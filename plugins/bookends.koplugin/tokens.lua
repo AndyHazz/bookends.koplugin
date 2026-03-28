@@ -154,7 +154,7 @@ function Tokens.expand(format_str, ui, session_start_time, session_pages_read, p
         end
         meminfo:close()
         if total and available and total > 0 then
-            mem_usage = math.floor((total - available) / total * 100) .. "%%"
+            mem_usage = math.floor((total - available) / total * 100) .. "%"
         end
     end
 
