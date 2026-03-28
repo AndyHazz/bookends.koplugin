@@ -376,7 +376,7 @@ function Bookends:buildMainMenu()
                     return pos.label
                 else
                     -- Expand tokens for preview
-                    local preview = Tokens.expand(lines[1], self.ui, self.session_start_time, (self.session_max_page or 0) - (self.session_start_page or 0))
+                    local preview = Tokens.expandPreview(lines[1], self.ui, self.session_start_time, (self.session_max_page or 0) - (self.session_start_page or 0))
                     if #lines > 1 then
                         preview = preview .. " ..."
                     end
@@ -490,7 +490,7 @@ function Bookends:buildPositionMenu(pos)
     for i, line in ipairs(lines) do
         table.insert(menu, {
             text_func = function()
-                local preview = Tokens.expand(self.positions[pos.key].lines[i] or "", self.ui, self.session_start_time, (self.session_max_page or 0) - (self.session_start_page or 0))
+                local preview = Tokens.expandPreview(self.positions[pos.key].lines[i] or "", self.ui, self.session_start_time, (self.session_max_page or 0) - (self.session_start_page or 0))
                 if #preview > 45 then
                     preview = preview:sub(1, 42) .. "..."
                 end

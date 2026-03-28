@@ -3,7 +3,7 @@ local datetime = require("datetime")
 
 local Tokens = {}
 
-function Tokens.expand(format_str, ui, session_start_time, session_pages_read)
+function Tokens.expand(format_str, ui, session_start_time, session_pages_read, preview_mode)
     -- Fast path: no tokens
     if not format_str:find("%%") then
         return format_str
@@ -186,7 +186,31 @@ function Tokens.expand(format_str, ui, session_start_time, session_pages_read)
         ["%W"] = wifi_symbol,
         ["%m"] = tostring(mem_usage),
     }
+    if preview_mode then
+        -- In preview mode, replace empty values with descriptive labels
+        local labels = {
+            ["%c"] = "page", ["%t"] = "total", ["%p"] = "%",
+            ["%P"] = "ch%", ["%g"] = "chread", ["%G"] = "chtotal",
+            ["%l"] = "chleft", ["%L"] = "left",
+            ["%h"] = "chtime", ["%H"] = "time",
+            ["%k"] = "12h", ["%K"] = "24h",
+            ["%R"] = "session", ["%s"] = "pages",
+            ["%T"] = "title", ["%A"] = "author",
+            ["%S"] = "series", ["%C"] = "chapter",
+            ["%b"] = "batt", ["%B"] = "batt", ["%W"] = "wifi",
+            ["%m"] = "mem",
+        }
+        for token, value in pairs(replace) do
+            if value == "" and labels[token] then
+                replace[token] = "[" .. labels[token] .. "]"
+            end
+        end
+    end
     return format_str:gsub("(%%%a)", replace)
+end
+
+function Tokens.expandPreview(format_str, ui, session_start_time, session_pages_read)
+    return Tokens.expand(format_str, ui, session_start_time, session_pages_read, true)
 end
 
 return Tokens
