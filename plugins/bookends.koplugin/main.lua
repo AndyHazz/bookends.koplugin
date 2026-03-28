@@ -85,13 +85,12 @@ function Bookends:markDirty()
 end
 
 -- Style constants and helpers
-Bookends.STYLES = { "regular", "bold", "italic", "bolditalic", "smallcaps" }
+Bookends.STYLES = { "regular", "bold", "italic", "bolditalic" }
 Bookends.STYLE_LABELS = {
     regular = _("Regular"),
     bold = _("Bold"),
     italic = _("Italic"),
     bolditalic = _("Bold Italic"),
-    smallcaps = _("Small Caps"),
 }
 
 -- Map a regular font filename to its italic variant (and vice versa)
@@ -115,15 +114,9 @@ function Bookends:resolveLineConfig(face_name, font_size, style)
         end
     end
 
-    local size = font_size
-    if style == "smallcaps" then
-        size = math.floor(font_size * 0.78)
-    end
-
     return {
-        face = Font:getFace(resolved_face, size),
+        face = Font:getFace(resolved_face, font_size),
         bold = bold,
-        smallcaps = (style == "smallcaps"),
     }
 end
 
