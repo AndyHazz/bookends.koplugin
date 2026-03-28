@@ -139,22 +139,14 @@ function Tokens.expand(format_str, ui, session_start_time, session_pages_read, p
         wifi_symbol = "\xEE\xB2\xA9" -- U+ECA9 wifi off
     end
 
-    -- Memory usage
+    -- Memory usage (KOReader process RSS in MiB, same as status bar)
     local mem_usage = ""
-    local meminfo = io.open("/proc/meminfo", "r")
-    if meminfo then
-        local total, available
-        for line in meminfo:lines() do
-            if line:match("^MemTotal:") then
-                total = tonumber(line:match("(%d+)"))
-            elseif line:match("^MemAvailable:") then
-                available = tonumber(line:match("(%d+)"))
-            end
-            if total and available then break end
-        end
-        meminfo:close()
-        if total and available and total > 0 then
-            mem_usage = math.floor((total - available) / total * 100)
+    local statm = io.open("/proc/self/statm", "r")
+    if statm then
+        local _, rss = statm:read("*number", "*number")
+        statm:close()
+        if rss then
+            mem_usage = math.floor(rss * 4096 / 1024 / 1024)
         end
     end
 
