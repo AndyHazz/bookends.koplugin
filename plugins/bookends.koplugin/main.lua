@@ -499,8 +499,8 @@ function Bookends:buildPositionMenu(pos)
             callback = function()
                 self:editLineString(pos, i)
             end,
-            hold_callback = function()
-                self:showLineManageDialog(pos, i)
+            hold_callback = function(touchmenu_instance)
+                self:showLineManageDialog(pos, i, touchmenu_instance)
             end,
         })
     end
@@ -730,11 +730,18 @@ function Bookends:editLineString(pos, line_idx)
     format_dialog:onShowKeyboard()
 end
 
-function Bookends:showLineManageDialog(pos, line_idx)
+function Bookends:showLineManageDialog(pos, line_idx, touchmenu_instance)
     local ConfirmBox = require("ui/widget/confirmbox")
     local ps = self.positions[pos.key]
     local num_lines = #ps.lines
     local T = require("ffi/util").template
+
+    local function refreshMenu()
+        if touchmenu_instance then
+            touchmenu_instance.item_table = self:buildPositionMenu(pos)
+            touchmenu_instance:updateItems()
+        end
+    end
 
     local function removeLine()
         table.remove(ps.lines, line_idx)
@@ -743,10 +750,10 @@ function Bookends:showLineManageDialog(pos, line_idx)
         if ps.line_font_face then table.remove(ps.line_font_face, line_idx) end
         self:savePositionSetting(pos.key)
         self:markDirty()
+        refreshMenu()
     end
 
     local function swapLines(a, b)
-        -- Swap in all parallel arrays
         ps.lines[a], ps.lines[b] = ps.lines[b], ps.lines[a]
         if ps.line_style then
             ps.line_style[a], ps.line_style[b] = ps.line_style[b], ps.line_style[a]
@@ -759,6 +766,7 @@ function Bookends:showLineManageDialog(pos, line_idx)
         end
         self:savePositionSetting(pos.key)
         self:markDirty()
+        refreshMenu()
     end
 
     local other_buttons = {}
