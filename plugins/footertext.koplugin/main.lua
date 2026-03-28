@@ -30,7 +30,7 @@ function FooterText:loadSettings()
     self.enabled = G_reader_settings:readSetting("footertext_enabled", true)
     self.format = G_reader_settings:readSetting("footertext_format", "Page %c")
     self.font_size = G_reader_settings:readSetting("footertext_font_size", footer_settings.text_font_size)
-    self.font_face_name = "ffont"
+    self.font_face_name = G_reader_settings:readSetting("footertext_font_face", "ffont")
     self.font_bold = footer_settings.text_font_bold or false
     self.vertical_offset = G_reader_settings:readSetting("footertext_vertical_offset", 35)
 end
@@ -232,6 +232,13 @@ function FooterText:addToMainMenu(menu_items)
                 end,
             },
             {
+                text = _("Font"),
+                enabled_func = function()
+                    return self.enabled
+                end,
+                sub_item_table = self:buildFontMenu(),
+            },
+            {
                 text = _("Font size"),
                 keep_menu_open = true,
                 enabled_func = function()
@@ -253,6 +260,29 @@ function FooterText:addToMainMenu(menu_items)
             },
         },
     }
+end
+
+function FooterText:buildFontMenu()
+    local font_choices = {
+        { text = "NotoSans Regular", face = "ffont" },
+        { text = "NotoSans Bold", face = "tfont" },
+        { text = "DroidSans Mono", face = "infont" },
+    }
+    local menu = {}
+    for _, choice in ipairs(font_choices) do
+        table.insert(menu, {
+            text = choice.text,
+            checked_func = function()
+                return self.font_face_name == choice.face
+            end,
+            callback = function()
+                self.font_face_name = choice.face
+                G_reader_settings:saveSetting("footertext_font_face", choice.face)
+                self:rebuildWidget()
+            end,
+        })
+    end
+    return menu
 end
 
 function FooterText:editFormatString()
