@@ -673,9 +673,13 @@ function Bookends:editLineString(pos, line_idx)
             {
                 {
                     text = _("Cancel"),
-                    id = "close",
                     callback = function()
-                        if current_text == "" and (pos_settings.lines[line_idx] or "") == "" then
+                        -- Restore original text if this was an edit (not a new line)
+                        if current_text ~= "" then
+                            pos_settings.lines[line_idx] = current_text
+                            self:savePositionSetting(pos.key)
+                        else
+                            -- New empty line: remove it
                             table.remove(pos_settings.lines, line_idx)
                             if pos_settings.line_style then table.remove(pos_settings.line_style, line_idx) end
                             if pos_settings.line_font_size then table.remove(pos_settings.line_font_size, line_idx) end
@@ -683,6 +687,7 @@ function Bookends:editLineString(pos, line_idx)
                             self:savePositionSetting(pos.key)
                         end
                         UIManager:close(format_dialog)
+                        self:markDirty()
                     end,
                 },
                 {
