@@ -10,7 +10,6 @@ User patches go in the KOReader `patches/` directory. Copy the `.lua` file and r
 |-------|-------------|
 | [2-suppress-opening-dialog.lua](patches/2-suppress-opening-dialog.lua) | Hides the "Opening file '...'" dialog that briefly flashes when opening a book. It has a zero timeout and disappears too fast to read — just visual noise. |
 | [2-coverbrowser-swipe-updown.lua](patches/2-coverbrowser-swipe-updown.lua) | Adds up/down swipe for page navigation in CoverBrowser History/Collections views. Swipe up = next page, swipe down = previous page. |
-| [2-series-sort-crash-fix.lua](patches/2-series-sort-crash-fix.lua) | Prevents crash when sorting by Series/Title/Authors/Keywords in folders containing directory entries (e.g. `../`). Required by the subfolder overrides plugin. |
 
 ## Plugins
 
