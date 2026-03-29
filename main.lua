@@ -898,6 +898,45 @@ function Bookends:showLineManageDialog(pos, line_idx, touchmenu_instance)
         })
     end
 
+    -- Move to another region
+    local function moveToRegion(target_key)
+        local target = self.positions[target_key]
+        target.lines = target.lines or {}
+        target.line_style = target.line_style or {}
+        target.line_font_size = target.line_font_size or {}
+        target.line_font_face = target.line_font_face or {}
+        target.line_v_nudge = target.line_v_nudge or {}
+        target.line_h_nudge = target.line_h_nudge or {}
+
+        -- Append to target
+        local ti = #target.lines + 1
+        target.lines[ti] = ps.lines[line_idx]
+        target.line_style[ti] = ps.line_style and ps.line_style[line_idx] or nil
+        target.line_font_size[ti] = ps.line_font_size and ps.line_font_size[line_idx] or nil
+        target.line_font_face[ti] = ps.line_font_face and ps.line_font_face[line_idx] or nil
+        target.line_v_nudge[ti] = ps.line_v_nudge and ps.line_v_nudge[line_idx] or nil
+        target.line_h_nudge[ti] = ps.line_h_nudge and ps.line_h_nudge[line_idx] or nil
+
+        -- Remove from source
+        removeLine()
+
+        self:savePositionSetting(target_key)
+    end
+
+    -- Build "Move to" buttons — one row per available region (excluding current)
+    for _, p in ipairs(self.POSITIONS) do
+        if p.key ~= pos.key then
+            table.insert(other_buttons, {
+                {
+                    text = _("Move to") .. " " .. p.label,
+                    callback = function()
+                        moveToRegion(p.key)
+                    end,
+                },
+            })
+        end
+    end
+
     UIManager:show(ConfirmBox:new{
         text = T(_("Line %1: %2"), line_idx, ps.lines[line_idx]),
         icon = "notice-question",
