@@ -56,6 +56,10 @@ end
 -- @param max_width number or nil: if set, truncate lines to this pixel width
 -- @return widget, width, height
 function OverlayWidget.buildTextWidget(text, line_configs, h_anchor, max_width)
+    if max_width and max_width <= 0 then
+        return nil, 0, 0
+    end
+
     local lines = {}
     for line in text:gmatch("([^\n]+)") do
         table.insert(lines, line)
@@ -148,7 +152,7 @@ function OverlayWidget.calculateRowLimits(left_w, center_w, right_w, screen_w, g
     local limits = { left = nil, center = nil, right = nil }
 
     if center_w then
-        local center_max = screen_w - 2 * gap
+        local center_max = math.max(0, screen_w - 2 * gap)
         if center_w > center_max then
             limits.center = center_max
             center_w = center_max
@@ -156,7 +160,7 @@ function OverlayWidget.calculateRowLimits(left_w, center_w, right_w, screen_w, g
     end
 
     if center_w then
-        local available_side = math.floor((screen_w - center_w) / 2) - gap
+        local available_side = math.max(0, math.floor((screen_w - center_w) / 2) - gap)
         if left_w and left_w > available_side - h_offset then
             limits.left = math.max(0, available_side - h_offset)
         end
@@ -174,11 +178,11 @@ function OverlayWidget.calculateRowLimits(left_w, center_w, right_w, screen_w, g
             end
         end
         if left_w and not right_w then
-            local max = screen_w - h_offset
+            local max = math.max(0, screen_w - h_offset)
             if left_w > max then limits.left = max end
         end
         if right_w and not left_w then
-            local max = screen_w - h_offset
+            local max = math.max(0, screen_w - h_offset)
             if right_w > max then limits.right = max end
         end
     end
