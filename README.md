@@ -112,17 +112,20 @@ The **Icons** button in the line editor opens a picker with categorised glyphs f
 Each line has its own style controls in the editor dialog:
 
 - **Style** -- Cycles through: Regular, Bold, Italic, Bold Italic
+- **Uppercase** -- Toggle uppercase rendering (displays "AA" when on, "Aa" when off)
 - **Size** -- Font size in pixels (defaults to global setting)
 - **Font** -- Choose from the full CRE font list (checkmark shows current selection)
+- **Nudge** -- Fine-tune vertical and horizontal position of individual lines with arrow buttons
 
-Italic uses NotoSans-Italic / NotoSerif-Italic font variants. Font and size default to the global settings if not overridden per-line.
+Italic uses NotoSans-Italic / NotoSerif-Italic font variants. Font and size default to the global settings if not overridden per-line. Overlay text uses the book's own text color, so it adapts to your reading theme.
 
 ### Managing lines
 
 - Tap a **line entry** in a position's submenu to edit it
 - Tap **Add line** to add a new line to the position
-- **Long-press** a line entry for options: **Move up**, **Move down**, or **Delete**
+- **Long-press** a line entry for options: **Move up**, **Move down**, **Move to** another position, or **Delete**
 - Saving an empty line automatically removes it
+- The editor shows a **live preview** of your format string as you type
 
 ### Smart ellipsis
 
@@ -140,6 +143,8 @@ Save and load complete configurations:
 
 Presets store everything: enabled state, all positions with lines/styles/fonts, all default settings.
 
+Several built-in presets are included: **Minimal**, **Full status**, **Book info**, and **Chapter focus**.
+
 ### Global settings
 
 At the bottom of the Bookends menu:
@@ -151,6 +156,7 @@ At the bottom of the Bookends menu:
 | Default vertical offset | 35px | Distance from screen edge (all positions) |
 | Default horizontal offset | 10px | Distance from screen edge (corners only) |
 | Overlap gap | 10px | Minimum space between adjacent texts |
+| Truncation priority | Center | Which positions get priority when text overlaps (Center or Sides) |
 
 ### Example configurations
 
@@ -199,7 +205,7 @@ Restart KOReader after installing.
 
 ## Compatibility
 
-Tested on KOReader 2025.08 (Kindle PW5). Should work on any KOReader device.
+Tested on KOReader 2025.08+ (Kindle PW5). Should work on any KOReader device.
 
 ## License
 
