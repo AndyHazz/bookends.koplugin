@@ -117,7 +117,7 @@ Each line has its own style controls in the editor dialog:
 - **Font** -- Choose from the full CRE font list (checkmark shows current selection)
 - **Nudge** -- Fine-tune vertical and horizontal position of individual lines with arrow buttons
 
-Italic uses NotoSans-Italic / NotoSerif-Italic font variants. Font and size default to the global settings if not overridden per-line. Overlay text uses the book's own text color, so it adapts to your reading theme.
+Italic uses NotoSans-Italic / NotoSerif-Italic font variants. Font and size default to the global settings if not overridden per-line.
 
 ### Managing lines
 
