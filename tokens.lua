@@ -23,6 +23,7 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
             ["%T"] = "[title]", ["%A"] = "[author]",
             ["%S"] = "[series]", ["%C"] = "[chapter]",
             ["%b"] = "[batt]", ["%B"] = "[batt]", ["%W"] = "[wifi]",
+            ["%f"] = "[light]", ["%F"] = "[warmth]",
             ["%m"] = "[mem]",
         }
         return format_str:gsub("(%%%a)", preview)
@@ -187,6 +188,20 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         end
     end
 
+    -- Frontlight
+    local fl_intensity = ""
+    local fl_warmth = ""
+    if needs("f", "F") then
+        local powerd = Device:getPowerDevice()
+        if needs("f") then
+            local val = powerd:frontlightIntensity()
+            fl_intensity = val == 0 and "OFF" or tostring(val)
+        end
+        if needs("F") and Device:hasNaturalLight() then
+            fl_warmth = tostring(powerd:toNativeWarmth(powerd:frontlightWarmth()))
+        end
+    end
+
     -- Memory usage
     local mem_usage = ""
     if needs("m") then
@@ -239,6 +254,8 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         ["%b"] = tostring(batt_lvl),
         ["%B"] = tostring(batt_symbol),
         ["%W"] = wifi_symbol,
+        ["%f"] = fl_intensity,
+        ["%F"] = fl_warmth,
         ["%m"] = tostring(mem_usage),
     }
     return format_str:gsub("(%%%a)", replace)

@@ -6,29 +6,71 @@ local IconPicker = {}
 
 -- Icon catalog: { category_label, { {display, description, insert_value}, ... } }
 -- insert_value is what gets inserted; display is what's shown in the picker
+-- All icons are from KOReader's bundled Nerd Fonts symbols.ttf or basic Unicode
 IconPicker.CATALOG = {
     { _("Dynamic"), {
-        { "\xEE\x9E\x90", _("Battery (changes with level)"), "%B" },     -- U+E790 battery icon
-        { "\xEE\xB2\xA8", _("Wi-Fi (changes with status)"), "%W" },      -- U+ECA8 wifi icon
+        { "\xEE\x9E\x90", _("Battery (changes with level)"), "%B" },     -- U+E790
+        { "\xEE\xB2\xA8", _("Wi-Fi (changes with status)"), "%W" },      -- U+ECA8
     }},
-    { _("Status"), {
-        { "\xEF\x82\x97", _("Bookmark") },            -- U+F097
-        { "\xEE\xA9\x9A", _("Memory chip") },         -- U+EA5A
+    { _("Device"), {
+        { "\xEF\x83\xAB", _("Lightbulb") },             -- U+F0EB fa-lightbulb-o
+        { "\xEF\x86\x85", _("Sun") },                   -- U+F185 fa-sun-o
+        { "\xEF\x86\x86", _("Moon") },                  -- U+F186 fa-moon-o
+        { "\xEE\x88\x97", _("Paper aeroplane") },        -- U+E217
+        { "\xEF\x81\x82", _("Adjust / contrast") },     -- U+F042 fa-adjust
+        { "\xEF\x83\xA7", _("Lightning bolt") },        -- U+F0E7 fa-bolt
+        { "\xEF\x80\x91", _("Power") },                 -- U+F011 fa-power-off
+        { "\xEF\x84\x8B", _("Mobile") },                -- U+F10B fa-mobile
+        { "\xEF\x87\xAB", _("Wi-Fi") },                 -- U+F1EB fa-wifi
+        { "\xEF\x83\x82", _("Cloud") },                 -- U+F0C2 fa-cloud
+        { "\xEE\xA9\x9A", _("Memory chip") },           -- U+EA5A
+    }},
+    { _("Reading"), {
+        { "\xEF\x80\xAD", _("Book") },                  -- U+F02D fa-book
+        { "\xEF\x80\xAE", _("Bookmark (filled)") },     -- U+F02E fa-bookmark
+        { "\xEF\x82\x97", _("Bookmark (outline)") },    -- U+F097 fa-bookmark-o
+        { "\xEF\x81\xAE", _("Eye") },                   -- U+F06E fa-eye
+        { "\xEF\x81\xB0", _("Eye (hidden)") },          -- U+F070 fa-eye-slash
+        { "\xEF\x80\xA4", _("Flag") },                  -- U+F024 fa-flag
+        { "\xEF\x82\x80", _("Bar chart") },             -- U+F080 fa-bar-chart
+        { "\xEF\x83\xA4", _("Tachometer") },            -- U+F0E4 fa-tachometer
+        { "\xEF\x87\x9E", _("Sliders") },               -- U+F1DE fa-sliders
     }},
     { _("Time"), {
-        { "\xE2\x8F\xB2", _("Clock") },               -- U+23F2
-        { "\xE2\x8C\x9A", _("Watch") },               -- U+231A
-        { "\xE2\x8F\xB3", _("Hourglass") },           -- U+23F3
-        { "\xE2\x8C\x9B", _("Hourglass (filled)") },  -- U+231B
+        { "\xEF\x80\x97", _("Clock") },                 -- U+F017 fa-clock-o
+        { "\xE2\x8F\xB2", _("Stopwatch") },             -- U+23F2
+        { "\xE2\x8C\x9A", _("Watch") },                 -- U+231A
+        { "\xE2\x8F\xB3", _("Hourglass") },             -- U+23F3
+        { "\xE2\x8C\x9B", _("Hourglass (filled)") },    -- U+231B
+        { "\xEF\x81\xB3", _("Calendar") },              -- U+F073 fa-calendar
+        { "\xEF\x89\xB4", _("Calendar (checked)") },    -- U+F274 fa-calendar-check-o
+    }},
+    { _("Status"), {
+        { "\xEF\x80\x8C", _("Check") },                 -- U+F00C fa-check
+        { "\xEF\x80\x8D", _("Cross") },                 -- U+F00D fa-times
+        { "\xEF\x81\x9A", _("Info") },                  -- U+F05A fa-info-circle
+        { "\xEF\x81\xB1", _("Warning") },               -- U+F071 fa-warning
+        { "\xEF\x80\x93", _("Cog") },                   -- U+F013 fa-cog
     }},
     { _("Symbols"), {
-        { "\xE2\x98\xBC", _("Sun / brightness") },    -- U+263C
-        { "\xE2\x99\xA0", _("Spade") },               -- U+2660
-        { "\xE2\x99\xA3", _("Club") },                -- U+2663
-        { "\xE2\x99\xA5", _("Heart") },               -- U+2665
-        { "\xE2\x99\xA6", _("Diamond suit") },        -- U+2666
-        { "\xE2\x98\x85", _("Star (filled)") },       -- U+2605
-        { "\xE2\x98\x86", _("Star (outline)") },      -- U+2606
+        { "\xE2\x98\xBC", _("Sun (outline)") },         -- U+263C
+        { "\xE2\x99\xA8", _("Hot springs / warmth") },  -- U+2668
+        { "\xE2\x99\xA0", _("Spade") },                 -- U+2660
+        { "\xE2\x99\xA3", _("Club") },                  -- U+2663
+        { "\xE2\x99\xA5", _("Heart") },                 -- U+2665
+        { "\xE2\x99\xA6", _("Diamond suit") },          -- U+2666
+        { "\xE2\x98\x85", _("Star (filled)") },         -- U+2605
+        { "\xE2\x98\x86", _("Star (outline)") },        -- U+2606
+        { "\xE2\x9C\x93", _("Check mark") },            -- U+2713
+        { "\xE2\x9C\x97", _("Cross mark") },            -- U+2717
+        { "\xE2\x88\x9E", _("Infinity") },              -- U+221E
+        { "\xC2\xA7",     _("Section sign") },          -- U+00A7
+        { "\xC2\xB6",     _("Pilcrow / paragraph") },   -- U+00B6
+        { "\xE2\x80\xA0", _("Dagger") },                -- U+2020
+        { "\xE2\x80\xA1", _("Double dagger") },         -- U+2021
+        { "\xC2\xA9",     _("Copyright") },             -- U+00A9
+        { "\xE2\x84\x96", _("Numero") },                -- U+2116
+        { "\xE2\x9A\xA1", _("High voltage") },          -- U+26A1
     }},
     { _("Arrows"), {
         { "\xE2\x86\x90", _("Arrow left") },            -- U+2190
@@ -45,8 +87,10 @@ IconPicker.CATALOG = {
         { "\xE2\x97\x80", _("Triangle left") },         -- U+25C0
         { "\xE2\x96\xB2", _("Triangle up") },           -- U+25B2
         { "\xE2\x96\xBC", _("Triangle down") },         -- U+25BC
-        { "\xC2\xBB",     _("Double angle right") },    -- U+00BB
+        { "\xE2\x80\xB9", _("Single angle left") },     -- U+2039
+        { "\xE2\x80\xBA", _("Single angle right") },    -- U+203A
         { "\xC2\xAB",     _("Double angle left") },     -- U+00AB
+        { "\xC2\xBB",     _("Double angle right") },    -- U+00BB
     }},
     { _("Separators"), {
         { "|",             _("Vertical bar") },          -- U+007C
@@ -63,19 +107,6 @@ IconPicker.CATALOG = {
         { "//",            _("Double slash") },
         { "~",             _("Tilde") },                 -- U+007E
         { "\xE2\x80\xA3", _("Triangular bullet") },     -- U+2023
-        { "\xE2\x80\xB9", _("Single angle left") },     -- U+2039
-        { "\xE2\x80\xBA", _("Single angle right") },    -- U+203A
-    }},
-    { _("Misc"), {
-        { "\xE2\x9C\x93", _("Check mark") },            -- U+2713
-        { "\xE2\x9C\x97", _("Cross mark") },            -- U+2717
-        { "\xE2\x88\x9E", _("Infinity") },              -- U+221E
-        { "\xC2\xA7",     _("Section sign") },          -- U+00A7
-        { "\xC2\xB6",     _("Pilcrow / paragraph") },   -- U+00B6
-        { "\xE2\x80\xA0", _("Dagger") },                -- U+2020
-        { "\xE2\x80\xA1", _("Double dagger") },         -- U+2021
-        { "\xC2\xA9",     _("Copyright") },             -- U+00A9
-        { "\xE2\x84\x96", _("Numero") },                -- U+2116
     }},
 }
 

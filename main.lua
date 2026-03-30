@@ -1475,6 +1475,8 @@ Bookends.TOKEN_CATALOG = {
         { "%b", _("Battery level") },
         { "%B", _("Battery icon (dynamic)") },
         { "%W", _("Wi-Fi icon (dynamic)") },
+        { "%f", _("Frontlight brightness") },
+        { "%F", _("Frontlight warmth") },
         { "%m", _("RAM used %") },
     }},
 }
