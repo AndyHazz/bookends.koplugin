@@ -18,9 +18,17 @@ Six positions: **Top-left**, **Top-center**, **Top-right**, **Bottom-left**, **B
 
 ### Screenshots
 
-| Reading page | Menu with previews |
+| Title page | Speed Reader preset |
 |:---:|:---:|
-| ![Reading page](screenshots/reading-page.png) | ![Menu previews](screenshots/menu-previews.png) |
+| ![Title page](screenshots/title-page.png) | ![Speed Reader](screenshots/speed-reader.png) |
+
+| Classic Alternating preset | Rich Detail preset |
+|:---:|:---:|
+| ![Classic Alternating](screenshots/classic-alternating.png) | ![Rich Detail](screenshots/rich-detail.png) |
+
+| Main menu | Adjust margins |
+|:---:|:---:|
+| ![Main menu](screenshots/main-menu.png) | ![Adjust margins](screenshots/adjust-margins.png) |
 
 | Line editor | Icon picker | Token picker |
 |:---:|:---:|:---:|
@@ -28,14 +36,24 @@ Six positions: **Top-left**, **Top-center**, **Top-right**, **Bottom-left**, **B
 
 ### Quick start
 
-1. Copy `plugins/bookends.koplugin/` to your KOReader plugins directory
+1. Copy `bookends.koplugin/` to your KOReader plugins directory
 2. Open a book
 3. Go to the **typeset/document menu** (style icon) and find **Bookends**
 4. Enable bookends
 5. Tap a position (e.g., Bottom-center)
 6. Tap **Add line**
-7. Type a format string like `%c / %t` or use the **Tokens** and **Icons** buttons to insert
+7. Type a format string like `Page %c of %t` or use the **Tokens** and **Icons** buttons to insert
 8. Tap **Save**
+
+### Built-in presets
+
+Three presets are included to get you started:
+
+- **Speed Reader** — Session timer, reading speed, time remaining, progress percentages
+- **Classic Alternating** — Book title on even pages, chapter on odd, page number at bottom
+- **Rich Detail** — All six positions with clock, battery, Wi-Fi, brightness, highlights, and more
+
+Save your own presets via **Presets > Custom presets > Create new preset from current settings**.
 
 ### Tokens
 
@@ -49,6 +67,12 @@ Tokens are placeholders that expand to live values. Insert them by typing `%` fo
 | `%A` | Author(s) | *F. Scott Fitzgerald* |
 | `%S` | Series with index | *Dune #1* |
 | `%C` | Chapter/section title | *Chapter 3: The Valley* |
+| `%N` | File name (no path/extension) | *The_Great_Gatsby* |
+| `%i` | Book language | *en* |
+| `%o` | Document format | *EPUB* |
+| `%q` | Number of highlights | *3* |
+| `%Q` | Number of notes | *1* |
+| `%x` | Number of bookmarks | *5* |
 
 #### Page / Progress
 
@@ -81,8 +105,10 @@ Tokens are placeholders that expand to live values. Insert them by typing `%` fo
 |-------|-------------|---------|
 | `%h` | Time left in chapter | *0h 12m* |
 | `%H` | Time left in book | *3h 45m* |
+| `%E` | Total reading time for book | *2h 30m* |
 | `%R` | Session reading time | *0h 23m* |
 | `%s` | Session pages read | *14* |
+| `%r` | Reading speed (pages/hour) | *42* |
 
 #### Device
 
@@ -91,33 +117,52 @@ Tokens are placeholders that expand to live values. Insert them by typing `%` fo
 | `%b` | Battery level | *73%* |
 | `%B` | Battery icon (dynamic) | Changes with charge level |
 | `%W` | Wi-Fi icon (dynamic) | Changes with connection status |
+| `%f` | Frontlight brightness | *18* or *OFF* |
+| `%F` | Frontlight warmth | *12* |
 | `%m` | RAM usage | *33%* |
 
-Page tokens respect **stable page numbers** and **hidden flows** (non-linear EPUB content). Time-left tokens use the **statistics plugin** reading speed data. Session pages tracks forward progress only (going back doesn't inflate the count).
+Page tokens respect **stable page numbers** and **hidden flows** (non-linear EPUB content). Time-left and reading speed tokens use the **statistics plugin**. Session timer and pages reset each time you wake the device.
+
+### Smart features
+
+- **Auto-hide** — Lines where all tokens resolve to empty or zero are automatically hidden
+- **Pluralisation** — Write `%q highlight(s)` and it becomes `1 highlight` or `3 highlights`
+- **Odd/even pages** — Set any line to appear on all pages, odd pages only, or even pages only
+- **Auto-refresh** — Clock and other dynamic tokens update every 60 seconds
 
 ### Icons
 
-The **Icons** button in the line editor opens a picker with categorised glyphs from the Nerd Fonts set (bundled with KOReader). Icons are inserted as literal Unicode characters. Categories include:
+The **Icons** button in the line editor opens a picker with categorised glyphs from the Nerd Fonts set (bundled with KOReader). Categories include:
 
-- **Dynamic** -- Battery and Wi-Fi icons that change with device state (inserts `%B` / `%W` tokens)
-- **Status** -- Bookmark, memory chip
-- **Time** -- Watch, hourglass
-- **Symbols** -- Sun, card suits (spade/club/heart/diamond), stars
-- **Arrows** -- Directional arrows, triangles, angle brackets
-- **Separators** -- Vertical bar, bullets, dots, ellipsis, dashes, slashes
-- **Misc** -- Check/cross marks, infinity, section signs, daggers, copyright
+- **Dynamic** — Battery and Wi-Fi icons that change with device state
+- **Device** — Lightbulb, sun, moon, power, Wi-Fi, cloud, memory chip
+- **Reading** — Book, bookmarks, eye, flag, bar chart, tachometer, sliders
+- **Time** — Clock, stopwatch, watch, hourglass, calendar
+- **Status** — Check, cross, info, warning, cog
+- **Symbols** — Sun, warmth, card suits, stars, check/cross marks
+- **Arrows** — Directional arrows, triangles, angle brackets
+- **Separators** — Vertical bar, bullets, dots, dashes, slashes
 
 ### Per-line styling
 
 Each line has its own style controls in the editor dialog:
 
-- **Style** -- Cycles through: Regular, Bold, Italic, Bold Italic
-- **Uppercase** -- Toggle uppercase rendering (displays "AA" when on, "Aa" when off)
-- **Size** -- Font size in pixels (defaults to global setting)
-- **Font** -- Choose from the full CRE font list (checkmark shows current selection)
-- **Nudge** -- Fine-tune vertical and horizontal position of individual lines with arrow buttons
+- **Style** — Cycles through: Regular, Bold, Italic, Bold Italic
+- **Uppercase** — Toggle uppercase rendering
+- **Size** — Font size in pixels (defaults to global setting, affected by font scale)
+- **Font** — Choose from the full CRE font list
+- **Nudge** — Fine-tune vertical and horizontal position of individual lines
+- **Page filter** — Show on all pages, odd pages only, or even pages only
 
-Italic uses NotoSans-Italic / NotoSerif-Italic font variants. Font and size default to the global settings if not overridden per-line.
+Italic uses automatic font variant detection — searches installed fonts for matching italic variants.
+
+### Margins
+
+Bookends uses a three-layer positioning system:
+
+1. **Global margins** (top/bottom/left/right) — Set in **Settings > Adjust margins** with real-time preview
+2. **Per-position extra margins** — Additional offset for individual regions
+3. **Per-line nudges** — Pixel-level fine-tuning in the line editor
 
 ### Managing lines
 
@@ -129,71 +174,28 @@ Italic uses NotoSans-Italic / NotoSerif-Italic font variants. Font and size defa
 
 ### Smart ellipsis
 
-When text would overlap between positions on the same row (top or bottom), Bookends automatically truncates with ellipsis. **Center positions always get priority** -- left and right text is truncated first. A configurable minimum gap prevents text from butting up against each other.
+When text would overlap between positions on the same row, Bookends automatically truncates with ellipsis. Center positions get priority by default — left and right text is truncated first. Enable **Prioritise left/right and truncate long center text** to reverse this.
 
-### Presets
-
-Save and load complete configurations:
-
-1. Set up all your positions, lines, fonts, and offsets
-2. Go to **Bookends > Presets > Create new preset from current settings**
-3. Name it (e.g., "Minimal", "Full status", "Reading session")
-4. To load: tap the preset name
-5. To manage: long-press a preset for Update, Delete, or Rename
-
-Presets store everything: enabled state, all positions with lines/styles/fonts, all default settings.
-
-Several built-in presets are included: **Minimal**, **Full status**, **Book info**, and **Chapter focus**.
-
-### Global settings
-
-At the bottom of the Bookends menu:
+### Settings
 
 | Setting | Default | Description |
 |---------|---------|-------------|
 | Default font | Status bar font | Base font for all overlays |
-| Default font size | Status bar size | Base size for all overlays |
-| Default vertical offset | 35px | Distance from screen edge (all positions) |
-| Default horizontal offset | 10px | Distance from screen edge (corners only) |
-| Overlap gap | 10px | Minimum space between adjacent texts |
-| Truncation priority | Center | Which positions get priority when text overlaps (Center or Sides) |
+| Font scale | 100% | Scale all text sizes (25%–300%) |
+| Adjust margins | 10/25/18/18 | Independent top/bottom/left/right margins |
+| Truncation gap | 50px | Minimum space between adjacent texts |
+| Truncation priority | Center | Which positions get priority when text overlaps |
+| Check for updates | — | Check GitHub for new versions with one-tap install |
 
-### Example configurations
+### Gesture support
 
-**Minimal page counter** (bottom-center):
-```
-Line 1: %c / %t
-```
-
-**Book info header** (top-center, two lines):
-```
-Line 1: %A          (Bold)
-Line 2: %T          (Italic, smaller font)
-```
-
-**Reading session** (bottom-left):
-```
-Line 1: %s pages in %R
-```
-
-**Status corner** (top-right):
-```
-Line 1: %B %b  %k
-```
-
-**Chapter progress** (bottom-right):
-```
-Line 1: %C
-Line 2: %g / %G (%P)
-```
+Assign **Toggle bookends** to any gesture via **Settings > Gesture manager > Reader**. Quickly show/hide all overlays with a tap, swipe, or multi-finger gesture.
 
 ---
 
 ## Installation
 
-**Via the KOReader App Store:** Search for "bookends" and install.
-
-**Manual install:** Download or clone this repo into your KOReader plugins directory:
+**Manual install:** Download the latest release ZIP from [GitHub Releases](https://github.com/AndyHazz/bookends.koplugin/releases) and extract to your KOReader plugins directory:
 
 | Device | Path |
 |--------|------|
@@ -201,11 +203,9 @@ Line 2: %g / %G (%P)
 | Kobo | `/mnt/onboard/.adds/koreader/plugins/bookends.koplugin/` |
 | Android | `<koreader-dir>/plugins/bookends.koplugin/` |
 
+Or use the built-in **Check for updates** feature in Settings to update from within KOReader.
+
 Restart KOReader after installing.
-
-## Compatibility
-
-Tested on KOReader 2025.08+ (Kindle PW5). Should work on any KOReader device.
 
 ## License
 

@@ -115,6 +115,7 @@ function Bookends:loadSettings()
         margin_bottom = G_reader_settings:readSetting("bookends_margin_bottom", 25),
         margin_left   = G_reader_settings:readSetting("bookends_margin_left", 18),
         margin_right  = G_reader_settings:readSetting("bookends_margin_right", 18),
+        font_scale = G_reader_settings:readSetting("bookends_font_scale", 100),
         overlap_gap = G_reader_settings:readSetting("bookends_overlap_gap", 50),
         truncation_priority = G_reader_settings:readSetting("bookends_truncation_priority", "center"),
     }
@@ -142,9 +143,6 @@ function Bookends:loadSettings()
             if not saved.lines then
                 saved.lines = {}
             end
-            -- v2 migration: clear old per-position offsets (now handled by global margins)
-            saved.v_offset = nil
-            saved.h_offset = nil
             self.positions[pos.key] = saved
         else
             -- First run: use default configuration
@@ -188,6 +186,7 @@ function Bookends:loadPreset(preset)
         G_reader_settings:saveSetting("bookends_font_face", self.defaults.font_face)
         G_reader_settings:saveSetting("bookends_font_size", self.defaults.font_size)
         G_reader_settings:saveSetting("bookends_font_bold", self.defaults.font_bold)
+        G_reader_settings:saveSetting("bookends_font_scale", self.defaults.font_scale)
         G_reader_settings:saveSetting("bookends_margin_top", self.defaults.margin_top)
         G_reader_settings:saveSetting("bookends_margin_bottom", self.defaults.margin_bottom)
         G_reader_settings:saveSetting("bookends_margin_left", self.defaults.margin_left)
@@ -313,8 +312,12 @@ function Bookends:resolveLineConfig(face_name, font_size, style)
         end
     end
 
+    -- Apply font scale
+    local scale = self.defaults.font_scale or 100
+    local scaled_size = math.max(6, math.floor(font_size * scale / 100 + 0.5))
+
     return {
-        face = Font:getFace(resolved_face, font_size),
+        face = Font:getFace(resolved_face, scaled_size),
         bold = bold,
     }
 end
@@ -683,18 +686,10 @@ function Bookends:buildMainMenu()
                 },
                 {
                     text_func = function()
-                        return _("Default font size") .. " (" .. self.defaults.font_size .. ")"
+                        return _("Font scale") .. " (" .. self.defaults.font_scale .. "%)"
                     end,
-                    keep_menu_open = true,
-                    callback = function(touchmenu_instance)
-                        self:showSpinner(_("Default font size"), self.defaults.font_size, 8, 36,
-                            self.ui.view.footer.settings.text_font_size,
-                            function(val)
-                                self.defaults.font_size = val
-                                G_reader_settings:saveSetting("bookends_font_size", val)
-                                self:markDirty()
-                                if touchmenu_instance then touchmenu_instance:updateItems() end
-                            end)
+                    callback = function()
+                        self:showFontScaleDialog()
                     end,
                 },
                 {
@@ -879,7 +874,7 @@ Bookends.BUILT_IN_PRESETS = {
                 margin_left = 18, margin_right = 18,
             },
             positions = {
-                tl = { lines = { "%A \xE2\x8B\xAE %T" }, line_font_size = { [1] = 12 } },
+                tl = { lines = { "%A \xE2\x8B\xAE %T", "%S" }, line_font_size = { [1] = 12 } },
                 tc = { lines = { "%k \xC2\xB7 %a %d" }, line_font_size = { [1] = 14 }, line_style = { [1] = "bold" } },
                 tr = { lines = { "%C", "%x Bookmark(s) \xEF\x82\x97" } },
                 bl = { lines = { "\xEF\x83\xAB %F", "\xEF\x86\x85 %f", "\xE2\x8F\xB3 %R \xC2\xBB %s page session" } },
@@ -898,7 +893,7 @@ Bookends.BUILT_IN_PRESETS = {
             },
             positions = {
                 tl = { lines = { "\xEF\x80\x97 %k" }, line_font_size = { [1] = 16 }, line_style = { [1] = "bold" } },
-                tc = { lines = { "\xE2\x8F\xB3 %R \xC2\xBB %s page(s) read this session" }, line_font_size = { [1] = 16 }, line_style = { [1] = "bold" } },
+                tc = { lines = { "\xE2\x8F\xB3 %R \xC2\xBB %s page(s) read this session", "\xEF\x83\xA4 %r page(s)/hr" }, line_font_size = { [1] = 16 }, line_style = { [1] = "bold" } },
                 tr = { lines = { "%B %b" }, line_font_size = { [1] = 16 }, line_style = { [1] = "bold" } },
                 bl = { lines = { "%p", "\xEF\x81\xAE %E reading this book" } },
                 bc = { lines = { "Page %c of %t", "\xEF\x80\xAD %L pages ~ %H left in book" },
@@ -1800,6 +1795,58 @@ function Bookends:showNudgeDialog(pos, field, label)
                     is_enter_default = true,
                     callback = function()
                         self:savePositionSetting(pos.key)
+                        UIManager:close(dialog)
+                    end,
+                },
+            },
+        },
+    }
+    UIManager:show(dialog)
+end
+
+function Bookends:showFontScaleDialog()
+    local original = self.defaults.font_scale
+    local dialog
+
+    local function nudge(delta)
+        self.defaults.font_scale = math.max(25, math.min(300, self.defaults.font_scale + delta))
+        self:markDirty()
+        dialog:reinit()
+    end
+
+    local ButtonDialog = require("ui/widget/buttondialog")
+    dialog = ButtonDialog:new{
+        title = _("Font scale"),
+        buttons = {
+            {
+                { text = "-10", callback = function() nudge(-10) end },
+                { text = "-1", callback = function() nudge(-1) end },
+                { text_func = function() return self.defaults.font_scale .. "%" end, enabled = false },
+                { text = "+1", callback = function() nudge(1) end },
+                { text = "+10", callback = function() nudge(10) end },
+            },
+            {
+                {
+                    text = _("Cancel"),
+                    callback = function()
+                        self.defaults.font_scale = original
+                        self:markDirty()
+                        UIManager:close(dialog)
+                    end,
+                },
+                {
+                    text = _("Reset"),
+                    callback = function()
+                        self.defaults.font_scale = 100
+                        self:markDirty()
+                        dialog:reinit()
+                    end,
+                },
+                {
+                    text = _("Save"),
+                    is_enter_default = true,
+                    callback = function()
+                        G_reader_settings:saveSetting("bookends_font_scale", self.defaults.font_scale)
                         UIManager:close(dialog)
                     end,
                 },
