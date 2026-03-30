@@ -867,13 +867,16 @@ Bookends.BUILT_IN_PRESETS = {
         name = _("Full status"),
         preset = {
             enabled = true,
+            defaults = {
+                v_offset = 10,
+            },
             positions = {
                 tl = { lines = { "%A \xE2\x8B\xAE %T" }, line_font_size = { [1] = 12 } },
-                tc = { lines = { "%k \xC2\xB7 %a %d" }, line_font_size = { [1] = 14 }, line_style = { [1] = "bold" } },
-                tr = { lines = { "%C" }, line_style = { [1] = "bold" } },
-                bl = { lines = { "\xE2\x8F\xB3 %R session" }, v_offset = 16 },
-                bc = { lines = { "Page %c of %t" }, line_font_size = { [1] = 16 }, v_offset = 35 },
-                br = { lines = { "%B %W" }, line_font_size = { [1] = 10 }, v_offset = 14 },
+                tc = { lines = { "%k  %a %d" }, line_font_size = { [1] = 14 }, line_style = { [1] = "bold" } },
+                tr = { lines = { "%C" }, line_style = { [1] = "italic" } },
+                bl = { lines = { "\xE2\x8F\xB3 %R \xE2\x80\xBA %s page session" }, v_offset = 16 },
+                bc = { lines = { "Page %c of %t" }, line_font_size = { [1] = 18 }, v_offset = 40, line_v_nudge = { [1] = -15 } },
+                br = { lines = { "%B", "%W", "%f \xE2\x98\xBC", "%F" }, v_offset = 20 },
             },
         },
     },
@@ -911,24 +914,28 @@ Bookends.BUILT_IN_PRESETS = {
             enabled = true,
             positions = {
                 tl = { lines = {
-                    "%T",
-                    "%A",
-                    "%S",
-                    "%C",
-                }, line_font_size = { [1] = 10, [2] = 10, [3] = 10, [4] = 10 } },
+                    "Title: %T",
+                    "Author: %A",
+                    "Series: %S",
+                    "Chapter: %C",
+                    "File: %N \xC2\xB7 Lang: %i",
+                }, line_font_size = { [1] = 10, [2] = 10, [3] = 10, [4] = 10, [5] = 10 } },
                 tc = { lines = {
-                    "%k \xC2\xB7 %K",
-                    "%d \xC2\xB7 %D",
+                    "12h: %k \xC2\xB7 24h: %K",
+                    "Date: %d \xC2\xB7 %D",
                     "%n \xC2\xB7 %w \xC2\xB7 %a",
                 }, line_font_size = { [1] = 10, [2] = 10, [3] = 10 } },
                 tr = { lines = {
-                    "%B %b \xC2\xB7 %W",
-                    "%m",
-                }, line_font_size = { [1] = 10, [2] = 10 } },
+                    "%B Batt: %b \xC2\xB7 %W",
+                    "Light: %f \xC2\xB7 Warm: %F",
+                    "RAM: %m",
+                }, line_font_size = { [1] = 10, [2] = 10, [3] = 10 } },
                 bl = { lines = {
-                    "%R session \xC2\xB7 %s pages",
-                    "%h ch \xC2\xB7 %H book",
-                }, line_font_size = { [1] = 10, [2] = 10 }, v_offset = 16 },
+                    "Session: %R \xC2\xB7 %s pg",
+                    "Book total: %E",
+                    "Speed: %r pg/hr",
+                    "Left: %h ch \xC2\xB7 %H book",
+                }, line_font_size = { [1] = 10, [2] = 10, [3] = 10, [4] = 10 }, v_offset = 16 },
                 bc = { lines = {
                     "Page %c of %t (%p)",
                 }, line_font_size = { [1] = 10 }, v_offset = 35 },
@@ -1445,6 +1452,8 @@ Bookends.TOKEN_CATALOG = {
         { "%A", _("Author(s)") },
         { "%S", _("Series with index") },
         { "%C", _("Chapter title") },
+        { "%N", _("File name") },
+        { "%i", _("Book language") },
     }},
     { _("Page / Progress"), {
         { "%c", _("Current page number") },
@@ -1468,8 +1477,10 @@ Bookends.TOKEN_CATALOG = {
     { _("Reading"), {
         { "%h", _("Time left in chapter") },
         { "%H", _("Time left in book") },
+        { "%E", _("Total reading time for book") },
         { "%R", _("Session reading time") },
         { "%s", _("Session pages read") },
+        { "%r", _("Reading speed (pages/hour)") },
     }},
     { _("Device"), {
         { "%b", _("Battery level") },

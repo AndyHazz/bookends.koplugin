@@ -22,6 +22,8 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
             ["%R"] = "[session]", ["%s"] = "[pages]",
             ["%T"] = "[title]", ["%A"] = "[author]",
             ["%S"] = "[series]", ["%C"] = "[chapter]",
+            ["%N"] = "[file]", ["%i"] = "[lang]",
+            ["%r"] = "[pg/hr]", ["%E"] = "[total]",
             ["%b"] = "[batt]", ["%B"] = "[batt]", ["%W"] = "[wifi]",
             ["%f"] = "[light]", ["%F"] = "[warmth]",
             ["%m"] = "[mem]",
@@ -152,7 +154,8 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     local title = ""
     local authors = ""
     local series = ""
-    if needs("T", "A", "S") then
+    local book_language = ""
+    if needs("T", "A", "S", "i") then
         local doc_props = ui.doc_props or {}
         local ok, props = pcall(doc.getProps, doc)
         if not ok then props = {} end
@@ -162,6 +165,36 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         local series_index = doc_props.series_index or props.series_index
         if series ~= "" and series_index then
             series = series .. " #" .. series_index
+        end
+        if needs("i") then
+            book_language = doc_props.language or props.language or ""
+        end
+    end
+
+    -- File name (without path and extension)
+    local file_name = ""
+    if needs("N") then
+        local filepath = doc.file or ""
+        file_name = filepath:match("([^/]+)$") or ""
+        file_name = (file_name:gsub("%.[^.]+$", ""))
+    end
+
+    -- Reading speed and total book time (via statistics plugin)
+    local reading_speed = ""
+    local total_book_time = ""
+    if needs("r", "E") and ui.statistics then
+        if needs("r") then
+            local avg = ui.statistics.avg_time
+            if avg and avg > 0 then
+                reading_speed = tostring(math.floor(3600 / avg))
+            end
+        end
+        if needs("E") then
+            local total_secs = ui.statistics.book_read_time
+            if total_secs and total_secs > 0 then
+                local user_duration_format = G_reader_settings:readSetting("duration_format", "classic")
+                total_book_time = datetime.secondsToClockDuration(user_duration_format, total_secs, true)
+            end
         end
     end
 
@@ -250,6 +283,11 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         ["%A"] = tostring(authors),
         ["%S"] = tostring(series),
         ["%C"] = tostring(chapter_title),
+        ["%N"] = file_name,
+        ["%i"] = book_language,
+        -- Statistics
+        ["%r"] = reading_speed,
+        ["%E"] = total_book_time,
         -- Device
         ["%b"] = tostring(batt_lvl),
         ["%B"] = tostring(batt_symbol),
