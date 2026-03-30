@@ -338,7 +338,7 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     end)
 
     -- Handle (s) pluralisation: "1 highlight(s)" -> "1 highlight", "3 highlight(s)" -> "3 highlights"
-    result = result:gsub("(%d+)(.-)%(s%)", function(num, between)
+    result = result:gsub("(%d+)(%D-)%(s%)", function(num, between)
         return num == "1" and num .. between or num .. between .. "s"
     end)
 

@@ -107,12 +107,18 @@ function Bookends:loadSettings()
     local footer_settings = self.ui.view.footer.settings
     self.enabled = G_reader_settings:readSetting("bookends_enabled", false)
 
+    -- Migrate old v_offset/h_offset to new margin settings
+    local old_v = G_reader_settings:readSetting("bookends_v_offset")
+    local old_h = G_reader_settings:readSetting("bookends_h_offset")
+
     self.defaults = {
         font_face = G_reader_settings:readSetting("bookends_font_face", Font.fontmap["ffont"]),
         font_size = G_reader_settings:readSetting("bookends_font_size", footer_settings.text_font_size),
         font_bold = G_reader_settings:readSetting("bookends_font_bold", false),
-        v_offset  = G_reader_settings:readSetting("bookends_v_offset", 35),
-        h_offset  = G_reader_settings:readSetting("bookends_h_offset", 18),
+        margin_top    = G_reader_settings:readSetting("bookends_margin_top", old_v or 10),
+        margin_bottom = G_reader_settings:readSetting("bookends_margin_bottom", old_v or 25),
+        margin_left   = G_reader_settings:readSetting("bookends_margin_left", old_h or 18),
+        margin_right  = G_reader_settings:readSetting("bookends_margin_right", old_h or 18),
         overlap_gap = G_reader_settings:readSetting("bookends_overlap_gap", 50),
         truncation_priority = G_reader_settings:readSetting("bookends_truncation_priority", "center"),
     }
@@ -122,9 +128,9 @@ function Bookends:loadSettings()
         tl = { lines = { "%A \xE2\x8B\xAE %T" }, line_font_size = { [1] = 12 } },
         tc = { lines = { "%k \xC2\xB7 %a %d" }, line_font_size = { [1] = 14 }, line_style = { [1] = "bold" } },
         tr = { lines = { "%C" }, line_style = { [1] = "bold" } },
-        bl = { lines = { "\xE2\x8F\xB3 %R session" }, v_offset = 16 },
-        bc = { lines = { "Page %c of %t" }, line_font_size = { [1] = 16 }, v_offset = 35 },
-        br = { lines = { "%B %W" }, line_font_size = { [1] = 10 }, v_offset = 14 },
+        bl = { lines = { "\xE2\x8F\xB3 %R session" } },
+        bc = { lines = { "Page %c of %t" }, line_font_size = { [1] = 16 } },
+        br = { lines = { "%B %W" }, line_font_size = { [1] = 10 } },
     }
 
     -- Per-position settings
@@ -174,8 +180,10 @@ function Bookends:loadPreset(preset)
         G_reader_settings:saveSetting("bookends_font_face", self.defaults.font_face)
         G_reader_settings:saveSetting("bookends_font_size", self.defaults.font_size)
         G_reader_settings:saveSetting("bookends_font_bold", self.defaults.font_bold)
-        G_reader_settings:saveSetting("bookends_v_offset", self.defaults.v_offset)
-        G_reader_settings:saveSetting("bookends_h_offset", self.defaults.h_offset)
+        G_reader_settings:saveSetting("bookends_margin_top", self.defaults.margin_top)
+        G_reader_settings:saveSetting("bookends_margin_bottom", self.defaults.margin_bottom)
+        G_reader_settings:saveSetting("bookends_margin_left", self.defaults.margin_left)
+        G_reader_settings:saveSetting("bookends_margin_right", self.defaults.margin_right)
         G_reader_settings:saveSetting("bookends_overlap_gap", self.defaults.overlap_gap)
         G_reader_settings:saveSetting("bookends_truncation_priority", self.defaults.truncation_priority)
     end
@@ -199,7 +207,15 @@ function Bookends:getPositionSetting(key, field)
     if pos[field] ~= nil then
         return pos[field]
     end
-    return self.defaults[field]
+    return self.defaults[field] or 0
+end
+
+function Bookends:getMargin(key)
+    local is_top = key == "tl" or key == "tc" or key == "tr"
+    local is_left = key == "tl" or key == "bl"
+    local v_margin = is_top and self.defaults.margin_top or self.defaults.margin_bottom
+    local h_margin = is_left and self.defaults.margin_left or self.defaults.margin_right
+    return v_margin, h_margin
 end
 
 function Bookends:isPositionActive(key)
@@ -471,9 +487,11 @@ function Bookends:paintTo(bb, x, y)
         local center_w = pre_built[center_key] and pre_built[center_key].w or nil
         local right_w = pre_built[right_key] and pre_built[right_key].w or nil
 
-        local left_h_offset = self:getPositionSetting(left_key, "h_offset")
-        local right_h_offset = self:getPositionSetting(right_key, "h_offset")
-        local max_h_offset = math.max(left_h_offset or 0, right_h_offset or 0)
+        local _, left_h_margin = self:getMargin(left_key)
+        local _, right_h_margin = self:getMargin(right_key)
+        local left_h_offset = self:getPositionSetting(left_key, "h_offset") + left_h_margin
+        local right_h_offset = self:getPositionSetting(right_key, "h_offset") + right_h_margin
+        local max_h_offset = math.max(left_h_offset, right_h_offset)
 
         local limits = OverlayWidget.calculateRowLimits(
             left_w, center_w, right_w, screen_w, gap, max_h_offset,
@@ -503,8 +521,9 @@ function Bookends:paintTo(bb, x, y)
                 end
 
                 if widget then
-                    local v_off = self:getPositionSetting(key, "v_offset")
-                    local h_off = self:getPositionSetting(key, "h_offset")
+                    local v_margin, h_margin = self:getMargin(key)
+                    local v_off = self:getPositionSetting(key, "v_offset") + v_margin
+                    local h_off = self:getPositionSetting(key, "h_offset") + h_margin
                     local px, py = OverlayWidget.computeCoordinates(
                         pb.pos_def.h_anchor, pb.pos_def.v_anchor,
                         w, h, screen_w, screen_h, v_off, h_off)
@@ -672,41 +691,20 @@ function Bookends:buildMainMenu()
                 },
                 {
                     text_func = function()
-                        return _("Default vertical offset") .. " (" .. self.defaults.v_offset .. ")"
+                        local m = self.defaults
+                        return _("Adjust margins") .. " (" .. m.margin_top .. "/" .. m.margin_bottom .. "/" .. m.margin_left .. "/" .. m.margin_right .. ")"
                     end,
-                    keep_menu_open = true,
-                    callback = function(touchmenu_instance)
-                        self:showSpinner(_("Default vertical offset (px)"), self.defaults.v_offset, 0, 999, 35,
-                            function(val)
-                                self.defaults.v_offset = val
-                                G_reader_settings:saveSetting("bookends_v_offset", val)
-                                self:markDirty()
-                                if touchmenu_instance then touchmenu_instance:updateItems() end
-                            end)
+                    callback = function()
+                        self:showMarginAdjuster()
                     end,
                 },
                 {
                     text_func = function()
-                        return _("Default horizontal offset") .. " (" .. self.defaults.h_offset .. ")"
+                        return _("Truncation gap between regions") .. " (" .. self.defaults.overlap_gap .. ")"
                     end,
                     keep_menu_open = true,
                     callback = function(touchmenu_instance)
-                        self:showSpinner(_("Default horizontal offset (px)"), self.defaults.h_offset, 0, 999, 18,
-                            function(val)
-                                self.defaults.h_offset = val
-                                G_reader_settings:saveSetting("bookends_h_offset", val)
-                                self:markDirty()
-                                if touchmenu_instance then touchmenu_instance:updateItems() end
-                            end)
-                    end,
-                },
-                {
-                    text_func = function()
-                        return _("Overlap gap") .. " (" .. self.defaults.overlap_gap .. ")"
-                    end,
-                    keep_menu_open = true,
-                    callback = function(touchmenu_instance)
-                        self:showSpinner(_("Minimum gap between texts (px)"), self.defaults.overlap_gap, 0, 999, 50,
+                        self:showSpinner(_("Truncation gap between regions (px)"), self.defaults.overlap_gap, 0, 999, 50,
                             function(val)
                                 self.defaults.overlap_gap = val
                                 G_reader_settings:saveSetting("bookends_overlap_gap", val)
@@ -803,60 +801,34 @@ function Bookends:buildPositionMenu(pos)
         separator = true,
     })
 
-    -- Per-position overrides (offsets only — font/size/style are per-line)
+    -- Per-position extra margins with nudge buttons
+    local is_top = pos.v_anchor == "top"
+    local v_label = is_top and _("Extra top margin") or _("Extra bottom margin")
     table.insert(menu, {
         text_func = function()
-            if self.positions[pos.key].v_offset then
-                return _("Override vertical offset") .. " (" .. self.positions[pos.key].v_offset .. ")"
-            end
-            return _("Override vertical offset")
+            local val = self.positions[pos.key].v_offset
+            if val then return v_label .. " (" .. val .. ")" end
+            return v_label
         end,
-        keep_menu_open = true,
-        callback = function(touchmenu_instance)
-            self:showSpinner(_("Vertical offset for " .. pos.label),
-                self:getPositionSetting(pos.key, "v_offset"), 0, 999,
-                self.defaults.v_offset,
-                function(val)
-                    self.positions[pos.key].v_offset = val
-                    self:savePositionSetting(pos.key)
-                    self:markDirty()
-                    if touchmenu_instance then touchmenu_instance:updateItems() end
-                end)
+        callback = function()
+            self:showNudgeDialog(pos, "v_offset", v_label)
         end,
     })
 
     if is_corner then
+        local is_left = pos.h_anchor == "left"
+        local h_label = is_left and _("Extra left margin") or _("Extra right margin")
         table.insert(menu, {
             text_func = function()
-                if self.positions[pos.key].h_offset then
-                    return _("Override horizontal offset") .. " (" .. self.positions[pos.key].h_offset .. ")"
-                end
-                return _("Override horizontal offset")
+                local val = self.positions[pos.key].h_offset
+                if val then return h_label .. " (" .. val .. ")" end
+                return h_label
             end,
-            keep_menu_open = true,
-            callback = function(touchmenu_instance)
-                self:showSpinner(_("Horizontal offset for " .. pos.label),
-                    self:getPositionSetting(pos.key, "h_offset"), 0, 999,
-                    self.defaults.h_offset,
-                    function(val)
-                        self.positions[pos.key].h_offset = val
-                        self:savePositionSetting(pos.key)
-                        self:markDirty()
-                        if touchmenu_instance then touchmenu_instance:updateItems() end
-                    end)
+            callback = function()
+                self:showNudgeDialog(pos, "h_offset", h_label)
             end,
         })
     end
-
-    table.insert(menu, {
-        text = _("Reset all overrides"),
-        callback = function()
-            local lines_copy = self.positions[pos.key].lines
-            self.positions[pos.key] = { lines = lines_copy }
-            self:savePositionSetting(pos.key)
-            self:markDirty()
-        end,
-    })
 
     return menu
 end
@@ -868,18 +840,15 @@ Bookends.BUILT_IN_PRESETS = {
         name = _("Speed reader"),
         preset = {
             enabled = true,
-            defaults = {
-                v_offset = 10,
-            },
             positions = {
-                tl = { lines = { "%k" }, line_font_size = { [1] = 16 } },
-                tc = { lines = { "\xE2\x8F\xB3 %R \xC2\xB7 %s page(s) read this session" }, line_font_size = { [1] = 16 } },
-                tr = { lines = { "%B %b" }, line_font_size = { [1] = 16 } },
-                bl = { lines = { " %E reading this book" }, v_offset = 16 },
-                bc = { lines = { "Page %c of %t", " %r page(s)/hr  %H left in book" },
+                tl = { lines = { " %k" }, line_font_size = { [1] = 16 }, line_style = { [1] = "bold" } },
+                tc = { lines = { "\xE2\x8F\xB3 %R \xC2\xBB %s page(s) read this session" }, line_font_size = { [1] = 16 }, line_style = { [1] = "bold" } },
+                tr = { lines = { "%B %b" }, line_font_size = { [1] = 16 }, line_style = { [1] = "bold" } },
+                bl = { lines = { "(%p)", " %E reading this book" } },
+                bc = { lines = { "Page %c of %t", " %L pages ~ %H left in book" },
                     line_font_size = { [1] = 18 }, line_style = { [1] = "italic", [2] = "bold" },
-                    line_v_nudge = { [1] = -14 }, v_offset = 16 },
-                br = { lines = { "%l page(s) / %h left in chapter" }, line_font_size = { [1] = 12 }, v_offset = 16 },
+                    line_v_nudge = { [1] = -14 } },
+                br = { lines = { "(%P)", "%l page(s) ~ %h left in chapter" }, line_font_size = { [2] = 12 } },
             },
         },
     },
@@ -887,15 +856,12 @@ Bookends.BUILT_IN_PRESETS = {
         name = _("Classic alternating"),
         preset = {
             enabled = true,
-            defaults = {
-                v_offset = 10,
-            },
             positions = {
                 tl = { lines = { "%T" }, line_font_size = { [1] = 18 }, line_style = { [1] = "bolditalic" }, line_page_filter = { [1] = "even" } },
                 tc = { lines = {} },
                 tr = { lines = { "%C" }, line_font_size = { [1] = 18 }, line_style = { [1] = "bolditalic" }, line_page_filter = { [1] = "odd" } },
                 bl = { lines = {} },
-                bc = { lines = { "%c" }, line_font_size = { [1] = 18 }, v_offset = 40 },
+                bc = { lines = { "%c" }, line_font_size = { [1] = 18 } },
                 br = { lines = {} },
             },
         },
@@ -904,16 +870,13 @@ Bookends.BUILT_IN_PRESETS = {
         name = _("Rich detail"),
         preset = {
             enabled = true,
-            defaults = {
-                v_offset = 10,
-            },
             positions = {
                 tl = { lines = { "%A \xE2\x8B\xAE %T", " %q highlight(s)" }, line_font_size = { [1] = 12 } },
                 tc = { lines = { "%k \xC2\xB7 %a %d" }, line_font_size = { [1] = 14 }, line_style = { [1] = "bold" } },
                 tr = { lines = { "%C" } },
-                bl = { lines = { "\xE2\x8F\xB3 %R \xE2\x80\xBA %s page session" }, v_offset = 16 },
-                bc = { lines = { "Page %c of %t" }, line_font_size = { [1] = 18 }, v_offset = 50 },
-                br = { lines = { "%B", "%W", "%F", "%f \xE2\x98\xBC" }, v_offset = 20 },
+                bl = { lines = { "\xE2\x8F\xB3 %R \xE2\x80\xBA %s page session" } },
+                bc = { lines = { "Page %c of %t" }, line_font_size = { [1] = 18 } },
+                br = { lines = { "%B", "%W", "%F", "%f \xE2\x98\xBC" } },
             },
         },
     },
@@ -1768,6 +1731,129 @@ function Bookends:installUpdate(zip_url, old_version, new_version)
             end,
         })
     end)
+end
+
+function Bookends:showNudgeDialog(pos, field, label)
+    local pos_settings = self.positions[pos.key]
+    local original = pos_settings[field]
+    local dialog
+
+    local function nudge(delta)
+        local val = (pos_settings[field] or 0) + delta
+        pos_settings[field] = math.max(0, val)
+        self:markDirty()
+        dialog:reinit()
+    end
+
+    local ButtonDialog = require("ui/widget/buttondialog")
+    dialog = ButtonDialog:new{
+        title = label,
+        buttons = {
+            {
+                { text = "-10", callback = function() nudge(-10) end },
+                { text = "-1", callback = function() nudge(-1) end },
+                { text_func = function() return tostring(pos_settings[field] or 0) end, enabled = false },
+                { text = "+1", callback = function() nudge(1) end },
+                { text = "+10", callback = function() nudge(10) end },
+            },
+            {
+                {
+                    text = _("Cancel"),
+                    callback = function()
+                        pos_settings[field] = original
+                        self:markDirty()
+                        UIManager:close(dialog)
+                    end,
+                },
+                {
+                    text = _("Save"),
+                    is_enter_default = true,
+                    callback = function()
+                        self:savePositionSetting(pos.key)
+                        UIManager:close(dialog)
+                    end,
+                },
+            },
+        },
+    }
+    UIManager:show(dialog)
+end
+
+function Bookends:showMarginAdjuster(touchmenu_instance)
+    local original = {
+        margin_top = self.defaults.margin_top,
+        margin_bottom = self.defaults.margin_bottom,
+        margin_left = self.defaults.margin_left,
+        margin_right = self.defaults.margin_right,
+    }
+
+    local margin_dialog
+
+    local function nudge(field, delta)
+        self.defaults[field] = math.max(0, self.defaults[field] + delta)
+        self:markDirty()
+        margin_dialog:reinit()
+    end
+
+    local function makeRow(label, field)
+        return {
+            { text = "-10", callback = function() nudge(field, -10) end },
+            { text = "-1", callback = function() nudge(field, -1) end },
+            { text_func = function()
+                return label .. ": " .. self.defaults[field]
+            end, enabled = false },
+            { text = "+1", callback = function() nudge(field, 1) end },
+            { text = "+10", callback = function() nudge(field, 10) end },
+        }
+    end
+
+    local buttons = {
+        makeRow(_("Top"), "margin_top"),
+        makeRow(_("Bottom"), "margin_bottom"),
+        makeRow(_("Left"), "margin_left"),
+        makeRow(_("Right"), "margin_right"),
+        {
+            {
+                text = _("Cancel"),
+                callback = function()
+                    for k, v in pairs(original) do
+                        self.defaults[k] = v
+                    end
+                    self:markDirty()
+                    UIManager:close(margin_dialog)
+                end,
+            },
+            {
+                text = _("Reset"),
+                callback = function()
+                    self.defaults.margin_top = 10
+                    self.defaults.margin_bottom = 25
+                    self.defaults.margin_left = 18
+                    self.defaults.margin_right = 18
+                    self:markDirty()
+                    margin_dialog:reinit()
+                end,
+            },
+            {
+                text = _("Save"),
+                is_enter_default = true,
+                callback = function()
+                    G_reader_settings:saveSetting("bookends_margin_top", self.defaults.margin_top)
+                    G_reader_settings:saveSetting("bookends_margin_bottom", self.defaults.margin_bottom)
+                    G_reader_settings:saveSetting("bookends_margin_left", self.defaults.margin_left)
+                    G_reader_settings:saveSetting("bookends_margin_right", self.defaults.margin_right)
+                    UIManager:close(margin_dialog)
+                end,
+            },
+        },
+    }
+
+    local ButtonDialog = require("ui/widget/buttondialog")
+    margin_dialog = ButtonDialog:new{
+        title = _("Adjust margins"),
+        buttons = buttons,
+    }
+    UIManager:show(margin_dialog)
 end
 
 function Bookends:showSpinner(title, value, min, max, default, on_set)
