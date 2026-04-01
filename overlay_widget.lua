@@ -2,6 +2,7 @@ local Font = require("ui/font")
 local TextWidget = require("ui/widget/textwidget")
 local Device = require("device")
 local Screen = Device.screen
+local Tokens = require("tokens")
 
 local OverlayWidget = {}
 
@@ -49,86 +50,271 @@ function MultiLineWidget:free()
     self.lines = {}
 end
 
---- Build a TextWidget or MultiLineWidget for a single line or multi-line string.
--- @param text string: the expanded text (may contain newlines)
--- @param line_configs table: array of {face=, bold=} per line
--- @param h_anchor string: "left", "center", or "right"
--- @param max_width number or nil: if set, truncate lines to this pixel width
--- @return widget, width, height
-function OverlayWidget.buildTextWidget(text, line_configs, h_anchor, max_width)
-    if max_width and max_width <= 0 then
-        return nil, 0, 0
+-- ─── BarWidget ─────────────────────────────────────────────────────────────
+-- Rounded-bordered progress bar with a dark-gray fill and optional tick marks.
+
+local BarWidget = {}
+BarWidget.__index = BarWidget
+
+function BarWidget:new(o)
+    return setmetatable(o or {}, self)
+end
+
+function BarWidget:paintTo(bb, x, y)
+    local w          = self.width
+    local h          = self.height
+    local fraction   = math.max(0, math.min(1, self.fraction or 0))
+    local ticks      = self.ticks or {}
+    local Blitbuffer = require("ffi/blitbuffer")
+
+    local border  = 2
+    local radius  = 2
+    local padding = 4
+
+    bb:paintRoundedRect(x, y, w, h, Blitbuffer.COLOR_WHITE, radius)
+    bb:paintBorder(x, y, w, h, border, Blitbuffer.COLOR_BLACK, radius)
+
+    local inset   = border + padding
+    local inner_w = w - 2 * inset
+    local inner_h = h - 2 * inset
+    local fill_w  = math.max(0, math.ceil(inner_w * fraction))
+    if fill_w > 0 and inner_h > 0 then
+        bb:paintRect(x + inset, y + inset, fill_w, inner_h, Blitbuffer.COLOR_DARK_GRAY)
     end
+
+    local tick_inset   = 1
+    local tick_inner_w = w - 2 * tick_inset
+    local tix          = x + tick_inset
+    local tiy          = y + tick_inset
+    for _, frac in ipairs(ticks) do
+        if frac > 0 and frac < 1 then
+            local tx = tix + math.floor(tick_inner_w * frac)
+            tx = math.max(tix, math.min(tx, tix + tick_inner_w - 1))
+            bb:paintRect(tx, tiy, 1, h - 2 * tick_inset, Blitbuffer.COLOR_BLACK)
+        end
+    end
+end
+
+function BarWidget:getSize()
+    return { w = self.width, h = self.height }
+end
+
+function BarWidget:free() end
+
+-- ─── HorizontalRowWidget ───────────────────────────────────────────────────
+-- Paints text and bar segments left-to-right, vertically centred in the row.
+
+local HorizontalRowWidget = {}
+HorizontalRowWidget.__index = HorizontalRowWidget
+
+function HorizontalRowWidget:new(o)
+    return setmetatable(o or {}, self)
+end
+
+function HorizontalRowWidget:paintTo(bb, x, y)
+    local row_h    = self.height
+    local x_cursor = x
+    for _, seg in ipairs(self.segments) do
+        local seg_y = y + math.floor((row_h - seg.h) / 2)
+        seg.widget:paintTo(bb, x_cursor, seg_y)
+        x_cursor = x_cursor + seg.w
+    end
+end
+
+function HorizontalRowWidget:getSize()
+    return { w = self.width, h = self.height }
+end
+
+function HorizontalRowWidget:free()
+    for _, seg in ipairs(self.segments) do
+        if seg.widget and seg.widget.free then seg.widget:free() end
+    end
+    self.segments = {}
+end
+
+-- ─── Internal helpers ─────────────────────────────────────────────────────
+
+local function buildBarWidget(info, bar_w, bar_h)
+    bar_h = math.max(bar_h or 16, 16)
+    bar_w = math.max(4, bar_w or Screen:getWidth())
+    return BarWidget:new{
+        width    = bar_w,
+        height   = bar_h,
+        fraction = info.pct or 0,
+        ticks    = info.ticks or {},
+    }
+end
+
+-- Build a HorizontalRowWidget from text/bar segments.
+-- full_w: uncapped slot width used for auto bar sizing.
+-- max_width: text truncation limit (nil = none).
+local function buildHorizontalRow(segments, cfg, full_w, max_width)
+    local bar_h     = cfg.bar_height or math.max(cfg.face and cfg.face.size or 16, 16)
+    local fixed_bar_w = (cfg.bar_manual_width and cfg.bar_manual_width > 0) and cfg.bar_manual_width or nil
+    local built    = {}
+    local used_w   = 0
+    local auto_bars = 0
+
+    for _, seg in ipairs(segments) do
+        if seg.kind == "text" and seg.text ~= "" then
+            local tw = TextWidget:new(textWidgetOpts{
+                text                   = seg.text,
+                face                   = cfg.face,
+                bold                   = cfg.bold,
+                max_width              = max_width,
+                truncate_with_ellipsis = max_width ~= nil,
+            })
+            local sz = tw:getSize()
+            table.insert(built, { widget = tw, w = sz.w, h = sz.h })
+            used_w = used_w + sz.w
+        elseif seg.kind == "bar" then
+            if fixed_bar_w then
+                local bar = buildBarWidget(seg.info, fixed_bar_w, bar_h)
+                table.insert(built, { widget = bar, w = fixed_bar_w, h = bar_h })
+                used_w = used_w + fixed_bar_w
+            else
+                table.insert(built, { _bar_auto = true, info = seg.info, w = 0, h = bar_h })
+                auto_bars = auto_bars + 1
+            end
+        end
+    end
+
+    if auto_bars > 0 then
+        local each = math.max(4, math.floor(
+            math.max(0, (full_w or Screen:getWidth()) - used_w) / auto_bars))
+        for _, entry in ipairs(built) do
+            if entry._bar_auto then
+                entry.widget    = buildBarWidget(entry.info, each, bar_h)
+                entry.w         = each
+                entry._bar_auto = nil
+            end
+        end
+    end
+
+    local total_w = 0
+    local row_h   = 0
+    for _, entry in ipairs(built) do
+        total_w = total_w + entry.w
+        if entry.h > row_h then row_h = entry.h end
+    end
+
+    if #built == 0 then return nil, 0, 0 end
+    return HorizontalRowWidget:new{ segments = built, width = total_w, height = row_h },
+           total_w, row_h
+end
+
+--- Build a widget for a possibly multi-line, possibly bar-containing string.
+-- @param text          expanded string (may contain bar sentinels)
+-- @param line_configs  per-line configs with face, bold, v_nudge, h_nudge, uppercase
+-- @param h_anchor      "left"|"center"|"right"
+-- @param max_width     number|nil  text truncation cap
+-- @param _available_w  (unused, accepted for API compatibility)
+-- @param full_w        number|nil  uncapped slot width for auto bar sizing
+-- @return widget, width, height
+function OverlayWidget.buildTextWidget(text, line_configs, h_anchor, max_width, _available_w, full_w)
+    full_w = full_w or Screen:getWidth()
+    if max_width and max_width <= 0 then return nil, 0, 0 end
 
     local lines = {}
     for line in text:gmatch("([^\n]+)") do
         table.insert(lines, line)
     end
-    if #lines == 0 then
-        return nil, 0, 0
-    end
+    if #lines == 0 then return nil, 0, 0 end
 
-    -- Get config for line i (fall back to last config if fewer configs than lines)
     local function getConfig(i)
-        return line_configs[i] or line_configs[#line_configs] or { face = nil, bold = false }
+        return line_configs[i] or line_configs[#line_configs]
+               or { face = nil, bold = false }
     end
 
-    if #lines == 1 then
-        local cfg = getConfig(1)
+    local align = "center"
+    if h_anchor == "left"  then align = "left"  end
+    if h_anchor == "right" then align = "right" end
+
+    -- Fast path: single plain text line
+    if #lines == 1 and not Tokens.lineHasBar(lines[1]) then
+        local cfg         = getConfig(1)
         local display_text = cfg.uppercase and lines[1]:upper() or lines[1]
         local tw = TextWidget:new(textWidgetOpts{
-            text = display_text,
-            face = cfg.face,
-            bold = cfg.bold,
-            max_width = max_width,
+            text                   = display_text,
+            face                   = cfg.face,
+            bold                   = cfg.bold,
+            max_width              = max_width,
             truncate_with_ellipsis = max_width ~= nil,
         })
         local size = tw:getSize()
         return tw, size.w, size.h
     end
 
-    local align = "center"
-    if h_anchor == "left" then
-        align = "left"
-    elseif h_anchor == "right" then
-        align = "right"
+    -- Fast path: single bar-containing line
+    if #lines == 1 then
+        local cfg = getConfig(1)
+        local row, rw, rh = buildHorizontalRow(
+            Tokens.splitLineSegments(lines[1]), cfg, full_w, max_width)
+        return row, rw, rh
     end
 
+    -- Multi-line
     local line_entries = {}
-    local max_w = 0
-    local total_h = 0
+    local max_w        = 0
+    local total_h      = 0
     for i, line in ipairs(lines) do
         local cfg = getConfig(i)
-        local display_text = cfg.uppercase and line:upper() or line
-        local tw = TextWidget:new(textWidgetOpts{
-            text = display_text,
-            face = cfg.face,
-            bold = cfg.bold,
-            max_width = max_width,
-            truncate_with_ellipsis = max_width ~= nil,
-        })
-        local size = tw:getSize()
-        table.insert(line_entries, {
-            widget = tw, w = size.w, h = size.h,
-            v_nudge = cfg.v_nudge or 0, h_nudge = cfg.h_nudge or 0,
-        })
-        if size.w > max_w then max_w = size.w end
-        total_h = total_h + size.h
+        if Tokens.lineHasBar(line) then
+            local row, rw, rh = buildHorizontalRow(
+                Tokens.splitLineSegments(line), cfg, full_w, max_width)
+            if row then
+                table.insert(line_entries, {
+                    widget  = row, w = rw, h = rh,
+                    v_nudge = cfg.v_nudge or 0, h_nudge = cfg.h_nudge or 0,
+                })
+                if rw > max_w then max_w = rw end
+                total_h = total_h + rh
+            end
+        else
+            local display_text = cfg.uppercase and line:upper() or line
+            local tw = TextWidget:new(textWidgetOpts{
+                text                   = display_text,
+                face                   = cfg.face,
+                bold                   = cfg.bold,
+                max_width              = max_width,
+                truncate_with_ellipsis = max_width ~= nil,
+            })
+            local sz = tw:getSize()
+            table.insert(line_entries, {
+                widget  = tw, w = sz.w, h = sz.h,
+                v_nudge = cfg.v_nudge or 0, h_nudge = cfg.h_nudge or 0,
+            })
+            if sz.w > max_w then max_w = sz.w end
+            total_h = total_h + sz.h
+        end
     end
 
-    local mlw = MultiLineWidget:new{
-        lines = line_entries,
-        width = max_w,
-        height = total_h,
-        align = align,
-    }
-    return mlw, max_w, total_h
+    if #line_entries == 0 then return nil, 0, 0 end
+    local reported_w = math.max(max_w, 4)
+    return MultiLineWidget:new{
+        lines = line_entries, width = reported_w, height = total_h, align = align,
+    }, reported_w, total_h
 end
 
---- Build a widget with no truncation (for measurement), returning it for potential reuse.
--- @return widget, width, height
-function OverlayWidget.buildAndMeasure(text, line_configs, h_anchor)
-    return OverlayWidget.buildTextWidget(text, line_configs, h_anchor, nil)
+--- Measure only the text-portion pixel width (bar lines excluded).
+-- Used for overlap-prevention so bars don't inflate the available limits.
+function OverlayWidget.measureTextWidth(text, line_configs)
+    local max_w = 0
+    local i     = 0
+    for line in text:gmatch("([^\n]+)") do
+        i = i + 1
+        if not Tokens.lineHasBar(line) then
+            local cfg = line_configs[i] or line_configs[#line_configs]
+                        or { face = nil, bold = false }
+            local tw = TextWidget:new(textWidgetOpts{
+                text = line, face = cfg.face, bold = cfg.bold,
+            })
+            local w = tw:getSize().w
+            tw:free()
+            if w > max_w then max_w = w end
+        end
+    end
+    return max_w
 end
 
 --- Calculate max_width for each position in a row, applying overlap prevention.

@@ -513,6 +513,8 @@ function Bookends:paintTo(bb, x, y)
             cfg.v_nudge = (pos_settings.line_v_nudge and pos_settings.line_v_nudge[i]) or 0
             cfg.h_nudge = (pos_settings.line_h_nudge and pos_settings.line_h_nudge[i]) or 0
             cfg.uppercase = (pos_settings.line_uppercase and pos_settings.line_uppercase[i]) or false
+            cfg.bar_height = (pos_settings.line_bar_height and pos_settings.line_bar_height[i]) or nil
+            cfg.bar_manual_width = (pos_settings.line_bar_manual_width and pos_settings.line_bar_manual_width[i]) or nil
             table.insert(line_configs, cfg)
         end
 
@@ -521,9 +523,13 @@ function Bookends:paintTo(bb, x, y)
             if p.key == key then pos_def = p; break end
         end
 
-        -- Build without truncation to measure natural width
-        local widget, w, h = OverlayWidget.buildTextWidget(text, line_configs, pos_def.h_anchor, nil)
-        pre_built[key] = { widget = widget, w = w, h = h, line_configs = line_configs, pos_def = pos_def }
+        -- Measure text-only width for overlap limits (bars excluded), then build widget
+        local _, h_margin = self:getMargin(key)
+        local h_off = self:getPositionSetting(key, "h_offset") + h_margin
+        local full_available_w = screen_w - 2 * h_off
+        local text_w = OverlayWidget.measureTextWidth(text, line_configs)
+        local widget, w, h = OverlayWidget.buildTextWidget(text, line_configs, pos_def.h_anchor, nil, nil, full_available_w)
+        pre_built[key] = { widget = widget, w = w, h = h, text_w = text_w, full_available_w = full_available_w, line_configs = line_configs, pos_def = pos_def }
     end
 
     -- Phase 3: Calculate overlap limits per row
@@ -539,9 +545,9 @@ function Bookends:paintTo(bb, x, y)
         local center_key = row == "top" and "tc" or "bc"
         local right_key = row == "top" and "tr" or "br"
 
-        local left_w = pre_built[left_key] and pre_built[left_key].w or nil
-        local center_w = pre_built[center_key] and pre_built[center_key].w or nil
-        local right_w = pre_built[right_key] and pre_built[right_key].w or nil
+        local left_w = pre_built[left_key] and pre_built[left_key].text_w or nil
+        local center_w = pre_built[center_key] and pre_built[center_key].text_w or nil
+        local right_w = pre_built[right_key] and pre_built[right_key].text_w or nil
 
         local _, left_h_margin = self:getMargin(left_key)
         local _, right_h_margin = self:getMargin(right_key)
@@ -570,7 +576,8 @@ function Bookends:paintTo(bb, x, y)
                     -- Truncation needed: free pre-built widget and rebuild with limit
                     if pb.widget and pb.widget.free then pb.widget:free() end
                     widget, w, h = OverlayWidget.buildTextWidget(
-                        expanded[key], pb.line_configs, pb.pos_def.h_anchor, max_width)
+                        expanded[key], pb.line_configs, pb.pos_def.h_anchor, max_width,
+                        nil, pb.full_available_w or screen_w)
                 else
                     -- No truncation: reuse pre-built widget
                     widget, w, h = pb.widget, pb.w, pb.h
@@ -1035,6 +1042,8 @@ function Bookends:editLineString(pos, line_idx)
     pos_settings.line_h_nudge = pos_settings.line_h_nudge or {}
     pos_settings.line_uppercase = pos_settings.line_uppercase or {}
     pos_settings.line_page_filter = pos_settings.line_page_filter or {}
+    pos_settings.line_bar_height = pos_settings.line_bar_height or {}
+    pos_settings.line_bar_manual_width = pos_settings.line_bar_manual_width or {}
 
     -- Snapshot for cancel/restore
     local original_settings = util.tableDeepCopy(pos_settings)
@@ -1046,6 +1055,8 @@ function Bookends:editLineString(pos, line_idx)
     local line_h_nudge = pos_settings.line_h_nudge[line_idx] or 0
     local line_uppercase = pos_settings.line_uppercase[line_idx] or false
     local line_page_filter = pos_settings.line_page_filter[line_idx] -- nil = all pages
+    local line_bar_height = pos_settings.line_bar_height[line_idx]       -- nil = auto
+    local line_bar_manual_width = pos_settings.line_bar_manual_width[line_idx] or 0
 
     -- Live preview: write current local state to settings and repaint
     local function applyLivePreview()
@@ -1056,6 +1067,8 @@ function Bookends:editLineString(pos, line_idx)
         pos_settings.line_h_nudge[line_idx] = line_h_nudge ~= 0 and line_h_nudge or nil
         pos_settings.line_uppercase[line_idx] = line_uppercase or nil
         pos_settings.line_page_filter[line_idx] = line_page_filter
+        pos_settings.line_bar_height[line_idx] = line_bar_height
+        pos_settings.line_bar_manual_width[line_idx] = line_bar_manual_width ~= 0 and line_bar_manual_width or nil
         self:markDirty()
     end
 
@@ -1098,6 +1111,22 @@ function Bookends:editLineString(pos, line_idx)
             if line_page_filter == "odd" then return _("Odd pg")
             elseif line_page_filter == "even" then return _("Even pg")
             else return _("All pg") end
+        end,
+        callback = function() end,
+    }
+    local bar_h_button = {
+        text_func = function()
+            return _("Bar h") .. ": " .. (line_bar_height or "auto")
+        end,
+        callback = function() end,
+    }
+    local bar_mw_button = {
+        text_func = function()
+            if line_bar_manual_width and line_bar_manual_width > 0 then
+                return _("Bar w") .. ": " .. line_bar_manual_width .. "px"
+            else
+                return _("Bar w: full")
+            end
         end,
         callback = function() end,
     }
@@ -1158,6 +1187,39 @@ function Bookends:editLineString(pos, line_idx)
             applyLivePreview()
             format_dialog:reinit()
         end)
+    end
+
+    bar_h_button.callback = function()
+        local cur = line_bar_height or 16
+        UIManager:show(SpinWidget:new{
+            value         = cur,
+            value_min     = 4,
+            value_max     = 60,
+            default_value = 16,
+            title_text    = _("Bar height (px) for line") .. " " .. line_idx,
+            ok_text       = _("Set"),
+            callback      = function(spin)
+                line_bar_height = spin.value
+                applyLivePreview()
+                format_dialog:reinit()
+            end,
+        })
+    end
+
+    bar_mw_button.callback = function()
+        UIManager:show(SpinWidget:new{
+            value         = line_bar_manual_width or 0,
+            value_min     = 0,
+            value_max     = Screen:getWidth(),
+            default_value = 0,
+            title_text    = _("Bar width (px, 0 = full)"),
+            ok_text       = _("Set"),
+            callback      = function(spin)
+                line_bar_manual_width = spin.value
+                applyLivePreview()
+                format_dialog:reinit()
+            end,
+        })
     end
 
     -- Nudge buttons (1px per tap)
@@ -1235,7 +1297,9 @@ function Bookends:editLineString(pos, line_idx)
         buttons = {
             -- Row 1: style controls
             { style_button, size_button, font_button, case_button, page_filter_button },
-            -- Row 2: position nudge (L/R on left, label center, U/D on right)
+            -- Row 2: bar dimension controls
+            { bar_h_button, bar_mw_button },
+            -- Row 3: position nudge (L/R on left, label center, U/D on right)
             { nudge_left, nudge_right, nudge_label, nudge_up, nudge_down },
             -- Row 3: main actions
             {
@@ -1282,6 +1346,8 @@ function Bookends:editLineString(pos, line_idx)
                             sparseRemove(pos_settings.line_h_nudge, line_idx)
                             sparseRemove(pos_settings.line_uppercase, line_idx)
                             sparseRemove(pos_settings.line_page_filter, line_idx)
+                            sparseRemove(pos_settings.line_bar_height, line_idx)
+                            sparseRemove(pos_settings.line_bar_manual_width, line_idx)
                         else
                             -- Save the text (style/font/nudge already applied via live preview)
                             pos_settings.lines[line_idx] = new_text
@@ -1321,6 +1387,8 @@ function Bookends:showLineManageDialog(pos, line_idx, touchmenu_instance)
         sparseRemove(ps.line_h_nudge, line_idx)
         sparseRemove(ps.line_uppercase, line_idx)
         sparseRemove(ps.line_page_filter, line_idx)
+        sparseRemove(ps.line_bar_height, line_idx)
+        sparseRemove(ps.line_bar_manual_width, line_idx)
         self:savePositionSetting(pos.key)
         self:markDirty()
         refreshMenu()
@@ -1348,6 +1416,12 @@ function Bookends:showLineManageDialog(pos, line_idx, touchmenu_instance)
         end
         if ps.line_page_filter then
             ps.line_page_filter[a], ps.line_page_filter[b] = ps.line_page_filter[b], ps.line_page_filter[a]
+        end
+        if ps.line_bar_height then
+            ps.line_bar_height[a], ps.line_bar_height[b] = ps.line_bar_height[b], ps.line_bar_height[a]
+        end
+        if ps.line_bar_manual_width then
+            ps.line_bar_manual_width[a], ps.line_bar_manual_width[b] = ps.line_bar_manual_width[b], ps.line_bar_manual_width[a]
         end
         self:savePositionSetting(pos.key)
         self:markDirty()
@@ -1493,6 +1567,8 @@ Bookends.TOKEN_CATALOG = {
         { "%G", _("Total pages in chapter") },
         { "%l", _("Pages left in chapter") },
         { "%L", _("Pages left in book") },
+        { "%bar_book",     _("Book progress bar") },
+        { "%bar_chapter",  _("Chapter progress bar") },
     }},
     { _("Time / Date"), {
         { "%k", _("12-hour clock") },

@@ -3,6 +3,54 @@ local datetime = require("datetime")
 
 local Tokens = {}
 
+--- Returns true if the line contains a bar sentinel string.
+function Tokens.lineHasBar(s)
+    return type(s) == "string" and
+        (s:find("BARBOOK:[0-9.]+;[0-9.,]*:END", 1) ~= nil or
+         s:find("BARCHAPTER:[0-9.]+:END", 1) ~= nil)
+end
+
+--- Decode a bar sentinel string into { kind, pct, ticks }.
+function Tokens.decodeBar(s)
+    local pct, tick_str = s:match("^BARBOOK:([0-9.]+);([0-9.,]*):END$")
+    if pct then
+        local ticks = {}
+        for t in tick_str:gmatch("[0-9.]+") do
+            local v = tonumber(t)
+            if v then table.insert(ticks, v) end
+        end
+        return { kind = "book", pct = tonumber(pct), ticks = ticks }
+    end
+    local pct2 = s:match("^BARCHAPTER:([0-9.]+):END$")
+    if pct2 then
+        return { kind = "chapter", pct = tonumber(pct2), ticks = {} }
+    end
+    return nil
+end
+
+--- Split a line into an ordered list of { kind="text"|"bar", text=...|info=... } segments.
+function Tokens.splitLineSegments(line)
+    local segments = {}
+    local remaining = line
+    while true do
+        local best_s, best_e = nil, nil
+        for _, p in ipairs({ "BARBOOK:[0-9.]+;[0-9.,]*:END", "BARCHAPTER:[0-9.]+:END" }) do
+            local s, e = remaining:find(p)
+            if s and (best_s == nil or s < best_s) then
+                best_s, best_e = s, e
+            end
+        end
+        if not best_s then
+            table.insert(segments, { kind = "text", text = remaining })
+            break
+        end
+        table.insert(segments, { kind = "text", text = remaining:sub(1, best_s - 1) })
+        table.insert(segments, { kind = "bar",  info = Tokens.decodeBar(remaining:sub(best_s, best_e)) })
+        remaining = remaining:sub(best_e + 1)
+    end
+    return segments
+end
+
 function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, preview_mode)
     -- Fast path: no tokens
     if not format_str:find("%%") then
@@ -30,7 +78,9 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
             ["%m"] = "[mem]", ["%M"] = "[rss]",
             ["%v"] = "[disk]",
         }
-        return format_str:gsub("(%%%a)", preview)
+        local r = format_str:gsub("%%bar_chapter", "[ch. bar]")
+        r = r:gsub("%%bar_book", "[book bar]")
+        return r:gsub("(%%%a)", preview)
     end
 
     -- Helper: check if any of the given tokens appear in the format string
@@ -77,17 +127,19 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
 
     -- Chapter progress
     local chapter_pct = ""
+    local chapter_pct_raw = 0
     local chapter_pages_done = ""
     local chapter_pages_left = ""
     local chapter_total_pages = ""
     local chapter_title = ""
-    if needs("P", "g", "G", "l", "C") and pageno and ui.toc then
+    if needs("P", "g", "G", "l", "C", "bar_chapter") and pageno and ui.toc then
         local done = ui.toc:getChapterPagesDone(pageno)
         local total = ui.toc:getChapterPageCount(pageno)
         if done and total and total > 0 then
             chapter_pages_done = done + 1
             chapter_total_pages = total
             chapter_pct = math.floor(chapter_pages_done / total * 100) .. "%"
+            chapter_pct_raw = math.max(0, math.min(1, chapter_pages_done / total))
         end
         local left = ui.toc:getChapterPagesLeft(pageno)
         if left then chapter_pages_left = left end
@@ -310,6 +362,34 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         end
     end
 
+    -- Book progress fraction and chapter tick marks for %bar_book
+    local book_pct_raw = 0
+    local chapter_ticks = {}
+    if needs("bar_book") and pageno then
+        local raw_total = doc:getPageCount()
+        if raw_total and raw_total > 0 then
+            book_pct_raw = math.max(0, math.min(1, pageno / raw_total))
+            if ui.toc then
+                local ok, ticks = pcall(function() return ui.toc:getTocTicksFlattened() end)
+                if ok and ticks then
+                    if doc:hasHiddenFlows() then
+                        local flow = doc:getPageFlow(pageno)
+                        local flow_total = doc:getTotalPagesInFlow(flow)
+                        for _, page in ipairs(ticks) do
+                            if doc:getPageFlow(page) == flow and flow_total > 0 then
+                                table.insert(chapter_ticks, doc:getPageNumberInFlow(page) / flow_total)
+                            end
+                        end
+                    else
+                        for _, page in ipairs(ticks) do
+                            table.insert(chapter_ticks, page / raw_total)
+                        end
+                    end
+                end
+            end
+        end
+    end
+
     local replace = {
         -- Page/Progress
         ["%c"] = tostring(currentpage),
@@ -356,10 +436,19 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         ["%M"] = ram_mb,
         ["%v"] = disk_avail,
     }
+    -- Bar tokens MUST be replaced before single-char substitution (avoids %b being consumed)
+    local result = format_str
+    if format_str:find("%%bar_") then
+        local tick_str = table.concat(chapter_ticks, ",")
+        result = result:gsub("%%bar_chapter",
+            string.format("BARCHAPTER:%.6f:END", chapter_pct_raw))
+        result = result:gsub("%%bar_book",
+            string.format("BARBOOK:%.6f;%s:END", book_pct_raw, tick_str))
+    end
     -- Track whether all tokens in the string resolved to empty or "0"
     local has_token = false
     local all_empty = true
-    local result = format_str:gsub("(%%%a)", function(token)
+    result = result:gsub("(%%%a)", function(token)
         local val = replace[token]
         if val == nil then return token end -- unknown token, leave as-is
         has_token = true
