@@ -351,33 +351,16 @@ function Bookends:_computeTickCache()
     if not doc or not self.ui.toc then return {} end
     local raw_total = doc:getPageCount()
     if not raw_total or raw_total <= 0 then return {} end
-    local is_cre = self.ui.rolling ~= nil
-    local pageno_local = self.ui.view.state.page or 0
     local toc_ticks = self.ui.toc:getTocTicks() or {}
     local max_depth = self.ui.toc:getMaxDepth() or 1
     local ticks = {}
+    -- Use page-based fractions (matches KOReader's footer progress bar)
     for depth, pages in ipairs(toc_ticks) do
         local tick_w = math.max(1, max_depth - depth + 1)
         for _, page in ipairs(pages) do
             if page > 1 then
-                local tick_frac
-                if is_cre and doc.getPosFromXPointer then
-                    local xp = doc:getPageXPointer(page)
-                    if xp then
-                        local tick_pos = doc:getPosFromXPointer(xp)
-                        local height = doc.info and doc.info.doc_height or 0
-                        tick_frac = height > 0 and (tick_pos / height) or nil
-                    end
-                elseif doc:hasHiddenFlows() then
-                    local flow = doc:getPageFlow(page)
-                    if flow == doc:getPageFlow(pageno_local) then
-                        local flow_total = doc:getTotalPagesInFlow(flow)
-                        tick_frac = flow_total > 0 and (doc:getPageNumberInFlow(page) / flow_total) or nil
-                    end
-                else
-                    tick_frac = page / raw_total
-                end
-                if tick_frac and tick_frac > 0 and tick_frac < 1 then
+                local tick_frac = page / raw_total
+                if tick_frac > 0 and tick_frac < 1 then
                     table.insert(ticks, { tick_frac, tick_w, depth })
                 end
             end

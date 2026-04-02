@@ -132,7 +132,7 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
             end
         end
 
-        -- Chapter tick positions as {fraction, width} pairs
+        -- Chapter tick positions as {fraction, width, depth} — page-based to match KOReader footer
         local ticks = {}
         local raw_total = bar_doc:getPageCount()
         if raw_total and raw_total > 0 and ui.toc then
@@ -142,24 +142,8 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
                 local tick_w = math.max(1, max_depth - depth + 1)
                 for _, page in ipairs(pages) do
                     if page > 1 then
-                        local tick_frac
-                        if is_cre and bar_doc.getPosFromXPointer then
-                            local xp = bar_doc:getPageXPointer(page)
-                            if xp then
-                                local tick_pos = bar_doc:getPosFromXPointer(xp)
-                                local height = bar_doc.info and bar_doc.info.doc_height or 0
-                                tick_frac = height > 0 and (tick_pos / height) or nil
-                            end
-                        elseif bar_doc:hasHiddenFlows() then
-                            local flow = bar_doc:getPageFlow(page)
-                            if flow == bar_doc:getPageFlow(bar_pageno) then
-                                local flow_total = bar_doc:getTotalPagesInFlow(flow)
-                                tick_frac = flow_total > 0 and (bar_doc:getPageNumberInFlow(page) / flow_total) or nil
-                            end
-                        else
-                            tick_frac = page / raw_total
-                        end
-                        if tick_frac and tick_frac > 0 and tick_frac < 1 then
+                        local tick_frac = page / raw_total
+                        if tick_frac > 0 and tick_frac < 1 then
                             table.insert(ticks, { tick_frac, tick_w, depth })
                         end
                     end
