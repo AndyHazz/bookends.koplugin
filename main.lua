@@ -1043,14 +1043,7 @@ function Bookends:buildMainMenu()
             return {
                 {
                     text_func = function()
-                        local ok, FontChooser = pcall(require, "ui/widget/fontchooser")
-                        local name
-                        if ok and FontChooser and FontChooser.getFontNameText then
-                            name = FontChooser.getFontNameText(self.defaults.font_face)
-                        end
-                        if not name then
-                            name = self.defaults.font_face:match("([^/]+)$"):gsub("%.%w+$", "")
-                        end
+                        local name = self.defaults.font_face:match("([^/]+)$"):gsub("%.%w+$", "")
                         return _("Default font") .. " (" .. name .. ")"
                     end,
                     callback = function()
@@ -2224,22 +2217,6 @@ function Bookends:showLineManageDialog(pos, line_idx, touchmenu_instance)
 end
 
 function Bookends:showFontPicker(current_face, on_select, default_face)
-    -- Try KOReader's FontChooser (available since v2026.03)
-    local ok, FontChooser = pcall(require, "ui/widget/fontchooser")
-    if ok and FontChooser then
-        UIManager:show(FontChooser:new{
-            title = _("Select font"),
-            font_file = current_face,
-            default_font_file = default_face,
-            keep_shown_on_apply = true,
-            callback = function(file)
-                on_select(file)
-            end,
-        })
-        return
-    end
-
-    -- Fallback for older KOReader versions
     local Menu = require("ui/widget/menu")
     local cre = require("document/credocument"):engineInit()
     local FontList = require("fontlist")
