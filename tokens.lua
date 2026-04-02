@@ -3,6 +3,37 @@ local datetime = require("datetime")
 
 local Tokens = {}
 
+-- Map KOReader UI language to a system locale for localized date strings.
+-- Caches the result after first successful lookup.
+local _date_locale
+local function getDateLocale()
+    if _date_locale ~= nil then return _date_locale end
+    local ok, GetText = pcall(require, "gettext")
+    if not ok or not GetText or not GetText.current_lang or GetText.current_lang == "C" then
+        _date_locale = false
+        return false
+    end
+    local lang = GetText.current_lang:match("^([a-z]+)") -- e.g. "es" from "es_ES"
+    if not lang or lang == "en" then
+        _date_locale = false
+        return false
+    end
+    -- Try common locale patterns
+    local candidates = {
+        lang .. "_" .. lang:upper() .. ".UTF-8",  -- es_ES.UTF-8
+        lang .. ".UTF-8",                           -- es.UTF-8
+    }
+    for _, loc in ipairs(candidates) do
+        if os.setlocale(loc, "time") then
+            os.setlocale("", "time") -- restore
+            _date_locale = loc
+            return loc
+        end
+    end
+    _date_locale = false
+    return false
+end
+
 function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, preview_mode)
     -- Fast path: no tokens
     if not format_str:find("%%") then
@@ -227,11 +258,21 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     local date_weekday = ""
     local date_weekday_short = ""
     if needs("d", "D", "n", "w", "a") then
+        -- Use device language for day/month names if available
+        local loc = getDateLocale()
+        local saved_locale
+        if loc then
+            saved_locale = os.setlocale(nil, "time")
+            os.setlocale(loc, "time")
+        end
         if needs("d") then date_short = os.date("%d %b") end
         if needs("D") then date_long = os.date("%d %B %Y") end
         if needs("n") then date_num = os.date("%d/%m/%Y") end
         if needs("w") then date_weekday = os.date("%A") end
         if needs("a") then date_weekday_short = os.date("%a") end
+        if saved_locale then
+            os.setlocale(saved_locale, "time")
+        end
     end
 
     -- Session reading time
