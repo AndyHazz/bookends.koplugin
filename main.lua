@@ -452,7 +452,7 @@ function Bookends:resolveLineConfig(face_name, font_size, style)
 
     -- Apply font scale
     local scale = self.defaults.font_scale or 100
-    local scaled_size = math.max(6, math.floor(font_size * scale / 100 + 0.5))
+    local scaled_size = math.max(1, math.floor(font_size * scale / 100 + 0.5))
 
     return {
         face = Font:getFace(resolved_face, scaled_size),
