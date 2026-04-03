@@ -388,10 +388,16 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
 	local reading_speed = ""
 	local total_book_time = ""
 	if needs("r", "E") and ui.statistics then
-		if needs("r") then
-			local avg = ui.statistics.avg_time
-			if avg and avg > 0 then
-				reading_speed = tostring(math.floor(3600 / avg))
+		-- Calculate Pages per Hour based on current session
+		if needs("r") and session_elapsed and session_pages_read then
+			if session_elapsed > 0 and session_pages_read > 0 then
+				-- (pages / seconds) * 3600 = pages per hour
+				reading_speed = tostring(math.floor((session_pages_read / session_elapsed) * 3600))
+			else
+				local avg = ui.statistics.avg_time
+				if avg and avg > 0 then
+					reading_speed = tostring(math.floor(3600 / avg))
+				end
 			end
 		end
 		if needs("E") then
