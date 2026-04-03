@@ -523,6 +523,21 @@ function Bookends:paintTo(bb, x, y)
     if self.dirty then
         self._tick_cache = nil
     end
+    -- Read custom bar colors from KOReader status bar color patch (if installed)
+    local bar_colors
+    local footer_settings = self.ui.view.footer and self.ui.view.footer.settings
+    if footer_settings then
+        local Blitbuffer = require("ffi/blitbuffer")
+        local style_key = footer_settings.progress_style_thin
+            and "progress_style_thin_colors" or "progress_style_thick_colors"
+        local color_settings = footer_settings[style_key]
+        if color_settings and (color_settings.fillcolor or color_settings.bgcolor) then
+            bar_colors = {
+                fill = color_settings.fillcolor and Blitbuffer.Color8(color_settings.fillcolor) or nil,
+                bg = color_settings.bgcolor and Blitbuffer.Color8(color_settings.bgcolor) or nil,
+            }
+        end
+    end
     for bar_idx, bar_cfg in ipairs(self.progress_bars or {}) do
         if bar_cfg.enabled then
             local anchor = bar_cfg.v_anchor or "bottom"
@@ -631,7 +646,7 @@ function Bookends:paintTo(bb, x, y)
                 local paint_vertical = direction == "ttb" or direction == "btt"
                 local paint_reverse = direction == "rtl" or direction == "btt"
                 OverlayWidget.paintProgressBar(bb, bar_x, bar_y, bar_w, bar_h, pct, ticks,
-                    bar_cfg.style or "solid", paint_vertical and "vertical" or nil, paint_reverse)
+                    bar_cfg.style or "solid", paint_vertical and "vertical" or nil, paint_reverse, bar_colors)
             end
         end
     end

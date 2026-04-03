@@ -586,10 +586,14 @@ end
 --- Paint a progress bar directly to a blitbuffer.
 -- @param orientation "horizontal" (default) or "vertical"
 -- @param reverse boolean: flip fill direction
-function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, orientation, reverse)
+-- @param colors table or nil: { fill = Blitbuffer color, bg = Blitbuffer color }
+function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, orientation, reverse, colors)
     if w < 1 or h < 1 then return end
     fraction = math.max(0, math.min(1, fraction or 0))
     local vertical = orientation == "vertical"
+    -- Custom colors from KOReader status bar color patch (if installed)
+    local custom_fill = colors and colors.fill
+    local custom_bg = colors and colors.bg
 
     -- Helper: paint a rect, swapping axes for vertical
     local function pr(rx, ry, rw, rh, color)
@@ -622,11 +626,13 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
         local line_fill = math.floor(line_len * fraction)
         local line_fill_start = reverse and (line_len - line_fill) or 0
 
+        local metro_fill = custom_fill or Blitbuffer.COLOR_DARK_GRAY
+        local metro_bg = custom_bg or Blitbuffer.COLOR_GRAY
         -- Background line (lighter)
-        pr(line_ox, line_y, line_len, line_thick, Blitbuffer.COLOR_GRAY)
+        pr(line_ox, line_y, line_len, line_thick, metro_bg)
         -- Filled line (darker)
         if line_fill > 0 then
-            pr(line_ox + line_fill_start, line_y, line_fill, line_thick, Blitbuffer.COLOR_DARK_GRAY)
+            pr(line_ox + line_fill_start, line_y, line_fill, line_thick, metro_fill)
         end
 
         -- Chapter ticks: depth 1 above line (connected to trunk), depth 2 below
@@ -639,13 +645,13 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
             if tick_pos > 0 and tick_pos < line_len then
                 if tick_depth <= 1 then
                     -- From top of bar down through trunk
-                    pr(line_ox + tick_pos, oy, line_thick, line_y + line_thick - oy, Blitbuffer.COLOR_DARK_GRAY)
+                    pr(line_ox + tick_pos, oy, line_thick, line_y + line_thick - oy, metro_fill)
                 else
                     -- Below trunk (same thickness as trunk)
                     local below_y = line_y + line_thick
                     local below_h = oy + thickness - below_y
                     if below_h > 0 then
-                        pr(line_ox + tick_pos, below_y, line_thick, below_h, Blitbuffer.COLOR_DARK_GRAY)
+                        pr(line_ox + tick_pos, below_y, line_thick, below_h, metro_fill)
                     end
                 end
             end
@@ -662,7 +668,7 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
 
         -- Start circle (empty ring, trunk colour)
         local start_cx = reverse and (line_ox + line_len - start_r) or (line_ox - start_r)
-        paintCircle(start_cx, oy, start_r, Blitbuffer.COLOR_DARK_GRAY)
+        paintCircle(start_cx, oy, start_r, metro_fill)
         local ring_border = line_thick
         local inner_r = start_r - ring_border
         if inner_r > 0 then
@@ -671,7 +677,7 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
 
         -- End circle (filled, trunk colour, same size as start)
         local end_cx = reverse and (line_ox - start_r) or (line_ox + line_len - start_r)
-        paintCircle(end_cx, oy, start_r, Blitbuffer.COLOR_DARK_GRAY)
+        paintCircle(end_cx, oy, start_r, metro_fill)
 
         -- Current position dot (filled black, smaller)
         local pos_on_line = reverse and (line_len - line_fill) or line_fill
@@ -680,11 +686,13 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
         paintCircle(dot_cx, dot_cy, dot_r, Blitbuffer.COLOR_BLACK)
 
     elseif style == "solid" then
-        pr(ox, oy, length, thickness, Blitbuffer.COLOR_GRAY)
+        local solid_fill = custom_fill or Blitbuffer.COLOR_GRAY_5
+        local solid_bg = custom_bg or Blitbuffer.COLOR_GRAY
+        pr(ox, oy, length, thickness, solid_bg)
         local fill_len = math.floor(length * fraction)
         local fill_start = reverse and (length - fill_len) or 0
         if fill_len > 0 then
-            pr(ox + fill_start, oy, fill_len, thickness, Blitbuffer.COLOR_GRAY_5)
+            pr(ox + fill_start, oy, fill_len, thickness, solid_fill)
         end
         for _, tick in ipairs(ticks or {}) do
             local tick_frac = type(tick) == "table" and tick[1] or tick
@@ -698,14 +706,16 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
             end
         end
     else
+        local border_fill = custom_fill or Blitbuffer.COLOR_DARK_GRAY
+        local border_bg = custom_bg or Blitbuffer.COLOR_WHITE
         local border = 1
         local min_dim = vertical and w or h
         local radius = style == "rounded" and math.floor(min_dim / 2) or 0
         -- Background + border (use real coordinates for rounded rect API)
         if radius > 0 then
-            bb:paintRoundedRect(x, y, w, h, Blitbuffer.COLOR_DARK_GRAY, radius)
+            bb:paintRoundedRect(x, y, w, h, border_fill, radius)
         else
-            bb:paintRect(x, y, w, h, Blitbuffer.COLOR_WHITE)
+            bb:paintRect(x, y, w, h, border_bg)
         end
         local inner_ox = ox + border + 1
         local inner_oy = oy + border + 1
@@ -718,18 +728,18 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
                 local unfilled = inner_len - fill_len
                 if unfilled > 0 then
                     if reverse then
-                        pr(inner_ox, inner_oy, unfilled, inner_thick, Blitbuffer.COLOR_WHITE)
+                        pr(inner_ox, inner_oy, unfilled, inner_thick, border_bg)
                     else
-                        pr(inner_ox + fill_len, inner_oy, unfilled, inner_thick, Blitbuffer.COLOR_WHITE)
+                        pr(inner_ox + fill_len, inner_oy, unfilled, inner_thick, border_bg)
                     end
                 end
             else
                 -- Bordered: paint fill on white background
                 if fill_len > 0 then
                     if reverse then
-                        pr(inner_ox + inner_len - fill_len, inner_oy, fill_len, inner_thick, Blitbuffer.COLOR_DARK_GRAY)
+                        pr(inner_ox + inner_len - fill_len, inner_oy, fill_len, inner_thick, border_fill)
                     else
-                        pr(inner_ox, inner_oy, fill_len, inner_thick, Blitbuffer.COLOR_DARK_GRAY)
+                        pr(inner_ox, inner_oy, fill_len, inner_thick, border_fill)
                     end
                 end
             end
