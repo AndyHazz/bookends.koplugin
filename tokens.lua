@@ -21,13 +21,15 @@ local function getDateLocale()
         lang .. "_" .. lang:upper() .. ".UTF-8",  -- es_ES.UTF-8
         lang .. ".UTF-8",                           -- es.UTF-8
     }
+    local saved = os.setlocale(nil, "time") -- save current locale
     for _, loc in ipairs(candidates) do
         if os.setlocale(loc, "time") then
-            os.setlocale("", "time") -- restore
+            os.setlocale(saved or "C", "time") -- restore previous locale
             _date_locale_cache[lang] = loc
             return loc
         end
     end
+    if saved then os.setlocale(saved, "time") end -- restore after failed probes
     _date_locale_cache[lang] = false
     return false
 end
