@@ -769,15 +769,26 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
     if w < 1 or h < 1 then return end
     fraction = math.max(0, math.min(1, fraction or 0))
     local vertical = orientation == "vertical"
-    -- Custom colors
+    -- Custom colors: nil = not set (use default), false = transparent (skip paint)
     local custom_fill = colors and colors.fill
     local custom_bg = colors and colors.bg
     local custom_track = colors and colors.track
     local custom_tick = colors and colors.tick
     local invert_read_ticks = colors and colors.invert_read_ticks
 
-    -- Helper: paint a rect, swapping axes for vertical
+    -- Resolve custom color: false → nil (transparent/skip), nil → default, else custom.
+    -- Must use type() checks to avoid triggering Blitbuffer's __eq metamethod.
+    local function resolveColor(custom, default)
+        local t = type(custom)
+        if t == "nil" then return default end      -- not set: use default
+        if t == "boolean" then return nil end      -- false = transparent
+        return custom                               -- Color8 value
+    end
+
+    -- Helper: paint a rect, swapping axes for vertical.
+    -- Skips painting if color is nil (transparent).
     local function pr(rx, ry, rw, rh, color)
+        if not color then return end
         if vertical then
             bb:paintRect(ry, rx, rh, rw, color)
         else
@@ -807,8 +818,8 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
         local line_fill = math.floor(line_len * fraction)
         local line_fill_start = reverse and (line_len - line_fill) or 0
 
-        local metro_track = custom_track or Blitbuffer.COLOR_DARK_GRAY
-        local metro_fill = custom_fill or Blitbuffer.COLOR_DARK_GRAY
+        local metro_track = resolveColor(custom_track, Blitbuffer.COLOR_DARK_GRAY)
+        local metro_fill = resolveColor(custom_fill, Blitbuffer.COLOR_DARK_GRAY)
         -- Track line (uniform colour — progress shown by dot only)
         pr(line_ox, line_y, line_len, line_thick, metro_track)
 
@@ -836,6 +847,7 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
 
         -- Helper for circles
         local function paintCircle(cx, cy, r, color)
+            if not color then return end
             if vertical then
                 bb:paintRoundedRect(cy, cx, r * 2, r * 2, color, r)
             else
@@ -860,11 +872,11 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
         local pos_on_line = reverse and (line_len - line_fill) or line_fill
         local dot_cx = line_ox + pos_on_line - dot_r
         local dot_cy = oy + math.floor((thickness - dot_r * 2) / 2)
-        paintCircle(dot_cx, dot_cy, dot_r, custom_tick or Blitbuffer.COLOR_BLACK)
+        paintCircle(dot_cx, dot_cy, dot_r, resolveColor(custom_tick, Blitbuffer.COLOR_BLACK))
 
     elseif style == "solid" then
-        local solid_fill = custom_fill or Blitbuffer.COLOR_GRAY_5
-        local solid_bg = custom_bg or Blitbuffer.COLOR_GRAY
+        local solid_fill = resolveColor(custom_fill, Blitbuffer.COLOR_GRAY_5)
+        local solid_bg = resolveColor(custom_bg, Blitbuffer.COLOR_GRAY)
         pr(ox, oy, length, thickness, solid_bg)
         local fill_len = math.floor(length * fraction)
         local fill_start = reverse and (length - fill_len) or 0
@@ -878,19 +890,21 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
             local tick_pos = math.floor(length * tick_frac)
             if tick_pos > 0 and tick_pos < length then
                 local in_fill = tick_pos >= fill_start and tick_pos < fill_start + fill_len
-                local base_tick = custom_tick or Blitbuffer.COLOR_BLACK
-                local tick_color
-                if invert_read_ticks ~= false and in_fill then
-                    tick_color = Blitbuffer.COLOR_WHITE
-                else
-                    tick_color = base_tick
+                local base_tick = resolveColor(custom_tick, Blitbuffer.COLOR_BLACK)
+                if base_tick then
+                    local tick_color
+                    if invert_read_ticks ~= false and in_fill then
+                        tick_color = Blitbuffer.COLOR_WHITE
+                    else
+                        tick_color = base_tick
+                    end
+                    pr(ox + tick_pos, oy, tick_w, thickness, tick_color)
                 end
-                pr(ox + tick_pos, oy, tick_w, thickness, tick_color)
             end
         end
     else
-        local border_fill = custom_fill or Blitbuffer.COLOR_DARK_GRAY
-        local border_bg = custom_bg or Blitbuffer.COLOR_WHITE
+        local border_fill = resolveColor(custom_fill, Blitbuffer.COLOR_DARK_GRAY)
+        local border_bg = resolveColor(custom_bg, Blitbuffer.COLOR_WHITE)
         local border = 1
         local margin_h = math.max(3, math.floor(thickness * 0.2))
         local margin_v = math.max(1, math.floor(thickness * 0.1))
@@ -898,9 +912,13 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
         local radius = style == "rounded" and math.floor(min_dim / 2) or 0
         -- Background + border (use real coordinates for rounded rect API)
         if radius > 0 then
-            bb:paintRoundedRect(x, y, w, h, border_fill, radius)
+            if border_fill then
+                bb:paintRoundedRect(x, y, w, h, border_fill, radius)
+            end
         else
-            bb:paintRect(x, y, w, h, border_bg)
+            if border_bg then
+                bb:paintRect(x, y, w, h, border_bg)
+            end
         end
         local h_inset = radius > 0 and radius or (border + margin_h)
         local v_inset = border + margin_v
@@ -950,15 +968,17 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
                 if reverse then tick_frac = 1 - tick_frac end
                 local tick_pos = math.floor(inner_len * tick_frac)
                 if tick_pos > 0 and tick_pos < inner_len then
-                    local base_tick = custom_tick or Blitbuffer.COLOR_BLACK
-                    local tick_color
-                    if invert_read_ticks ~= false then
-                        local in_fill = tick_pos >= fill_start and tick_pos < fill_start + fill_len
-                        tick_color = in_fill and border_bg or base_tick
-                    else
-                        tick_color = base_tick
+                    local base_tick = resolveColor(custom_tick, Blitbuffer.COLOR_BLACK)
+                    if base_tick then
+                        local tick_color
+                        if invert_read_ticks ~= false then
+                            local in_fill = tick_pos >= fill_start and tick_pos < fill_start + fill_len
+                            tick_color = in_fill and border_bg or base_tick
+                        else
+                            tick_color = base_tick
+                        end
+                        pr(inner_ox + tick_pos, inner_oy, tick_w, inner_thick, tick_color)
                     end
-                    pr(inner_ox + tick_pos, inner_oy, tick_w, inner_thick, tick_color)
                 end
             end
         end

@@ -8,23 +8,45 @@ local Screen = Device.screen
 local Tokens = require("tokens")
 local OverlayWidget = require("overlay_widget")
 local InputDialog = require("ui/widget/inputdialog")
-local SpinWidget = require("ui/widget/spinwidget")
+local SpinWidget_orig = require("ui/widget/spinwidget")
+
+--- Show a SpinWidget with hold-to-alpha disabled to prevent accidental transparency.
+local function showSpinWidget(args)
+    local sw = SpinWidget_orig:new(args)
+    if sw.movable then
+        sw.movable.ges_events.MovableHold = nil
+        sw.movable.ges_events.MovableHoldPan = nil
+        sw.movable.ges_events.MovableHoldRelease = nil
+    end
+    UIManager:show(sw)
+end
 local InfoMessage = require("ui/widget/infomessage")
 local ConfirmBox = require("ui/widget/confirmbox")
 local util = require("util")
 
 --- Show an error on-screen and log it, instead of crashing.
+local _error_dialog_shown = false
 local function bookends_error(context, err)
     local tb = debug.traceback(tostring(err), 2)
     local msg = "Bookends error in " .. context .. ":\n" .. tb
     -- Log to stderr (appears in crash.log on next launch)
     io.stderr:write(msg .. "\n")
-    -- Show on-screen if possible (schedule to avoid re-entrancy during paintTo)
+    -- Show only one error dialog at a time
+    if _error_dialog_shown then return end
+    _error_dialog_shown = true
     UIManager:scheduleIn(0, function()
-        UIManager:show(InfoMessage:new{
+        UIManager:show(ConfirmBox:new{
             text = msg,
             icon = "notice-warning",
-            width = Screen:getWidth() * 0.9,
+            ok_text = _("Restart"),
+            cancel_text = _("Dismiss"),
+            ok_callback = function()
+                UIManager:restartKOReader()
+            end,
+            cancel_callback = function()
+                _error_dialog_shown = false
+            end,
+            other_buttons_first = true,
         })
     end)
 end
@@ -398,7 +420,9 @@ end
 function Bookends:markDirty()
     self.dirty = true
     self._tick_cache = nil
-    self.enabled = self.settings:isTrue("enabled")  -- re-enable after paint error disable
+    if not self._error_disabled then
+        self.enabled = self.settings:isTrue("enabled")
+    end
     UIManager:setDirty(self.ui, "ui")
 end
 
@@ -469,6 +493,11 @@ function Bookends:onPageUpdate()
             self.session_max_page = current
         end
     end
+    -- Re-enable after paint error disable
+    if self._error_disabled then
+        self._error_disabled = false
+        self.enabled = self.settings:isTrue("enabled")
+    end
     self:markDirty()
 end
 function Bookends:onPosUpdate() self:markDirty() end
@@ -517,6 +546,7 @@ function Bookends:paintTo(bb, x, y)
         if self._paint_error_count >= 3 then
             -- Disable rendering to break error loop; re-enabled on next page turn
             self.enabled = false
+            self._error_disabled = true
             self._paint_error_count = 0
             bookends_error("paintTo (disabled until page turn)", err)
         else
@@ -547,11 +577,17 @@ function Bookends:_paintToInner(bb, x, y)
     local bc = self.settings:readSetting("bar_colors")
     if bc then
         local Blitbuffer = require("ffi/blitbuffer")
+        -- 0xFF (0% black) is treated as transparent (false = don't paint)
+        local function colorOrTransparent(v)
+            if not v then return nil end       -- not set: use default
+            if v >= 0xFF then return false end  -- 0% black = transparent
+            return Blitbuffer.Color8(v)
+        end
         bar_colors = {
-            fill = bc.fill and Blitbuffer.Color8(bc.fill) or nil,
-            bg = bc.bg and Blitbuffer.Color8(bc.bg) or nil,
-            track = bc.track and Blitbuffer.Color8(bc.track) or nil,
-            tick = bc.tick and Blitbuffer.Color8(bc.tick) or nil,
+            fill = colorOrTransparent(bc.fill),
+            bg = colorOrTransparent(bc.bg),
+            track = colorOrTransparent(bc.track),
+            tick = colorOrTransparent(bc.tick),
             invert_read_ticks = bc.invert_read_ticks,
         }
     end
@@ -1412,7 +1448,7 @@ function Bookends:showBarNudgeDialog(title, initial_value, on_change)
     end
 
     local function setDirect()
-        UIManager:show(SpinWidget:new{
+        showSpinWidget({
             value = value,
             value_min = 0,
             value_max = 2000,
@@ -1542,7 +1578,7 @@ function Bookends:buildBarColorsMenu()
     end
 
     local function colorSpinner(title, field, default_pct, touchmenu_instance)
-        UIManager:show(SpinWidget:new{
+        showSpinWidget({
             title_text = title,
             value = bc[field] and math.floor((0xFF - bc[field]) * 100 / 0xFF + 0.5) or default_pct,
             value_min = 0,
@@ -1559,7 +1595,9 @@ function Bookends:buildBarColorsMenu()
 
     local function pctLabel(field, default_pct)
         if bc[field] then
-            return math.floor((0xFF - bc[field]) * 100 / 0xFF + 0.5) .. "%"
+            local pct = math.floor((0xFF - bc[field]) * 100 / 0xFF + 0.5)
+            if pct == 0 then return _("transparent") end
+            return pct .. "%"
         end
         return _("default") .. " (" .. default_pct .. "%)"
     end
@@ -2087,7 +2125,7 @@ function Bookends:editLineString(pos, line_idx)
     size_button.callback = function()
         format_dialog:onCloseKeyboard()
         local current = line_size or self:getPositionSetting(pos.key, "font_size")
-        UIManager:show(SpinWidget:new{
+        showSpinWidget({
             value = current,
             value_min = 1,
             value_max = 36,
@@ -2253,6 +2291,23 @@ function Bookends:editLineString(pos, line_idx)
         end,
         buttons = buildDialogButtons(),
     }
+    -- Disable hold-to-alpha on the movable container to prevent accidental
+    -- semi-transparency when rapidly tapping spinner buttons.
+    -- Must survive reinit() which recreates the movable, so we wrap reinit.
+    local orig_reinit = format_dialog.reinit
+    function format_dialog:reinit(...)
+        orig_reinit(self, ...)
+        if self.movable then
+            self.movable.ges_events.MovableHold = nil
+            self.movable.ges_events.MovableHoldPan = nil
+            self.movable.ges_events.MovableHoldRelease = nil
+        end
+    end
+    if format_dialog.movable then
+        format_dialog.movable.ges_events.MovableHold = nil
+        format_dialog.movable.ges_events.MovableHoldPan = nil
+        format_dialog.movable.ges_events.MovableHoldRelease = nil
+    end
     UIManager:show(format_dialog)
     format_dialog:onShowKeyboard()
 end
@@ -2690,6 +2745,12 @@ function Bookends:showFontPicker(current_face, on_select, default_face)
                     range = Geom:new{ w = screen_w, h = screen_h },
                 },
             },
+            Swipe = {
+                GestureRange:new{
+                    ges = "swipe",
+                    range = Geom:new{ w = screen_w, h = screen_h },
+                },
+            },
         },
     }
 
@@ -2706,6 +2767,22 @@ function Bookends:showFontPicker(current_face, on_select, default_face)
         }
         self.frame = frame
         UIManager:setDirty(self, "ui")
+    end
+
+    function picker:onSwipe(_, ges_ev)
+        local dir = ges_ev.direction
+        if dir == "west" or dir == "north" then
+            if page < total_pages then
+                page = page + 1
+                self:rebuild()
+            end
+        elseif dir == "east" or dir == "south" then
+            if page > 1 then
+                page = page - 1
+                self:rebuild()
+            end
+        end
+        return true
     end
 
     function picker:onTapClose(_, ges_ev)
@@ -3242,7 +3319,7 @@ function Bookends:showMarginAdjuster(touchmenu_instance)
 end
 
 function Bookends:showSpinner(title, value, min, max, default, on_set)
-    UIManager:show(SpinWidget:new{
+    showSpinWidget({
         value = value,
         value_min = min,
         value_max = max,
