@@ -1207,7 +1207,7 @@ function Bookends:buildSingleBarMenu(bar_idx, bar_cfg)
             enabled_func = function() return bar_cfg.enabled and bar_cfg.type == "book" end,
             keep_menu_open = true,
             callback = function(touchmenu_instance)
-                local cycle = { "off", "all", "level1", "level2" }
+                local cycle = { "off", "level1", "level2", "all" }
                 local cur = bar_cfg.chapter_ticks or "off"
                 for idx, v in ipairs(cycle) do
                     if v == cur then
@@ -1803,8 +1803,8 @@ function Bookends:editLineString(pos, line_idx)
         return t and t:find("%%bar") ~= nil
     end
 
-    local BAR_TYPE_CYCLE = { "chapter", "book", "book_ticks_all", "book_ticks", "book_ticks2" }
-    local BAR_TYPE_LABELS = { chapter = _("Chapter"), book = _("Book"), book_ticks_all = _("Book*"), book_ticks = _("Book+"), book_ticks2 = _("Book++") }
+    local BAR_TYPE_CYCLE = { "chapter", "book", "book_ticks", "book_ticks2", "book_ticks_all" }
+    local BAR_TYPE_LABELS = { chapter = _("Chapter"), book = _("Book"), book_ticks = _("Book+"), book_ticks2 = _("Book++"), book_ticks_all = _("Book*") }
 
     local bar_insert_button = {
         text_func = function()
