@@ -1,11 +1,8 @@
--- i18n must be installed before any module captures require("gettext")
-require("i18n").install()
-
 local Device = require("device")
 local Font = require("ui/font")
 local UIManager = require("ui/uimanager")
 local WidgetContainer = require("ui/widget/container/widgetcontainer")
-local _ = require("gettext")
+local _ = require("i18n").gettext
 local T = require("ffi/util").template
 local Screen = Device.screen
 local Tokens = require("tokens")
@@ -2478,7 +2475,7 @@ function Bookends:showFontPicker(current_face, on_select, default_face)
         local selected_face = selected and Font:getFace(selected, title_font_size)
                               or Font:getFace("cfont", title_font_size)
         local title_face = Font:getFace("infofont", title_font_size)
-        local title_prefix = _("Select font") .. " \xE2\x80\x94 "  -- em dash
+        local title_prefix = _("Select font") .. ": "
         local title_text = TextWidget:new{
             text = title_prefix,
             face = title_face,

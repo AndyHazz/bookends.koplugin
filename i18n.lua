@@ -1,7 +1,11 @@
 -- i18n.lua — Bookends
 -- Translation loader for plugin-specific strings.
--- KOReader's gettext already translates standard strings (Cancel, Save, etc.).
--- This module adds translations for bookends-specific strings.
+-- Returns a translation function that checks Bookends .po files first,
+-- then delegates to KOReader's gettext. Does NOT modify the global gettext
+-- module, avoiding potential interference with KOReader's own translations.
+--
+-- Usage:
+--   local _ = require("i18n").gettext
 --
 -- HOW TO ADD A LANGUAGE
 --   1. Copy locale/bookends.pot -> locale/<lang>.po (e.g. locale/es.po)
@@ -61,16 +65,12 @@ local function detectLang()
     return lang or "en"
 end
 
-local _installed = false
+-- Build the translation function once at require time
+local ko_gettext = require("gettext")
+local translations
 
-local function install()
-    if _installed then return end
-
-    local lang = detectLang()
-    if lang == "en" or lang == "en_US" then return end
-
-    -- Try loading translation file
-    local translations
+local lang = detectLang()
+if lang ~= "en" and lang ~= "en_US" then
     local function try(name)
         local path = _dir .. "locale/" .. name .. ".po"
         local t = parsePO(path)
@@ -85,38 +85,21 @@ local function install()
         if prefix and prefix ~= lang then return try(prefix) end
     end)()
 
-    if not translations then return end
-
-    local orig_gettext = package.loaded["gettext"]
-    if not orig_gettext then return end
-
-    local wrapper
-    local mt = getmetatable(orig_gettext)
-    if mt and mt.__call then
-        wrapper = setmetatable({}, {
-            __call = function(_, msgid)
-                local t = translations[msgid]
-                if t then return t end
-                return orig_gettext(msgid)
-            end,
-            __index = orig_gettext,
-        })
-    elseif type(orig_gettext) == "function" then
-        wrapper = function(msgid)
-            local t = translations[msgid]
-            if t then return t end
-            return orig_gettext(msgid)
-        end
-    else
-        return
+    if translations then
+        logger.info("bookends i18n: installed for language: " .. lang)
     end
+end
 
-    package.loaded["gettext"] = wrapper
-    _installed = true
-    logger.info("bookends i18n: installed for language: " .. lang)
+--- Translation function: checks Bookends .po first, then KOReader gettext.
+local function gettext(msgid)
+    if translations then
+        local t = translations[msgid]
+        if t then return t end
+    end
+    return ko_gettext(msgid)
 end
 
 return {
-    install = install,
+    gettext = gettext,
     getLang = detectLang,
 }
