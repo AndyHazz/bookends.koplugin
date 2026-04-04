@@ -775,6 +775,7 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
     local custom_track = colors and colors.track
     local custom_tick = colors and colors.tick
     local invert_read_ticks = colors and colors.invert_read_ticks
+    local tick_height_pct = colors and colors.tick_height_pct or 100
 
     -- Resolve custom color: false → nil (transparent/skip), nil → default, else custom.
     -- Must use type() checks to avoid triggering Blitbuffer's __eq metamethod.
@@ -833,13 +834,16 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
             if tick_pos > 0 and tick_pos < line_len then
                 if tick_depth <= 1 then
                     -- From top of bar down through trunk
-                    pr(line_ox + tick_pos, oy, line_thick, line_y + line_thick - oy, metro_track)
+                    local full_h = line_y + line_thick - oy
+                    local th = math.max(1, math.floor(full_h * tick_height_pct / 100))
+                    pr(line_ox + tick_pos, line_y + line_thick - th, line_thick, th, metro_track)
                 else
                     -- Below trunk (same thickness as trunk)
                     local below_y = line_y + line_thick
-                    local below_h = oy + thickness - below_y
-                    if below_h > 0 then
-                        pr(line_ox + tick_pos, below_y, line_thick, below_h, metro_track)
+                    local full_h = oy + thickness - below_y
+                    local th = math.max(1, math.floor(full_h * tick_height_pct / 100))
+                    if th > 0 then
+                        pr(line_ox + tick_pos, below_y, line_thick, th, metro_track)
                     end
                 end
             end
@@ -898,7 +902,9 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
                     else
                         tick_color = base_tick
                     end
-                    pr(ox + tick_pos, oy, tick_w, thickness, tick_color)
+                    local th = math.max(1, math.floor(thickness * tick_height_pct / 100))
+                    local t_oy = oy + math.floor((thickness - th) / 2)
+                    pr(ox + tick_pos, t_oy, tick_w, th, tick_color)
                 end
             end
         end
@@ -977,7 +983,9 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
                         else
                             tick_color = base_tick
                         end
-                        pr(inner_ox + tick_pos, inner_oy, tick_w, inner_thick, tick_color)
+                        local th = math.max(1, math.floor(inner_thick * tick_height_pct / 100))
+                        local t_oy = inner_oy + math.floor((inner_thick - th) / 2)
+                        pr(inner_ox + tick_pos, t_oy, tick_w, th, tick_color)
                     end
                 end
             end

@@ -34,7 +34,7 @@ local function getDateLocale()
     return false
 end
 
-function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, preview_mode)
+function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, preview_mode, tick_width_multiplier)
     -- Fast path: no tokens
     if not format_str:find("%%") then
         return format_str
@@ -214,7 +214,8 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
             local toc_ticks = ui.toc:getTocTicks() or {}
             local max_depth = ui.toc:getMaxDepth() or 1
             for depth, pages in ipairs(toc_ticks) do
-                local tick_w = math.max(1, (max_depth - depth + 1) * 2 - 1)
+                local tick_m = tick_width_multiplier or 2
+                local tick_w = math.max(1, (max_depth - depth + 1) * tick_m - 1)
                 for _, page in ipairs(pages) do
                     if page > 1 then
                         local tick_frac = page / raw_total
@@ -583,8 +584,8 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     return result, is_empty, bar_info
 end
 
-function Tokens.expandPreview(format_str, ui, session_elapsed, session_pages_read)
-    return Tokens.expand(format_str, ui, session_elapsed, session_pages_read, true)
+function Tokens.expandPreview(format_str, ui, session_elapsed, session_pages_read, tick_width_multiplier)
+    return Tokens.expand(format_str, ui, session_elapsed, session_pages_read, true, tick_width_multiplier)
 end
 
 return Tokens

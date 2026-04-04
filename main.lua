@@ -8,18 +8,6 @@ local Screen = Device.screen
 local Tokens = require("tokens")
 local OverlayWidget = require("overlay_widget")
 local InputDialog = require("ui/widget/inputdialog")
-local SpinWidget_orig = require("ui/widget/spinwidget")
-
---- Show a SpinWidget with hold-to-alpha disabled to prevent accidental transparency.
-local function showSpinWidget(args)
-    local sw = SpinWidget_orig:new(args)
-    if sw.movable then
-        sw.movable.ges_events.MovableHold = nil
-        sw.movable.ges_events.MovableHoldPan = nil
-        sw.movable.ges_events.MovableHoldRelease = nil
-    end
-    UIManager:show(sw)
-end
 local InfoMessage = require("ui/widget/infomessage")
 local ConfirmBox = require("ui/widget/confirmbox")
 local util = require("util")
@@ -332,6 +320,9 @@ function Bookends:buildPreset()
         preset.positions[pos.key] = util.tableDeepCopy(self.positions[pos.key])
     end
     preset.progress_bars = util.tableDeepCopy(self.progress_bars)
+    preset.bar_colors = self.settings:readSetting("bar_colors")
+    preset.tick_width_multiplier = self.settings:readSetting("tick_width_multiplier")
+    preset.tick_height_pct = self.settings:readSetting("tick_height_pct")
     return preset
 end
 
@@ -390,6 +381,22 @@ function Bookends:loadPreset(preset)
     for i = 1, 4 do
         self.settings:saveSetting("progress_bar_" .. i, self.progress_bars[i])
     end
+    if preset.bar_colors then
+        self.settings:saveSetting("bar_colors", preset.bar_colors)
+    else
+        self.settings:delSetting("bar_colors")
+    end
+    if preset.tick_width_multiplier then
+        self.settings:saveSetting("tick_width_multiplier", preset.tick_width_multiplier)
+    else
+        self.settings:delSetting("tick_width_multiplier")
+    end
+    if preset.tick_height_pct then
+        self.settings:saveSetting("tick_height_pct", preset.tick_height_pct)
+    else
+        self.settings:delSetting("tick_height_pct")
+    end
+    self._tick_cache = nil
     self:markDirty()
 end
 
@@ -447,7 +454,8 @@ function Bookends:_computeTickCache()
     local ticks = {}
     -- Use page-based fractions (matches KOReader's footer progress bar)
     for depth, pages in ipairs(toc_ticks) do
-        local tick_w = math.max(1, (max_depth - depth + 1) * 2 - 1)
+        local tick_m = self.settings:readSetting("tick_width_multiplier", 2)
+        local tick_w = math.max(1, (max_depth - depth + 1) * tick_m - 1)
         for _, page in ipairs(pages) do
             if page > 1 then
                 local tick_frac = page / raw_total
@@ -594,24 +602,28 @@ function Bookends:_paintToInner(bb, x, y)
     if self.dirty then
         self._tick_cache = nil
     end
-    -- Progress bar colors from settings
-    local bar_colors
-    local bc = self.settings:readSetting("bar_colors")
-    if bc then
+    local function resolveColors(bc)
         local Blitbuffer = require("ffi/blitbuffer")
-        -- 0xFF (0% black) is treated as transparent (false = don't paint)
         local function colorOrTransparent(v)
-            if not v then return nil end       -- not set: use default
-            if v >= 0xFF then return false end  -- 0% black = transparent
+            if not v then return nil end
+            if v >= 0xFF then return false end
             return Blitbuffer.Color8(v)
         end
-        bar_colors = {
+        return {
             fill = colorOrTransparent(bc.fill),
             bg = colorOrTransparent(bc.bg),
             track = colorOrTransparent(bc.track),
             tick = colorOrTransparent(bc.tick),
             invert_read_ticks = bc.invert_read_ticks,
+            tick_height_pct = bc.tick_height_pct,
         }
+    end
+    -- Progress bar colors from settings
+    local bar_colors
+    local bc = self.settings:readSetting("bar_colors") or {}
+    bc.tick_height_pct = bc.tick_height_pct or self.settings:readSetting("tick_height_pct")
+    if bc.fill or bc.bg or bc.track or bc.tick or bc.invert_read_ticks ~= nil or bc.tick_height_pct then
+        bar_colors = resolveColors(bc)
     end
     for bar_idx, bar_cfg in ipairs(self.progress_bars or {}) do
         if bar_cfg.enabled then
@@ -720,8 +732,9 @@ function Bookends:_paintToInner(bb, x, y)
                 local direction = bar_cfg.direction or (vertical and "ttb" or "ltr")
                 local paint_vertical = direction == "ttb" or direction == "btt"
                 local paint_reverse = direction == "rtl" or direction == "btt"
+                local colors = bar_cfg.colors and resolveColors(bar_cfg.colors) or bar_colors
                 OverlayWidget.paintProgressBar(bb, bar_x, bar_y, bar_w, bar_h, pct, ticks,
-                    bar_cfg.style or "solid", paint_vertical and "vertical" or nil, paint_reverse, bar_colors)
+                    bar_cfg.style or "solid", paint_vertical and "vertical" or nil, paint_reverse, colors)
             end
         end
     end
@@ -754,7 +767,8 @@ function Bookends:_paintToInner(bb, x, y)
                 local final_indices = {}
                 local position_bars = {}
                 for j, line in ipairs(visible_lines) do
-                    local result, is_empty, line_bar = Tokens.expand(line, self.ui, session_elapsed, session_pages)
+                    local result, is_empty, line_bar = Tokens.expand(line, self.ui, session_elapsed, session_pages,
+                        nil, self.settings:readSetting("tick_width_multiplier", 2))
                     if not is_empty then
                         table.insert(expanded_lines, result)
                         table.insert(final_indices, visible_indices[j])
@@ -1113,7 +1127,8 @@ function Bookends:buildMainMenu()
                 local session_pages = math.max(0, (self.session_max_page or 0) - (self.session_start_page or 0))
                 local previews = {}
                 for _, line in ipairs(lines) do
-                    table.insert(previews, (Tokens.expandPreview(line, self.ui, session_elapsed, session_pages)))
+                    table.insert(previews, (Tokens.expandPreview(line, self.ui, session_elapsed, session_pages,
+                        self.settings:readSetting("tick_width_multiplier", 2))))
                 end
                 local preview = table.concat(previews, " \xC2\xB7 ")
                 preview = preview:gsub("%s+", " "):match("^%s*(.-)%s*$")
@@ -1197,7 +1212,14 @@ function Bookends:buildMainMenu()
                         return _("Font scale") .. " (" .. self.defaults.font_scale .. "%)"
                     end,
                     callback = function()
-                        self:showFontScaleDialog()
+                        self:showNudgeDialog(_("Font scale"), self.defaults.font_scale, 25, 300, 100, "%",
+                            function(val)
+                                self.defaults.font_scale = val
+                                self:markDirty()
+                            end,
+                            function()
+                                self.settings:saveSetting("font_scale", self.defaults.font_scale)
+                            end)
                     end,
                 },
                 {
@@ -1215,11 +1237,13 @@ function Bookends:buildMainMenu()
                     end,
                     keep_menu_open = true,
                     callback = function(touchmenu_instance)
-                        self:showSpinner(_("Truncation gap between regions (px)"), self.defaults.overlap_gap, 0, 999, 50,
+                        self:showNudgeDialog(_("Truncation gap"), self.defaults.overlap_gap, 0, 999, 50, "px",
                             function(val)
                                 self.defaults.overlap_gap = val
                                 self.settings:saveSetting("overlap_gap", val)
                                 self:markDirty()
+                            end,
+                            function()
                                 if touchmenu_instance then touchmenu_instance:updateItems() end
                             end)
                     end,
@@ -1241,7 +1265,7 @@ function Bookends:buildMainMenu()
                     end,
                 },
                 {
-                    text = _("Progress bar colors"),
+                    text = _("Progress bar colours and tick marks"),
                     sub_item_table_func = function()
                         return self:buildBarColorsMenu()
                     end,
@@ -1477,10 +1501,12 @@ function Bookends:buildSingleBarMenu(bar_idx, bar_cfg)
             enabled_func = isEnabled,
             keep_menu_open = true,
             callback = function(touchmenu_instance)
-                self:showSpinner(_("Bar thickness (px)"), bar_cfg.height or 20, 1, 60, 20,
+                self:showNudgeDialog(_("Bar thickness"), bar_cfg.height or 20, 1, 60, 20, "px",
                     function(val)
                         bar_cfg.height = val
                         saveBar()
+                    end,
+                    function()
                         if touchmenu_instance then touchmenu_instance:updateItems() end
                     end)
             end,
@@ -1497,58 +1523,86 @@ function Bookends:buildSingleBarMenu(bar_idx, bar_cfg)
                 self:showBarMarginAdjuster(bar_cfg, bar_idx)
             end,
         },
-    }
-end
-
-function Bookends:showBarNudgeDialog(title, initial_value, on_change)
-    local value = initial_value
-    local dialog
-
-    local function update(delta)
-        value = math.max(0, value + delta)
-        on_change(value)
-        dialog:reinit()
-    end
-
-    local function setDirect()
-        showSpinWidget({
-            value = value,
-            value_min = 0,
-            value_max = 2000,
-            default_value = 0,
-            title_text = title .. " (px)",
-            ok_text = _("Set"),
-            callback = function(spin)
-                value = spin.value
-                on_change(value)
-                dialog:reinit()
+        {
+            text_func = function()
+                if bar_cfg.colors then
+                    return _("Custom colors") .. " (\u{2713})"
+                end
+                return _("Custom colors")
             end,
-        })
-    end
+            enabled_func = isEnabled,
+            sub_item_table_func = function()
+                local custom_items = {}
 
-    local ButtonDialog = require("ui/widget/buttondialog")
-    dialog = ButtonDialog:new{
-        title = title .. ": " .. value .. "px",
-        buttons = {
-            {
-                { text = "-10", callback = function() update(-10) end },
-                { text = "-1",  callback = function() update(-1) end },
-                { text_func = function() return tostring(value) end, callback = setDirect },
-                { text = "+1",  callback = function() update(1) end },
-                { text = "+10", callback = function() update(10) end },
-            },
-            {
-                { text = _("Reset"), callback = function() value = 0; on_change(0); dialog:reinit() end },
-                {
-                    text = _("Close"),
+                -- Toggle
+                table.insert(custom_items, {
+                    text = _("Use custom colors"),
+                    checked_func = function() return bar_cfg.colors ~= nil end,
                     callback = function()
-                        UIManager:close(dialog)
+                        if bar_cfg.colors then
+                            bar_cfg.colors = nil
+                        else
+                            bar_cfg.colors = {}
+                        end
+                        saveBar()
                     end,
-                },
-            },
+                    separator = true,
+                })
+
+                -- Color items (only functional when custom colors enabled)
+                local bc = bar_cfg.colors or {}
+                local color_items = self:_buildColorItems(bc, function()
+                    bar_cfg.colors = bc
+                    saveBar()
+                end)
+                for _, item in ipairs(color_items) do
+                    local orig_enabled = item.enabled_func
+                    item.enabled_func = function()
+                        if not bar_cfg.colors then return false end
+                        return orig_enabled == nil or orig_enabled()
+                    end
+                    table.insert(custom_items, item)
+                end
+
+                -- Per-bar tick height override
+                table.insert(custom_items, {
+                    text_func = function()
+                        return _("Tick height") .. ": " .. (bc.tick_height_pct or 100) .. "%"
+                    end,
+                    enabled_func = function() return bar_cfg.colors ~= nil end,
+                    keep_menu_open = true,
+                    callback = function()
+                        self:showNudgeDialog(_("Tick height"), bc.tick_height_pct or 100, 1, 400, 100, "%",
+                            function(val)
+                                bc.tick_height_pct = val ~= 100 and val or nil
+                                bar_cfg.colors = bc
+                                saveBar()
+                            end)
+                    end,
+                    hold_callback = function(touchmenu_instance)
+                        bc.tick_height_pct = nil
+                        bar_cfg.colors = bc
+                        saveBar()
+                        if touchmenu_instance then touchmenu_instance:updateItems() end
+                    end,
+                })
+
+                -- Reset custom to defaults
+                table.insert(custom_items, {
+                    text = _("Reset custom to defaults"),
+                    enabled_func = function() return bar_cfg.colors ~= nil end,
+                    keep_menu_open = true,
+                    callback = function(touchmenu_instance)
+                        bar_cfg.colors = {}
+                        saveBar()
+                        if touchmenu_instance then touchmenu_instance:updateItems() end
+                    end,
+                })
+
+                return custom_items
+            end,
         },
     }
-    UIManager:show(dialog)
 end
 
 function Bookends:showBarMarginAdjuster(bar_cfg, bar_idx)
@@ -1586,7 +1640,15 @@ function Bookends:showBarMarginAdjuster(bar_cfg, bar_idx)
 
     local ButtonDialog = require("ui/widget/buttondialog")
     margin_dialog = ButtonDialog:new{
+        dismissable = false,
         title = _("Adjust margins"),
+        tap_close_callback = function()
+            for k, v in pairs(original) do
+                bar_cfg[k] = v
+            end
+            self.settings:saveSetting("progress_bar_" .. bar_idx, bar_cfg)
+            self:markDirty()
+        end,
         buttons = {
             makeRow(edge_label, "margin_v"),
             makeRow(start_label, "margin_left"),
@@ -1604,7 +1666,7 @@ function Bookends:showBarMarginAdjuster(bar_cfg, bar_idx)
                     end,
                 },
                 {
-                    text = _("Reset"),
+                    text = _("Default") .. " 0",
                     callback = function()
                         bar_cfg.margin_v = 0
                         bar_cfg.margin_left = 0
@@ -1615,7 +1677,7 @@ function Bookends:showBarMarginAdjuster(bar_cfg, bar_idx)
                     end,
                 },
                 {
-                    text = _("Save"),
+                    text = _("Apply"),
                     is_enter_default = true,
                     callback = function()
                         self.settings:saveSetting("progress_bar_" .. bar_idx, bar_cfg)
@@ -1628,32 +1690,81 @@ function Bookends:showBarMarginAdjuster(bar_cfg, bar_idx)
     UIManager:show(margin_dialog)
 end
 
-function Bookends:buildBarColorsMenu()
-    local bc = self.settings:readSetting("bar_colors") or {}
+function Bookends:showNudgeDialog(title, value, min_val, max_val, default_val, unit, on_change, on_close, small_step, large_step)
+    local ButtonDialog = require("ui/widget/buttondialog")
+    local dialog
+    local original_value = value
+    small_step = small_step or 1
+    if large_step == nil then large_step = 10 end
 
-    local function saveColors()
-        if not bc.fill and not bc.bg and not bc.track and not bc.tick and bc.invert_read_ticks == nil then
-            self.settings:delSetting("bar_colors")
-        else
-            self.settings:saveSetting("bar_colors", bc)
-        end
-        self:markDirty()
+    local function update(delta)
+        value = math.max(min_val, math.min(max_val, value + delta))
+        on_change(value)
+        dialog:reinit()
     end
 
-    local function colorSpinner(title, field, default_pct, touchmenu_instance)
-        showSpinWidget({
-            title_text = title,
-            value = bc[field] and math.floor((0xFF - bc[field]) * 100 / 0xFF + 0.5) or default_pct,
-            value_min = 0,
-            value_max = 100,
-            default_value = default_pct,
-            unit = "% " .. _("black"),
-            callback = function(spin)
-                bc[field] = 0xFF - math.floor(spin.value * 0xFF / 100 + 0.5)
+    local nudge_buttons = {}
+    if large_step then
+        table.insert(nudge_buttons, { text = "-" .. large_step, callback = function() update(-large_step) end })
+    end
+    table.insert(nudge_buttons, { text = "-" .. small_step, callback = function() update(-small_step) end })
+    table.insert(nudge_buttons, { text_func = function() return tostring(value) .. unit end, enabled = false })
+    table.insert(nudge_buttons, { text = "+" .. small_step, callback = function() update(small_step) end })
+    if large_step then
+        table.insert(nudge_buttons, { text = "+" .. large_step, callback = function() update(large_step) end })
+    end
+
+    dialog = ButtonDialog:new{
+        dismissable = false,
+        title = title .. ": " .. value .. unit,
+        tap_close_callback = function()
+            -- Revert to original value on tap-outside
+            if value ~= original_value then
+                value = original_value
+                on_change(value)
+            end
+            if on_close then on_close() end
+        end,
+        buttons = {
+            nudge_buttons,
+            {
+                {
+                    text = _("Cancel"),
+                    callback = function()
+                        if value ~= original_value then
+                            value = original_value
+                            on_change(value)
+                        end
+                        UIManager:close(dialog)
+                        if on_close then on_close() end
+                    end,
+                },
+                { text = _("Default") .. " " .. default_val .. unit, callback = function() value = default_val; on_change(value); dialog:reinit() end },
+                {
+                    text = _("Apply"),
+                    is_enter_default = true,
+                    callback = function()
+                        UIManager:close(dialog)
+                        if on_close then on_close() end
+                    end,
+                },
+            },
+        },
+    }
+    UIManager:show(dialog)
+end
+
+function Bookends:_buildColorItems(bc, saveColors)
+    local function colorNudge(title, field, default_pct, touchmenu_instance)
+        local current = bc[field] and math.floor((0xFF - bc[field]) * 100 / 0xFF + 0.5) or default_pct
+        self:showNudgeDialog(title, current, 0, 100, default_pct, "%",
+            function(val)
+                bc[field] = 0xFF - math.floor(val * 0xFF / 100 + 0.5)
                 saveColors()
-                if touchmenu_instance then touchmenu_instance:updateItems() end
             end,
-        })
+            function()
+                if touchmenu_instance then touchmenu_instance:updateItems() end
+            end)
     end
 
     local function pctLabel(field, default_pct)
@@ -1672,7 +1783,7 @@ function Bookends:buildBarColorsMenu()
             end,
             keep_menu_open = true,
             callback = function(touchmenu_instance)
-                colorSpinner(_("Read color (% black)"), "fill", 75, touchmenu_instance)
+                colorNudge(_("Read color (% black)"), "fill", 75, touchmenu_instance)
             end,
             hold_callback = function(touchmenu_instance)
                 bc.fill = nil; saveColors()
@@ -1685,7 +1796,7 @@ function Bookends:buildBarColorsMenu()
             end,
             keep_menu_open = true,
             callback = function(touchmenu_instance)
-                colorSpinner(_("Unread color (% black)"), "bg", 25, touchmenu_instance)
+                colorNudge(_("Unread color (% black)"), "bg", 25, touchmenu_instance)
             end,
             hold_callback = function(touchmenu_instance)
                 bc.bg = nil; saveColors()
@@ -1698,7 +1809,7 @@ function Bookends:buildBarColorsMenu()
             end,
             keep_menu_open = true,
             callback = function(touchmenu_instance)
-                colorSpinner(_("Metro track color (% black)"), "track", 75, touchmenu_instance)
+                colorNudge(_("Metro track color (% black)"), "track", 75, touchmenu_instance)
             end,
             hold_callback = function(touchmenu_instance)
                 bc.track = nil; saveColors()
@@ -1711,7 +1822,7 @@ function Bookends:buildBarColorsMenu()
             end,
             keep_menu_open = true,
             callback = function(touchmenu_instance)
-                colorSpinner(_("Tick color (% black)"), "tick", 100, touchmenu_instance)
+                colorNudge(_("Tick color (% black)"), "tick", 100, touchmenu_instance)
             end,
             hold_callback = function(touchmenu_instance)
                 bc.tick = nil; saveColors()
@@ -1730,17 +1841,93 @@ function Bookends:buildBarColorsMenu()
                 saveColors()
             end,
         },
-        {
-            text = _("Reset all to defaults"),
-            keep_menu_open = true,
-            callback = function(touchmenu_instance)
-                bc = {}
-                self.settings:delSetting("bar_colors")
-                self:markDirty()
-                if touchmenu_instance then touchmenu_instance:updateItems() end
-            end,
-        },
     }
+end
+
+function Bookends:buildBarColorsMenu()
+    local bc = self.settings:readSetting("bar_colors") or {}
+
+    local function saveColors()
+        if not bc.fill and not bc.bg and not bc.track and not bc.tick and bc.invert_read_ticks == nil and not bc.tick_height_pct then
+            self.settings:delSetting("bar_colors")
+        else
+            self.settings:saveSetting("bar_colors", bc)
+        end
+        self:markDirty()
+    end
+
+    local items = self:_buildColorItems(bc, saveColors)
+
+    -- Tick width multiplier
+    table.insert(items, {
+        text_func = function()
+            local m = self.settings:readSetting("tick_width_multiplier", 2)
+            return _("Tick width") .. ": " .. m .. "x"
+        end,
+        keep_menu_open = true,
+        callback = function(touchmenu_instance)
+            self:showNudgeDialog(_("Tick width"), self.settings:readSetting("tick_width_multiplier", 2), 1, 5, 2, "x",
+                function(val)
+                    self.settings:saveSetting("tick_width_multiplier", val)
+                    self._tick_cache = nil
+                    self:markDirty()
+                end,
+                function()
+                    if touchmenu_instance then touchmenu_instance:updateItems() end
+                end, 1, false)
+        end,
+        hold_callback = function(touchmenu_instance)
+            self.settings:delSetting("tick_width_multiplier")
+            self._tick_cache = nil
+            self:markDirty()
+            if touchmenu_instance then touchmenu_instance:updateItems() end
+        end,
+    })
+
+    -- Tick height
+    table.insert(items, {
+        text_func = function()
+            local h = self.settings:readSetting("tick_height_pct", 100)
+            return _("Tick height") .. ": " .. h .. "%"
+        end,
+        keep_menu_open = true,
+        callback = function(touchmenu_instance)
+            self:showNudgeDialog(_("Tick height"), self.settings:readSetting("tick_height_pct", 100), 1, 400, 100, "%",
+                function(val)
+                    if val == 100 then
+                        self.settings:delSetting("tick_height_pct")
+                    else
+                        self.settings:saveSetting("tick_height_pct", val)
+                    end
+                    self:markDirty()
+                end,
+                function()
+                    if touchmenu_instance then touchmenu_instance:updateItems() end
+                end)
+        end,
+        hold_callback = function(touchmenu_instance)
+            self.settings:delSetting("tick_height_pct")
+            self:markDirty()
+            if touchmenu_instance then touchmenu_instance:updateItems() end
+        end,
+    })
+
+    -- Reset all
+    table.insert(items, {
+        text = _("Reset all to defaults"),
+        keep_menu_open = true,
+        callback = function(touchmenu_instance)
+            bc = {}
+            self.settings:delSetting("bar_colors")
+            self.settings:delSetting("tick_width_multiplier")
+            self.settings:delSetting("tick_height_pct")
+            self._tick_cache = nil
+            self:markDirty()
+            if touchmenu_instance then touchmenu_instance:updateItems() end
+        end,
+    })
+
+    return items
 end
 
 function Bookends:buildPositionMenu(pos)
@@ -1773,7 +1960,8 @@ function Bookends:buildPositionMenu(pos)
                 local tag = ""
                 if filter == "odd" then tag = " [odd]"
                 elseif filter == "even" then tag = " [even]" end
-                local preview = (Tokens.expandPreview(ps.lines[i] or "", self.ui, self:getSessionElapsed(), math.max(0, (self.session_max_page or 0) - (self.session_start_page or 0))))
+                local preview = (Tokens.expandPreview(ps.lines[i] or "", self.ui, self:getSessionElapsed(), math.max(0, (self.session_max_page or 0) - (self.session_start_page or 0)),
+                    self.settings:readSetting("tick_width_multiplier", 2)))
                 preview = preview:gsub("%s+", " "):match("^%s*(.-)%s*$")
                 if #preview > 42 then
                     preview = truncateUtf8(preview, 39)
@@ -1811,7 +1999,15 @@ function Bookends:buildPositionMenu(pos)
             return v_label
         end,
         callback = function()
-            self:showNudgeDialog(pos, "v_offset", v_label)
+            local ps = self.positions[pos.key]
+            self:showNudgeDialog(v_label, ps.v_offset or 0, 0, 999, 0, "px",
+                function(val)
+                    ps.v_offset = val > 0 and val or nil
+                    self:markDirty()
+                end,
+                function()
+                    self:savePositionSetting(pos.key)
+                end)
         end,
     })
 
@@ -1825,7 +2021,15 @@ function Bookends:buildPositionMenu(pos)
                 return h_label
             end,
             callback = function()
-                self:showNudgeDialog(pos, "h_offset", h_label)
+                local ps = self.positions[pos.key]
+                self:showNudgeDialog(h_label, ps.h_offset or 0, 0, 999, 0, "px",
+                    function(val)
+                        ps.h_offset = val > 0 and val or nil
+                        self:markDirty()
+                    end,
+                    function()
+                        self:savePositionSetting(pos.key)
+                    end)
             end,
         })
     end
@@ -2188,19 +2392,15 @@ function Bookends:editLineString(pos, line_idx)
     size_button.callback = function()
         format_dialog:onCloseKeyboard()
         local current = line_size or self:getPositionSetting(pos.key, "font_size")
-        showSpinWidget({
-            value = current,
-            value_min = 1,
-            value_max = 36,
-            default_value = self:getPositionSetting(pos.key, "font_size"),
-            title_text = _("Font size for line") .. " " .. line_idx,
-            ok_text = _("Set"),
-            callback = function(spin)
-                line_size = spin.value
+        self:showNudgeDialog(_("Font size") .. " " .. _("line") .. " " .. line_idx,
+            current, 1, 36, self:getPositionSetting(pos.key, "font_size"), "px",
+            function(val)
+                line_size = val
                 applyLivePreview()
-                format_dialog:reinit()
             end,
-        })
+            function()
+                format_dialog:reinit()
+            end, 1, false)
     end
 
     font_button.callback = function()
@@ -2244,30 +2444,24 @@ function Bookends:editLineString(pos, line_idx)
         callback = function() end,  -- reset, wired below
     }
 
-    nudge_up.callback = function()
+    local function doNudge(axis, delta)
         format_dialog:onCloseKeyboard()
-        line_v_nudge = line_v_nudge - nudge_step
+        if axis == "v" then
+            line_v_nudge = line_v_nudge + delta
+        else
+            line_h_nudge = line_h_nudge + delta
+        end
         applyLivePreview()
         format_dialog:reinit()
     end
-    nudge_down.callback = function()
-        format_dialog:onCloseKeyboard()
-        line_v_nudge = line_v_nudge + nudge_step
-        applyLivePreview()
-        format_dialog:reinit()
-    end
-    nudge_left.callback = function()
-        format_dialog:onCloseKeyboard()
-        line_h_nudge = line_h_nudge - nudge_step
-        applyLivePreview()
-        format_dialog:reinit()
-    end
-    nudge_right.callback = function()
-        format_dialog:onCloseKeyboard()
-        line_h_nudge = line_h_nudge + nudge_step
-        applyLivePreview()
-        format_dialog:reinit()
-    end
+    nudge_up.callback = function() doNudge("v", -1) end
+    nudge_up.hold_callback = function() doNudge("v", -10) end
+    nudge_down.callback = function() doNudge("v", 1) end
+    nudge_down.hold_callback = function() doNudge("v", 10) end
+    nudge_left.callback = function() doNudge("h", -1) end
+    nudge_left.hold_callback = function() doNudge("h", -10) end
+    nudge_right.callback = function() doNudge("h", 1) end
+    nudge_right.hold_callback = function() doNudge("h", 10) end
     nudge_label.callback = function()
         format_dialog:onCloseKeyboard()
         line_v_nudge = 0
@@ -2354,12 +2548,43 @@ function Bookends:editLineString(pos, line_idx)
         end,
         buttons = buildDialogButtons(),
     }
-    -- Disable hold-to-alpha on the movable container to prevent accidental
-    -- semi-transparency when rapidly tapping spinner buttons.
-    -- Must survive reinit() which recreates the movable, so we wrap reinit.
+    -- Allow tap-outside to hide keyboard, but never close dialog
+    function format_dialog:onTap(arg, ges)
+        if self:isKeyboardVisible() then
+            if self._input_widget.keyboard and self._input_widget.keyboard.dimen
+                    and ges.pos:notIntersectWith(self._input_widget.keyboard.dimen) then
+                self:onCloseKeyboard()
+            end
+        end
+        -- Never close the dialog on tap-outside
+    end
+    -- Always report keyboard as visible so dialog layout stays in upper portion.
+    -- But track real keyboard state to avoid reopening it on reinit.
+    local real_kb_visible = false
+    local orig_isKeyboardVisible = format_dialog.isKeyboardVisible
+    function format_dialog:isKeyboardVisible()
+        return true  -- layout always reserves keyboard space
+    end
+    local orig_onShowKeyboard = format_dialog.onShowKeyboard
+    function format_dialog:onShowKeyboard(...)
+        real_kb_visible = true
+        return orig_onShowKeyboard(self, ...)
+    end
+    local orig_onCloseKeyboard = format_dialog.onCloseKeyboard
+    function format_dialog:onCloseKeyboard(...)
+        real_kb_visible = false
+        return orig_onCloseKeyboard(self, ...)
+    end
     local orig_reinit = format_dialog.reinit
     function format_dialog:reinit(...)
+        -- reinit checks isKeyboardVisible (returns true for layout),
+        -- then calls onShowKeyboard if true. Suppress that when kb was actually hidden.
+        local was_visible = real_kb_visible
         orig_reinit(self, ...)
+        if not was_visible then
+            self._input_widget:onCloseKeyboard()
+            real_kb_visible = false
+        end
         if self.movable then
             self.movable.ges_events.MovableHold = nil
             self.movable.ges_events.MovableHoldPan = nil
@@ -2372,7 +2597,9 @@ function Bookends:editLineString(pos, line_idx)
         format_dialog.movable.ges_events.MovableHoldRelease = nil
     end
     UIManager:show(format_dialog)
-    format_dialog:onShowKeyboard()
+    -- Hide keyboard after show — dialog is already positioned for keyboard-open,
+    -- so it stays in the upper portion of screen, clear of the keyboard when reopened.
+    format_dialog:onCloseKeyboard()
 end
 
 function Bookends:showLineManageDialog(pos, line_idx, touchmenu_instance)
@@ -2979,7 +3206,8 @@ function Bookends:showTokenPicker(on_select)
             -- Expand the token to get its current value
             local current = ""
             if self.ui then
-                local expanded = Tokens.expand(token, self.ui, session_elapsed, session_pages)
+                local expanded = Tokens.expand(token, self.ui, session_elapsed, session_pages,
+                    nil, self.settings:readSetting("tick_width_multiplier", 2))
                 if expanded and expanded ~= "" and expanded ~= token then
                     current = expanded
                 end
@@ -3306,103 +3534,6 @@ function Bookends:installUpdate(zip_url, old_version, new_version)
     end)
 end
 
-function Bookends:showNudgeDialog(pos, field, label)
-    local pos_settings = self.positions[pos.key]
-    local original = pos_settings[field]
-    local dialog
-
-    local function nudge(delta)
-        local val = math.max(0, (pos_settings[field] or 0) + delta)
-        pos_settings[field] = val > 0 and val or nil
-        self:markDirty()
-        dialog:reinit()
-    end
-
-    local ButtonDialog = require("ui/widget/buttondialog")
-    dialog = ButtonDialog:new{
-        title = label,
-        buttons = {
-            {
-                { text = "-10", callback = function() nudge(-10) end },
-                { text = "-1", callback = function() nudge(-1) end },
-                { text_func = function() return tostring(pos_settings[field] or 0) end, enabled = false },
-                { text = "+1", callback = function() nudge(1) end },
-                { text = "+10", callback = function() nudge(10) end },
-            },
-            {
-                {
-                    text = _("Cancel"),
-                    callback = function()
-                        pos_settings[field] = original
-                        self:markDirty()
-                        UIManager:close(dialog)
-                    end,
-                },
-                {
-                    text = _("Save"),
-                    is_enter_default = true,
-                    callback = function()
-                        self:savePositionSetting(pos.key)
-                        UIManager:close(dialog)
-                    end,
-                },
-            },
-        },
-    }
-    UIManager:show(dialog)
-end
-
-function Bookends:showFontScaleDialog()
-    local original = self.defaults.font_scale
-    local dialog
-
-    local function nudge(delta)
-        self.defaults.font_scale = math.max(25, math.min(300, self.defaults.font_scale + delta))
-        self:markDirty()
-        dialog:reinit()
-    end
-
-    local ButtonDialog = require("ui/widget/buttondialog")
-    dialog = ButtonDialog:new{
-        title = _("Font scale"),
-        buttons = {
-            {
-                { text = "-10", callback = function() nudge(-10) end },
-                { text = "-1", callback = function() nudge(-1) end },
-                { text_func = function() return self.defaults.font_scale .. "%" end, enabled = false },
-                { text = "+1", callback = function() nudge(1) end },
-                { text = "+10", callback = function() nudge(10) end },
-            },
-            {
-                {
-                    text = _("Cancel"),
-                    callback = function()
-                        self.defaults.font_scale = original
-                        self:markDirty()
-                        UIManager:close(dialog)
-                    end,
-                },
-                {
-                    text = _("Reset"),
-                    callback = function()
-                        self.defaults.font_scale = 100
-                        self:markDirty()
-                        dialog:reinit()
-                    end,
-                },
-                {
-                    text = _("Save"),
-                    is_enter_default = true,
-                    callback = function()
-                        self.settings:saveSetting("font_scale", self.defaults.font_scale)
-                        UIManager:close(dialog)
-                    end,
-                },
-            },
-        },
-    }
-    UIManager:show(dialog)
-end
 
 function Bookends:showMarginAdjuster(touchmenu_instance)
     local original = {
@@ -3449,7 +3580,7 @@ function Bookends:showMarginAdjuster(touchmenu_instance)
                 end,
             },
             {
-                text = _("Reset"),
+                text = _("Default"),
                 callback = function()
                     self.defaults.margin_top = 10
                     self.defaults.margin_bottom = 25
@@ -3460,7 +3591,7 @@ function Bookends:showMarginAdjuster(touchmenu_instance)
                 end,
             },
             {
-                text = _("Save"),
+                text = _("Apply"),
                 is_enter_default = true,
                 callback = function()
                     self.settings:saveSetting("margin_top", self.defaults.margin_top)
@@ -3475,24 +3606,11 @@ function Bookends:showMarginAdjuster(touchmenu_instance)
 
     local ButtonDialog = require("ui/widget/buttondialog")
     margin_dialog = ButtonDialog:new{
+        dismissable = false,
         title = _("Adjust margins"),
         buttons = buttons,
     }
     UIManager:show(margin_dialog)
-end
-
-function Bookends:showSpinner(title, value, min, max, default, on_set)
-    showSpinWidget({
-        value = value,
-        value_min = min,
-        value_max = max,
-        default_value = default,
-        title_text = title,
-        ok_text = _("Set"),
-        callback = function(spin)
-            on_set(spin.value)
-        end,
-    })
 end
 
 return Bookends
