@@ -223,7 +223,16 @@ When text would overlap between positions on the same row, Bookends automaticall
 | Adjust margins | 10/25/18/18 | Independent top/bottom/left/right margins |
 | Truncation gap | 50px | Minimum space between adjacent texts |
 | Truncation priority | Center | Which positions get priority when text overlaps |
+| Disable stock status bar | Off | Hides KOReader's built-in status bar (see below) |
 | Check for updates | — | Check GitHub for new versions with one-tap install |
+
+### Disabling the stock status bar
+
+For the best experience, disable KOReader's built-in status bar via **Settings > Disable stock status bar**. This:
+
+- **Reduces e-ink flicker** — Bookends no longer needs to repaint over the stock footer, eliminating extra screen refreshes on page turns
+- **Frees screen space** — The stock footer's reserved area is returned to the reading area
+- **Avoids duplication** — All stock status bar features (time, battery, progress, pages, etc.) are available as Bookends tokens
 
 ### Gesture support
 

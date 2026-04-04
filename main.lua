@@ -1070,7 +1070,9 @@ function Bookends:addToMainMenu(menu_items)
     menu_items.bookends = {
         text = _("Bookends"),
         sorting_hint = "typeset",
-        sub_item_table = self:buildMainMenu(),
+        sub_item_table_func = function()
+            return self:buildMainMenu()
+        end,
     }
 end
 
@@ -1227,7 +1229,6 @@ function Bookends:buildMainMenu()
                         self.settings:saveSetting("truncation_priority", self.defaults.truncation_priority)
                         self:markDirty()
                     end,
-                    separator = true,
                 },
                 {
                     text = _("Progress bar colors"),
@@ -1235,6 +1236,30 @@ function Bookends:buildMainMenu()
                         return self:buildBarColorsMenu()
                     end,
                     separator = true,
+                },
+                {
+                    text_func = function()
+                        if self.ui.view.footer_visible then
+                            return _("Disable stock status bar") .. " (" .. _("recommended") .. ")"
+                        end
+                        return _("Disable stock status bar")
+                    end,
+                    keep_menu_open = true,
+                    help_text = _("Hides KOReader's built-in status bar. This simplifies the render pipeline and can reduce e-ink flicker on some devices. All status bar features are available as Bookends tokens."),
+                    checked_func = function()
+                        return not self.ui.view.footer_visible
+                    end,
+                    callback = function()
+                        local footer = self.ui.view.footer
+                        if self.ui.view.footer_visible then
+                            footer:applyFooterMode(footer.mode_list.off)
+                            G_reader_settings:saveSetting("reader_footer_mode", footer.mode_list.off)
+                        else
+                            footer:applyFooterMode(footer.mode_list.page_progress)
+                            G_reader_settings:saveSetting("reader_footer_mode", footer.mode_list.page_progress)
+                        end
+                        self:markDirty()
+                    end,
                 },
                 {
                     text = _("Check for updates"),
