@@ -3019,11 +3019,30 @@ end
 -- ─── Helpers ─────────────────────────────────────────────
 
 
+function Bookends:_offerReleasesPage(message)
+    local url = "https://github.com/AndyHazz/bookends.koplugin/releases"
+    if Device:canOpenLink() then
+        UIManager:show(ConfirmBox:new{
+            text = message .. "\n\n" .. _("Open the releases page in a browser?"),
+            ok_text = _("Open"),
+            ok_callback = function()
+                Device:openLink(url)
+            end,
+        })
+    else
+        UIManager:show(InfoMessage:new{
+            text = message,
+            timeout = 3,
+        })
+    end
+end
+
 function Bookends:checkForUpdates()
 
     local DataStorage = require("datastorage")
-    local meta = dofile("plugins/bookends.koplugin/_meta.lua")
-    local installed_version = meta and meta.version or "unknown"
+    local meta_path = DataStorage:getDataDir() .. "/plugins/bookends.koplugin/_meta.lua"
+    local ok_meta, meta = pcall(dofile, meta_path)
+    local installed_version = (ok_meta and meta and meta.version) or "unknown"
 
     local NetworkMgr = require("ui/network/manager")
     if not NetworkMgr:isWifiOn() then
@@ -3040,29 +3059,53 @@ function Bookends:checkForUpdates()
     })
 
     UIManager:scheduleIn(0.1, function()
-        local http = require("socket/http")
-        local ltn12 = require("ltn12")
-        local socket = require("socket")
-        local socketutil = require("socketutil")
         local json = require("json")
 
-        local function githubGet(url)
-            local body = {}
-            socketutil:set_timeout(socketutil.LARGE_BLOCK_TIMEOUT, socketutil.LARGE_TOTAL_TIMEOUT)
-            local code = socket.skip(1, http.request({
-                url = url,
-                method = "GET",
-                headers = {
-                    ["User-Agent"] = "KOReader-Bookends/" .. installed_version,
-                    ["Accept"] = "application/vnd.github.v3+json",
-                },
-                sink = ltn12.sink.table(body),
-                redirect = true,
-            }))
-            socketutil:reset_timeout()
-            if code ~= 200 then return nil end
-            local ok, data = pcall(json.decode, table.concat(body))
-            return ok and data or nil
+        -- Try LuaSocket first, fall back to curl for platforms where SSL crashes
+        local function httpGetJSON(url)
+            local ok_require, http, ltn12, socket, socketutil =
+                pcall(function()
+                    return require("socket/http"),
+                           require("ltn12"),
+                           require("socket"),
+                           require("socketutil")
+                end)
+            if ok_require then
+                local body = {}
+                local ok_req, code = pcall(function()
+                    socketutil:set_timeout(socketutil.LARGE_BLOCK_TIMEOUT, socketutil.LARGE_TOTAL_TIMEOUT)
+                    local c = socket.skip(1, http.request({
+                        url = url,
+                        method = "GET",
+                        headers = {
+                            ["User-Agent"] = "KOReader-Bookends/" .. installed_version,
+                            ["Accept"] = "application/vnd.github.v3+json",
+                        },
+                        sink = ltn12.sink.table(body),
+                        redirect = true,
+                    }))
+                    socketutil:reset_timeout()
+                    return c
+                end)
+                if ok_req and code == 200 then
+                    local ok, data = pcall(json.decode, table.concat(body))
+                    if ok then return data end
+                end
+                pcall(function() socketutil:reset_timeout() end)
+            end
+            -- Fallback: curl (available on Android, desktop)
+            local handle = io.popen(string.format(
+                "curl -s -L -H 'User-Agent: KOReader-Bookends' -H 'Accept: application/vnd.github.v3+json' %q",
+                url))
+            if handle then
+                local body = handle:read("*a")
+                handle:close()
+                if body and body ~= "" then
+                    local ok, data = pcall(json.decode, body)
+                    if ok then return data end
+                end
+            end
+            return nil
         end
 
         local function parseVersion(v)
@@ -3083,12 +3126,9 @@ function Bookends:checkForUpdates()
         end
 
         -- Fetch all releases to gather notes between installed and latest
-        local releases = githubGet("https://api.github.com/repos/AndyHazz/bookends.koplugin/releases")
+        local releases = httpGetJSON("https://api.github.com/repos/AndyHazz/bookends.koplugin/releases")
         if not releases or #releases == 0 then
-            UIManager:show(InfoMessage:new{
-                text = _("Could not check for updates."),
-                timeout = 3,
-            })
+            self:_offerReleasesPage(_("Could not check for updates."))
             return
         end
 
@@ -3188,11 +3228,6 @@ function Bookends:installUpdate(zip_url, old_version, new_version)
     })
 
     UIManager:scheduleIn(0.1, function()
-        local http = require("socket/http")
-        local ltn12 = require("ltn12")
-        local socket = require("socket")
-        local socketutil = require("socketutil")
-
         -- Download ZIP to temp location
         local cache_dir = DataStorage:getSettingsDir() .. "/bookends_cache"
         if lfs.attributes(cache_dir, "mode") ~= "directory" then
@@ -3200,33 +3235,48 @@ function Bookends:installUpdate(zip_url, old_version, new_version)
         end
         local zip_path = cache_dir .. "/bookends.koplugin.zip"
 
-        local file = io.open(zip_path, "wb")
-        if not file then
-            UIManager:show(InfoMessage:new{
-                text = _("Could not save download."),
-                timeout = 3,
-            })
-            return
+        -- Try LuaSocket first, fall back to curl
+        local downloaded = false
+        local ok_require, http, ltn12, socket, socketutil =
+            pcall(function()
+                return require("socket/http"),
+                       require("ltn12"),
+                       require("socket"),
+                       require("socketutil")
+            end)
+        if ok_require then
+            local file = io.open(zip_path, "wb")
+            if file then
+                local ok_dl, code = pcall(function()
+                    socketutil:set_timeout(socketutil.FILE_BLOCK_TIMEOUT, socketutil.FILE_TOTAL_TIMEOUT)
+                    local c = socket.skip(1, http.request({
+                        url = zip_url,
+                        method = "GET",
+                        headers = {
+                            ["User-Agent"] = "KOReader-Bookends/" .. old_version,
+                        },
+                        sink = ltn12.sink.file(file),
+                        redirect = true,
+                    }))
+                    socketutil:reset_timeout()
+                    return c
+                end)
+                if not ok_dl then
+                    pcall(function() socketutil:reset_timeout() end)
+                end
+                downloaded = ok_dl and code == 200
+            end
         end
-
-        socketutil:set_timeout(socketutil.FILE_BLOCK_TIMEOUT, socketutil.FILE_TOTAL_TIMEOUT)
-        local code = socket.skip(1, http.request({
-            url = zip_url,
-            method = "GET",
-            headers = {
-                ["User-Agent"] = "KOReader-Bookends/" .. old_version,
-            },
-            sink = ltn12.sink.file(file),
-            redirect = true,
-        }))
-        socketutil:reset_timeout()
-
-        if code ~= 200 then
+        -- Fallback: curl (available on Android, desktop)
+        if not downloaded then
             pcall(os.remove, zip_path)
-            UIManager:show(InfoMessage:new{
-                text = _("Download failed."),
-                timeout = 3,
-            })
+            local ret = os.execute(string.format(
+                "curl -s -L -o %q %q", zip_path, zip_url))
+            downloaded = ret == 0 or ret == true
+        end
+        if not downloaded then
+            pcall(os.remove, zip_path)
+            self:_offerReleasesPage(_("Download failed."))
             return
         end
 
