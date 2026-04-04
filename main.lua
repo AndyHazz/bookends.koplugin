@@ -423,12 +423,15 @@ function Bookends:markDirty()
     if not self._error_disabled then
         self.enabled = self.settings:isTrue("enabled")
     end
-    -- Debounce: coalesce multiple markDirty calls within the same tick
+    -- Debounce: coalesce multiple markDirty calls within the same tick.
+    -- Skip if a KOReader paint cycle already consumed the dirty flag.
     if not self._repaint_scheduled then
         self._repaint_scheduled = true
         UIManager:nextTick(function()
             self._repaint_scheduled = false
-            UIManager:setDirty(self.ui, "ui")
+            if self.dirty then
+                UIManager:setDirty(self.ui, "ui")
+            end
         end)
     end
 end
@@ -505,9 +508,16 @@ function Bookends:onPageUpdate()
         self._error_disabled = false
         self.enabled = self.settings:isTrue("enabled")
     end
-    self:markDirty()
+    -- Mark dirty but don't request a repaint — KOReader's own page-turn
+    -- paint cycle will call our paintTo, which picks up the dirty flag.
+    -- Calling setDirty here would cause a second e-ink refresh (visible flicker).
+    self.dirty = true
+    self._tick_cache = nil
 end
-function Bookends:onPosUpdate() self:markDirty() end
+function Bookends:onPosUpdate()
+    self.dirty = true
+    self._tick_cache = nil
+end
 function Bookends:onReaderFooterVisibilityChange() self:markDirty() end
 function Bookends:onSetDimensions() self:markDirty() end
 
