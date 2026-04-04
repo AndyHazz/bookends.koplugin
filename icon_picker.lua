@@ -142,6 +142,8 @@ function IconPicker:show(on_select)
     local Device = require("device")
     local Screen = Device.screen
 
+    local Size = require("ui/size")
+
     local menu
     menu = Menu:new{
         title = _("Insert icon"),
@@ -156,6 +158,8 @@ function IconPicker:show(on_select)
             end
         end,
     }
+    -- Override popout corner radius and page text size to match font picker
+    if menu[1] then menu[1].radius = Size.radius.window end
     local x = math.floor((Screen:getWidth() - menu.dimen.w) / 2)
     local y = math.floor((Screen:getHeight() - menu.dimen.h) / 2)
     UIManager:show(menu, nil, nil, x, y)

@@ -2931,6 +2931,13 @@ Bookends.TOKEN_CATALOG = {
 
 function Bookends:showTokenPicker(on_select)
     local Menu = require("ui/widget/menu")
+    local Size = require("ui/size")
+    local Tokens = require("tokens")
+
+    -- Resolve current values for each token
+    local session_elapsed = self:getSessionElapsed()
+    local session_pages = math.max(0, (self.session_max_page or 0) - (self.session_start_page or 0))
+
     local items = {}
     for _, category in ipairs(self.TOKEN_CATALOG) do
         local label = category[1]
@@ -2941,9 +2948,23 @@ function Bookends:showTokenPicker(on_select)
             callback = function() end,
         })
         for _, token_entry in ipairs(tokens) do
+            local token = token_entry[1]
+            local desc = token_entry[2]
+            -- Expand the token to get its current value
+            local current = ""
+            if self.ui then
+                local expanded = Tokens.expand(token, self.ui, session_elapsed, session_pages)
+                if expanded and expanded ~= "" and expanded ~= token then
+                    current = expanded
+                end
+            end
+            local display = token .. "  " .. desc
+            if current ~= "" then
+                display = display .. "  \xE2\x86\x92 " .. current  -- → arrow
+            end
             table.insert(items, {
-                text = token_entry[1] .. "  " .. token_entry[2],
-                insert_value = token_entry[1],
+                text = display,
+                insert_value = token,
             })
         end
     end
@@ -2962,6 +2983,8 @@ function Bookends:showTokenPicker(on_select)
             end
         end,
     }
+    -- Override popout corner radius and page text size to match font picker
+    if menu[1] then menu[1].radius = Size.radius.window end
     local x = math.floor((Screen:getWidth() - menu.dimen.w) / 2)
     local y = math.floor((Screen:getHeight() - menu.dimen.h) / 2)
     UIManager:show(menu, nil, nil, x, y)
