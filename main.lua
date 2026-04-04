@@ -707,7 +707,7 @@ function Bookends:_paintToInner(bb, x, y)
                     end
                 end
 
-                local direction = bar_cfg.direction or "ltr"
+                local direction = bar_cfg.direction or (vertical and "ttb" or "ltr")
                 local paint_vertical = direction == "ttb" or direction == "btt"
                 local paint_reverse = direction == "rtl" or direction == "btt"
                 OverlayWidget.paintProgressBar(bb, bar_x, bar_y, bar_w, bar_h, pct, ticks,
@@ -1431,14 +1431,30 @@ function Bookends:buildSingleBarMenu(bar_idx, bar_cfg)
             enabled_func = isEnabled,
             keep_menu_open = true,
             callback = function(touchmenu_instance)
-                local cycle = { "ltr", "rtl", "ttb", "btt" }
-                local cur = bar_cfg.direction or "ltr"
+                local is_side = bar_cfg.v_anchor == "left" or bar_cfg.v_anchor == "right"
+                local is_metro = (bar_cfg.style or "solid") == "metro"
+                local cycle
+                if is_metro and is_side then
+                    cycle = { "ttb", "btt" }
+                elseif is_metro then
+                    cycle = { "ltr", "rtl" }
+                else
+                    cycle = { "ltr", "rtl", "ttb", "btt" }
+                end
+                local default_dir = is_side and "ttb" or "ltr"
+                local cur = bar_cfg.direction or default_dir
+                local found = false
                 for idx, v in ipairs(cycle) do
                     if v == cur then
                         local next_dir = cycle[(idx % #cycle) + 1]
-                        bar_cfg.direction = next_dir ~= "ltr" and next_dir or nil
+                        bar_cfg.direction = next_dir ~= default_dir and next_dir or nil
+                        found = true
                         break
                     end
+                end
+                if not found then
+                    -- Stale direction not in allowed cycle — snap to default
+                    bar_cfg.direction = nil
                 end
                 saveBar()
                 if touchmenu_instance then touchmenu_instance:updateItems() end
