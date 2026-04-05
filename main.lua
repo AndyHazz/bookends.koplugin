@@ -2727,9 +2727,6 @@ function Bookends:editLineString(pos, line_idx, touchmenu_instance)
     local line_bar_style = pos_settings.line_bar_style[line_idx] -- nil = "bordered"
 
     -- Live preview: write current local state to settings and repaint.
-    -- Repaint immediately (not via nextTick) so it merges into the same
-    -- paint cycle as the dialog's own refresh, avoiding a separate e-ink
-    -- refresh that flashes book text through the Bookends area.
     local function applyLivePreview()
         pos_settings.line_style[line_idx] = line_style ~= "regular" and line_style or nil
         pos_settings.line_font_size[line_idx] = line_size
@@ -2741,9 +2738,7 @@ function Bookends:editLineString(pos, line_idx, touchmenu_instance)
         pos_settings.line_bar_type[line_idx] = line_bar_type
         pos_settings.line_bar_height[line_idx] = line_bar_height
         pos_settings.line_bar_style[line_idx] = line_bar_style
-        self.dirty = true
-        self._tick_cache = nil
-        UIManager:setDirty(self.ui, "fast")
+        self:markDirty()
     end
 
     -- Style cycle button
@@ -3715,6 +3710,13 @@ Bookends.TOKEN_CATALOG = {
         { "%f", _("Frontlight brightness") },
         { "%F", _("Frontlight warmth") },
         { "%m", _("RAM used %") },
+    }},
+    { _("Snippets"), {
+        { "\xE2\x80\x94 Page %c of %t \xE2\x80\x94", "" },
+        { "%T \xE2\x8B\xAE [i]%A[/i]", "" },
+        { "%x Bookmark(s)", "" },
+        { "%q Highlight(s)", "" },
+        { "\xE2\x8C\x9B %R \xC2\xBB %s page session", "" },
     }},
 }
 
