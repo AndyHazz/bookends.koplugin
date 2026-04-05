@@ -1,16 +1,16 @@
+local ConfirmBox = require("ui/widget/confirmbox")
 local Device = require("device")
 local Font = require("ui/font")
+local InfoMessage = require("ui/widget/infomessage")
+local InputDialog = require("ui/widget/inputdialog")
+local OverlayWidget = require("overlay_widget")
+local Tokens = require("tokens")
 local UIManager = require("ui/uimanager")
 local WidgetContainer = require("ui/widget/container/widgetcontainer")
-local _ = require("i18n").gettext
-local T = require("ffi/util").template
-local Screen = Device.screen
-local Tokens = require("tokens")
-local OverlayWidget = require("overlay_widget")
-local InputDialog = require("ui/widget/inputdialog")
-local InfoMessage = require("ui/widget/infomessage")
-local ConfirmBox = require("ui/widget/confirmbox")
 local util = require("util")
+local _ = require("i18n").gettext
+local Screen = Device.screen
+local T = require("ffi/util").template
 
 --- Show an error on-screen and log it, instead of crashing.
 local _error_dialog_shown = false
@@ -135,8 +135,8 @@ function Bookends:init()
     self.ui.view:registerViewModule("bookends", self)
     self.session_elapsed = 0
     self.session_resume_time = os.time()
-    self.session_start_page = nil -- raw page, set on first onPageUpdate
-    self.session_max_page = nil   -- highest raw page reached
+    self.session_start_page = nil -- set on first onPageUpdate (stable or raw per setting)
+    self.session_max_page = nil   -- highest page reached (stable or raw per setting)
     self.dirty = true
     self.position_cache = {}
 
@@ -245,7 +245,6 @@ end
 function Bookends:loadSettings()
     local footer_settings = self.ui.view.footer.settings
     self.enabled = self.settings:readSetting("enabled", false)
-
     self.defaults = {
         font_face = self.settings:readSetting("font_face", Font.fontmap["ffont"]),
         font_size = self.settings:readSetting("font_size", footer_settings.text_font_size),
@@ -724,7 +723,7 @@ Bookends.STYLE_LABELS = {
     regular = _("Regular"),
     bold = _("Bold"),
     italic = _("Italic"),
-    bolditalic = _("Bold Italic"),
+    bolditalic = _("Bold italic"),
 }
 
 function Bookends:resolveLineConfig(face_name, font_size, style)
@@ -752,7 +751,7 @@ end
 
 -- Event handlers
 function Bookends:onPageUpdate()
-    local current = self.ui.view.state.page
+    local current = self:getSessionPageNumber()
     if current then
         if not self.session_start_page then
             self.session_start_page = current
@@ -793,6 +792,20 @@ Bookends.onNotCharging            = Bookends.delayedRepaint
 Bookends.onNetworkConnected       = Bookends.delayedRepaint
 Bookends.onNetworkDisconnected    = Bookends.delayedRepaint
 Bookends.onAnnotationsModified = Bookends.delayedRepaint
+function Bookends:getSessionPageNumber()
+    local pageno = self.ui.view.state.page
+    if not pageno then return nil end
+    -- Use stable page numbers when available (pagemap index or flow-aware)
+    if self.ui.pagemap and self.ui.pagemap:wantsPageLabels() then
+        local _label, idx, _count = self.ui.pagemap:getCurrentPageLabel(true)
+        if idx then return idx end
+    end
+    local doc = self.ui.document
+    if doc and doc:hasHiddenFlows() then
+        return doc:getPageNumberInFlow(pageno)
+    end
+    return pageno
+end
 function Bookends:getSessionElapsed()
     local elapsed = self.session_elapsed or 0
     if self.session_resume_time then
@@ -1643,10 +1656,10 @@ function Bookends:buildSingleBarMenu(bar_idx, bar_cfg)
                     bar_cfg.show_chapter_ticks = nil
                 end
                 local labels = {
-                    off = _("Chapter ticks: Off"),
-                    all = _("Chapter ticks: All levels"),
-                    level1 = _("Chapter ticks: Top level"),
-                    level2 = _("Chapter ticks: Top 2 levels"),
+                    off = _("Chapter ticks: off"),
+                    all = _("Chapter ticks: all levels"),
+                    level1 = _("Chapter ticks: top level"),
+                    level2 = _("Chapter ticks: top 2 levels"),
                 }
                 return labels[bar_cfg.chapter_ticks or "off"]
             end,
@@ -1717,10 +1730,10 @@ function Bookends:buildSingleBarMenu(bar_idx, bar_cfg)
         {
             text_func = function()
                 local labels = {
-                    ltr = _("Fill: Left to right"),
-                    rtl = _("Fill: Right to left"),
-                    ttb = _("Fill: Top to bottom"),
-                    btt = _("Fill: Bottom to top"),
+                    ltr = _("Fill: left to right"),
+                    rtl = _("Fill: right to left"),
+                    ttb = _("Fill: top to bottom"),
+                    btt = _("Fill: bottom to top"),
                 }
                 local is_side = bar_cfg.v_anchor == "left" or bar_cfg.v_anchor == "right"
                 local default_dir = is_side and "ttb" or "ltr"
@@ -2984,7 +2997,7 @@ function Bookends:editLineString(pos, line_idx, touchmenu_instance)
                 end,
             },
             {
-                text = _("Icons"),
+                text = _("Symbols"),
                 callback = function()
                     format_dialog:onCloseKeyboard()
                     IconPicker:show(function(value)
@@ -3643,7 +3656,7 @@ Bookends.TOKEN_CATALOG = {
         { "%Q", _("Number of notes") },
         { "%x", _("Number of bookmarks") },
     }},
-    { _("Page / Progress"), {
+    { _("Page / progress"), {
         { "%c", _("Current page number") },
         { "%t", _("Total pages") },
         { "%p", _("Book percentage read") },
@@ -3653,10 +3666,10 @@ Bookends.TOKEN_CATALOG = {
         { "%l", _("Pages left in chapter") },
         { "%L", _("Pages left in book") },
     }},
-    { _("Progress Bars"), {
+    { _("Progress bars"), {
         { "%bar", _("Progress bar (configure type in line editor)") },
     }},
-    { _("Time / Date"), {
+    { _("Time / date"), {
         { "%k", _("12-hour clock") },
         { "%K", _("24-hour clock") },
         { "%d", _("Date short (28 Mar)") },

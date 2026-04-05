@@ -86,7 +86,7 @@ msgstr "Livello batteria"
 msgid "Bold"
 msgstr "Grassetto"
 
-msgid "Bold Italic"
+msgid "Bold italic"
 msgstr "Grassetto corsivo"
 
 msgid "book"
@@ -173,16 +173,16 @@ msgstr "Capitolo"
 msgid "Chapter percentage read"
 msgstr "% capitolo letto"
 
-msgid "Chapter ticks: Off"
+msgid "Chapter ticks: off"
 msgstr "Tacche capitolo: Off"
 
-msgid "Chapter ticks: All levels"
+msgid "Chapter ticks: all levels"
 msgstr "Marcatori capitolo: Tutti i livelli"
 
-msgid "Chapter ticks: Top 2 levels"
+msgid "Chapter ticks: top 2 levels"
 msgstr "Tacche capitolo: 2 livelli"
 
-msgid "Chapter ticks: Top level"
+msgid "Chapter ticks: top level"
 msgstr "Tacche capitolo: 1° livello"
 
 msgid "Chapter title"
@@ -347,16 +347,16 @@ msgstr "Occhio (nascosto)"
 msgid "File name"
 msgstr "Nome file"
 
-msgid "Fill: Bottom to top"
+msgid "Fill: bottom to top"
 msgstr "Riempimento: Dal basso"
 
-msgid "Fill: Left to right"
+msgid "Fill: left to right"
 msgstr "Riempimento: Da sinistra"
 
-msgid "Fill: Right to left"
+msgid "Fill: right to left"
 msgstr "Riempimento: Da destra"
 
-msgid "Fill: Top to bottom"
+msgid "Fill: top to bottom"
 msgstr "Riempimento: Dall'alto"
 
 msgid "Flag"
@@ -407,8 +407,8 @@ msgstr "Clessidra"
 msgid "Hourglass (filled)"
 msgstr "Clessidra (piena)"
 
-msgid "Icons"
-msgstr "Icone"
+msgid "Symbols"
+msgstr "Simboli"
 
 msgid "Infinity"
 msgstr "Infinito"
@@ -419,8 +419,8 @@ msgstr "Info"
 msgid "Inline progress bars can be added via the line editor"
 msgstr "Le barre inline si aggiungono dall'editor riga"
 
-msgid "Insert icon"
-msgstr "Inserisci icona"
+msgid "Insert symbol"
+msgstr "Inserisci simbolo"
 
 msgid "Insert token"
 msgstr "Inserisci token"
@@ -515,7 +515,7 @@ msgstr "off"
 msgid "on"
 msgstr "on"
 
-msgid "Page / Progress"
+msgid "Page / progress"
 msgstr "Pagina / Avanzamento"
 
 msgid "Pages left in book"
@@ -557,7 +557,7 @@ msgstr "- Barra avanzamento"
 msgid "Progress bar (configure type in line editor)"
 msgstr "Barra avanzamento (configura tipo nell'editor riga)"
 
-msgid "Progress Bars"
+msgid "Progress bars"
 msgstr "Barre avanzamento"
 
 msgid "RAM used %"
@@ -689,7 +689,7 @@ msgstr "Tilde"
 msgid "Time"
 msgstr "Ora"
 
-msgid "Time / Date"
+msgid "Time / date"
 msgstr "Ora / Data"
 
 msgid "Time left in book"

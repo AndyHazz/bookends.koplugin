@@ -843,14 +843,12 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
                 if vertical then tick_above = not tick_above end
                 if tick_above then
                     -- From top of bar down through trunk
-                    local full_h = line_y + line_thick - oy
-                    local th = math.max(1, math.floor(full_h * tick_height_pct / 100))
+                    local th = math.max(1, math.floor(thickness * tick_height_pct / 100))
                     pr(line_ox + tick_pos, line_y + line_thick - th, line_thick, th, metro_track)
                 else
                     -- Below trunk (same thickness as trunk)
                     local below_y = line_y + line_thick
-                    local full_h = oy + thickness - below_y
-                    local th = math.max(1, math.floor(full_h * tick_height_pct / 100))
+                    local th = math.max(1, math.floor(thickness * tick_height_pct / 100))
                     if th > 0 then
                         pr(line_ox + tick_pos, below_y, line_thick, th, metro_track)
                     end

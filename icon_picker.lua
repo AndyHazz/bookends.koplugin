@@ -146,7 +146,7 @@ function IconPicker:show(on_select)
 
     local menu
     menu = Menu:new{
-        title = _("Insert icon"),
+        title = _("Insert symbol"),
         item_table = item_table,
         width = math.floor(Screen:getWidth() * 0.8),
         height = math.floor(Screen:getHeight() * 0.8),

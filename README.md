@@ -26,9 +26,9 @@ Six positions: **Top-left**, **Top-center**, **Top-right**, **Bottom-left**, **B
 |:---:|:---:|:---:|
 | ![Rich Detail](screenshots/rich-detail.png) | ![Main menu](screenshots/main-menu.png) | ![Adjust margins](screenshots/adjust-margins.png) |
 
-| Line editor | Icon picker | Token picker |
+| Line editor | Symbol picker | Token picker |
 |:---:|:---:|:---:|
-| ![Line editor](screenshots/line-editor.png) | ![Icon picker](screenshots/icon-picker.png) | ![Token picker](screenshots/token-picker.png) |
+| ![Line editor](screenshots/line-editor.png) | ![Symbol picker](screenshots/icon-picker.png) | ![Token picker](screenshots/token-picker.png) |
 
 | Progress bar styles | Progress bar line editor |
 |:---:|:---:|

@@ -90,7 +90,7 @@ msgstr ""
 msgid "Bold"
 msgstr ""
 
-msgid "Bold Italic"
+msgid "Bold italic"
 msgstr ""
 
 msgid "book"
@@ -177,16 +177,16 @@ msgstr ""
 msgid "Chapter percentage read"
 msgstr ""
 
-msgid "Chapter ticks: All levels"
+msgid "Chapter ticks: all levels"
 msgstr ""
 
-msgid "Chapter ticks: Off"
+msgid "Chapter ticks: off"
 msgstr ""
 
-msgid "Chapter ticks: Top 2 levels"
+msgid "Chapter ticks: top 2 levels"
 msgstr ""
 
-msgid "Chapter ticks: Top level"
+msgid "Chapter ticks: top level"
 msgstr ""
 
 msgid "Chapter title"
@@ -354,16 +354,16 @@ msgstr ""
 msgid "File name"
 msgstr ""
 
-msgid "Fill: Bottom to top"
+msgid "Fill: bottom to top"
 msgstr ""
 
-msgid "Fill: Left to right"
+msgid "Fill: left to right"
 msgstr ""
 
-msgid "Fill: Right to left"
+msgid "Fill: right to left"
 msgstr ""
 
-msgid "Fill: Top to bottom"
+msgid "Fill: top to bottom"
 msgstr ""
 
 msgid "Flag"
@@ -414,7 +414,7 @@ msgstr ""
 msgid "Hourglass (filled)"
 msgstr ""
 
-msgid "Icons"
+msgid "Symbols"
 msgstr ""
 
 msgid "Infinity"
@@ -426,7 +426,7 @@ msgstr ""
 msgid "Inline progress bars can be added via the line editor"
 msgstr ""
 
-msgid "Insert icon"
+msgid "Insert symbol"
 msgstr ""
 
 msgid "Insert token"
@@ -531,7 +531,7 @@ msgstr ""
 msgid "on"
 msgstr ""
 
-msgid "Page / Progress"
+msgid "Page / progress"
 msgstr ""
 
 msgid "Pages left in book"
@@ -576,7 +576,7 @@ msgstr ""
 msgid "Progress bar (configure type in line editor)"
 msgstr ""
 
-msgid "Progress Bars"
+msgid "Progress bars"
 msgstr ""
 
 msgid "RAM used %"
@@ -723,7 +723,7 @@ msgstr ""
 msgid "Time"
 msgstr ""
 
-msgid "Time / Date"
+msgid "Time / date"
 msgstr ""
 
 msgid "Time left in book"

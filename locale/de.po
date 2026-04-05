@@ -86,7 +86,7 @@ msgstr "Ladestand"
 msgid "Bold"
 msgstr "Fett"
 
-msgid "Bold Italic"
+msgid "Bold italic"
 msgstr "Fett Kursiv"
 
 msgid "book"
@@ -173,16 +173,16 @@ msgstr "Kapitel"
 msgid "Chapter percentage read"
 msgstr "Kapitel gelesen (%)"
 
-msgid "Chapter ticks: Off"
+msgid "Chapter ticks: off"
 msgstr "Kapitelmarkierungen: Aus"
 
-msgid "Chapter ticks: All levels"
+msgid "Chapter ticks: all levels"
 msgstr "Kapitelmarkierungen: Alle Ebenen"
 
-msgid "Chapter ticks: Top 2 levels"
+msgid "Chapter ticks: top 2 levels"
 msgstr "Kapitelmarkierungen: Oberste 2 Ebenen"
 
-msgid "Chapter ticks: Top level"
+msgid "Chapter ticks: top level"
 msgstr "Kapitelmarkierungen: Oberste Ebene"
 
 msgid "Chapter title"
@@ -347,16 +347,16 @@ msgstr "Auge (verborgen)"
 msgid "File name"
 msgstr "Dateiname"
 
-msgid "Fill: Bottom to top"
+msgid "Fill: bottom to top"
 msgstr "Füllung: Unten nach oben"
 
-msgid "Fill: Left to right"
+msgid "Fill: left to right"
 msgstr "Füllung: Links nach rechts"
 
-msgid "Fill: Right to left"
+msgid "Fill: right to left"
 msgstr "Füllung: Rechts nach links"
 
-msgid "Fill: Top to bottom"
+msgid "Fill: top to bottom"
 msgstr "Füllung: Oben nach unten"
 
 msgid "Flag"
@@ -407,7 +407,7 @@ msgstr "Sanduhr"
 msgid "Hourglass (filled)"
 msgstr "Sanduhr (gefüllt)"
 
-msgid "Icons"
+msgid "Symbols"
 msgstr "Symbole"
 
 msgid "Infinity"
@@ -419,7 +419,7 @@ msgstr "Info"
 msgid "Inline progress bars can be added via the line editor"
 msgstr "Inline-Fortschrittsbalken können über den Zeileneditor hinzugefügt werden"
 
-msgid "Insert icon"
+msgid "Insert symbol"
 msgstr "Symbol einfügen"
 
 msgid "Insert token"
@@ -515,7 +515,7 @@ msgstr "aus"
 msgid "on"
 msgstr "ein"
 
-msgid "Page / Progress"
+msgid "Page / progress"
 msgstr "Seite / Fortschritt"
 
 msgid "Pages left in book"
@@ -557,7 +557,7 @@ msgstr "- Fortschrittsbalken"
 msgid "Progress bar (configure type in line editor)"
 msgstr "Fortschrittsbalken (Typ im Zeileneditor wählen)"
 
-msgid "Progress Bars"
+msgid "Progress bars"
 msgstr "Fortschrittsbalken"
 
 msgid "RAM used %"
@@ -689,7 +689,7 @@ msgstr "Tilde"
 msgid "Time"
 msgstr "Zeit"
 
-msgid "Time / Date"
+msgid "Time / date"
 msgstr "Zeit / Datum"
 
 msgid "Time left in book"

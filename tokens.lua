@@ -131,55 +131,76 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     local totalpages = ""
     local percent = ""
     local pages_left_book = ""
+    -- Numeric page indices for arithmetic (separate from display labels)
+    local page_idx = nil   -- numeric current page position
+    local page_count = nil -- numeric total pages
     if needs("c", "t", "p", "L") then
         if ui.pagemap and ui.pagemap:wantsPageLabels() then
-            currentpage = ui.pagemap:getCurrentPageLabel(true) or ""
-            totalpages = ui.pagemap:getLastPageLabel(true) or ""
+            local label, idx, count = ui.pagemap:getCurrentPageLabel(true)
+            currentpage = label or ""
+            page_idx = idx
+            page_count = count
+            -- Total: show count of mapped pages (not the last label, which may be "279" while count is 247)
+            totalpages = count and tostring(count) or ""
         elseif pageno and doc:hasHiddenFlows() then
             currentpage = doc:getPageNumberInFlow(pageno)
             local flow = doc:getPageFlow(pageno)
             totalpages = doc:getTotalPagesInFlow(flow)
+            page_idx = tonumber(currentpage)
+            page_count = tonumber(totalpages)
         else
             currentpage = pageno or 0
             totalpages = doc:getPageCount()
+            page_idx = pageno
+            page_count = tonumber(totalpages)
         end
 
+        -- Book percent: raw pages for per-flip accuracy
         local raw_total = doc:getPageCount()
         if pageno and raw_total and raw_total > 0 then
             percent = math.floor(pageno / raw_total * 100) .. "%"
         end
-
-        if pageno then
-            if (ui.pagemap and ui.pagemap:wantsPageLabels()) or doc:hasHiddenFlows() then
-                -- Use stable page numbers: totalpages and currentpage are already stable
-                local cur = tonumber(currentpage) or 0
-                local tot = tonumber(totalpages) or 0
-                if tot > 0 and cur > 0 then
-                    pages_left_book = tot - cur
-                end
-            else
-                local left = doc:getTotalPagesLeft(pageno)
-                if left then pages_left_book = left end
-            end
+        -- Pages left in book: stable page count
+        if page_idx and page_count and page_count > 0 then
+            pages_left_book = math.max(0, page_count - page_idx)
         end
     end
 
-    -- Chapter progress
+    -- Chapter progress: raw pages for %P (per-flip accuracy),
+    -- stable pages for %g, %G, %l (display values matching page numbers)
     local chapter_pct = ""
     local chapter_pages_done = ""
     local chapter_pages_left = ""
     local chapter_total_pages = ""
     local chapter_title = ""
     if needs("P", "g", "G", "l", "C") and pageno and ui.toc then
+        -- Raw page calculation for %P (percentage)
+        local chapter_start = ui.toc:getPreviousChapter(pageno)
+        if ui.toc:isChapterStart(pageno) then
+            chapter_start = pageno
+        end
+        if chapter_start then
+            local next_chapter = ui.toc:getNextChapter(pageno)
+            local chapter_end = next_chapter or (doc:getPageCount() + 1)
+            local raw_total = chapter_end - chapter_start
+            if raw_total > 0 then
+                local raw_done = pageno - chapter_start
+                if raw_total > 1 then
+                    chapter_pct = math.floor(raw_done / (raw_total - 1) * 100) .. "%"
+                else
+                    chapter_pct = "100%"
+                end
+            end
+        end
+        -- Stable page counts for %g (done), %G (total), %l (left)
         local done = ui.toc:getChapterPagesDone(pageno)
         local total = ui.toc:getChapterPageCount(pageno)
         if done and total and total > 0 then
-            chapter_pages_done = done + 1
+            chapter_pages_done = math.max(0, done + 1)
             chapter_total_pages = total
-            chapter_pct = math.floor(chapter_pages_done / total * 100) .. "%"
         end
         local left = ui.toc:getChapterPagesLeft(pageno)
-        if left then chapter_pages_left = left end
+        if left then chapter_pages_left = math.max(0, left) end
         local title = ui.toc:getTocTitleByPage(pageno)
         if title and title ~= "" then chapter_title = title end
     end
@@ -190,10 +211,9 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     if has_bar then
         local bar_pageno = pageno or 0
         local bar_doc = doc
-        local is_cre = ui.rolling ~= nil
         bar_info = {}
 
-        -- Book progress (page-based, matches KOReader footer)
+        -- Book progress: raw pages (visual position through screen flips)
         local book_pct
         local raw_total = bar_doc:getPageCount()
         if raw_total and raw_total > 0 then
@@ -229,37 +249,23 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
 
         bar_info.book = { kind = "book", pct = book_pct or 0, ticks = ticks }
 
-        -- Chapter progress
+        -- Chapter progress: raw page numbers to avoid stable-page rounding
         local ch_pct = 0
-        if is_cre and bar_doc.getCurrentPos and ui.toc then
-            local cur_pos = bar_doc:getCurrentPos()
-            -- Find current chapter start: getPreviousChapter returns < pageno,
-            -- so on a chapter start page we need to use pageno itself
+        if ui.toc then
             local chapter_start = ui.toc:getPreviousChapter(bar_pageno)
             if ui.toc:isChapterStart(bar_pageno) then
                 chapter_start = bar_pageno
             end
-            local next_chapter = ui.toc:getNextChapter(bar_pageno)
             if chapter_start then
-                local start_xp = bar_doc:getPageXPointer(chapter_start)
-                local start_pos = start_xp and bar_doc:getPosFromXPointer(start_xp) or 0
-                local end_pos
-                if next_chapter then
-                    local next_xp = bar_doc:getPageXPointer(next_chapter)
-                    end_pos = next_xp and bar_doc:getPosFromXPointer(next_xp) or (bar_doc.info and bar_doc.info.doc_height or 0)
-                else
-                    end_pos = bar_doc.info and bar_doc.info.doc_height or 0
+                local next_chapter = ui.toc:getNextChapter(bar_pageno)
+                local chapter_end = next_chapter or (bar_doc:getPageCount() + 1)
+                local total = chapter_end - chapter_start
+                if total > 1 then
+                    local done = bar_pageno - chapter_start
+                    ch_pct = math.max(0, math.min(1, done / (total - 1)))
+                elseif total > 0 then
+                    ch_pct = 1 -- single-page chapter
                 end
-                local range = end_pos - start_pos
-                if range > 0 then
-                    ch_pct = math.max(0, math.min(1, (cur_pos - start_pos) / range))
-                end
-            end
-        elseif ui.toc then
-            local done = ui.toc:getChapterPagesDone(bar_pageno)
-            local total = ui.toc:getChapterPageCount(bar_pageno)
-            if done and total and total > 0 then
-                ch_pct = math.max(0, math.min(1, (done + 1) / total))
             end
         end
         bar_info.chapter = { kind = "chapter", pct = ch_pct, ticks = {} }
@@ -277,19 +283,24 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     if needs("h", "H") and pageno and ui.statistics and ui.statistics.getTimeForPages then
         if needs("h") then
             local ch_left = ui.toc and ui.toc:getChapterPagesLeft(pageno, true)
-            if not ch_left then
-                ch_left = doc:getTotalPagesLeft(pageno)
-            end
             if ch_left then
-                local result = ui.statistics:getTimeForPages(ch_left)
-                if result and result ~= "N/A" then time_left_chapter = result end
+                ch_left = math.max(0, ch_left)
+                if ch_left > 0 then
+                    local result = ui.statistics:getTimeForPages(ch_left)
+                    if result and result ~= "N/A" then time_left_chapter = result end
+                else
+                    time_left_chapter = "0m"
+                end
             end
         end
         if needs("H") then
+            -- Use raw page count: getTimeForPages is calibrated against avg_time per raw page
             local doc_left = doc:getTotalPagesLeft(pageno)
-            if doc_left then
+            if doc_left and doc_left > 0 then
                 local result = ui.statistics:getTimeForPages(doc_left)
                 if result and result ~= "N/A" then time_left_doc = result end
+            elseif doc_left then
+                time_left_doc = "0m"
             end
         end
     end
@@ -390,14 +401,19 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     -- Reading speed and total book time (via statistics plugin)
     local reading_speed = ""
     local total_book_time = ""
-    if needs("r", "E") and ui.statistics then
+    if needs("r", "E") then
         if needs("r") then
-            local avg = ui.statistics.avg_time
-            if avg and avg > 0 then
-                reading_speed = tostring(math.floor(3600 / avg))
+            -- Prefer session-based speed (respects stable page numbering)
+            if session_elapsed and session_elapsed > 60 and session_pages > 0 then
+                reading_speed = tostring(math.floor(session_pages / session_elapsed * 3600))
+            elseif ui.statistics then
+                local avg = ui.statistics.avg_time
+                if avg and avg > 0 then
+                    reading_speed = tostring(math.floor(3600 / avg))
+                end
             end
         end
-        if needs("E") then
+        if needs("E") and ui.statistics then
             local total_secs = ui.statistics.book_read_time
             if total_secs and total_secs > 0 then
                 local user_duration_format = G_reader_settings:readSetting("duration_format", "classic")
@@ -553,13 +569,20 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     -- Track whether all tokens in the string resolved to empty or "0"
     local has_token = false
     local all_empty = true
+    -- Tokens that always count as content (page/chapter/time info is meaningful at zero)
+    local always_content = {
+        ["%c"] = true, ["%t"] = true, ["%p"] = true, ["%L"] = true,
+        ["%P"] = true, ["%g"] = true, ["%G"] = true, ["%l"] = true,
+        ["%h"] = true, ["%H"] = true, ["%k"] = true, ["%K"] = true,
+        ["%R"] = true, ["%s"] = true, ["%r"] = true,
+    }
     -- Per-token occurrence counters for matching limits
     local token_occurrence = {}
     local result = result_str:gsub("(%%%a)", function(token)
         local val = replace[token]
         if val == nil then return token end -- unknown token, leave as-is
         has_token = true
-        if val ~= "" and val ~= "0" then
+        if (val ~= "" and val ~= "0") or always_content[token] then
             all_empty = false
         end
         -- Wrap with markers if this occurrence has a pixel limit
