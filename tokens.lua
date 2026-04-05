@@ -403,8 +403,8 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     local total_book_time = ""
     if needs("r", "E") then
         if needs("r") then
-            -- Prefer session-based speed (respects stable page numbering)
-            if session_elapsed and session_elapsed > 60 and session_pages > 0 then
+            -- Prefer session-based speed once we have at least one page flip
+            if session_elapsed and session_elapsed > 0 and session_pages > 0 then
                 reading_speed = tostring(math.floor(session_pages / session_elapsed * 3600))
             elseif ui.statistics then
                 local avg = ui.statistics.avg_time
