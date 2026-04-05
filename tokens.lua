@@ -133,8 +133,9 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     local pages_left_book = ""
     if needs("c", "t", "p", "L") then
         if ui.pagemap and ui.pagemap:wantsPageLabels() then
-            currentpage = ui.pagemap:getCurrentPageLabel(true) or ""
-            totalpages = ui.pagemap:getLastPageLabel(true) or ""
+            local label, idx, count = ui.pagemap:getCurrentPageLabel(true)
+            currentpage = idx or pageno or 0
+            totalpages = count or doc:getPageCount()
         elseif pageno and doc:hasHiddenFlows() then
             currentpage = doc:getPageNumberInFlow(pageno)
             local flow = doc:getPageFlow(pageno)
