@@ -79,12 +79,33 @@ IconPicker.CATALOG = {
         { "\xE2\x86\x92", _("Arrow right") },           -- U+2192
         { "\xE2\x86\x91", _("Arrow up") },              -- U+2191
         { "\xE2\x86\x93", _("Arrow down") },            -- U+2193
+        { "\xE2\x87\x90", _("Double arrow left") },     -- U+21D0
+        { "\xE2\x87\x92", _("Double arrow right") },    -- U+21D2
+        { "\xE2\x87\x91", _("Double arrow up") },       -- U+21D1
+        { "\xE2\x87\x93", _("Double arrow down") },     -- U+21D3
         { "\xE2\x87\x84", _("Arrows left-right") },     -- U+21C4
         { "\xE2\x87\x89", _("Double arrows right") },   -- U+21C9
         { "\xE2\x86\xA2", _("Arrow left with tail") },  -- U+21A2
         { "\xE2\x86\xA3", _("Arrow right with tail") }, -- U+21A3
         { "\xE2\xA4\x9F", _("Arrow left to bar") },     -- U+291F
         { "\xE2\xA4\xA0", _("Arrow right to bar") },    -- U+2920
+        { "\xE2\x86\xA9", _("Arrow left hooked") },     -- U+21A9
+        { "\xE2\x86\xAA", _("Arrow right hooked") },    -- U+21AA
+        { "\xE2\xA4\xB4", _("Arrow right then up") },   -- U+2934
+        { "\xE2\xA4\xB5", _("Arrow right then down") }, -- U+2935
+        { "\xE2\x86\xB0", _("Arrow up then left") },    -- U+21B0
+        { "\xE2\x86\xB1", _("Arrow up then right") },   -- U+21B1
+        { "\xE2\x86\xB2", _("Arrow down then left") },  -- U+21B2
+        { "\xE2\x86\xB3", _("Arrow down then right") }, -- U+21B3
+        { "\xE2\x86\xBA", _("Circle arrow left") },     -- U+21BA
+        { "\xE2\x86\xBB", _("Circle arrow right") },    -- U+21BB
+        { "\xE2\x9E\x94", _("Heavy arrow right") },     -- U+2794
+        { "\xE2\x9E\x9C", _("Heavy round arrow right") }, -- U+279C
+        { "\xE2\x9E\x9D", _("Triangle-head right") },   -- U+279D
+        { "\xE2\x9E\x9E", _("Heavy triangle right") },  -- U+279E
+        { "\xE2\x9E\xA4", _("Arrowhead right") },       -- U+27A4
+        { "\xE2\x9F\xB5", _("Long arrow left") },       -- U+27F5
+        { "\xE2\x9F\xB6", _("Long arrow right") },      -- U+27F6
         { "\xE2\x96\xB6", _("Triangle right") },        -- U+25B6
         { "\xE2\x97\x80", _("Triangle left") },         -- U+25C0
         { "\xE2\x96\xB2", _("Triangle up") },           -- U+25B2
@@ -93,6 +114,11 @@ IconPicker.CATALOG = {
         { "\xE2\x80\xBA", _("Single angle right") },    -- U+203A
         { "\xC2\xAB",     _("Double angle left") },     -- U+00AB
         { "\xC2\xBB",     _("Double angle right") },    -- U+00BB
+        { "\xE2\x98\x9B", _("Pointing right (black)") }, -- U+261B
+        { "\xE2\x98\x9E", _("Pointing right") },        -- U+261E
+        { "\xE2\x98\x9C", _("Pointing left") },         -- U+261C
+        { "\xE2\x98\x9D", _("Pointing up") },           -- U+261D
+        { "\xE2\x98\x9F", _("Pointing down") },         -- U+261F
     }},
     { _("Separators"), {
         { "|",             _("Vertical bar") },          -- U+007C
