@@ -785,16 +785,13 @@ function Bookends:onReaderFooterVisibilityChange()
 end
 function Bookends:onSetDimensions() self:markDirty() end
 
--- Repaint after events that cause the stock footer to refresh over us.
--- Only needed when the stock footer is actually visible.
--- Like onReaderFooterVisibilityChange, we avoid markDirty() (which triggers
--- a full-screen "ui" e-ink refresh) and instead just set the dirty flag so
--- the event's own paint cycle picks up our changes without a second flash.
+-- Repaint after system events that change token values (battery, frontlight, etc.).
+-- These events don't trigger a ReaderView repaint on their own, so we need
+-- markDirty() to request one.  Use a nextTick to avoid interrupting the
+-- event's own processing.
 function Bookends:delayedRepaint()
-    if not self.ui.view.footer_visible then return end
     UIManager:nextTick(function()
-        self.dirty = true
-        self._tick_cache = nil
+        self:markDirty()
     end)
 end
 Bookends.onFrontlightStateChanged = Bookends.delayedRepaint
@@ -893,9 +890,10 @@ function Bookends:_paintToInner(bb, x, y)
         }
     end
     -- Progress bar colors from settings
+    local global_tick_height_pct = self.settings:readSetting("tick_height_pct")
     local bar_colors
     local bc = self.settings:readSetting("bar_colors") or {}
-    bc.tick_height_pct = bc.tick_height_pct or self.settings:readSetting("tick_height_pct")
+    bc.tick_height_pct = global_tick_height_pct or bc.tick_height_pct
     if bc.fill or bc.bg or bc.track or bc.tick or bc.invert_read_ticks ~= nil or bc.tick_height_pct then
         bar_colors = resolveColors(bc)
     end
@@ -1019,6 +1017,12 @@ function Bookends:_paintToInner(bb, x, y)
                 local paint_vertical = direction == "ttb" or direction == "btt"
                 local paint_reverse = direction == "rtl" or direction == "btt"
                 local colors = bar_cfg.colors and resolveColors(bar_cfg.colors) or bar_colors
+                -- Ensure global tick_height_pct is always available
+                if colors and not colors.tick_height_pct and global_tick_height_pct then
+                    colors.tick_height_pct = global_tick_height_pct
+                elseif not colors and global_tick_height_pct then
+                    colors = { tick_height_pct = global_tick_height_pct }
+                end
                 OverlayWidget.paintProgressBar(bb, bar_x, bar_y, bar_w, bar_h, pct, ticks,
                     bar_cfg.style or "solid", paint_vertical and "vertical" or nil, paint_reverse, colors)
             end
@@ -1334,6 +1338,12 @@ function Bookends:_paintToInner(bb, x, y)
     for key, text in pairs(expanded) do
         self.position_cache[key] = text
     end
+
+    -- Repaint the bookmark dog-ear on top of Bookends so it isn't hidden
+    if self.ui.view.dogear_visible and self.ui.view.dogear then
+        self.ui.view.dogear:paintTo(bb, x, y)
+    end
+
     self.dirty = false
     self:startRefreshTimer()
 end

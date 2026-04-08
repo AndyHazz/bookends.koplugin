@@ -930,14 +930,13 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
                 bb:paintRect(x, y, w, h, border_bg)
             end
         end
-        local h_inset, v_inset
+        local padding = math.max(1, math.floor(thickness * 0.1))
+        local h_inset = border + padding
+        local v_inset = border + padding
         if radius > 0 then
             -- Rounded: paint fill as a rounded rect, then overpaint the unfilled
             -- portion with a background rounded rect so both ends keep curved edges.
-            v_inset = border
-            h_inset = border
-            local padding = math.max(1, math.floor(thickness * 0.1))
-            local inset = border + padding
+            local inset = h_inset
             local inner_r = math.max(0, radius - inset)
             local inner_x = x + inset
             local inner_y = y + inset
@@ -967,10 +966,6 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
                     end
                 end
             end
-        else
-            local padding = math.max(1, math.floor(thickness * 0.1))
-            h_inset = border + padding
-            v_inset = border + padding
         end
         local inner_ox = ox + h_inset
         local inner_oy = oy + v_inset
@@ -1000,6 +995,8 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
         if inner_len > 0 and inner_thick > 0 then
             local fill_len = math.floor(inner_len * fraction)
             local fill_start = reverse and (inner_len - fill_len) or 0
+            -- For rounded bars, compute the inner radius for tick clipping
+            local clip_r = radius > 0 and math.max(0, radius - h_inset) or 0
             for _, tick in ipairs(ticks or {}) do
                 local tick_frac = type(tick) == "table" and tick[1] or tick
                 local tick_w = type(tick) == "table" and tick[2] or 1
@@ -1016,8 +1013,20 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
                             tick_color = base_tick
                         end
                         local th = math.max(1, math.floor(inner_thick * tick_height_pct / 100))
-                        local t_oy = inner_oy + math.floor((inner_thick - th) / 2)
-                        pr(inner_ox + tick_pos, t_oy, tick_w, th, tick_color)
+                        -- Clip tick height near rounded ends so ticks don't exceed the curve
+                        if clip_r > 0 then
+                            local dist_from_left = tick_pos
+                            local dist_from_right = inner_len - tick_pos
+                            local dist_from_edge = math.min(dist_from_left, dist_from_right)
+                            if dist_from_edge < clip_r then
+                                local avail = 2 * math.floor(math.sqrt(math.max(0, clip_r * clip_r - (clip_r - dist_from_edge) * (clip_r - dist_from_edge))))
+                                th = math.min(th, avail)
+                            end
+                        end
+                        if th > 0 then
+                            local t_oy = inner_oy + math.floor((inner_thick - th) / 2)
+                            pr(inner_ox + tick_pos, t_oy, tick_w, th, tick_color)
+                        end
                     end
                 end
             end
