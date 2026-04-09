@@ -1532,7 +1532,13 @@ function Bookends:buildMainMenu()
 
     -- Settings submenu
     table.insert(menu, {
-        text = _("Settings"),
+        text_func = function()
+            Updater.checkBackground()
+            if Updater.getAvailableUpdate() then
+                return _("Settings") .. " (" .. _("plugin update available") .. ")"
+            end
+            return _("Settings")
+        end,
         enabled_func = function() return self.enabled end,
         sub_item_table_func = function()
             return {
