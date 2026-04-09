@@ -136,7 +136,7 @@ Add a `%bar` token to any line to render an inline progress bar. The bar auto-fi
 
 ### Full-width progress bars
 
-Up to 4 independent progress bars rendered as dedicated layers behind text. Configure via **Full width progress bars** in the Bookends menu.
+Up to 8 independent progress bars rendered as dedicated layers behind text. Configure via **Full width progress bars** in the Bookends menu.
 
 - **Anchor** — Top, Bottom, Left (vertical), Right (vertical)
 - **Fill direction** — Left to right, Right to left, Top to bottom, Bottom to top
