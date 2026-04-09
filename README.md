@@ -30,49 +30,15 @@ Customisable text overlays for KOReader — page numbers, reading stats, progres
 
 ### Recipes
 
-Copy-paste these format strings to get started quickly. Each one goes in a single line — just pick a position and paste.
+A few examples to show how format strings work. Type these in the line editor, or use the **Tokens** and **Icons** buttons to build them visually.
 
-**Page numbers** — the basics
-```
-Page %c of %t
-```
+| You type | You get |
+|----------|---------|
+| `Page %c of %t` | Page 42 of 218 |
+| `%p %bar` | 19% ━━━━━━━░░░░░░░░░░░ |
+| `%k  %B` | 2:35 PM 🔋 |
 
-**Chapter progress** — pages read and remaining
-```
-%g/%G  (%l left)
-```
-
-**Clock and battery in a corner**
-```
-%k  %B
-```
-
-**Book title on even pages, chapter title on odd**
-```
-[if:page=even]%T[else]%C[/if]
-```
-
-**Reading speed, only shown when actively reading**
-```
-[if:speed>0]%r pages/hr[/if]
-```
-
-**Speed in italics when you're reading fast**
-```
-[if:speed>50][i]%r pg/hr[/i][else]%r pg/hr[/if]
-```
-
-**Time left in book with a progress bar**
-```
-%H remaining  %bar
-```
-
-**Low battery warning**
-```
-[if:batt<20]Low battery %b[/if]
-```
-
-Each line has its own font, size, and style controls in the editor — so you can set page numbers in one font and chapter titles in another.
+You don't need to memorise tokens — the editor has a **Tokens** picker with the full list, and a **live preview** that updates as you type. The built-in presets and the token reference below cover much more.
 
 ### Built-in presets
 
