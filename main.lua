@@ -145,6 +145,9 @@ function Bookends:init()
 
     -- Register gesture/dispatcher actions
     self:onDispatcherRegisterActions()
+
+    -- Register hold-to-skim touch zone
+    self:setupTouchZones()
 end
 
 function Bookends:onDispatcherRegisterActions()
@@ -169,6 +172,40 @@ function Bookends:onDispatcherRegisterActions()
         args = {true, false},
         toggle = {_("on"), _("off")},
     })
+end
+
+function Bookends:setupTouchZones()
+    if not Device:isTouchDevice() then return end
+    self.ui:registerTouchZones({
+        {
+            id = "bookends_hold",
+            ges = "hold",
+            screen_zone = {
+                ratio_x = 0, ratio_y = 0,
+                ratio_w = 1, ratio_h = 1,
+            },
+            handler = function(ges) return self:onHoldBookends(ges) end,
+            overrides = {
+                "readerhighlight_hold",
+            },
+        },
+    })
+end
+
+function Bookends:onHoldBookends(ges)
+    if not self.enabled or not self.skim_on_hold then return end
+    local rects = self._hold_rects
+    if not rects or #rects == 0 then return end
+    local pos = ges.pos
+    local PAD = Screen:scaleBySize(15)
+    for _, r in ipairs(rects) do
+        if pos.x >= r.x - PAD and pos.x < r.x + r.w + PAD
+           and pos.y >= r.y - PAD and pos.y < r.y + r.h + PAD then
+            local Event = require("ui/event")
+            self.ui:handleEvent(Event:new("ShowSkimtoDialog"))
+            return true
+        end
+    end
 end
 
 function Bookends:onToggleBookends()
@@ -258,6 +295,8 @@ function Bookends:loadSettings()
         truncation_priority = self.settings:readSetting("truncation_priority", "center"),
     }
 
+    self.skim_on_hold = self.settings:readSetting("skim_on_hold", true)
+
     -- Default position configurations (used on first run)
     local default_positions = {
         tl = { lines = { "%A \xE2\x8B\xAE %T" }, line_font_size = { [1] = 12 } },
@@ -295,7 +334,7 @@ function Bookends:loadSettings()
         chapter_ticks = "off",
     }
     self.progress_bars = {}
-    for i = 1, 4 do
+    for i = 1, 8 do
         local default = util.tableDeepCopy(bar_defaults)
         if i == 1 then default.chapter_ticks = "all" end
         if i == 2 then default.type = "chapter" end
@@ -373,12 +412,12 @@ function Bookends:loadPreset(preset)
         self.progress_bars = {}
     end
     -- Always ensure exactly 4 bar slots exist
-    for i = 1, 4 do
+    for i = 1, 8 do
         if not self.progress_bars[i] then
             self.progress_bars[i] = util.tableDeepCopy(bar_defaults)
         end
     end
-    for i = 1, 4 do
+    for i = 1, 8 do
         self.settings:saveSetting("progress_bar_" .. i, self.progress_bars[i])
     end
     if preset.bar_colors then
@@ -866,6 +905,8 @@ end
 
 function Bookends:_paintToInner(bb, x, y)
 
+    self._hold_rects = {}
+
     local screen_size = Screen:getSize()
     local screen_w = screen_size.w
     local screen_h = screen_size.h
@@ -1027,6 +1068,7 @@ function Bookends:_paintToInner(bb, x, y)
                 end
                 OverlayWidget.paintProgressBar(bb, bar_x, bar_y, bar_w, bar_h, pct, ticks,
                     bar_cfg.style or "solid", paint_vertical and "vertical" or nil, paint_reverse, colors)
+                table.insert(self._hold_rects, { x = bar_x, y = bar_y, w = bar_w, h = bar_h })
             end
         end
     end
@@ -1570,6 +1612,17 @@ function Bookends:buildMainMenu()
                     separator = true,
                 },
                 {
+                    text = _("Long-press progress bars to skim document"),
+                    checked_func = function()
+                        return self.skim_on_hold
+                    end,
+                    callback = function()
+                        self.skim_on_hold = not self.skim_on_hold
+                        self.settings:saveSetting("skim_on_hold", self.skim_on_hold)
+                    end,
+                    help_text = _("Opens the skim dialog when you long-press on a full-width progress bar. Replaces the stock status bar's long-press to skim feature."),
+                },
+                {
                     text_func = function()
                         if self.ui.view.footer_visible then
                             return _("Disable stock status bar") .. " (" .. _("recommended") .. ")"
@@ -1618,10 +1671,24 @@ end
 
 function Bookends:buildProgressBarMenu()
     local items = {}
-    for idx, bar_cfg in ipairs(self.progress_bars) do
-        local label = _("Bar") .. " " .. idx
+
+    local function swapBars(a, b, touchmenu_instance)
+        self.progress_bars[a], self.progress_bars[b] = self.progress_bars[b], self.progress_bars[a]
+        self.settings:saveSetting("progress_bar_" .. a, self.progress_bars[a])
+        self.settings:saveSetting("progress_bar_" .. b, self.progress_bars[b])
+        self:markDirty()
+        if touchmenu_instance then
+            touchmenu_instance.item_table = self:buildProgressBarMenu()
+            touchmenu_instance:updateItems()
+        end
+    end
+
+    local num_bars = #self.progress_bars
+    for idx in ipairs(self.progress_bars) do
         table.insert(items, {
             text_func = function()
+                local bar_cfg = self.progress_bars[idx]
+                local label = _("Bar") .. " " .. idx
                 if bar_cfg.enabled then
                     local type_label = bar_cfg.type == "chapter" and _("chapter") or _("book")
                     local anchor_labels = { top = _("top"), bottom = _("bottom"), left = _("left"), right = _("right") }
@@ -1630,12 +1697,46 @@ function Bookends:buildProgressBarMenu()
                 end
                 return label
             end,
-            checked_func = function() return bar_cfg.enabled end,
+            checked_func = function() return self.progress_bars[idx].enabled end,
+            hold_callback = function(touchmenu_instance)
+                local buttons = {}
+                if idx > 1 then
+                    table.insert(buttons, {{
+                        text = _("Move up"),
+                        callback = function()
+                            UIManager:close(self._bar_manage_dialog)
+                            swapBars(idx, idx - 1, touchmenu_instance)
+                        end,
+                    }})
+                end
+                if idx < num_bars then
+                    table.insert(buttons, {{
+                        text = _("Move down"),
+                        callback = function()
+                            UIManager:close(self._bar_manage_dialog)
+                            swapBars(idx, idx + 1, touchmenu_instance)
+                        end,
+                    }})
+                end
+                if #buttons == 0 then return end
+                self._bar_manage_dialog = ConfirmBox:new{
+                    text = T(_("Bar %1"), idx),
+                    icon = "notice-question",
+                    ok_text = _("Cancel"),
+                    ok_callback = function() end,
+                    other_buttons = buttons,
+                }
+                UIManager:show(self._bar_manage_dialog)
+            end,
             sub_item_table_func = function()
-                return self:buildSingleBarMenu(idx, bar_cfg)
+                return self:buildSingleBarMenu(idx, self.progress_bars[idx])
             end,
         })
     end
+    table.insert(items, {
+        text = _("Long press to change render order"),
+        enabled_func = function() return false end,
+    })
     table.insert(items, {
         text = _("Inline progress bars can be added via the line editor"),
         enabled_func = function() return false end,
