@@ -12,6 +12,14 @@ Customisable text overlays for KOReader — page numbers, reading stats, progres
 |:---:|:---:|:---:|
 | ![Rich Detail](screenshots/rich-detail.png) | ![Progress bar styles](screenshots/progress-bars-styles.png) | ![Main menu](screenshots/main-menu.png) |
 
+| Line editor | Symbol picker | Token picker |
+|:---:|:---:|:---:|
+| ![Line editor](screenshots/line-editor.png) | ![Symbol picker](screenshots/icon-picker.png) | ![Token picker](screenshots/token-picker.png) |
+
+| Adjust margins | Progress bar line editor |
+|:---:|:---:|
+| ![Adjust margins](screenshots/adjust-margins.png) | ![Progress bar line editor](screenshots/progress-bars-line-editor.png) |
+
 ### Quick start
 
 1. Copy `bookends.koplugin/` to your KOReader plugins directory ([paths](#installation))
@@ -231,10 +239,6 @@ Up to 8 independent progress bars rendered as dedicated layers behind text. Conf
 
 Progress on EPUB documents updates smoothly per screen turn using pixel-level position tracking. Chapter tick marks vary in thickness by TOC depth.
 
-| Progress bar styles | Progress bar line editor |
-|:---:|:---:|
-| ![Progress bar styles](screenshots/progress-bars-styles.png) | ![Progress bar line editor](screenshots/progress-bars-line-editor.png) |
-
 </details>
 
 <details>
@@ -268,10 +272,6 @@ Each line has its own style controls in the editor dialog:
 - **Page filter** — Show on all pages, odd pages only, or even pages only
 
 Italic uses automatic font variant detection — searches installed fonts for matching italic variants.
-
-| Line editor | Symbol picker | Token picker |
-|:---:|:---:|:---:|
-| ![Line editor](screenshots/line-editor.png) | ![Symbol picker](screenshots/icon-picker.png) | ![Token picker](screenshots/token-picker.png) |
 
 #### Inline formatting
 
@@ -314,10 +314,6 @@ Bookends uses a three-layer positioning system:
 1. **Global margins** (top/bottom/left/right) — Set in **Settings > Adjust margins** with real-time preview
 2. **Per-position extra margins** — Additional offset for individual regions
 3. **Per-line nudges** — Pixel-level fine-tuning in the line editor
-
-| Adjust margins |
-|:---:|
-| ![Adjust margins](screenshots/adjust-margins.png) |
 
 #### Managing lines
 
