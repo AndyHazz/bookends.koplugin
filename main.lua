@@ -219,7 +219,25 @@ end
 
 function Bookends:setupTouchZones()
     if not Device:isTouchDevice() then return end
+    local DTAP_ZONE_MINIBAR = G_defaults:readSetting("DTAP_ZONE_MINIBAR")
     self.ui:registerTouchZones({
+        {
+            id = "bookends_footer_tap",
+            ges = "tap",
+            screen_zone = {
+                ratio_x = DTAP_ZONE_MINIBAR.x, ratio_y = DTAP_ZONE_MINIBAR.y,
+                ratio_w = DTAP_ZONE_MINIBAR.w, ratio_h = DTAP_ZONE_MINIBAR.h,
+            },
+            handler = function(ges)
+                -- Block the stock footer from re-appearing when we've disabled it
+                if not self.ui.view.footer_visible then
+                    return true
+                end
+            end,
+            overrides = {
+                "readerfooter_tap",
+            },
+        },
         {
             id = "bookends_hold",
             ges = "hold",
