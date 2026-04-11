@@ -189,6 +189,14 @@ function Bookends:init()
     -- Register hold-to-skim touch zone
     self:setupTouchZones()
 
+    -- Apply stock bar disable if our setting is active
+    if self.stock_bar_disabled then
+        local footer = self.ui.view.footer
+        if footer then
+            footer:applyFooterMode(footer.mode_list.off)
+        end
+    end
+
     -- Background update check on book open (opt-in only, throttled to once/hour)
     self:backgroundUpdateCheck()
 end
@@ -230,7 +238,7 @@ function Bookends:setupTouchZones()
             },
             handler = function(ges)
                 -- Block the stock footer from re-appearing when we've disabled it
-                if not self.ui.view.footer_visible then
+                if self.stock_bar_disabled then
                     return true
                 end
             end,
@@ -358,6 +366,7 @@ function Bookends:loadSettings()
 
     self.skim_on_hold = self.settings:readSetting("skim_on_hold", true)
     self.check_updates = self.settings:readSetting("check_updates", false)
+    self.stock_bar_disabled = self.settings:readSetting("stock_bar_disabled", false)
 
     -- Default position configurations (used on first run)
     local default_positions = {
@@ -1689,7 +1698,7 @@ function Bookends:buildMainMenu()
                 },
                 {
                     text_func = function()
-                        if self.ui.view.footer_visible then
+                        if not self.stock_bar_disabled then
                             return _("Disable stock status bar") .. " (" .. _("recommended") .. ")"
                         end
                         return _("Disable stock status bar")
@@ -1697,16 +1706,16 @@ function Bookends:buildMainMenu()
                     keep_menu_open = true,
                     help_text = _("Hides KOReader's built-in status bar. This simplifies the render pipeline and can reduce e-ink flicker on some devices. All status bar features are available as Bookends tokens."),
                     checked_func = function()
-                        return not self.ui.view.footer_visible
+                        return self.stock_bar_disabled
                     end,
                     callback = function()
                         local footer = self.ui.view.footer
-                        if self.ui.view.footer_visible then
+                        self.stock_bar_disabled = not self.stock_bar_disabled
+                        self.settings:saveSetting("stock_bar_disabled", self.stock_bar_disabled)
+                        if self.stock_bar_disabled then
                             footer:applyFooterMode(footer.mode_list.off)
-                            G_reader_settings:saveSetting("reader_footer_mode", footer.mode_list.off)
                         else
                             footer:applyFooterMode(footer.mode_list.page_progress)
-                            G_reader_settings:saveSetting("reader_footer_mode", footer.mode_list.page_progress)
                         end
                         self:markDirty()
                     end,
