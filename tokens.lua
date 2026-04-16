@@ -114,7 +114,12 @@ local function processConditionals(format_str, state)
 end
 
 --- Build a state table of raw values for conditional evaluation.
-function Tokens.buildConditionState(ui, session_elapsed, session_pages_read)
+--- If paint_ctx is provided and already has a cached state, returns it
+--- (shared across all expand() calls within one paint cycle).
+function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, paint_ctx)
+    if paint_ctx and paint_ctx._condition_state then
+        return paint_ctx._condition_state
+    end
     local state = {}
 
     -- WiFi
@@ -202,18 +207,23 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read)
     end
     state.speed = state.speed or 0
 
+    if paint_ctx then
+        paint_ctx._condition_state = state
+    end
     return state
 end
 
-function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, preview_mode, tick_width_multiplier, symbol_color)
+function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, preview_mode, tick_width_multiplier, symbol_color, paint_ctx)
     -- Fast path: no tokens or conditionals
     if not format_str:find("%%") and not format_str:find("%[if:") then
         return format_str
     end
 
-    -- Process conditionals before token expansion (skip in preview mode)
+    -- Process conditionals before token expansion (skip in preview mode).
+    -- buildConditionState will reuse paint_ctx._condition_state if present,
+    -- so multiple lines with [if:...] in the same paint share one build.
     if not preview_mode and format_str:find("%[if:") then
-        local state = Tokens.buildConditionState(ui, session_elapsed, session_pages_read)
+        local state = Tokens.buildConditionState(ui, session_elapsed, session_pages_read, paint_ctx)
         format_str = processConditionals(format_str, state)
         -- After stripping false branches, check if anything remains to expand
         if not format_str:find("%%") then

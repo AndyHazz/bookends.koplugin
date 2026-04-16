@@ -833,6 +833,9 @@ function Bookends:_paintToInner(bb, x, y)
     local expanded = {}
     local active_line_indices = {} -- key -> { original indices of visible lines }
     local bar_data = {} -- key -> sparse table { [expanded_line_index] = bar_info }
+    -- Shared across every Tokens.expand() call for this paint: lets expensive
+    -- setup (buildConditionState) happen once even when many lines need it.
+    local paint_ctx = {}
     for _, pos in ipairs(self.POSITIONS) do
         if self:isPositionActive(pos.key) then
             local pos_settings = self.positions[pos.key]
@@ -856,7 +859,7 @@ function Bookends:_paintToInner(bb, x, y)
                 for j, line in ipairs(visible_lines) do
                     local result, is_empty, line_bar = Tokens.expand(line, self.ui, session_elapsed, session_pages,
                         nil, self.settings:readSetting("tick_width_multiplier", self.DEFAULT_TICK_WIDTH_MULTIPLIER),
-                        symbol_color)
+                        symbol_color, paint_ctx)
                     if not is_empty then
                         table.insert(expanded_lines, result)
                         table.insert(final_indices, visible_indices[j])
