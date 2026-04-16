@@ -1,3 +1,4 @@
+local Config = require("config")
 local ConfirmBox = require("ui/widget/confirmbox")
 local Device = require("device")
 local Font = require("ui/font")
@@ -53,24 +54,16 @@ local function safe(context, fn)
     end
 end
 
---- Per-line attribute field names. Used by removeLineFields/swapLineFields
---- to avoid repeating the field list in multiple places.
-local LINE_FIELDS = {
-    "line_style", "line_font_size", "line_font_face",
-    "line_v_nudge", "line_h_nudge", "line_uppercase",
-    "line_page_filter", "line_bar_type", "line_bar_height", "line_bar_style",
-}
-
 --- Remove all per-line attribute fields at index `idx`, shifting higher indices down.
 local function removeLineFields(ps, idx)
-    for _, field in ipairs(LINE_FIELDS) do
+    for _, field in ipairs(Config.LINE_FIELDS) do
         Utils.sparseRemove(ps[field], idx)
     end
 end
 
 --- Swap all per-line attribute fields between indices `a` and `b`.
 local function swapLineFields(ps, a, b)
-    for _, field in ipairs(LINE_FIELDS) do
+    for _, field in ipairs(Config.LINE_FIELDS) do
         if ps[field] then
             ps[field][a], ps[field][b] = ps[field][b], ps[field][a]
         end
@@ -92,12 +85,9 @@ Bookends.POSITIONS = {
     { key = "br", label = _("Bottom-right"),   row = "bottom", h_anchor = "right",  v_anchor = "bottom" },
 }
 
-Bookends.MAX_BARS = 8
-Bookends.DEFAULT_MARGINS = {
-    margin_top = 10, margin_bottom = 25,
-    margin_left = 18, margin_right = 18,
-}
-Bookends.DEFAULT_TICK_WIDTH_MULTIPLIER = 2
+Bookends.MAX_BARS = Config.MAX_BARS
+Bookends.DEFAULT_MARGINS = Config.DEFAULT_MARGINS
+Bookends.DEFAULT_TICK_WIDTH_MULTIPLIER = Config.DEFAULT_TICK_WIDTH_MULTIPLIER
 
 function Bookends:init()
     -- Install custom icons (chevron.down) into KOReader's user icons dir
@@ -283,12 +273,7 @@ function Bookends:openSettings()
 
     -- One-time migration from G_reader_settings
     if not self.settings:has("migrated") then
-        local old_keys = {
-            "enabled", "font_face", "font_size", "font_bold", "font_scale",
-            "margin_top", "margin_bottom", "margin_left", "margin_right",
-            "overlap_gap", "truncation_priority", "presets", "last_cycled_preset",
-        }
-        for _, key in ipairs(old_keys) do
+        for _, key in ipairs(Config.LEGACY_GLOBAL_KEYS) do
             local val = G_reader_settings:readSetting("bookends_" .. key)
             if val ~= nil then
                 self.settings:saveSetting(key, val)
@@ -327,16 +312,6 @@ function Bookends:loadSettings()
     self.check_updates = self.settings:readSetting("check_updates", false)
     self.stock_bar_disabled = self.settings:readSetting("stock_bar_disabled", false)
 
-    -- Default position configurations (used on first run)
-    local default_positions = {
-        tl = { lines = { "%A \xE2\x8B\xAE %T" }, line_font_size = { [1] = 12 } },
-        tc = { lines = { "%k \xC2\xB7 %a %d" }, line_font_size = { [1] = 14 }, line_style = { [1] = "bold" } },
-        tr = { lines = { "%C" }, line_style = { [1] = "bold" } },
-        bl = { lines = { "\xE2\x8F\xB3 %R session" } },
-        bc = { lines = { "Page %c of %t" }, line_font_size = { [1] = 16 } },
-        br = { lines = { "%B %W" }, line_font_size = { [1] = 10 } },
-    }
-
     -- Per-position settings
     self.positions = {}
     for _, pos in ipairs(self.POSITIONS) do
@@ -352,20 +327,15 @@ function Bookends:loadSettings()
             end
             self.positions[pos.key] = saved
         else
-            -- First run: use default configuration
-            self.positions[pos.key] = default_positions[pos.key] or { lines = {} }
+            -- First run: use default configuration (deep-copy the shared constant)
+            self.positions[pos.key] = util.tableDeepCopy(Config.DEFAULT_POSITIONS[pos.key]) or { lines = {} }
         end
     end
 
     -- Full-width progress bars
-    local bar_defaults = {
-        enabled = false, type = "book", style = "solid", height = 20,
-        v_anchor = "bottom", margin_v = 0, margin_left = 0, margin_right = 0,
-        chapter_ticks = "off",
-    }
     self.progress_bars = {}
-    for i = 1, self.MAX_BARS do
-        local default = util.tableDeepCopy(bar_defaults)
+    for i = 1, Config.MAX_BARS do
+        local default = util.tableDeepCopy(Config.BAR_DEFAULTS)
         if i == 1 then default.chapter_ticks = "all" end
         if i == 2 then default.type = "chapter" end
         self.progress_bars[i] = self.settings:readSetting("progress_bar_" .. i, default)
@@ -380,7 +350,6 @@ function Bookends:loadSettings()
 end
 
 function Bookends:buildPreset()
-
     local preset = {
         enabled = self.enabled,
         defaults = util.tableDeepCopy(self.defaults),
@@ -392,16 +361,13 @@ function Bookends:buildPreset()
         preset.positions[pos.key] = util.tableDeepCopy(self.positions[pos.key])
     end
     preset.progress_bars = util.tableDeepCopy(self.progress_bars)
-    preset.bar_colors = self.settings:readSetting("bar_colors")
-    preset.tick_width_multiplier = self.settings:readSetting("tick_width_multiplier")
-    preset.tick_height_pct = self.settings:readSetting("tick_height_pct")
-    preset.text_color = self.settings:readSetting("text_color")
-    preset.symbol_color = self.settings:readSetting("symbol_color")
+    for _, key in ipairs(Config.PRESET_OPTIONAL_KEYS) do
+        preset[key] = self.settings:readSetting(key)
+    end
     return preset
 end
 
 function Bookends:loadPreset(preset)
-
     if preset.enabled ~= nil then
         self.enabled = preset.enabled
         self.settings:saveSetting("enabled", self.enabled)
@@ -414,22 +380,15 @@ function Bookends:loadPreset(preset)
         -- Never override the user's default font from a preset
         pd.font_face = nil
         -- Reset margins before applying preset values
-        for k, v in pairs(self.DEFAULT_MARGINS) do
+        for k, v in pairs(Config.DEFAULT_MARGINS) do
             self.defaults[k] = v
         end
         for k, v in pairs(pd) do
             self.defaults[k] = v
         end
-        self.settings:saveSetting("font_face", self.defaults.font_face)
-        self.settings:saveSetting("font_size", self.defaults.font_size)
-        self.settings:saveSetting("font_bold", self.defaults.font_bold)
-        self.settings:saveSetting("font_scale", self.defaults.font_scale)
-        self.settings:saveSetting("margin_top", self.defaults.margin_top)
-        self.settings:saveSetting("margin_bottom", self.defaults.margin_bottom)
-        self.settings:saveSetting("margin_left", self.defaults.margin_left)
-        self.settings:saveSetting("margin_right", self.defaults.margin_right)
-        self.settings:saveSetting("overlap_gap", self.defaults.overlap_gap)
-        self.settings:saveSetting("truncation_priority", self.defaults.truncation_priority)
+        for _, key in ipairs(Config.DEFAULTS_KEYS) do
+            self.settings:saveSetting(key, self.defaults[key])
+        end
     end
     if preset.positions then
         for _, pos in ipairs(self.POSITIONS) do
@@ -439,49 +398,20 @@ function Bookends:loadPreset(preset)
             end
         end
     end
-    local bar_defaults = {
-        enabled = false, type = "book", style = "solid", height = 20,
-        v_anchor = "bottom", margin_v = 0, margin_left = 0, margin_right = 0,
-        chapter_ticks = "off",
-    }
-    if preset.progress_bars then
-        self.progress_bars = util.tableDeepCopy(preset.progress_bars)
-    else
-        self.progress_bars = {}
-    end
-    -- Always ensure exactly MAX_BARS bar slots exist
-    for i = 1, self.MAX_BARS do
+    self.progress_bars = preset.progress_bars and util.tableDeepCopy(preset.progress_bars) or {}
+    -- Always ensure exactly MAX_BARS bar slots exist, then persist each
+    for i = 1, Config.MAX_BARS do
         if not self.progress_bars[i] then
-            self.progress_bars[i] = util.tableDeepCopy(bar_defaults)
+            self.progress_bars[i] = util.tableDeepCopy(Config.BAR_DEFAULTS)
         end
-    end
-    for i = 1, self.MAX_BARS do
         self.settings:saveSetting("progress_bar_" .. i, self.progress_bars[i])
     end
-    if preset.bar_colors then
-        self.settings:saveSetting("bar_colors", preset.bar_colors)
-    else
-        self.settings:delSetting("bar_colors")
-    end
-    if preset.tick_width_multiplier then
-        self.settings:saveSetting("tick_width_multiplier", preset.tick_width_multiplier)
-    else
-        self.settings:delSetting("tick_width_multiplier")
-    end
-    if preset.tick_height_pct then
-        self.settings:saveSetting("tick_height_pct", preset.tick_height_pct)
-    else
-        self.settings:delSetting("tick_height_pct")
-    end
-    if preset.text_color then
-        self.settings:saveSetting("text_color", preset.text_color)
-    else
-        self.settings:delSetting("text_color")
-    end
-    if preset.symbol_color then
-        self.settings:saveSetting("symbol_color", preset.symbol_color)
-    else
-        self.settings:delSetting("symbol_color")
+    for _, key in ipairs(Config.PRESET_OPTIONAL_KEYS) do
+        if preset[key] then
+            self.settings:saveSetting(key, preset[key])
+        else
+            self.settings:delSetting(key)
+        end
     end
     self._tick_cache = nil
     self:markDirty()
