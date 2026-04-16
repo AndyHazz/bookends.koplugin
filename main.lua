@@ -7,6 +7,7 @@ local OverlayWidget = require("overlay_widget")
 local Tokens = require("tokens")
 local Updater = require("updater")
 local UIManager = require("ui/uimanager")
+local Utils = require("utils")
 local WidgetContainer = require("ui/widget/container/widgetcontainer")
 local util = require("util")
 local _ = require("i18n").gettext
@@ -52,40 +53,6 @@ local function safe(context, fn)
     end
 end
 
---- Remove an index from a sparse table, shifting higher indices down.
--- Unlike table.remove, this works correctly when the table has gaps.
-local function sparseRemove(tbl, idx)
-    if not tbl then return end
-    -- Find the highest index
-    local max_idx = 0
-    for k in pairs(tbl) do
-        if type(k) == "number" and k > max_idx then max_idx = k end
-    end
-    -- Shift everything above idx down by one
-    for i = idx, max_idx do
-        tbl[i] = tbl[i + 1]
-    end
-end
-
---- Truncate a string to max_bytes, avoiding splitting multi-byte UTF-8 characters.
-local function truncateUtf8(str, max_bytes)
-    if #str <= max_bytes then return str end
-    local pos = 0
-    local i = 1
-    while i <= max_bytes do
-        local b = str:byte(i)
-        local char_len
-        if b < 0x80 then char_len = 1
-        elseif b < 0xE0 then char_len = 2
-        elseif b < 0xF0 then char_len = 3
-        else char_len = 4 end
-        if i + char_len - 1 > max_bytes then break end
-        pos = i + char_len - 1
-        i = i + char_len
-    end
-    return str:sub(1, pos) .. "..."
-end
-
 --- Per-line attribute field names. Used by removeLineFields/swapLineFields
 --- to avoid repeating the field list in multiple places.
 local LINE_FIELDS = {
@@ -94,18 +61,10 @@ local LINE_FIELDS = {
     "line_page_filter", "line_bar_type", "line_bar_height", "line_bar_style",
 }
 
---- Cycle to the next value in a list, wrapping around.
-local function cycleNext(tbl, current)
-    for i, v in ipairs(tbl) do
-        if v == current then return tbl[(i % #tbl) + 1] end
-    end
-    return tbl[1]
-end
-
 --- Remove all per-line attribute fields at index `idx`, shifting higher indices down.
 local function removeLineFields(ps, idx)
     for _, field in ipairs(LINE_FIELDS) do
-        sparseRemove(ps[field], idx)
+        Utils.sparseRemove(ps[field], idx)
     end
 end
 
@@ -1568,7 +1527,7 @@ function Bookends:buildMainMenu()
                 local preview = table.concat(previews, " \xC2\xB7 ")
                 preview = preview:gsub("%s+", " "):match("^%s*(.-)%s*$")
                 if #preview > 38 then
-                    preview = truncateUtf8(preview, 35)
+                    preview = Utils.truncateUtf8(preview, 35)
                 end
                 return pos.label .. " \xE2\x80\x94 " .. preview
             end,
@@ -1907,7 +1866,7 @@ function Bookends:buildSingleBarMenu(bar_idx, bar_cfg)
             enabled_func = function() return bar_cfg.enabled and bar_cfg.type == "book" end,
             keep_menu_open = true,
             callback = function(touchmenu_instance)
-                bar_cfg.chapter_ticks = cycleNext(
+                bar_cfg.chapter_ticks = Utils.cycleNext(
                     { "off", "level1", "level2", "all" },
                     bar_cfg.chapter_ticks or "off")
                 saveBar()
@@ -1922,7 +1881,7 @@ function Bookends:buildSingleBarMenu(bar_idx, bar_cfg)
             enabled_func = isEnabled,
             keep_menu_open = true,
             callback = function(touchmenu_instance)
-                bar_cfg.style = cycleNext(
+                bar_cfg.style = Utils.cycleNext(
                     { "solid", "bordered", "rounded", "metro", "wavy" },
                     bar_cfg.style or "solid")
                 saveBar()
@@ -1937,7 +1896,7 @@ function Bookends:buildSingleBarMenu(bar_idx, bar_cfg)
             enabled_func = isEnabled,
             keep_menu_open = true,
             callback = function(touchmenu_instance)
-                local new_anchor = cycleNext(
+                local new_anchor = Utils.cycleNext(
                     { "top", "bottom", "left", "right" },
                     bar_cfg.v_anchor or "bottom")
                 bar_cfg.v_anchor = new_anchor
@@ -1981,7 +1940,7 @@ function Bookends:buildSingleBarMenu(bar_idx, bar_cfg)
                 end
                 local default_dir = is_side and "ttb" or "ltr"
                 local cur = bar_cfg.direction or default_dir
-                local next_dir = cycleNext(cycle, cur)
+                local next_dir = Utils.cycleNext(cycle, cur)
                 bar_cfg.direction = next_dir ~= default_dir and next_dir or nil
                 saveBar()
                 if touchmenu_instance then touchmenu_instance:updateItems() end
@@ -2638,7 +2597,7 @@ function Bookends:buildPositionMenu(pos)
                     self.settings:readSetting("tick_width_multiplier", self.DEFAULT_TICK_WIDTH_MULTIPLIER)))
                 preview = preview:gsub("%s+", " "):match("^%s*(.-)%s*$")
                 if #preview > 42 then
-                    preview = truncateUtf8(preview, 39)
+                    preview = Utils.truncateUtf8(preview, 39)
                 end
                 return _("Line") .. " " .. i .. tag .. ": " .. preview
             end,
@@ -3218,7 +3177,7 @@ function Bookends:editLineString(pos, line_idx, touchmenu_instance)
 
     bar_type_button.callback = function()
         format_dialog:onCloseKeyboard()
-        local next_type = cycleNext(BAR_TYPE_CYCLE, line_bar_type or "chapter")
+        local next_type = Utils.cycleNext(BAR_TYPE_CYCLE, line_bar_type or "chapter")
         line_bar_type = next_type ~= "chapter" and next_type or nil
         applyLivePreview()
         format_dialog:reinit()
@@ -3226,7 +3185,7 @@ function Bookends:editLineString(pos, line_idx, touchmenu_instance)
 
     bar_style_button.callback = function()
         format_dialog:onCloseKeyboard()
-        local next_style = cycleNext(
+        local next_style = Utils.cycleNext(
             { "bordered", "solid", "rounded", "metro", "wavy" },
             line_bar_style or "bordered")
         line_bar_style = next_style ~= "bordered" and next_style or nil
@@ -3236,7 +3195,7 @@ function Bookends:editLineString(pos, line_idx, touchmenu_instance)
 
     style_button.callback = function()
         format_dialog:onCloseKeyboard()
-        line_style = cycleNext(self.STYLES, line_style)
+        line_style = Utils.cycleNext(self.STYLES, line_style)
         applyLivePreview()
         format_dialog:reinit()
     end
