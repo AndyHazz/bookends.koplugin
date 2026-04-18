@@ -117,7 +117,11 @@ function Utils.getFontFamilyLabel(face)
     local FontList = require("fontlist")
     local display
     if resolved then
-        display = FontList:getLocalizedFontName(resolved, 0)
+        -- Prefer the family name (e.g. "Raleway") over the localized full name
+        -- (e.g. "Raleway SemiBold"), which would include the weight.
+        local info = FontList.fontinfo and FontList.fontinfo[resolved]
+        display = (info and info[1] and info[1].name)
+               or FontList:getLocalizedFontName(resolved, 0)
                or resolved:match("([^/]+)%.[tT][tT][fF]$")
                or resolved
     end
