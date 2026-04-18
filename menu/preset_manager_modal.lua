@@ -156,7 +156,7 @@ function PresetManagerModal._rebuild(self)
         self.modal_widget = nil
     end
 
-    local width = math.floor(math.min(Screen:getWidth(), Screen:getHeight()) * 0.9)
+    local width = math.floor(math.min(Screen:getWidth(), Screen:getHeight()) * 0.8)
     local row_height = Screen:scaleBySize(42)
     local font_size = 18
     local baseline = math.floor(row_height * 0.65)
@@ -206,12 +206,17 @@ function PresetManagerModal._rebuild(self)
     local local_btn   = tabButton(_("Local"),   self.tab == "local",   function() self.setTab("local") end)
     local gallery_btn = tabButton(_("Gallery"), self.tab == "gallery", function() self.setTab("gallery") end)
 
+    -- Compute spacer width so the tab buttons sit flush with the right edge.
+    local tabs_block_w = local_btn:getSize().w + Screen:scaleBySize(8) + gallery_btn:getSize().w
+    local title_w = title:getWidth()
+    local title_row_spacer_w = math.max(Screen:scaleBySize(20),
+                                        width - left_pad - title_w - tabs_block_w - left_pad)
     table.insert(vg, LeftContainer:new{
         dimen = Geom:new{ w = width, h = row_height },
         HorizontalGroup:new{
             HorizontalSpan:new{ width = left_pad },
             title,
-            HorizontalSpan:new{ width = Screen:scaleBySize(20) },
+            HorizontalSpan:new{ width = title_row_spacer_w },
             local_btn,
             HorizontalSpan:new{ width = Screen:scaleBySize(8) },
             gallery_btn,
@@ -273,7 +278,12 @@ function PresetManagerModal._rebuild(self)
             PresetManagerModal._openOverflow(self)
             return true
         end
-        table.insert(state_group, HorizontalSpan:new{ width = Screen:scaleBySize(12) })
+        -- Right-align overflow: push with a spacer filling remaining width.
+        local state_text_widget = state_group[2]
+        local text_w = state_text_widget:getWidth()
+        local spacer_w = math.max(Screen:scaleBySize(12),
+                                   width - left_pad - text_w - overflow_ic:getSize().w - left_pad)
+        table.insert(state_group, HorizontalSpan:new{ width = spacer_w })
         table.insert(state_group, overflow_ic)
     end
     table.insert(vg, LeftContainer:new{
@@ -371,6 +381,9 @@ function PresetManagerModal._rebuild(self)
     }
     self.modal_widget = wc
     UIManager:show(wc)
+    -- Force a full-screen flash so e-ink repaints cleanly when a dialog above
+    -- us closes and we rebuild (otherwise the dialog's last frame can ghost).
+    UIManager:setDirty("all", "flashui")
 end
 
 function PresetManagerModal._renderLocalRows(self, vg, width, row_height, font_size, baseline, left_pad)

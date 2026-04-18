@@ -334,6 +334,12 @@ function Bookends:onCycleBookendsPreset()
 
     if next_entry == "_empty" then
         for _, pos in pairs(self.positions) do pos.lines = {} end
+        -- Also disable any progress bars so the overlay really is blank.
+        if self.progress_bars then
+            for i = 1, #self.progress_bars do
+                if self.progress_bars[i] then self.progress_bars[i].enabled = false end
+            end
+        end
         self:setActivePresetFilename(nil)
         self:markDirty()
         Notification:notify(_("(No overlay)"))
