@@ -551,14 +551,12 @@ function Bookends:delayedRepaint()
         self:markDirty()
     end)
 end
-Bookends.onFrontlightStateChanged   = Bookends.delayedRepaint
-Bookends.onCharging                 = Bookends.delayedRepaint
-Bookends.onNotCharging              = Bookends.delayedRepaint
-Bookends.onNetworkConnected         = Bookends.delayedRepaint
-Bookends.onNetworkDisconnected      = Bookends.delayedRepaint
-Bookends.onToggleReadingOrder       = Bookends.delayedRepaint
-Bookends.onSwapPageTurnButtons      = Bookends.delayedRepaint
-Bookends.onSetPageTurnButtonDirection = Bookends.delayedRepaint
+Bookends.onFrontlightStateChanged = Bookends.delayedRepaint
+Bookends.onCharging               = Bookends.delayedRepaint
+Bookends.onNotCharging            = Bookends.delayedRepaint
+Bookends.onNetworkConnected       = Bookends.delayedRepaint
+Bookends.onNetworkDisconnected    = Bookends.delayedRepaint
+Bookends.onToggleReadingOrder     = Bookends.delayedRepaint
 function Bookends:onAnnotationsModified()
     self:markDirty()
 end
