@@ -832,7 +832,6 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         ["%P"] = true, ["%g"] = true, ["%G"] = true, ["%l"] = true,
         ["%h"] = true, ["%H"] = true, ["%k"] = true, ["%K"] = true,
         ["%R"] = true, ["%s"] = true, ["%r"] = true,
-        ["%X"] = true, ["%x"] = true, ["%q"] = true, ["%Q"] = true,
     }
     -- Per-token occurrence counters for matching limits
     local token_occurrence = {}
