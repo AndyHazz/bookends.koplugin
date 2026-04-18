@@ -1387,32 +1387,36 @@ function Bookends:showFontPicker(current_face, on_select, default_face)
     local FontList = require("fontlist")
     local ffiUtil = require("ffi/util")
 
-    -- Build font list: one entry per font family, preferring the Regular weight
+    -- Build font list: one entry per font family, preferring the Regular weight.
+    -- Bold/italic/bolditalic variants are excluded — bookends' per-line style
+    -- button picks those at render time via overlay_widget.findFontVariant.
     local fonts = {}
     local font_display_names = {} -- file → display name lookup
     local families = {} -- family name → { file, name, rank }
     for font_file, font_info in pairs(FontList.fontinfo) do
         local info = font_info and font_info[1]
         if info then
-            local name = FontList:getLocalizedFontName(font_file, 0) or info.name
-            local prev = families[name]
-            -- Rank: lower = more "regular". Use both fontinfo flags and filename keywords.
-            local rank = 0
-            if info.bold then rank = rank + 2 end
-            if info.italic then rank = rank + 2 end
             local lbase = (font_file:match("([^/]+)$") or ""):lower()
-            if lbase:find("regular") then
-                rank = rank - 1
-            elseif lbase:find("bold") or lbase:find("italic") or lbase:find("oblique") then
-                rank = rank + 2
-            elseif lbase:find("light") or lbase:find("thin") or lbase:find("heavy")
-                or lbase:find("black") or lbase:find("medium") or lbase:find("semibold")
-                or lbase:find("extrabold") or lbase:find("extralight") or lbase:find("ultralight")
-                or lbase:find("demibold") or lbase:find("book") then
-                rank = rank + 1
-            end
-            if not prev or rank < prev.rank then
-                families[name] = { file = font_file, name = name, rank = rank }
+            -- Skip bold/italic variants (flag-based or filename-based detection)
+            local is_variant = info.bold or info.italic
+                or lbase:find("bold") or lbase:find("italic") or lbase:find("oblique")
+            if not is_variant then
+                local name = FontList:getLocalizedFontName(font_file, 0) or info.name
+                local prev = families[name]
+                -- Rank: lower = more "regular". Handles within-family weight variants
+                -- (light/medium/semibold/etc.) so we pick the most regular available.
+                local rank = 0
+                if lbase:find("regular") then
+                    rank = rank - 1
+                elseif lbase:find("light") or lbase:find("thin") or lbase:find("heavy")
+                    or lbase:find("black") or lbase:find("medium") or lbase:find("semibold")
+                    or lbase:find("extrabold") or lbase:find("extralight") or lbase:find("ultralight")
+                    or lbase:find("demibold") or lbase:find("book") then
+                    rank = rank + 1
+                end
+                if not prev or rank < prev.rank then
+                    families[name] = { file = font_file, name = name, rank = rank }
+                end
             end
         end
     end
