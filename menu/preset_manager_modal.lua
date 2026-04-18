@@ -5,6 +5,7 @@
 -- Gallery tab is a stub until Phase 2.
 
 local Blitbuffer = require("ffi/blitbuffer")
+local Button = require("ui/widget/button")
 local CenterContainer = require("ui/widget/container/centercontainer")
 local ConfirmBox = require("ui/widget/confirmbox")
 local Device = require("device")
@@ -36,6 +37,7 @@ function PresetManagerModal.show(bookends)
     local self = {
         bookends = bookends,
         tab = "local",
+        page = 1,
         previewing = nil,
         original_settings = nil,
         modal_widget = nil,
@@ -58,8 +60,9 @@ function PresetManagerModal.show(bookends)
     self.rebuildSync = function() PresetManagerModal._rebuild(self) end
     self.close = function(restore) PresetManagerModal._close(self, restore) end
     self.setTab = function(tab)
-        if self.tab ~= tab then self.tab = tab; self.rebuild() end
+        if self.tab ~= tab then self.tab = tab; self.page = 1; self.rebuild() end
     end
+    self.setPage = function(p) self.page = p; self.rebuild() end
     self.previewLocal = function(p) PresetManagerModal._previewLocal(self, p) end
     self.previewBlank = function() PresetManagerModal._previewBlank(self) end
     self.applyCurrent = function() PresetManagerModal._applyCurrent(self) end
@@ -424,15 +427,66 @@ function PresetManagerModal._renderLocalRows(self, vg, width, row_height, font_s
         is_selected = (selected_key == "_empty"),
     })
 
-    -- Real presets
+    -- Real presets, paginated
     local presets = self.bookends:readPresetFiles()
-    for _, p in ipairs(presets) do
+    local ROWS_PER_PAGE = 8
+    local total_pages = math.max(1, math.ceil(#presets / ROWS_PER_PAGE))
+    if self.page > total_pages then self.page = total_pages end
+    local start_idx = (self.page - 1) * ROWS_PER_PAGE + 1
+    local end_idx = math.min(start_idx + ROWS_PER_PAGE - 1, #presets)
+    for i = start_idx, end_idx do
+        local p = presets[i]
         local by = p.preset.author and (" — " .. p.preset.author) or ""
         PresetManagerModal._addRow(self, vg, width, row_height, font_size, baseline, left_pad, {
             display = p.name .. by,
             star_key = p.filename,
             on_preview = function() self.previewLocal(p) end,
             is_selected = (selected_key == p.filename),
+        })
+    end
+
+    -- Pad out short pages so the modal height stays stable across pages
+    local rendered = end_idx - start_idx + 1
+    for _ = rendered + 1, ROWS_PER_PAGE do
+        table.insert(vg, HorizontalGroup:new{
+            HorizontalSpan:new{ width = left_pad },
+            TextWidget:new{
+                text = "",
+                face = Font:getFace("cfont", font_size),
+                forced_height = row_height,
+                forced_baseline = baseline,
+            },
+        })
+    end
+
+    -- Pagination nav (matching font picker style)
+    if total_pages > 1 then
+        local page_cur = self.page
+        local page_nav = HorizontalGroup:new{
+            align = "center",
+            Button:new{ icon = "chevron.first",
+                callback = function() self.setPage(1) end,
+                bordersize = 0, enabled = page_cur > 1, show_parent = self.modal_widget },
+            HorizontalSpan:new{ width = Screen:scaleBySize(8) },
+            Button:new{ icon = "chevron.left",
+                callback = function() self.setPage(page_cur - 1) end,
+                bordersize = 0, enabled = page_cur > 1, show_parent = self.modal_widget },
+            HorizontalSpan:new{ width = Screen:scaleBySize(16) },
+            Button:new{ text = T(_("Page %1 of %2"), page_cur, total_pages),
+                text_font_size = 16, callback = function() end,
+                bordersize = 0, show_parent = self.modal_widget },
+            HorizontalSpan:new{ width = Screen:scaleBySize(16) },
+            Button:new{ icon = "chevron.right",
+                callback = function() self.setPage(page_cur + 1) end,
+                bordersize = 0, enabled = page_cur < total_pages, show_parent = self.modal_widget },
+            HorizontalSpan:new{ width = Screen:scaleBySize(8) },
+            Button:new{ icon = "chevron.last",
+                callback = function() self.setPage(total_pages) end,
+                bordersize = 0, enabled = page_cur < total_pages, show_parent = self.modal_widget },
+        }
+        table.insert(vg, CenterContainer:new{
+            dimen = Geom:new{ w = width, h = row_height },
+            page_nav,
         })
     end
 end
