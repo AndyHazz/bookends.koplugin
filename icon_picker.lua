@@ -14,6 +14,7 @@ IconPicker.CATALOG = {
     }},
     { _("Device"), {
         { "\xEF\x83\xAB", _("Lightbulb") },             -- U+F0EB fa-lightbulb-o
+        { "\xF0\x9F\x92\xA1", _("Lightbulb emoji") },   -- U+1F4A1
         { "\xE2\x98\x80", _("Sun (filled)") },             -- U+2600 BLACK SUN WITH RAYS
         { "\xEF\x86\x85", _("Sun (outline)") },          -- U+F185 fa-sun-o
         { "\xEF\x86\x86", _("Moon") },                  -- U+F186 fa-moon-o
@@ -85,6 +86,8 @@ IconPicker.CATALOG = {
         { "\xE2\x87\x93", _("Double arrow down") },     -- U+21D3
         { "\xE2\x87\x84", _("Arrows left-right") },     -- U+21C4
         { "\xE2\x87\x89", _("Double arrows right") },   -- U+21C9
+        { "\xE2\xA5\x96", _("Left harpoon with right arrow") }, -- U+2956
+        { "\xE2\xA4\xBB", _("Curved back arrow") },     -- U+293B
         { "\xE2\x86\xA2", _("Arrow left with tail") },  -- U+21A2
         { "\xE2\x86\xA3", _("Arrow right with tail") }, -- U+21A3
         { "\xE2\xA4\x9F", _("Arrow left to bar") },     -- U+291F
