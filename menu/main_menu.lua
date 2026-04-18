@@ -96,6 +96,10 @@ function Bookends:buildMainMenu()
             return {
                 {
                     text_func = function()
+                        local fam = Utils.getFontFamilyLabel(self.defaults.font_face)
+                        if fam then
+                            return _("Default font") .. " (" .. fam.label .. ")"
+                        end
                         local ok, FontChooser = pcall(require, "ui/widget/fontchooser")
                         local name
                         if ok and FontChooser and FontChooser.getFontNameText then
