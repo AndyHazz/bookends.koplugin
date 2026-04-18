@@ -1403,7 +1403,10 @@ function Bookends:showFontPicker(current_face, on_select, default_face)
             local lbase = (font_file:match("([^/]+)$") or ""):lower()
             local is_variant = info.bold or info.italic
                 or lbase:find("bold") or lbase:find("italic") or lbase:find("oblique")
-            local name = FontList:getLocalizedFontName(font_file, 0) or info.name
+            -- Group by base family name (e.g. "Amazon Ember"), not per-weight
+            -- localized name (e.g. "Amazon Ember Bold") — otherwise each weight
+            -- gets its own bucket and variants survive the merge.
+            local name = info.name or FontList:getLocalizedFontName(font_file, 0)
             -- Rank: lower = more "regular". Handles within-family weight variants.
             local rank = 0
             if info.bold then rank = rank + 2 end
