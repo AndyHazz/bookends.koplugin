@@ -1,7 +1,7 @@
 --- Reusable ButtonDialog shapes for nudge-style adjusters.
 -- Keeps callers free to decide when to persist (live vs on-apply).
 local UIManager = require("ui/uimanager")
-local _ = require("i18n").gettext
+local _ = require("bookends_i18n").gettext
 
 local DialogHelpers = {}
 

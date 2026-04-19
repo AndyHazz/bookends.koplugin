@@ -1,7 +1,7 @@
-local _ = require("i18n").gettext
+local _ = require("bookends_i18n").gettext
 return {
     name = "bookends",
     fullname = _("Bookends"),
     description = _([[Configurable text overlays at screen corners and edges with token expansion and icon support.]]),
-    version = "4.0.0",
+    version = "4.0.1",
 }

@@ -5,7 +5,7 @@
 -- module, avoiding potential interference with KOReader's own translations.
 --
 -- Usage:
---   local _ = require("i18n").gettext
+--   local _ = require("bookends_i18n").gettext
 --
 -- HOW TO ADD A LANGUAGE
 --   1. Copy locale/bookends.pot -> locale/<lang>.po (e.g. locale/es.po)

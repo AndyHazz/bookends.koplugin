@@ -2,14 +2,14 @@
 -- long-press manage dialog (delete/reorder/move-to-region).
 
 local ConfirmBox = require("ui/widget/confirmbox")
-local Config = require("config")
+local Config = require("bookends_config")
 local Device = require("device")
 local Font = require("ui/font")
 local InputDialog = require("ui/widget/inputdialog")
 local UIManager = require("ui/uimanager")
-local Utils = require("utils")
+local Utils = require("bookends_utils")
 local util = require("util")
-local _ = require("i18n").gettext
+local _ = require("bookends_i18n").gettext
 local T = require("ffi/util").template
 local Screen = Device.screen
 
@@ -38,7 +38,7 @@ function LineEditor.attach(Bookends)
 
     function Bookends:editLineString(pos, line_idx, touchmenu_instance)
         local restoreMenu = self:hideMenu(touchmenu_instance)
-        local IconPicker = require("icon_picker")
+        local IconPicker = require("bookends_icon_picker")
 
         local pos_settings = self.positions[pos.key]
 

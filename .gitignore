@@ -4,3 +4,4 @@ docs/superpowers/
 *~
 .DS_Store
 tools/submit-worker/node_modules/
+.claude/

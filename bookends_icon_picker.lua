@@ -1,6 +1,6 @@
 local Menu = require("ui/widget/menu")
 local UIManager = require("ui/uimanager")
-local _ = require("i18n").gettext
+local _ = require("bookends_i18n").gettext
 
 local IconPicker = {}
 

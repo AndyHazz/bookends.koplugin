@@ -2,7 +2,7 @@ local ConfirmBox = require("ui/widget/confirmbox")
 local Device = require("device")
 local InfoMessage = require("ui/widget/infomessage")
 local UIManager = require("ui/uimanager")
-local _ = require("i18n").gettext
+local _ = require("bookends_i18n").gettext
 
 local Updater = {}
 

@@ -1,9 +1,9 @@
 --- Full-width progress bar menus: list of bars, per-bar configuration,
 -- and the bar-margin adjuster dialog.
-local DialogHelpers = require("dialog_helpers")
+local DialogHelpers = require("bookends_dialog_helpers")
 local UIManager = require("ui/uimanager")
-local Utils = require("utils")
-local _ = require("i18n").gettext
+local Utils = require("bookends_utils")
+local _ = require("bookends_i18n").gettext
 local T = require("ffi/util").template
 
 return function(Bookends)

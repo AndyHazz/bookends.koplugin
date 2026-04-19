@@ -1,7 +1,7 @@
 --- Per-position (tl/tc/tr/bl/bc/br) configuration menu.
-local Tokens = require("tokens")
-local Utils = require("utils")
-local _ = require("i18n").gettext
+local Tokens = require("bookends_tokens")
+local Utils = require("bookends_utils")
+local _ = require("bookends_i18n").gettext
 
 return function(Bookends)
 

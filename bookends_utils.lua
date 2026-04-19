@@ -1,5 +1,5 @@
 --- Utility helpers shared across the plugin. KOReader modules loaded lazily where needed.
-local _ = require("i18n").gettext
+local _ = require("bookends_i18n").gettext
 local Utils = {}
 
 --- Supported font-family keys with human-readable labels.

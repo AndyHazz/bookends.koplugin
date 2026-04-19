@@ -1,7 +1,7 @@
 --- Token picker menu: catalogs, item builder, and the picker dialog.
-local Tokens = require("tokens")
+local Tokens = require("bookends_tokens")
 local UIManager = require("ui/uimanager")
-local _ = require("i18n").gettext
+local _ = require("bookends_i18n").gettext
 
 return function(Bookends)
 
@@ -145,7 +145,7 @@ function Bookends:buildTokenItems(catalog, on_select)
 end
 
 function Bookends:showTokenPicker(on_select)
-    local IconPicker = require("icon_picker")
+    local IconPicker = require("bookends_icon_picker")
     local items = self:buildTokenItems(self.TOKEN_CATALOG, on_select)
 
     -- Insert "Conditionals →" at the top, opening a sub-picker

@@ -1,9 +1,9 @@
 --- Top-level Bookends menu (entry point from KOReader main menu).
 local Font = require("ui/font")
-local Tokens = require("tokens")
-local Updater = require("updater")
-local Utils = require("utils")
-local _ = require("i18n").gettext
+local Tokens = require("bookends_tokens")
+local Updater = require("bookends_updater")
+local Utils = require("bookends_utils")
+local _ = require("bookends_i18n").gettext
 
 return function(Bookends)
 

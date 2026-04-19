@@ -1,6 +1,6 @@
 --- Colour-related menus: text/symbol colours and bar colours/ticks.
 -- Attached onto the Bookends class by main.lua on plugin load.
-local _ = require("i18n").gettext
+local _ = require("bookends_i18n").gettext
 
 return function(Bookends)
 

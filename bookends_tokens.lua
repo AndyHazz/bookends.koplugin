@@ -1,6 +1,6 @@
 local Device = require("device")
 local datetime = require("datetime")
-local BAR_PLACEHOLDER = require("overlay_widget").BAR_PLACEHOLDER
+local BAR_PLACEHOLDER = require("bookends_overlay_widget").BAR_PLACEHOLDER
 
 local Tokens = {}
 

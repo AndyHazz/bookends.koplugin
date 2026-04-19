@@ -1,18 +1,40 @@
-local Config = require("config")
+-- One-time cleanup: pre-v4.0.1 Bookends shipped its internal modules with
+-- generic names (config.lua, utils.lua, i18n.lua, etc.) which collided with
+-- identically-named modules in other plugins via Lua's package.loaded cache.
+-- v4.0.1 renamed them to bookends_*.lua but upgrades via the updates manager
+-- extract over the old dir, leaving orphan copies behind. Delete them before
+-- any other plugin has a chance to require one of them.
+do
+    local info = debug.getinfo(1, "S")
+    local src = info and info.source or ""
+    local plugin_dir = src:match("^@(.+)/[^/]+$")
+    if plugin_dir then
+        local orphans = {
+            "config.lua", "utils.lua", "tokens.lua", "updater.lua", "i18n.lua",
+            "overlay_widget.lua", "dialog_helpers.lua", "icon_picker.lua",
+            "line_editor.lua",
+        }
+        for _, f in ipairs(orphans) do
+            os.remove(plugin_dir .. "/" .. f)
+        end
+    end
+end
+
+local Config = require("bookends_config")
 local ConfirmBox = require("ui/widget/confirmbox")
-local DialogHelpers = require("dialog_helpers")
+local DialogHelpers = require("bookends_dialog_helpers")
 local Device = require("device")
 local Font = require("ui/font")
 local InfoMessage = require("ui/widget/infomessage")
 local InputDialog = require("ui/widget/inputdialog")
-local OverlayWidget = require("overlay_widget")
-local Tokens = require("tokens")
-local Updater = require("updater")
+local OverlayWidget = require("bookends_overlay_widget")
+local Tokens = require("bookends_tokens")
+local Updater = require("bookends_updater")
 local UIManager = require("ui/uimanager")
-local Utils = require("utils")
+local Utils = require("bookends_utils")
 local WidgetContainer = require("ui/widget/container/widgetcontainer")
 local util = require("util")
-local _ = require("i18n").gettext
+local _ = require("bookends_i18n").gettext
 local Screen = Device.screen
 local T = require("ffi/util").template
 
@@ -75,7 +97,7 @@ Bookends.DEFAULT_MARGINS = Config.DEFAULT_MARGINS
 Bookends.DEFAULT_TICK_WIDTH_MULTIPLIER = Config.DEFAULT_TICK_WIDTH_MULTIPLIER
 
 -- Attach non-core behaviour defined in dedicated files to keep main.lua focused.
-require("line_editor").attach(Bookends)
+require("bookends_line_editor").attach(Bookends)
 require("preset_manager").attach(Bookends)
 require("menu.colours_menu")(Bookends)
 require("menu.main_menu")(Bookends)
