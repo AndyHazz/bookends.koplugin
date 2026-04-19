@@ -44,9 +44,6 @@ msgstr "Read colour"
 msgid "Read color (% black)"
 msgstr "Read colour (% black)"
 
-msgid "Star favorites to cycle through them; star this for a blank"
-msgstr "Star favourites to cycle through them; star this for a blank"
-
 msgid "Symbol color"
 msgstr "Symbol colour"
 

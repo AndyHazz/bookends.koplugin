@@ -415,7 +415,7 @@ function PresetManagerModal._renderLocalRows(self, vg, width, row_height, font_s
         local blank_selected = (selected_key == "_empty")
         local compact_pad_v = Screen:scaleBySize(6)
         local label_widget = TextWidget:new{
-            text = _("Star favorites to cycle through them; star this for a blank"),
+            text = _("Star = in preset cycle; star this to include a blank"),
             face = Font:getFace("cfont", 14),
             bold = blank_selected,
             fgcolor = Blitbuffer.COLOR_BLACK,
@@ -486,18 +486,13 @@ function PresetManagerModal._renderLocalRows(self, vg, width, row_height, font_s
         })
     end
 
-    -- Pad out short pages so the modal height stays stable across pages
+    -- Pad out short pages so the modal height stays stable regardless of
+    -- how many real presets fit the page. Each pad slot equals one card
+    -- plus the 8px gap _addRow adds after every rendered card.
     local rendered = end_idx - start_idx + 1
+    local card_slot_h = Screen:scaleBySize(64) + Screen:scaleBySize(8)
     for _ = rendered + 1, ROWS_PER_PAGE do
-        table.insert(vg, HorizontalGroup:new{
-            HorizontalSpan:new{ width = left_pad },
-            TextWidget:new{
-                text = "",
-                face = Font:getFace("cfont", font_size),
-                forced_height = row_height,
-                forced_baseline = baseline,
-            },
-        })
+        table.insert(vg, VerticalSpan:new{ width = card_slot_h })
     end
 
     -- Pagination nav (matching font picker style)
@@ -1140,7 +1135,8 @@ function PresetManagerModal._renderGalleryRows(self, vg, width, row_height, font
     -- Empty state: pad the body so the modal's height stays consistent with
     -- a populated list. The status strip above already explains what to do.
     if not self.gallery_index or not self.gallery_index.presets then
-        table.insert(vg, VerticalSpan:new{ width = row_height * 5 })
+        local card_slot_h = Screen:scaleBySize(64) + Screen:scaleBySize(8)
+        table.insert(vg, VerticalSpan:new{ width = card_slot_h * 5 })
         return
     end
 
@@ -1178,6 +1174,14 @@ function PresetManagerModal._renderGalleryRows(self, vg, width, row_height, font
             is_selected = is_selected,
             installed = local_names[entry.name] == true,
         })
+    end
+
+    -- Pad out short pages so the Gallery tab's body height matches the Local
+    -- tab's (which also pads). Each slot equals one card plus the 8px gap.
+    local rendered = end_idx - start_idx + 1
+    local card_slot_h = Screen:scaleBySize(64) + Screen:scaleBySize(8)
+    for _ = rendered + 1, ROWS_PER_PAGE do
+        table.insert(vg, VerticalSpan:new{ width = card_slot_h })
     end
 
     -- Pagination nav (matches Local tab's visual)
