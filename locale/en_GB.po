@@ -8,8 +8,20 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "Border color"
+msgstr "Border colour"
+
+msgid "Border color (% black)"
+msgstr "Border colour (% black)"
+
 msgid "Bottom-center"
 msgstr "Bottom-centre"
+
+msgid "Bottom center tap gesture"
+msgstr "Bottom centre tap gesture"
+
+msgid "Custom colors and tick marks"
+msgstr "Custom colours and tick marks"
 
 msgid "Invert tick color on read portion"
 msgstr "Invert tick colour on read portion"
@@ -23,8 +35,8 @@ msgstr "Metro track colour (% black)"
 msgid "Prioritise left/right and truncate long center text"
 msgstr "Prioritise left/right and truncate long centre text"
 
-msgid "Progress bar colors"
-msgstr "Progress bar colours"
+msgid "Progress bar colors and tick marks"
+msgstr "Progress bar colours and tick marks"
 
 msgid "Read color"
 msgstr "Read colour"
@@ -32,11 +44,32 @@ msgstr "Read colour"
 msgid "Read color (% black)"
 msgstr "Read colour (% black)"
 
+msgid "Star favorites to cycle through them; star this for a blank"
+msgstr "Star favourites to cycle through them; star this for a blank"
+
+msgid "Symbol color"
+msgstr "Symbol colour"
+
+msgid "Symbol color (% black)"
+msgstr "Symbol colour (% black)"
+
+msgid "Text color"
+msgstr "Text colour"
+
+msgid "Text color (% black)"
+msgstr "Text colour (% black)"
+
 msgid "Tick color"
 msgstr "Tick colour"
 
 msgid "Tick color (% black)"
 msgstr "Tick colour (% black)"
+
+msgid "Tick inversion color"
+msgstr "Tick inversion colour"
+
+msgid "Tick inversion color (% black)"
+msgstr "Tick inversion colour (% black)"
 
 msgid "Top-center"
 msgstr "Top-centre"
@@ -46,3 +79,6 @@ msgstr "Unread colour"
 
 msgid "Unread color (% black)"
 msgstr "Unread colour (% black)"
+
+msgid "Use custom colors"
+msgstr "Use custom colours"

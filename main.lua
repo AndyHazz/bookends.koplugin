@@ -580,6 +580,20 @@ function Bookends:markDirty(refresh_mode)
             end
         end)
     end
+
+    -- Debounced autosave. settings:saveSetting only updates RAM; without this
+    -- debounce, edits aren't persisted until onFlushSettings fires (book close
+    -- / suspend). 2s is tight enough to feel instant and loose enough to
+    -- coalesce a burst of menu taps or nudge-dialog adjustments.
+    if self._pending_autosave then
+        UIManager:unschedule(self._pending_autosave)
+    end
+    self._pending_autosave = function()
+        self._pending_autosave = nil
+        if self.settings then pcall(function() self.settings:flush() end) end
+        pcall(self.autosaveActivePreset, self)
+    end
+    UIManager:scheduleIn(2, self._pending_autosave)
 end
 
 --- Compute chapter tick fractions for book progress bars (cached per dirty cycle).

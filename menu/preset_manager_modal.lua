@@ -116,6 +116,11 @@ function PresetManagerModal._close(self, restore)
         self.modal_widget = nil
     end
     self.bookends:markDirty()
+    -- Persist now — closing the manager is a strong signal the user is done
+    -- making edits. Belt-and-braces alongside markDirty's debounce, in case
+    -- the app is backgrounded before the 2s debounce fires.
+    pcall(function() self.bookends.settings:flush() end)
+    pcall(self.bookends.autosaveActivePreset, self.bookends)
 end
 
 function PresetManagerModal._previewLocal(self, entry)
@@ -410,7 +415,7 @@ function PresetManagerModal._renderLocalRows(self, vg, width, row_height, font_s
         local blank_selected = (selected_key == "_empty")
         local compact_pad_v = Screen:scaleBySize(6)
         local label_widget = TextWidget:new{
-            text = _("(No overlay)"),
+            text = _("Star favorites to cycle through them; star this for a blank"),
             face = Font:getFace("cfont", 14),
             bold = blank_selected,
             fgcolor = Blitbuffer.COLOR_BLACK,
@@ -459,27 +464,15 @@ function PresetManagerModal._renderLocalRows(self, vg, width, row_height, font_s
         table.insert(vg, VerticalSpan:new{ width = Screen:scaleBySize(8) })
     end
 
-    -- Real presets, paginated. Page 1 has room for one fewer because of the
-    -- pinned (No overlay) row above.
+    -- Real presets, paginated. Page 1 fits the same 5 cards as the Gallery
+    -- tab — the compact (No overlay) strip above is small enough that we
+    -- don't need to displace a card.
     local presets = self.bookends:readPresetFiles()
-    local FIRST_PAGE_ROWS = 4
-    local OTHER_PAGE_ROWS = 5
-    local total_pages = 1
-    if #presets > FIRST_PAGE_ROWS then
-        total_pages = 1 + math.ceil((#presets - FIRST_PAGE_ROWS) / OTHER_PAGE_ROWS)
-    end
+    local ROWS_PER_PAGE = 5
+    local total_pages = math.max(1, math.ceil(#presets / ROWS_PER_PAGE))
     if self.page > total_pages then self.page = total_pages end
-    local start_idx, end_idx
-    if self.page == 1 then
-        start_idx = 1
-        end_idx = math.min(FIRST_PAGE_ROWS, #presets)
-    else
-        start_idx = FIRST_PAGE_ROWS + (self.page - 2) * OTHER_PAGE_ROWS + 1
-        end_idx = math.min(start_idx + OTHER_PAGE_ROWS - 1, #presets)
-    end
-    -- Used only by the pad-out loop below, which pads real rows only (the
-    -- virtual (No overlay) card already takes one slot on page 1).
-    local ROWS_PER_PAGE = (self.page == 1) and FIRST_PAGE_ROWS or OTHER_PAGE_ROWS
+    local start_idx = (self.page - 1) * ROWS_PER_PAGE + 1
+    local end_idx = math.min(start_idx + ROWS_PER_PAGE - 1, #presets)
     for i = start_idx, end_idx do
         local p = presets[i]
         PresetManagerModal._addRow(self, vg, width, row_height, font_size, baseline, left_pad, {
