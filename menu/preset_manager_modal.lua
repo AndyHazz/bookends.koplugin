@@ -680,7 +680,8 @@ local function findNonPortableFonts(preset_data, position_labels)
         if s then table.insert(findings, { location = _("Default font"), font = s }) end
     end
     if preset_data.positions then
-        for _, pos in ipairs(position_labels) do
+        -- Note: `_` is gettext here; must not shadow it in the loop.
+        for _idx, pos in ipairs(position_labels) do
             local p = preset_data.positions[pos.key]
             if p and p.line_font_face then
                 for i, face in pairs(p.line_font_face) do
@@ -708,7 +709,7 @@ local function stripNonPortableFonts(preset_data)
         clean.defaults.font_face = nil
     end
     if clean.positions then
-        for _, pos_data in pairs(clean.positions) do
+        for _k, pos_data in pairs(clean.positions) do
             if pos_data.line_font_face then
                 local kept = {}
                 for i, face in pairs(pos_data.line_font_face) do
@@ -770,7 +771,10 @@ local function serializePresetForSubmission(preset_entry)
     return header .. "return " .. PresetManager.serializeTable(preset_entry.preset) .. "\n"
 end
 
-function PresetManagerModal._submitToGallery(self, entry)
+-- Wrap the submit flow in xpcall so any unhandled error surfaces as a
+-- notification rather than crashing the overlay. The submit path runs rarely
+-- and shuttles between several dialogs; easy place for regressions.
+local function submitToGalleryImpl(self, entry)
     -- If any required metadata is missing, prompt inline, save it, and continue.
     local data = entry.preset
     local function needsField(f) return not data[f] or data[f] == "" end
@@ -851,6 +855,14 @@ function PresetManagerModal._submitToGallery(self, entry)
         })
     else
         showConfirmAndSubmit()
+    end
+end
+
+function PresetManagerModal._submitToGallery(self, entry)
+    local ok, err = xpcall(function() submitToGalleryImpl(self, entry) end, debug.traceback)
+    if not ok then
+        require("logger").warn("bookends: Submit to gallery crashed:", err)
+        Notification:notify(_("Submission failed — details in the KOReader log."))
     end
 end
 
