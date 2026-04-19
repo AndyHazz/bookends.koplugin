@@ -69,16 +69,16 @@ function Bookends:buildMainMenu()
         end,
     })
 
-    -- Preset adjustments: styling settings that ARE saved with the current
+    -- Preset submenu: styling settings that ARE saved with the current
     -- preset. Title includes the active preset name so the user can see at
     -- a glance which preset these tweaks will affect.
     table.insert(menu, {
         text_func = function()
             local name = self:getActivePresetName()
             if name then
-                return _("Preset adjustments") .. " (" .. name .. ")"
+                return _("Preset") .. " (" .. name .. ")"
             end
-            return _("Preset adjustments")
+            return _("Preset")
         end,
         enabled_func = function() return self.enabled end,
         sub_item_table_func = function()
@@ -318,7 +318,7 @@ function Bookends:buildBookendsSettingsMenu()
     }
 end
 
---- Preset adjustments: styling tweaks that ARE saved into the active preset.
+--- Preset submenu: styling tweaks that ARE saved into the active preset.
 --- Opens the preset library as its first item so users can pick/manage
 --- presets from the same menu that tweaks the current one.
 function Bookends:buildPresetAdjustmentsMenu()
