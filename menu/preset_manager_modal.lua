@@ -1047,21 +1047,26 @@ function PresetManagerModal._renderGalleryRows(self, vg, width, row_height, font
     -- Tapping an uncached preset will show a clearer offline notification, but
     -- the banner lets the user know before they try.
     if not online then
+        local banner_pad = Screen:scaleBySize(12)
+        local banner_outer_w = width - 2 * left_pad
+        local banner_content_w = banner_outer_w - 2 * banner_pad - 2 * Size.border.thin
         local banner_h = Screen:scaleBySize(36)
         local banner_frame = FrameContainer:new{
             bordersize = Size.border.thin,
             radius = Size.radius.default,
             padding = 0,
-            padding_left = Screen:scaleBySize(12),
-            padding_right = Screen:scaleBySize(12),
+            padding_left = banner_pad,
+            padding_right = banner_pad,
+            padding_top = 0,
+            padding_bottom = 0,
             margin = 0,
             background = Blitbuffer.COLOR_LIGHT_GRAY or Blitbuffer.gray(0.92),
             LeftContainer:new{
-                dimen = Geom:new{ w = width - 2 * left_pad - 2 * Size.border.thin, h = banner_h },
+                dimen = Geom:new{ w = banner_content_w, h = banner_h },
                 TextWidget:new{
                     text = _("Offline — only already-downloaded presets will load."),
                     face = Font:getFace("cfont", 13),
-                    max_width = width - 2 * left_pad - Screen:scaleBySize(24),
+                    max_width = banner_content_w,
                     fgcolor = Blitbuffer.COLOR_BLACK,
                 },
             },
