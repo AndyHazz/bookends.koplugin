@@ -24,6 +24,7 @@ local Size = require("ui/size")
 local TextWidget = require("ui/widget/textwidget")
 local UIManager = require("ui/uimanager")
 local VerticalGroup = require("ui/widget/verticalgroup")
+local VerticalSpan = require("ui/widget/verticalspan")
 local util = require("util")
 local _ = require("i18n").gettext
 local T = require("ffi/util").template
@@ -520,31 +521,18 @@ function PresetManagerModal._renderLocalRows(self, vg, width, row_height, font_s
 end
 
 function PresetManagerModal._addRow(self, vg, width, row_height, font_size, baseline, left_pad, opts)
-    -- Card-style row: title, optional description + author underneath, star
-    -- column on the left. Selected row gets a thicker border.
+    -- Row layout:  [ card (title + description/author) ]  [ gap ]  [ star ]
+    -- Tap card → preview. Tap star → toggle cycle membership (no preview).
+    -- Selected row gets a light-gray background fill instead of a thick border.
     -- `opts` fields: display (title), star_key, on_preview, on_hold, is_selected,
     --                 description (optional), author (optional), is_virtual (optional)
     local starred = isStarred(self.bookends, opts.star_key)
-    local card_height = Screen:scaleBySize(66)
+    local card_height = Screen:scaleBySize(64)
     local star_width = Screen:scaleBySize(40)
-    local inner_pad = Screen:scaleBySize(8)
-    local card_outer_w = width - 2 * left_pad
-    local content_w = card_outer_w - star_width - 2 * inner_pad
-
-    -- Star — tappable sub-area that toggles cycle membership (doesn't preview).
-    local star_widget = TextWidget:new{
-        text = starred and "\xE2\x98\x85" or "\xE2\x98\x86",
-        face = Font:getFace("infofont", 20),
-        bold = true,
-        fgcolor = Blitbuffer.COLOR_BLACK,
-    }
-    local star_ic = InputContainer:new{
-        dimen = Geom:new{ w = star_width, h = card_height },
-        CenterContainer:new{ dimen = Geom:new{ w = star_width, h = card_height }, star_widget },
-    }
-    star_ic.ges_events = { TapSelect = { GestureRange:new{ ges = "tap", range = star_ic.dimen } } }
-    local key = opts.star_key
-    star_ic.onTapSelect = function() self.toggleStar(key); return true end
+    local star_gap = Screen:scaleBySize(6)
+    local inner_pad = Screen:scaleBySize(12)
+    local card_outer_w = width - 2 * left_pad - star_gap - star_width
+    local content_w = card_outer_w - 2 * inner_pad - 2 * Size.border.thin
 
     -- Title
     local title_widget = TextWidget:new{
@@ -555,8 +543,7 @@ function PresetManagerModal._addRow(self, vg, width, row_height, font_size, base
         fgcolor = Blitbuffer.COLOR_BLACK,
     }
 
-    -- Secondary line: description + author in smaller, lighter text.
-    -- Virtual rows (No overlay / Save button) skip this line.
+    -- Secondary line: description + author. Virtual rows skip this.
     local secondary_widget
     if not opts.is_virtual and (opts.description or opts.author) then
         local secondary_text = opts.description or ""
@@ -582,24 +569,17 @@ function PresetManagerModal._addRow(self, vg, width, row_height, font_size, base
         table.insert(content_group, secondary_widget)
     end
 
-    -- Force the content row to fill the card's interior width so all cards
-    -- have consistent width. LeftContainer with explicit dimen pins the row.
     local content_row = LeftContainer:new{
-        dimen = Geom:new{
-            w = card_outer_w - 2 * inner_pad - 2 * Size.border.thick,
-            h = card_height - 2 * Size.border.thick,
-        },
-        HorizontalGroup:new{
-            align = "center",
-            star_ic,
-            content_group,
-        },
+        dimen = Geom:new{ w = content_w, h = card_height - 2 * Size.border.thin },
+        content_group,
     }
 
-    -- Frame: thick border + white background when selected; thin border
-    -- otherwise. No inverted colors — keeps readability high on e-ink.
-    local frame = FrameContainer:new{
-        bordersize = opts.is_selected and Size.border.thick or Size.border.thin,
+    -- Card frame: thin border always; background fills light-gray when selected.
+    local card_bg = opts.is_selected
+        and (Blitbuffer.COLOR_LIGHT_GRAY or Blitbuffer.gray(0.92))
+        or Blitbuffer.COLOR_WHITE
+    local card_frame = FrameContainer:new{
+        bordersize = Size.border.thin,
         radius = Size.radius.default,
         padding = 0,
         padding_left = inner_pad,
@@ -607,15 +587,14 @@ function PresetManagerModal._addRow(self, vg, width, row_height, font_size, base
         padding_top = 0,
         padding_bottom = 0,
         margin = 0,
-        background = Blitbuffer.COLOR_WHITE,
+        background = card_bg,
         content_row,
     }
 
-    -- Capture taps/holds on the whole card (minus the star sub-area which
-    -- has its own handler). InputContainer wraps the frame.
+    -- Tap/hold on the card previews / opens overflow.
     local card = InputContainer:new{
-        dimen = Geom:new{ w = frame:getSize().w, h = frame:getSize().h },
-        frame,
+        dimen = Geom:new{ w = card_frame:getSize().w, h = card_frame:getSize().h },
+        card_frame,
     }
     card.ges_events = { TapSelect = { GestureRange:new{ ges = "tap", range = card.dimen } } }
     card.onTapSelect = function() opts.on_preview(); return true end
@@ -624,14 +603,31 @@ function PresetManagerModal._addRow(self, vg, width, row_height, font_size, base
         card.onHoldSelect = function() opts.on_hold(); return true end
     end
 
+    -- Star to the right of the card, outside the frame. Its own tap target,
+    -- toggles cycle membership without previewing.
+    local star_widget = TextWidget:new{
+        text = starred and "\xE2\x98\x85" or "\xE2\x98\x86",
+        face = Font:getFace("infofont", 22),
+        bold = true,
+        fgcolor = Blitbuffer.COLOR_BLACK,
+    }
+    local star_ic = InputContainer:new{
+        dimen = Geom:new{ w = star_width, h = card_height },
+        CenterContainer:new{ dimen = Geom:new{ w = star_width, h = card_height }, star_widget },
+    }
+    star_ic.ges_events = { TapSelect = { GestureRange:new{ ges = "tap", range = star_ic.dimen } } }
+    local key = opts.star_key
+    star_ic.onTapSelect = function() self.toggleStar(key); return true end
+
     table.insert(vg, HorizontalGroup:new{
+        align = "center",
         HorizontalSpan:new{ width = left_pad },
         card,
+        HorizontalSpan:new{ width = star_gap },
+        star_ic,
     })
-    -- Small gap between cards
-    table.insert(vg, VerticalGroup:new{
-        HorizontalGroup:new{ HorizontalSpan:new{ width = 1 } },
-    })
+    -- Gap between cards
+    table.insert(vg, VerticalSpan:new{ width = Screen:scaleBySize(8) })
 end
 
 function PresetManagerModal._saveCurrentAsPreset(self)
