@@ -8,7 +8,7 @@ local Gallery = {}
 
 local INDEX_URL = "https://raw.githubusercontent.com/AndyHazz/bookends-presets/main/index.json"
 local BASE_URL  = "https://raw.githubusercontent.com/AndyHazz/bookends-presets/main/"
-local SUBMIT_URL = "https://bookends-submit.andyhazz.workers.dev/submit"  -- update after Worker deploy
+local SUBMIT_URL = "https://bookends-submit.andy-nmc.workers.dev/submit"
 local CACHE_TTL = 24 * 3600  -- 24h
 
 -- Session in-memory cache of downloaded preset data
