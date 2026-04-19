@@ -472,7 +472,9 @@ end
 
 function Bookends:buildPreset()
     local preset = {
-        enabled = self.enabled,
+        -- `enabled` is deliberately NOT in presets — it's a global on/off
+        -- switch, not a visual style. Older preset files may still contain
+        -- it; loadPreset ignores the field.
         defaults = util.tableDeepCopy(self.defaults),
         positions = {},
     }
@@ -489,10 +491,8 @@ function Bookends:buildPreset()
 end
 
 function Bookends:loadPreset(preset)
-    if preset.enabled ~= nil then
-        self.enabled = preset.enabled
-        self.settings:saveSetting("enabled", self.enabled)
-    end
+    -- Ignore preset.enabled — it's a global on/off, not a style (kept in
+    -- older files but no longer applied on load).
     if preset.defaults then
         local pd = preset.defaults
         -- Ignore old v_offset/h_offset keys from pre-v2 presets
