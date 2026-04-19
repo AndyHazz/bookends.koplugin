@@ -34,27 +34,27 @@ local Screen = Device.screen
 
 local PresetManagerModal = {}
 
---- Open the manager modal. Single entry point from menu / gesture.
-function PresetManagerModal.show(bookends)
-    -- Compute which Local page contains the active preset so the user
-    -- sees their current selection immediately instead of page 1 with no
-    -- highlighted row (happens when the active preset is 6+ in the list).
-    local initial_page = 1
+--- Local tab page number containing the active preset, or 1 if no active
+--- preset. Used both on modal open and on every switch back to the Local
+--- tab so the selected row is always in view.
+local function activePresetPage(bookends)
     local active_fn = bookends:getActivePresetFilename()
-    if active_fn then
-        local ROWS_PER_PAGE = 5
-        for i, p in ipairs(bookends:readPresetFiles()) do
-            if p.filename == active_fn then
-                initial_page = math.ceil(i / ROWS_PER_PAGE)
-                break
-            end
+    if not active_fn then return 1 end
+    local ROWS_PER_PAGE = 5
+    for i, p in ipairs(bookends:readPresetFiles()) do
+        if p.filename == active_fn then
+            return math.ceil(i / ROWS_PER_PAGE)
         end
     end
+    return 1
+end
 
+--- Open the manager modal. Single entry point from menu / gesture.
+function PresetManagerModal.show(bookends)
     local self = {
         bookends = bookends,
         tab = "local",
-        page = initial_page,
+        page = activePresetPage(bookends),
         previewing = nil,
         original_settings = nil,
         modal_widget = nil,
@@ -102,7 +102,14 @@ function PresetManagerModal.show(bookends)
     self.setTab = function(tab)
         if self.tab ~= tab then
             self.tab = tab
-            self.page = 1
+            -- When returning to My presets, jump to the page with the active
+            -- preset (same reason as on initial show). Gallery has no active
+            -- concept, so it resets to page 1.
+            if tab == "local" then
+                self.page = activePresetPage(self.bookends)
+            else
+                self.page = 1
+            end
             self.rebuild()
         end
     end
@@ -263,7 +270,7 @@ function PresetManagerModal._rebuild(self)
         ic.onTapSelect = function() on_tap(); return true end
         return ic
     end
-    local local_seg   = segmentHalf(_("Local"),   self.tab == "local",   function() self.setTab("local") end)
+    local local_seg   = segmentHalf(_("My presets"), self.tab == "local",   function() self.setTab("local") end)
     local gallery_seg = segmentHalf(_("Gallery"), self.tab == "gallery", function() self.setTab("gallery") end)
     local seg_divider = LineWidget:new{
         background = Blitbuffer.COLOR_BLACK,
