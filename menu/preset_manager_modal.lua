@@ -46,13 +46,12 @@ function PresetManagerModal.show(bookends)
         gallery_error = nil,
     }
 
-    self.original_settings = util.tableDeepCopy({
-        enabled       = bookends.enabled,
-        positions     = bookends.positions,
-        defaults      = bookends.defaults,
-        progress_bars = bookends.progress_bars,
-        active_filename = bookends:getActivePresetFilename(),
-    })
+    -- Snapshot the complete overlay state via the same pipeline used to save a
+    -- preset. On Close-revert we re-apply via loadPreset, which writes back to
+    -- settings too — purely in-memory reverts leaked preview data into settings
+    -- (loadPreset saves each progress_bar_N and pos_X when applying a preview).
+    self.original_preset = bookends:buildPreset()
+    self.original_active_filename = bookends:getActivePresetFilename()
 
     -- nextTick lets any pending dialog dismissal flush before we re-open the modal,
     -- avoiding visual glitches where the dialog's close races the modal's rebuild.
@@ -101,12 +100,13 @@ end
 
 function PresetManagerModal._close(self, restore)
     if restore and self.previewing then
-        local snap = self.original_settings
-        self.bookends.enabled       = snap.enabled
-        self.bookends.positions     = util.tableDeepCopy(snap.positions)
-        self.bookends.defaults      = util.tableDeepCopy(snap.defaults)
-        self.bookends.progress_bars = util.tableDeepCopy(snap.progress_bars)
-        self.bookends:setActivePresetFilename(snap.active_filename)
+        -- Must clear _previewing before loadPreset so the saveSetting calls
+        -- inside it actually persist; but autosaveActivePreset is triggered
+        -- via onFlushSettings which is fine either way since loadPreset is
+        -- restoring the ORIGINAL active preset's config.
+        self.bookends._previewing = false
+        self.bookends:loadPreset(self.original_preset)
+        self.bookends:setActivePresetFilename(self.original_active_filename)
     end
     self.bookends._previewing = false
     self.previewing = nil
