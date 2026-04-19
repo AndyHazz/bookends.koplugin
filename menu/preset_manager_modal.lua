@@ -294,10 +294,19 @@ function PresetManagerModal._rebuild(self)
     end
 
     -- Footer: three buttons (Close | Edit | Apply) separated by thin vertical lines.
-    -- Edit is enabled only when a Personal preset is currently previewed (so the
-    -- overflow-menu actions have an unambiguous target).
-    local edit_enabled = self.previewing and self.previewing.kind == "local"
-    local edit_target = edit_enabled and self.previewing.filename
+    -- Edit targets whichever Personal preset is "selected": the previewed one
+    -- if we're previewing a Local row, otherwise the currently-active preset
+    -- (highlighted in the list when no preview is active). Gallery previews
+    -- and virtual-blank previews leave edit disabled.
+    local edit_target
+    if self.previewing then
+        if self.previewing.kind == "local" then
+            edit_target = self.previewing.filename
+        end
+    else
+        edit_target = self.bookends:getActivePresetFilename()
+    end
+    local edit_enabled = edit_target ~= nil
     local btn_w = math.floor((width - 2 * Size.line.thick) / 3)
 
     local function make_footer_btn(label_text, active, on_tap, is_bold)
@@ -446,7 +455,7 @@ function PresetManagerModal._renderLocalRows(self, vg, width, row_height, font_s
 
     -- Real presets, paginated
     local presets = self.bookends:readPresetFiles()
-    local ROWS_PER_PAGE = 5
+    local ROWS_PER_PAGE = 4
     local total_pages = math.max(1, math.ceil(#presets / ROWS_PER_PAGE))
     if self.page > total_pages then self.page = total_pages end
     local start_idx = (self.page - 1) * ROWS_PER_PAGE + 1
@@ -573,6 +582,20 @@ function PresetManagerModal._addRow(self, vg, width, row_height, font_size, base
         table.insert(content_group, secondary_widget)
     end
 
+    -- Force the content row to fill the card's interior width so all cards
+    -- have consistent width. LeftContainer with explicit dimen pins the row.
+    local content_row = LeftContainer:new{
+        dimen = Geom:new{
+            w = card_outer_w - 2 * inner_pad - 2 * Size.border.thick,
+            h = card_height - 2 * Size.border.thick,
+        },
+        HorizontalGroup:new{
+            align = "center",
+            star_ic,
+            content_group,
+        },
+    }
+
     -- Frame: thick border + white background when selected; thin border
     -- otherwise. No inverted colors — keeps readability high on e-ink.
     local frame = FrameContainer:new{
@@ -581,15 +604,11 @@ function PresetManagerModal._addRow(self, vg, width, row_height, font_size, base
         padding = 0,
         padding_left = inner_pad,
         padding_right = inner_pad,
-        padding_top = math.floor(Size.padding.small / 2),
-        padding_bottom = math.floor(Size.padding.small / 2),
+        padding_top = 0,
+        padding_bottom = 0,
         margin = 0,
         background = Blitbuffer.COLOR_WHITE,
-        HorizontalGroup:new{
-            align = "center",
-            star_ic,
-            content_group,
-        },
+        content_row,
     }
 
     -- Capture taps/holds on the whole card (minus the star sub-area which
