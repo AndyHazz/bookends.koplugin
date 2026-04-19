@@ -36,10 +36,25 @@ local PresetManagerModal = {}
 
 --- Open the manager modal. Single entry point from menu / gesture.
 function PresetManagerModal.show(bookends)
+    -- Compute which Local page contains the active preset so the user
+    -- sees their current selection immediately instead of page 1 with no
+    -- highlighted row (happens when the active preset is 6+ in the list).
+    local initial_page = 1
+    local active_fn = bookends:getActivePresetFilename()
+    if active_fn then
+        local ROWS_PER_PAGE = 5
+        for i, p in ipairs(bookends:readPresetFiles()) do
+            if p.filename == active_fn then
+                initial_page = math.ceil(i / ROWS_PER_PAGE)
+                break
+            end
+        end
+    end
+
     local self = {
         bookends = bookends,
         tab = "local",
-        page = 1,
+        page = initial_page,
         previewing = nil,
         original_settings = nil,
         modal_widget = nil,
