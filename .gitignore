@@ -3,3 +3,4 @@ docs/superpowers/
 *.swo
 *~
 .DS_Store
+tools/submit-worker/node_modules/

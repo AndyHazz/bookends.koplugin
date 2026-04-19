@@ -81,6 +81,12 @@ Non-secret settings live in `wrangler.toml` under `[vars]`:
 
 Change these in the dashboard (Workers → bookends-submit → Settings → Variables) or edit `wrangler.toml` and redeploy.
 
+## How index.json stays up to date
+
+The Worker **does not touch `index.json`**. Submissions only commit the preset file (`presets/<slug>.lua`) and open a PR.
+
+`bookends-presets` has a GitHub Action (`.github/workflows/regenerate-index.yml`) that watches `presets/*.lua` on `main` and regenerates `index.json` automatically on every push. This means submission PRs never conflict on `index.json` — they only add disjoint preset files.
+
 ## Abuse controls
 
 Two layers:

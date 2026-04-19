@@ -83,16 +83,6 @@ function b64(s: string): string {
     return btoa(bin);
 }
 
-function b64decodeUtf8(b64_content: string): string {
-    // atob returns a binary string (one char per byte). For multi-byte UTF-8
-    // content (em-dashes, accented chars, etc.) we must reassemble as bytes
-    // and decode as UTF-8 — otherwise each byte becomes a Latin-1 char and
-    // re-encoding corrupts the original content.
-    const bin = atob(b64_content.replace(/\n/g, ""));
-    const bytes = new Uint8Array(bin.length);
-    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-    return new TextDecoder("utf-8").decode(bytes);
-}
 
 async function handleSubmit(request: Request, env: Env): Promise<Response> {
     if (request.method === "OPTIONS") return json(204, {});
@@ -136,27 +126,26 @@ async function handleSubmit(request: Request, env: Env): Promise<Response> {
         return json(502, { ok: false, error: `github check failed: ${(e as Error).message}` });
     }
 
-    // Fetch main's SHA + current index.json
+    // Fetch main's SHA
     let mainSha: string;
-    let indexSha: string;
-    let indexObj: { presets?: unknown[]; updated?: string; schema_version?: number };
     try {
         const ref = await gh<{ object: { sha: string } }>(env, `/repos/${owner}/${repo}/git/refs/heads/main`);
         mainSha = ref.object.sha;
-        const indexFile = await gh<{ sha: string; content: string; encoding: string }>(
-            env, `/repos/${owner}/${repo}/contents/index.json?ref=main`);
-        indexSha = indexFile.sha;
-        indexObj = JSON.parse(b64decodeUtf8(indexFile.content));
     } catch (e) {
         return json(502, { ok: false, error: `github fetch failed: ${(e as Error).message}` });
     }
 
-    // Duplicate-slug check
-    if (Array.isArray(indexObj.presets)) {
-        for (const p of indexObj.presets) {
-            if (p && typeof p === "object" && (p as { slug?: unknown }).slug === body.slug) {
-                return json(409, { ok: false, error: "slug already exists in the gallery" });
-            }
+    const presetPath = `presets/${body.slug}.lua`;
+
+    // Duplicate-slug check: does the preset file already exist on main?
+    try {
+        await gh(env, `/repos/${owner}/${repo}/contents/${presetPath}?ref=main`);
+        // If the GET succeeds (200), the file exists.
+        return json(409, { ok: false, error: "slug already exists in the gallery" });
+    } catch (e) {
+        // 404 is expected (file doesn't exist yet); other errors bubble up.
+        if (!/ 404: /.test((e as Error).message)) {
+            return json(502, { ok: false, error: `github check failed: ${(e as Error).message}` });
         }
     }
 
@@ -176,25 +165,9 @@ async function handleSubmit(request: Request, env: Env): Promise<Response> {
     const shortTs = Math.floor(Date.now() / 1000).toString(36);
     const branchName = `submit/${body.slug}-${shortTs}`;
 
-    // Build updated index.json
-    const today = new Date().toISOString().slice(0, 10);
-    const newEntry = {
-        slug: body.slug!,
-        name: body.name!.trim(),
-        author: body.author!.trim(),
-        description: body.description!.trim(),
-        added: today,
-        preset_url: `presets/${body.slug}.lua`,
-    };
-    const newIndex = {
-        schema_version: indexObj.schema_version ?? 1,
-        updated: new Date().toISOString(),
-        presets: [...(indexObj.presets as unknown[] ?? []), newEntry],
-    };
-    const newIndexJson = JSON.stringify(newIndex, null, 2) + "\n";
-    const presetPath = `presets/${body.slug}.lua`;
-
-    // Create the branch at main's SHA, then commit both files to it, then open PR.
+    // Create the branch at main's SHA, then commit the preset file, then open PR.
+    // index.json is NOT touched — a GitHub Action on the presets repo regenerates
+    // it from presets/*.lua on every push to main, so submissions can't conflict.
     try {
         await gh(env, `/repos/${owner}/${repo}/git/refs`, {
             method: "POST",
@@ -209,17 +182,6 @@ async function handleSubmit(request: Request, env: Env): Promise<Response> {
                 message: `Add preset: ${body.name}`,
                 content: b64(body.preset_lua!),
                 branch: branchName,
-            }),
-        });
-
-        await gh(env, `/repos/${owner}/${repo}/contents/index.json`, {
-            method: "PUT",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify({
-                message: `Add ${body.slug} to index`,
-                content: b64(newIndexJson),
-                branch: branchName,
-                sha: indexSha,
             }),
         });
 
