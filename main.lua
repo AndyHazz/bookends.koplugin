@@ -1688,8 +1688,11 @@ function Bookends:showFontPicker(current_face, on_select, default_face)
         local selected_face
         if selected then
             local sel_resolved = Utils.resolveFontFace(selected, nil)
+            -- Font load can fail (unsupported file, freetype errors).
+            -- Fall back to cfont if the resolved face returns nil.
             if sel_resolved then
                 selected_face = Font:getFace(sel_resolved, title_font_size)
+                             or Font:getFace("cfont", title_font_size)
             else
                 selected_face = Font:getFace("cfont", title_font_size)
             end
@@ -1834,7 +1837,12 @@ function Bookends:showFontPicker(current_face, on_select, default_face)
             local f = fonts[i]
             local is_selected = (f.file == selected)
             local is_default = (f.file == default_face)
+            -- Font load can fail for unsupported files (e.g. some .otf files
+            -- with non-Latin1 filenames, parentheses in paths, or glyph tables
+            -- freetype can't handle). Fall back to cfont so the picker row
+            -- still renders (just in the default font instead of its own).
             local face = Font:getFace(f.file, font_size)
+                      or Font:getFace("cfont", font_size)
 
             local suffix = is_default and "  \xE2\x98\x85" or ""
             local label = f.display .. suffix
