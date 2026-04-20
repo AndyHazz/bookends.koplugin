@@ -258,7 +258,10 @@ function Bookends:runPresetManagerMigration()
         self.settings:saveSetting("preset_cycle", cycle)
     end
 
-    -- 3. First-run: provision Basic bookends if bookends_presets/ is empty
+    -- 3. First-run: provision Basic bookends if bookends_presets/ is empty.
+    -- Do NOT set it active for users upgrading from v3.x who already had a
+    -- customised layout in their settings — otherwise the init-time preset
+    -- re-apply would overwrite their layout with Basic bookends' content.
     self:ensurePresetDir()
     local dir = self:presetDir()
     local has_any = false
@@ -266,6 +269,15 @@ function Bookends:runPresetManagerMigration()
         if f:match("%.lua$") then has_any = true; break end
     end
     if not has_any then
+        -- Detect an existing v3.x layout: any position with configured lines.
+        local has_existing_layout = false
+        for _, pos in ipairs(self.POSITIONS) do
+            local saved = self.settings:readSetting("pos_" .. pos.key)
+            if saved and saved.lines and #saved.lines > 0 then
+                has_existing_layout = true
+                break
+            end
+        end
         local DataStorage = require("datastorage")
         local source = DataStorage:getDataDir() .. "/plugins/bookends.koplugin/basic_bookends.lua"
         local dest = dir .. "/basic_bookends.lua"
@@ -275,7 +287,11 @@ function Bookends:runPresetManagerMigration()
             if dst_file then
                 dst_file:write(src_file:read("*a"))
                 dst_file:close()
-                if not self.settings:readSetting("active_preset_filename") then
+                -- Only make Basic bookends active for a genuine first-run.
+                -- Upgrading v3.x users keep their existing layout; Basic
+                -- bookends still lands in their library for reference.
+                if not has_existing_layout
+                   and not self.settings:readSetting("active_preset_filename") then
                     self.settings:saveSetting("active_preset_filename", "basic_bookends.lua")
                 end
                 local cycle = self.settings:readSetting("preset_cycle") or {}
