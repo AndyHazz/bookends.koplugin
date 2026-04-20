@@ -85,11 +85,15 @@ Bookends.CONDITIONAL_CATALOG = {
         { "[if:speed>0]%r pg/hr[/if]", _("Speed, hidden until calculated") },
         { "[if:session>0]%R[/if]", _("Session time, hidden at start") },
         { "[if:page=odd]%c[else]%c[/if]", _("Different content on odd/even pages") },
-        { "[if:percent>90]Almost done![/if]", _("Message near end of book") },
+        { "[if:book_pct>90]Almost done![/if]", _("Message near end of book") },
         { "[if:light=off]Light off[else]Light on[/if]", _("Frontlight status") },
         { "[if:format=PDF]%c / %t[/if]", _("Only show for PDF documents") },
         { "[if:time>22:00]Late night reading![/if]", _("After 10pm") },
-        { "[if:day=Sat]Weekend![else]%a[/if]", _("Different text on Saturdays") },
+        { "[if:day=Sat or day=Sun]Weekend![/if]", _("Weekend days (OR operator)") },
+        { "[if:time>=18:00 and time<18:30]6\xE2\x80\x936:30[/if]", _("Half-hour window (AND operator)") },
+        { "[if:not series]Standalone[/if]", _("Books not in a series") },
+        { "[if:chapter_title_2]%C2[else]%C1[/if]", _("Sub-chapter title when present") },
+        { "[if:chapters>20]Long read[/if]", _("Books with many chapters") },
     }},
     { _("Reference"), {
         { "[if:wifi=on]...[/if]", _("wifi — on / off") },
@@ -97,16 +101,23 @@ Bookends.CONDITIONAL_CATALOG = {
         { "[if:batt<50]...[/if]", _("batt — 0 to 100") },
         { "[if:charging=yes]...[/if]", _("charging — yes / no") },
         { "[if:invert=yes]...[/if]", _("invert — yes / no (page-turn direction)") },
-        { "[if:percent>50]...[/if]", _("percent — 0 to 100 (book)") },
-        { "[if:chapter>50]...[/if]", _("chapter — 0 to 100 (chapter)") },
+        { "[if:book_pct>50]...[/if]", _("book_pct — 0 to 100 (book progress)") },
+        { "[if:chapter_pct>50]...[/if]", _("chapter_pct — 0 to 100 (chapter progress)") },
+        { "[if:chapter=1]...[/if]", _("chapter — current chapter number") },
+        { "[if:chapters>20]...[/if]", _("chapters — total chapter count") },
         { "[if:speed>0]...[/if]", _("speed — pages per hour") },
         { "[if:session>30]...[/if]", _("session — minutes reading") },
-        { "[if:pages>0]...[/if]", _("pages — session pages read") },
+        { "[if:session_pages>0]...[/if]", _("session_pages — pages read this session") },
         { "[if:page=odd]...[/if]", _("page — odd / even") },
         { "[if:light=on]...[/if]", _("light — on / off") },
         { "[if:format=EPUB]...[/if]", _("format — EPUB / PDF / CBZ etc.") },
         { "[if:time>18:00]...[/if]", _("time — use HH:MM (24h)") },
         { "[if:day=Mon]...[/if]", _("day — Mon Tue Wed Thu Fri Sat Sun") },
+        { "[if:title]...[/if]", _("title — book title (empty string is falsy)") },
+        { "[if:author]...[/if]", _("author — author name") },
+        { "[if:series]...[/if]", _("series — series + index, empty when standalone") },
+        { "[if:chapter_title]...[/if]", _("chapter_title — current chapter title") },
+        { "[if:chapter_title_2]...[/if]", _("chapter_title_1/2/3 — title at depth 1/2/3") },
     }},
 }
 
@@ -160,7 +171,7 @@ function Bookends:showTokenPicker(on_select)
             local cond_items = {
                 { text = _("[if:key=value]show when true[/if]"), dim = true, callback = dim },
                 { text = _("[if:key=value]if true[else]if false[/if]"), dim = true, callback = dim },
-                { text = _("Operators:  =  <  >"), dim = true, callback = dim },
+                { text = _("Compare:  =  <  >     Boolean:  and  or  not  ( )"), dim = true, callback = dim },
             }
             -- Append catalog items
             for _, item in ipairs(self:buildTokenItems(self.CONDITIONAL_CATALOG, on_select)) do

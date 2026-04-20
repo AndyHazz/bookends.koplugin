@@ -167,14 +167,16 @@ Show or hide content based on device state, reading progress, time, and more usi
 [if:batt<20]LOW %b[/if]
 [if:charging=yes]⚡[/if] %b
 [if:page=odd]%T[else]%C[/if]
-[if:percent>90]Almost done![/if]
+[if:book_pct>90]Almost done![/if]
 [if:time>22:00]Late night reading![/if]
 [if:day=Sat]Weekend![else]%a[/if]
-[if:speed>0]%r pg/hr[/if]
+[if:chapter_title_2]%C2[else]%C1[/if]
+[if:not series]Standalone[/if]
+[if:day=Sat or day=Sun]Weekend[/if]
 [if:format=PDF]%c / %t[/if]
 ```
 
-Operators: `=` (equals), `<` (less than), `>` (greater than).
+Comparison operators: `=` (equals), `<` (less than), `>` (greater than). Boolean operators: `and`, `or`, `not`, with parens `()` for grouping. Conditionals can be nested to any depth — `[if:A][if:B]…[/if][/if]` — and compose with `[else]`.
 
 | Condition | Values | Description |
 |-----------|--------|-------------|
@@ -182,16 +184,28 @@ Operators: `=` (equals), `<` (less than), `>` (greater than).
 | `connected` | yes / no | Network connection state |
 | `batt` | 0–100 | Battery percentage |
 | `charging` | yes / no | Charging or charged |
-| `percent` | 0–100 | Book progress percentage |
-| `chapter` | 0–100 | Chapter progress percentage |
+| `book_pct` | 0–100 | Book progress percentage (matches `%p`) |
+| `chapter_pct` | 0–100 | Chapter progress percentage (matches `%P`) |
+| `chapter` | 1–N | Current chapter number (matches `%j`) |
+| `chapters` | count | Total chapter count (matches `%J`) |
 | `speed` | pages/hr | Reading speed |
 | `session` | minutes | Session reading time |
-| `pages` | count | Session pages read |
+| `session_pages` | count | Session pages read |
 | `page` | odd / even | Current page parity |
 | `light` | on / off | Frontlight state |
 | `format` | EPUB / PDF / CBZ… | Document format |
 | `time` | HH:MM (24h) | Time of day |
 | `day` | Mon–Sun | Day of week |
+| `invert` | yes / no | Page-turn direction flipped |
+| `title` | string | Book title (matches `%T`) — test with `[if:not title]` or `[if:title=…]` |
+| `author` | string | Author (matches `%A`) |
+| `series` | string | Series, e.g. `"Foo #2"` (matches `%S`) — empty when not in a series |
+| `chapter_title` | string | Current chapter title (matches `%C`) |
+| `chapter_title_1` | string | Chapter title at depth 1 (matches `%C1`) |
+| `chapter_title_2` | string | Chapter title at depth 2 (matches `%C2`) |
+| `chapter_title_3` | string | Chapter title at depth 3 (matches `%C3`) |
+
+String predicates evaluate as falsy when the string is empty, so `[if:not series]` means "book isn't in a series" and `[if:chapter_title_2]` means "we're in a sub-chapter at depth 2".
 
 Conditions evaluate live — the charging icon appears the moment you plug in, the wifi icon vanishes when you disconnect. The token picker has a dedicated **If/Else conditional tokens** submenu with syntax help, examples, and a complete reference.
 

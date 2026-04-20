@@ -65,6 +65,9 @@ msgstr "Freccia su"
 msgid "Author(s)"
 msgstr "Autore/i"
 
+msgid "author — author name"
+msgstr "author — nome dell'autore"
+
 msgid "Bar"
 msgstr "Barra"
 
@@ -124,6 +127,9 @@ msgstr "Segnalibro (contorno)"
 
 msgid "Book percentage read"
 msgstr "% libro letto"
+
+msgid "book_pct — 0 to 100 (book progress)"
+msgstr "book_pct — da 0 a 100 (avanzamento libro)"
 
 msgid "Border"
 msgstr "Bordo"
@@ -910,6 +916,12 @@ msgstr "Bookends: attiva/disattiva visibilità"
 msgid "Bookends update available: v"
 msgstr "Aggiornamento Bookends disponibile: v"
 
+msgid "Books not in a series"
+msgstr "Libri non in una serie"
+
+msgid "Books with many chapters"
+msgstr "Libri con molti capitoli"
+
 msgid "Border color"
 msgstr "Colore bordo"
 
@@ -928,9 +940,6 @@ msgstr "Sfoglia i preset condivisi da altri, visualizzane l'anteprima sulla tua 
 msgid "by"
 msgstr "di"
 
-msgid "chapter — 0 to 100 (chapter)"
-msgstr "chapter — da 0 a 100 (capitolo)"
-
 msgid "Chapter title at depth 1"
 msgstr "Titolo capitolo al livello 1"
 
@@ -943,6 +952,21 @@ msgstr "Titolo capitolo al livello 3"
 msgid "Chapter title (deepest)"
 msgstr "Titolo capitolo (più profondo)"
 
+msgid "chapter — current chapter number"
+msgstr "chapter — numero del capitolo corrente"
+
+msgid "chapter_pct — 0 to 100 (chapter progress)"
+msgstr "chapter_pct — da 0 a 100 (avanzamento capitolo)"
+
+msgid "chapter_title — current chapter title"
+msgstr "chapter_title — titolo del capitolo corrente"
+
+msgid "chapter_title_1/2/3 — title at depth 1/2/3"
+msgstr "chapter_title_1/2/3 — titolo al livello 1/2/3"
+
+msgid "chapters — total chapter count"
+msgstr "chapters — numero totale di capitoli"
+
 msgid "charging — yes / no"
 msgstr "charging — sì / no"
 
@@ -951,6 +975,9 @@ msgstr "Freccia cerchio sinistra"
 
 msgid "Circle arrow right"
 msgstr "Freccia cerchio destra"
+
+msgid "Compare:  =  <  >     Boolean:  and  or  not  ( )"
+msgstr "Confronta:  =  <  >     Booleano:  and  or  not  ( )"
 
 msgid "Configure what happens when you tap the centre of the status bar area, and whether long-pressing a progress bar opens the skim dialog."
 msgstr "Configura cosa accade quando tocchi il centro dell'area della barra di stato e se la pressione prolungata su una barra di avanzamento apre la finestra di scorrimento rapido."
@@ -996,9 +1023,6 @@ msgstr "Eliminare il preset '%1'?"
 
 msgid "Different content on odd/even pages"
 msgstr "Contenuto diverso su pagine pari/dispari"
-
-msgid "Different text on Saturdays"
-msgstr "Testo diverso al sabato"
 
 msgid "Disable stock status bar"
 msgstr "Disabilita barra di stato predefinita"
@@ -1065,6 +1089,9 @@ msgstr "Stato retroilluminazione"
 
 msgid "Gallery"
 msgstr "Galleria"
+
+msgid "Half-hour window (AND operator)"
+msgstr "Finestra di mezz'ora (operatore AND)"
 
 msgid "Heavy arrow right"
 msgstr "Freccia destra spessa"
@@ -1168,9 +1195,6 @@ msgstr "Apre la finestra di scorrimento rapido quando tieni premuta una barra di
 msgid "Open the releases page in a browser?"
 msgstr "Aprire la pagina delle versioni in un browser?"
 
-msgid "Operators:  =  <  >"
-msgstr "Operatori:  =  <  >"
-
 msgid "Overwrite"
 msgstr "Sovrascrivi"
 
@@ -1180,14 +1204,8 @@ msgstr "Pagina %1 di %2"
 msgid "page — odd / even"
 msgstr "page — dispari / pari"
 
-msgid "pages — session pages read"
-msgstr "pages — pagine lette nella sessione"
-
 msgid "Page-turn direction \xE2\x87\x84 (shows when inverted)"
 msgstr "Direzione cambio pagina \xE2\x87\x84 (mostrata quando invertita)"
-
-msgid "percent — 0 to 100 (book)"
-msgstr "percent — da 0 a 100 (libro)"
 
 msgid "per style"
 msgstr "per stile"
@@ -1282,11 +1300,17 @@ msgstr "Preset salvato:"
 msgid "Save preset"
 msgstr "Salva preset"
 
+msgid "series — series + index, empty when standalone"
+msgstr "series — serie + indice, vuoto se indipendente"
+
 msgid "Serif"
 msgstr "Serif"
 
 msgid "session — minutes reading"
 msgstr "session — minuti di lettura"
+
+msgid "session_pages — pages read this session"
+msgstr "session_pages — pagine lette in questa sessione"
 
 msgid "Session time, hidden at start"
 msgstr "Tempo di sessione, nascosto all'inizio"
@@ -1308,6 +1332,9 @@ msgstr "speed — pagine all'ora"
 
 msgid "Star = include in preset cycle gesture"
 msgstr "Stella = includi nel gesto di ciclo preset"
+
+msgid "Sub-chapter title when present"
+msgstr "Titolo sotto-capitolo se disponibile"
 
 msgid "Submission failed: %1"
 msgstr "Invio non riuscito: %1"
@@ -1375,6 +1402,9 @@ msgstr "time — usa HH:MM (24h)"
 msgid "Tip: for portable presets, pick a Font-family font (Serif, Sans-serif, etc.) instead of a specific one — those adapt to each user's font settings."
 msgstr "Suggerimento: per preset portabili, scegli un font per famiglia (Serif, Sans-serif, ecc.) invece di uno specifico — quelli si adattano alle impostazioni dei font di ciascun utente."
 
+msgid "title — book title (empty string is falsy)"
+msgstr "title — titolo del libro (stringa vuota è falsa)"
+
 msgid "toggle bookends"
 msgstr "attiva/disattiva bookends"
 
@@ -1404,6 +1434,9 @@ msgstr "Avviso quando la batteria è sotto il 20%"
 
 msgid "Wave"
 msgstr "Onda"
+
+msgid "Weekend days (OR operator)"
+msgstr "Giorni del fine settimana (operatore OR)"
 
 msgid "Who should we credit as the author?"
 msgstr "Chi dobbiamo accreditare come autore?"

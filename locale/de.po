@@ -928,9 +928,6 @@ msgstr "Durchstöbere von anderen geteilte Presets, betrachte sie in der Vorscha
 msgid "by"
 msgstr "von"
 
-msgid "chapter — 0 to 100 (chapter)"
-msgstr "chapter — 0 bis 100 (Kapitel)"
-
 msgid "Chapter title at depth 1"
 msgstr "Kapiteltitel Ebene 1"
 
@@ -996,9 +993,6 @@ msgstr "Preset '%1' löschen?"
 
 msgid "Different content on odd/even pages"
 msgstr "Unterschiedliche Inhalte auf geraden/ungeraden Seiten"
-
-msgid "Different text on Saturdays"
-msgstr "Anderer Text samstags"
 
 msgid "Disable stock status bar"
 msgstr "Standard-Statusleiste deaktivieren"
@@ -1168,9 +1162,6 @@ msgstr "Öffnet den Überflug-Dialog, wenn du lange auf einen Fortschrittsbalken
 msgid "Open the releases page in a browser?"
 msgstr "Release-Seite im Browser öffnen?"
 
-msgid "Operators:  =  <  >"
-msgstr "Operatoren:  =  <  >"
-
 msgid "Overwrite"
 msgstr "Überschreiben"
 
@@ -1180,14 +1171,8 @@ msgstr "Seite %1 von %2"
 msgid "page — odd / even"
 msgstr "page — ungerade / gerade"
 
-msgid "pages — session pages read"
-msgstr "pages — in dieser Sitzung gelesene Seiten"
-
 msgid "Page-turn direction \xE2\x87\x84 (shows when inverted)"
 msgstr "Blätterrichtung \xE2\x87\x84 (zeigt sich bei Umkehrung)"
-
-msgid "percent — 0 to 100 (book)"
-msgstr "percent — 0 bis 100 (Buch)"
 
 msgid "per style"
 msgstr "pro Stil"
@@ -1446,4 +1431,52 @@ msgstr "Ersetzen"
 
 msgid "Total chapter count"
 msgstr "Gesamtanzahl der Kapitel"
+
+msgid "author — author name"
+msgstr "author — Autorenname"
+
+msgid "book_pct — 0 to 100 (book progress)"
+msgstr "book_pct — 0 bis 100 (Buchfortschritt)"
+
+msgid "Books not in a series"
+msgstr "Bücher, die nicht zu einer Reihe gehören"
+
+msgid "Books with many chapters"
+msgstr "Bücher mit vielen Kapiteln"
+
+msgid "chapter — current chapter number"
+msgstr "chapter — aktuelle Kapitelnummer"
+
+msgid "chapter_pct — 0 to 100 (chapter progress)"
+msgstr "chapter_pct — 0 bis 100 (Kapitelfortschritt)"
+
+msgid "chapter_title — current chapter title"
+msgstr "chapter_title — aktueller Kapiteltitel"
+
+msgid "chapter_title_1/2/3 — title at depth 1/2/3"
+msgstr "chapter_title_1/2/3 — Titel auf Ebene 1/2/3"
+
+msgid "chapters — total chapter count"
+msgstr "chapters — Gesamtanzahl der Kapitel"
+
+msgid "Compare:  =  <  >     Boolean:  and  or  not  ( )"
+msgstr "Vergleich:  =  <  >     Boole'sch:  and  or  not  ( )"
+
+msgid "Half-hour window (AND operator)"
+msgstr "Halbstundenfenster (AND-Operator)"
+
+msgid "series — series + index, empty when standalone"
+msgstr "series — Reihe + Index, leer bei Einzelband"
+
+msgid "session_pages — pages read this session"
+msgstr "session_pages — in dieser Sitzung gelesene Seiten"
+
+msgid "Sub-chapter title when present"
+msgstr "Unterkapiteltitel, wenn vorhanden"
+
+msgid "title — book title (empty string is falsy)"
+msgstr "title — Buchtitel (leerer String gilt als falsch)"
+
+msgid "Weekend days (OR operator)"
+msgstr "Wochenendtage (OR-Operator)"
 

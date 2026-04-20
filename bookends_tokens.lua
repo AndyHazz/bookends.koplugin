@@ -63,6 +63,49 @@ function Tokens.computeTickFractions(doc, toc, tick_width_multiplier)
     return ticks
 end
 
+--- Walk the TOC once and return a table of chapter-title data derived from it.
+-- @param ui     KOReader ReaderUI instance (must have .toc)
+-- @param pageno current page number (1-indexed)
+-- @return table with keys:
+--   chapter_title       — deepest (most-specific) chapter title covering the page
+--   chapter_titles_by_depth — { [1]="Part II", [2]="Ch 3", ... }
+--   chapter_num         — 1-indexed flat position of the current entry
+--   chapter_count       — total TOC entries across all depths
+-- Returns an empty-ish table if ui.toc or page data is unavailable.
+function Tokens.getChapterTitlesByDepth(ui, pageno)
+    local out = {
+        chapter_title = "",
+        chapter_titles_by_depth = {},
+        chapter_num = 0,
+        chapter_count = 0,
+    }
+    if not ui or not ui.toc or not pageno then return out end
+
+    local title = ui.toc:getTocTitleByPage(pageno)
+    if title and title ~= "" then out.chapter_title = title end
+
+    local full_toc = ui.toc.toc
+    if not full_toc then return out end
+
+    out.chapter_count = #full_toc
+    local idx = 0
+    for i, entry in ipairs(full_toc) do
+        if entry.page and entry.page <= pageno then
+            idx = i
+        else
+            break
+        end
+    end
+    if idx > 0 then out.chapter_num = idx end
+
+    for _, entry in ipairs(full_toc) do
+        if entry.page and entry.page <= pageno and entry.depth then
+            out.chapter_titles_by_depth[entry.depth] = entry.title or ""
+        end
+    end
+    return out
+end
+
 --- Parse a comparison value, handling HH:MM time format as minutes since midnight.
 local function parseNumericValue(val)
     local h, m = val:match("^(%d+):(%d+)$")
@@ -77,7 +120,8 @@ end
 -- Without an operator, checks if the value is truthy (non-nil, non-empty, non-zero, not "off"/"no").
 local function evaluateCondition(cond_str, state)
     -- Try operator: key=value, key<value, key>value
-    local key, op, value = cond_str:match("^(%w+)([=<>])(.+)$")
+    -- Key pattern allows underscores ([%w_]+) to support names like book_pct.
+    local key, op, value = cond_str:match("^([%w_]+)([=<>])(.+)$")
     if key and op and value then
         local state_val = state[key]
         if state_val == nil then return false end
@@ -94,7 +138,7 @@ local function evaluateCondition(cond_str, state)
         return false
     end
     -- No operator: truthy check
-    local key_only = cond_str:match("^(%w+)$")
+    local key_only = cond_str:match("^([%w_]+)$")
     if key_only then
         local v = state[key_only]
         return v ~= nil and v ~= "" and v ~= false and v ~= 0 and v ~= "off" and v ~= "no"
@@ -102,20 +146,143 @@ local function evaluateCondition(cond_str, state)
     return false
 end
 
---- Process [if:condition]...[else]...[/if] blocks in a format string.
+--- Tokenise a conditional-expression string into keyword / paren / atom tokens.
+-- Whitespace separates tokens. "(" and ")" are always single tokens.
+-- The words "and", "or", "not" (lowercase, exact match) are keywords.
+-- Everything else is an atom, passed verbatim to evaluateCondition.
+local function tokeniseExpression(cond_str)
+    local tokens = {}
+    local i, len = 1, #cond_str
+    while i <= len do
+        local c = cond_str:sub(i, i)
+        if c == " " or c == "\t" then
+            i = i + 1
+        elseif c == "(" or c == ")" then
+            tokens[#tokens + 1] = { kind = "op", value = c }
+            i = i + 1
+        else
+            local j = i
+            while j <= len do
+                local cj = cond_str:sub(j, j)
+                if cj == " " or cj == "\t" or cj == "(" or cj == ")" then break end
+                j = j + 1
+            end
+            local word = cond_str:sub(i, j - 1)
+            if word == "and" or word == "or" or word == "not" then
+                tokens[#tokens + 1] = { kind = "op", value = word }
+            else
+                tokens[#tokens + 1] = { kind = "atom", value = word }
+            end
+            i = j
+        end
+    end
+    return tokens
+end
+
+--- Evaluate a conditional expression with operators (and/or/not/parens).
+-- Recursive-descent parser. Precedence: not > and > or (standard).
+-- A bare atom is delegated to evaluateCondition, preserving all legacy
+-- atom semantics (numeric comparison, HH:MM, truthiness).
+local function evaluateExpression(cond_str, state)
+    local tokens = tokeniseExpression(cond_str)
+    local pos = 1
+    local function peek() return tokens[pos] end
+    local function advance()
+        local t = tokens[pos]; pos = pos + 1; return t
+    end
+
+    local parseOr  -- forward declaration for mutual recursion
+
+    local function parsePrimary()
+        local t = peek()
+        if not t then return false end
+        if t.kind == "op" and t.value == "(" then
+            advance()
+            local v = parseOr()
+            local cl = peek()
+            if cl and cl.kind == "op" and cl.value == ")" then advance() end
+            return v
+        end
+        if t.kind == "atom" then
+            advance()
+            return evaluateCondition(t.value, state)
+        end
+        -- Stray "and"/"or"/")"/etc. — skip and continue as false
+        advance()
+        return false
+    end
+
+    local function parseNot()
+        local t = peek()
+        if t and t.kind == "op" and t.value == "not" then
+            advance()
+            return not parseNot()
+        end
+        return parsePrimary()
+    end
+
+    local function parseAnd()
+        local left = parseNot()
+        while true do
+            local t = peek()
+            if not (t and t.kind == "op" and t.value == "and") then break end
+            advance()
+            local right = parseNot()
+            left = left and right
+        end
+        return left
+    end
+
+    parseOr = function()
+        local left = parseAnd()
+        while true do
+            local t = peek()
+            if not (t and t.kind == "op" and t.value == "or") then break end
+            advance()
+            local right = parseAnd()
+            left = left or right
+        end
+        return left
+    end
+
+    return parseOr()
+end
+
+--- Process [if:condition]...[/if] blocks, supporting nesting and boolean
+-- operators in predicates. Peels the innermost block each iteration:
+--   1. Find the first [/if]
+--   2. Find the last [if:...] that appears before it
+--   3. That pair is the innermost block (no nested [if:] can sit between them)
+--   4. Evaluate its predicate, substitute the chosen branch, repeat
+-- Unbalanced tags are left in place (no [/if] → break; orphan closer → break).
 local function processConditionals(format_str, state)
-    return format_str:gsub("%[if:([^%]]+)%](.-)%[/if%]", function(cond, body)
+    local result = format_str
+    while true do
+        local close_s, close_e = result:find("%[/if%]", 1, false)
+        if not close_s then break end
+
+        -- Scan forward for all [if:...] openers that start before close_s,
+        -- keeping the last one — that's the innermost opener for this closer.
+        local open_s, open_e, cond
+        local search_from = 1
+        while true do
+            local s, e, c = result:find("%[if:([^%]]-)%]", search_from, false)
+            if not s or s >= close_s then break end
+            open_s, open_e, cond = s, e, c
+            search_from = s + 1
+        end
+        if not open_s then break end  -- orphan [/if], leave string as-is
+
+        local body = result:sub(open_e + 1, close_s - 1)
         local if_part, else_part = body:match("^(.-)%[else%](.*)$")
         if not if_part then
             if_part = body
             else_part = ""
         end
-        if evaluateCondition(cond, state) then
-            return if_part
-        else
-            return else_part
-        end
-    end)
+        local chosen = evaluateExpression(cond, state) and if_part or else_part
+        result = result:sub(1, open_s - 1) .. chosen .. result:sub(close_e + 1)
+    end
+    return result
 end
 
 --- Build a state table of raw values for conditional evaluation.
@@ -161,12 +328,12 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
             local flow_page = doc:getPageNumberInFlow(pageno)
             local flow_total = doc:getTotalPagesInFlow(flow)
             if flow_total and flow_total > 0 then
-                state.percent = math.floor(flow_page / flow_total * 100 + 0.5)
+                state.book_pct = math.floor(flow_page / flow_total * 100 + 0.5)
             end
         else
             local raw_total = doc:getPageCount()
             if raw_total and raw_total > 0 then
-                state.percent = math.floor(pageno / raw_total * 100 + 0.5)
+                state.book_pct = math.floor(pageno / raw_total * 100 + 0.5)
             end
         end
 
@@ -181,12 +348,17 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
                 local chapter_end = next_chapter or (doc:getPageCount() + 1)
                 local total = chapter_end - chapter_start
                 if total > 1 then
-                    state.chapter = math.floor((pageno - chapter_start) / (total - 1) * 100)
+                    state.chapter_pct = math.floor((pageno - chapter_start) / (total - 1) * 100)
                 elseif total > 0 then
-                    state.chapter = 100
+                    state.chapter_pct = 100
                 end
             end
         end
+
+        -- Chapter number / total count — same source as %j / %J tokens.
+        local titles = Tokens.getChapterTitlesByDepth(ui, pageno)
+        if titles.chapter_num  > 0 then state.chapter  = titles.chapter_num  end
+        if titles.chapter_count > 0 then state.chapters = titles.chapter_count end
 
         -- Odd/even page
         state.page = (pageno % 2 == 1) and "odd" or "even"
@@ -196,6 +368,30 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
     local doc = ui.document
     if doc and doc.file then
         state.format = (doc.file:match("%.([^.]+)$") or ""):upper()
+    end
+
+    -- Book metadata (mirrors %T / %A / %S derivation in Tokens.expand)
+    if doc then
+        local doc_props = ui.doc_props or {}
+        local ok, props = pcall(doc.getProps, doc)
+        if not ok then props = {} end
+        state.title  = doc_props.display_title or props.title   or ""
+        state.author = doc_props.authors       or props.authors or ""
+        local series = doc_props.series        or props.series  or ""
+        local series_index = doc_props.series_index or props.series_index
+        if series ~= "" and series_index then
+            series = series .. " #" .. series_index
+        end
+        state.series = series
+    end
+
+    -- Chapter titles (reuses the helper already called for state.chapter/chapters)
+    if pageno and ui.toc then
+        local titles = Tokens.getChapterTitlesByDepth(ui, pageno)
+        state.chapter_title   = titles.chapter_title or ""
+        state.chapter_title_1 = titles.chapter_titles_by_depth[1] or ""
+        state.chapter_title_2 = titles.chapter_titles_by_depth[2] or ""
+        state.chapter_title_3 = titles.chapter_titles_by_depth[3] or ""
     end
 
     -- Time (minutes since midnight, compare with HH:MM or raw minutes)
@@ -208,7 +404,7 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
 
     -- Session
     state.session = session_elapsed and math.floor(session_elapsed / 60) or 0
-    state.pages = math.max(0, session_pages_read or 0)
+    state.session_pages = math.max(0, session_pages_read or 0)
 
     -- Reading speed (pages/hr)
     if session_elapsed and session_elapsed > 60 and (session_pages_read or 0) > 0 then
@@ -463,40 +659,11 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         if left then
             chapter_pages_left = math.max(0, left + pages_left_offset)
         end
-        local title = ui.toc:getTocTitleByPage(pageno)
-        if title and title ~= "" then chapter_title = title end
-
-        -- Chapter number / total count, from the flat TOC.
-        -- "Chapter number" = the 1-indexed position of the deepest entry that
-        -- covers the current page. A book with nested Parts/Chapters/Sections
-        -- counts every entry, so the number reflects flat reading order rather
-        -- than the structural "Chapter N" in the book's own numbering — an
-        -- approximation that works well for most e-books without TOC hierarchy.
-        local full_toc = ui.toc.toc
-        if full_toc then
-            chapter_count = #full_toc
-            local idx = 0
-            for i, entry in ipairs(full_toc) do
-                if entry.page and entry.page <= pageno then
-                    idx = i
-                else
-                    break
-                end
-            end
-            if idx > 0 then chapter_num = idx end
-        end
-        -- Depth-specific chapter titles for %C1, %C2, etc.
-        -- getTocTitleByPage above ensures the TOC is populated.
-        if format_str:find("%%C%d") then
-            local full_toc = ui.toc.toc
-            if full_toc then
-                for _, entry in ipairs(full_toc) do
-                    if entry.page and entry.page <= pageno and entry.depth then
-                        chapter_titles_by_depth[entry.depth] = entry.title or ""
-                    end
-                end
-            end
-        end
+        local titles = Tokens.getChapterTitlesByDepth(ui, pageno)
+        if titles.chapter_title ~= "" then chapter_title = titles.chapter_title end
+        chapter_titles_by_depth = titles.chapter_titles_by_depth
+        if titles.chapter_num > 0  then chapter_num   = titles.chapter_num   end
+        if titles.chapter_count > 0 then chapter_count = titles.chapter_count end
     end
 
     -- Bar token data (parallel channel — not embedded in text)
@@ -946,5 +1113,12 @@ end
 function Tokens.expandPreview(format_str, ui, session_elapsed, session_pages_read, tick_width_multiplier, symbol_color)
     return Tokens.expand(format_str, ui, session_elapsed, session_pages_read, true, tick_width_multiplier, symbol_color)
 end
+
+-- Test-only internal exports. Underscore prefix marks these as private —
+-- they are exposed solely so _test_conditionals.lua can exercise the parser
+-- without needing a running KOReader. Not stable API; may change without notice.
+Tokens._processConditionals = processConditionals
+Tokens._evaluateCondition   = evaluateCondition
+Tokens._evaluateExpression  = evaluateExpression
 
 return Tokens

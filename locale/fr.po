@@ -62,6 +62,9 @@ msgstr "Flèches gauche-droite"
 msgid "Arrow up"
 msgstr "Flèche haut"
 
+msgid "author — author name"
+msgstr "author — nom de l'auteur"
+
 msgid "Author(s)"
 msgstr "Auteur(s)"
 
@@ -91,6 +94,9 @@ msgstr "Gras italique"
 
 msgid "book"
 msgstr "livre"
+
+msgid "book_pct — 0 to 100 (book progress)"
+msgstr "book_pct — 0 à 100 (progression du livre)"
 
 msgid "Book"
 msgstr "Livre"
@@ -124,6 +130,12 @@ msgstr "Signet (contour)"
 
 msgid "Book percentage read"
 msgstr "% du livre lu"
+
+msgid "Books not in a series"
+msgstr "Livres sans série"
+
+msgid "Books with many chapters"
+msgstr "Livres avec de nombreux chapitres"
 
 msgid "Border"
 msgstr "Bordure"
@@ -166,6 +178,21 @@ msgstr "Ch."
 
 msgid "chapter"
 msgstr "chapitre"
+
+msgid "chapter — current chapter number"
+msgstr "chapter — numéro du chapitre actuel"
+
+msgid "chapter_pct — 0 to 100 (chapter progress)"
+msgstr "chapter_pct — 0 à 100 (progression du chapitre)"
+
+msgid "chapter_title — current chapter title"
+msgstr "chapter_title — titre du chapitre actuel"
+
+msgid "chapter_title_1/2/3 — title at depth 1/2/3"
+msgstr "chapter_title_1/2/3 — titre au niveau 1/2/3"
+
+msgid "chapters — total chapter count"
+msgstr "chapters — nombre total de chapitres"
 
 msgid "Chapter"
 msgstr "Chapitre"
@@ -217,6 +244,9 @@ msgstr "Trèfle"
 
 msgid "Cog"
 msgstr "Engrenage"
+
+msgid "Compare:  =  <  >     Boolean:  and  or  not  ( )"
+msgstr "Comparer :  =  <  >     Booléen :  and  or  not  ( )"
 
 msgid "Copyright"
 msgstr "Copyright"
@@ -385,6 +415,9 @@ msgstr "Chaleur de l'éclairage"
 
 msgid "Full width progress bars"
 msgstr "Barres de progression pleine largeur"
+
+msgid "Half-hour window (AND operator)"
+msgstr "Fenêtre d'une demi-heure (opérateur AND)"
 
 msgid "HDD / disk"
 msgstr "HDD / disque"
@@ -782,6 +815,9 @@ msgstr "Jour de la semaine (vendredi)"
 msgid "Weekday short (Fri)"
 msgstr "Jour court (ven.)"
 
+msgid "Weekend days (OR operator)"
+msgstr "Jours du week-end (opérateur OR)"
+
 msgid "Wi-Fi"
 msgstr "Wi-Fi"
 
@@ -928,9 +964,6 @@ msgstr "Parcourez les presets partagés par d'autres, prévisualisez-les sur vot
 msgid "by"
 msgstr "par"
 
-msgid "chapter — 0 to 100 (chapter)"
-msgstr "chapter — 0 à 100 (chapitre)"
-
 msgid "Chapter title at depth 1"
 msgstr "Titre de chapitre au niveau 1"
 
@@ -996,9 +1029,6 @@ msgstr "Supprimer le preset « %1 » ?"
 
 msgid "Different content on odd/even pages"
 msgstr "Contenu différent sur les pages paires/impaires"
-
-msgid "Different text on Saturdays"
-msgstr "Texte différent le samedi"
 
 msgid "Disable stock status bar"
 msgstr "Désactiver la barre d'état d'origine"
@@ -1168,9 +1198,6 @@ msgstr "Ouvre le dialogue de survol lors d'un appui long sur une barre de progre
 msgid "Open the releases page in a browser?"
 msgstr "Ouvrir la page des versions dans un navigateur ?"
 
-msgid "Operators:  =  <  >"
-msgstr "Opérateurs :  =  <  >"
-
 msgid "Overwrite"
 msgstr "Écraser"
 
@@ -1180,14 +1207,8 @@ msgstr "Page %1 sur %2"
 msgid "page — odd / even"
 msgstr "page — impair / pair"
 
-msgid "pages — session pages read"
-msgstr "pages — pages lues dans la session"
-
 msgid "Page-turn direction \xE2\x87\x84 (shows when inverted)"
 msgstr "Sens de tourne \xE2\x87\x84 (affiché lorsqu'inversé)"
-
-msgid "percent — 0 to 100 (book)"
-msgstr "percent — 0 à 100 (livre)"
 
 msgid "per style"
 msgstr "par style"
@@ -1282,11 +1303,17 @@ msgstr "Preset enregistré :"
 msgid "Save preset"
 msgstr "Enregistrer le preset"
 
+msgid "series — series + index, empty when standalone"
+msgstr "series — série + index, vide si indépendant"
+
 msgid "Serif"
 msgstr "Serif"
 
 msgid "session — minutes reading"
 msgstr "session — minutes de lecture"
+
+msgid "session_pages — pages read this session"
+msgstr "session_pages — pages lues cette session"
 
 msgid "Session time, hidden at start"
 msgstr "Durée de la session, masquée au départ"
@@ -1308,6 +1335,9 @@ msgstr "speed — pages par heure"
 
 msgid "Star = include in preset cycle gesture"
 msgstr "Étoile = inclure dans le geste de parcours des presets"
+
+msgid "Sub-chapter title when present"
+msgstr "Titre de sous-chapitre si présent"
 
 msgid "Submission failed: %1"
 msgstr "Échec de l'envoi : %1"
@@ -1371,6 +1401,9 @@ msgstr "Largeur des graduations"
 
 msgid "time — use HH:MM (24h)"
 msgstr "time — utiliser HH:MM (24h)"
+
+msgid "title — book title (empty string is falsy)"
+msgstr "title — titre du livre (chaîne vide est fausse)"
 
 msgid "Tip: for portable presets, pick a Font-family font (Serif, Sans-serif, etc.) instead of a specific one — those adapt to each user's font settings."
 msgstr "Astuce : pour des presets portables, choisissez une police de famille (Serif, Sans-serif, etc.) plutôt qu'une police spécifique — celles-ci s'adaptent aux réglages de police de chaque utilisateur."
