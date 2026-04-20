@@ -1411,3 +1411,39 @@ msgstr "Quem devemos creditar como autor?"
 msgid "wifi — on / off"
 msgstr "wifi — ligado / desligado"
 
+msgid "'%1' already exists in your library.\n\nReplacing it will overwrite your local copy with the current gallery version. Any local edits will be lost.\n\nInstall under a new name to keep both."
+msgstr "'%1' já existe na sua biblioteca.\n\nSubstituí-lo irá sobrescrever sua cópia local com a versão atual da galeria. Quaisquer edições locais serão perdidas.\n\nInstale com um novo nome para manter ambos."
+
+msgid "Affects %L (pages left in book) and %l (pages left in chapter). Off (default): 'n−1 → 0'. On: 'n → 1'."
+msgstr "Afeta %L (páginas restantes no livro) e %l (páginas restantes no capítulo). Desligado (padrão): 'n−1 → 0'. Ligado: 'n → 1'."
+
+msgid "A preset called '%1' is already in the gallery. Rename your preset (Manage… → Rename…) before submitting."
+msgstr "Um preset chamado '%1' já está na galeria. Renomeie seu preset (Gerenciar… → Renomear…) antes de enviar."
+
+msgid "A preset called '%1' is already in the gallery. Rename your preset (Manage… → Rename…) before submitting, so it doesn't collide with the existing entry."
+msgstr "Um preset chamado '%1' já está na galeria. Renomeie seu preset (Gerenciar… → Renomear…) antes de enviar, para que não conflite com a entrada existente."
+
+msgid "A submission for '%1' is already awaiting review. Wait for that one to be reviewed, or rename your preset to submit under a different name."
+msgstr "Um envio para '%1' já está aguardando revisão. Aguarde a revisão desse, ou renomeie seu preset para enviar com um nome diferente."
+
+msgid "Current chapter number"
+msgstr "Número do capítulo atual"
+
+msgid "Imported from your earlier Bookends settings"
+msgstr "Importado das suas configurações anteriores do Bookends"
+
+msgid "Include current page in pages-left tokens"
+msgstr "Incluir página atual nos tokens de páginas restantes"
+
+msgid "Install as new name…"
+msgstr "Instalar com novo nome…"
+
+msgid "My setup"
+msgstr "Minha configuração"
+
+msgid "Replace"
+msgstr "Substituir"
+
+msgid "Total chapter count"
+msgstr "Total de capítulos"
+

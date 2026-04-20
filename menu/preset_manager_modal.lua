@@ -183,9 +183,21 @@ function PresetManagerModal._applyCurrent(self)
         -- Install: save to bookends_presets/ and make active.
         local entry = self.previewing.entry
         local data = self.previewing.data
+        -- Normalize to alphanumeric-lowercase before comparing. Catches
+        -- preset files whose `name` field is missing (fallback derives
+        -- from filename, which can differ in punctuation from the gallery
+        -- entry's name — e.g. 'kobo-like' vs 'Kobo Like').
+        local function normalize(s)
+            return s and tostring(s):lower():gsub("[^%w]", "") or ""
+        end
+        local entry_norm = normalize(entry.name)
         local existing
         for _, p in ipairs(self.bookends:readPresetFiles()) do
-            if p.name == entry.name then existing = p; break end
+            if normalize(p.name) == entry_norm
+               or normalize(p.filename:gsub("%.lua$", "")) == entry_norm then
+                existing = p
+                break
+            end
         end
         if existing then
             PresetManagerModal._promptInstallCollision(self, existing, data, entry)
@@ -1326,10 +1338,13 @@ function PresetManagerModal._promptInstallCollision(self, existing, data, entry)
     local ButtonDialogTitle = require("ui/widget/buttondialogtitle")
     local dlg
     dlg = ButtonDialogTitle:new{
-        title = T(_("A preset called '%1' already exists."), entry.name),
-        title_align = "center",
+        title = T(_("'%1' already exists in your library.\n\nReplacing it will overwrite your local copy with the current gallery version. Any local edits will be lost.\n\nInstall under a new name to keep both."), entry.name),
+        title_align = "left",
         buttons = {
-            {{ text = _("Overwrite"), callback = function()
+            {{ text = _("Cancel"), callback = function()
+                UIManager:close(dlg)
+            end }},
+            {{ text = _("Replace"), callback = function()
                 UIManager:close(dlg)
                 self.bookends:deletePresetFile(existing.filename)
                 local filename = self.bookends:writePresetFile(entry.name, data)
@@ -1342,7 +1357,7 @@ function PresetManagerModal._promptInstallCollision(self, existing, data, entry)
                 end
                 self.bookends:markDirty()
             end }},
-            {{ text = _("Rename…"), callback = function()
+            {{ text = _("Install as new name…"), callback = function()
                 UIManager:close(dlg)
                 local input
                 input = InputDialog:new{

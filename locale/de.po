@@ -1411,3 +1411,39 @@ msgstr "Wen sollen wir als Autor angeben?"
 msgid "wifi — on / off"
 msgstr "wifi — an / aus"
 
+msgid "'%1' already exists in your library.\n\nReplacing it will overwrite your local copy with the current gallery version. Any local edits will be lost.\n\nInstall under a new name to keep both."
+msgstr "'%1' ist bereits in deiner Bibliothek vorhanden.\n\nBeim Ersetzen wird deine lokale Kopie mit der aktuellen Galerie-Version überschrieben. Alle lokalen Änderungen gehen verloren.\n\nInstalliere unter einem neuen Namen, um beide zu behalten."
+
+msgid "Affects %L (pages left in book) and %l (pages left in chapter). Off (default): 'n−1 → 0'. On: 'n → 1'."
+msgstr "Betrifft %L (verbleibende Seiten im Buch) und %l (verbleibende Seiten im Kapitel). Aus (Standard): 'n−1 → 0'. Ein: 'n → 1'."
+
+msgid "A preset called '%1' is already in the gallery. Rename your preset (Manage… → Rename…) before submitting."
+msgstr "Ein Preset namens '%1' ist bereits in der Galerie vorhanden. Benenne dein Preset um (Verwalten… → Umbenennen…), bevor du es einreichst."
+
+msgid "A preset called '%1' is already in the gallery. Rename your preset (Manage… → Rename…) before submitting, so it doesn't collide with the existing entry."
+msgstr "Ein Preset namens '%1' ist bereits in der Galerie vorhanden. Benenne dein Preset um (Verwalten… → Umbenennen…), bevor du es einreichst, damit es nicht mit dem vorhandenen Eintrag kollidiert."
+
+msgid "A submission for '%1' is already awaiting review. Wait for that one to be reviewed, or rename your preset to submit under a different name."
+msgstr "Eine Einreichung für '%1' wartet bereits auf die Überprüfung. Warte, bis diese überprüft wurde, oder benenne dein Preset um, um es unter einem anderen Namen einzureichen."
+
+msgid "Current chapter number"
+msgstr "Aktuelle Kapitelnummer"
+
+msgid "Imported from your earlier Bookends settings"
+msgstr "Importiert aus deinen früheren Bookends-Einstellungen"
+
+msgid "Include current page in pages-left tokens"
+msgstr "Aktuelle Seite in Tokens für verbleibende Seiten einbeziehen"
+
+msgid "Install as new name…"
+msgstr "Unter neuem Namen installieren…"
+
+msgid "My setup"
+msgstr "Meine Einstellungen"
+
+msgid "Replace"
+msgstr "Ersetzen"
+
+msgid "Total chapter count"
+msgstr "Gesamtanzahl der Kapitel"
+

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bookends
 "
-"POT-Creation-Date: 2026-04-19 20:25+0000
+"POT-Creation-Date: 2026-04-20 07:58+0000
 "
 "MIME-Version: 1.0
 "
@@ -15,6 +15,9 @@ msgstr ""
 
 
 msgid "12-hour clock"
+msgstr ""
+
+msgid "'%1' already exists in your library.\n\nReplacing it will overwrite your local copy with the current gallery version. Any local edits will be lost.\n\nInstall under a new name to keep both."
 msgstr ""
 
 msgid "%1, line %2"
@@ -38,6 +41,9 @@ msgstr ""
 msgid "Adjust margins"
 msgstr ""
 
+msgid "Affects %L (pages left in book) and %l (pages left in chapter). Off (default): 'n−1 → 0'. On: 'n → 1'."
+msgstr ""
+
 msgid "After 10pm"
 msgstr ""
 
@@ -50,7 +56,10 @@ msgstr ""
 msgid "Apply"
 msgstr ""
 
-msgid "A preset called '%1' already exists."
+msgid "A preset called '%1' is already in the gallery. Rename your preset (Manage… → Rename…) before submitting."
+msgstr ""
+
+msgid "A preset called '%1' is already in the gallery. Rename your preset (Manage… → Rename…) before submitting, so it doesn't collide with the existing entry."
 msgstr ""
 
 msgid "Arrow down"
@@ -111,6 +120,9 @@ msgid "Arrow up then left"
 msgstr ""
 
 msgid "Arrow up then right"
+msgstr ""
+
+msgid "A submission for '%1' is already awaiting review. Wait for that one to be reviewed, or rename your preset to submit under a different name."
 msgstr ""
 
 msgid "Author(s)"
@@ -351,6 +363,9 @@ msgid "Cross"
 msgstr ""
 
 msgid "Cross mark"
+msgstr ""
+
+msgid "Current chapter number"
 msgstr ""
 
 msgid "Current page number"
@@ -638,6 +653,12 @@ msgstr ""
 msgid "[if:key=value]show when true[/if]"
 msgstr ""
 
+msgid "Imported from your earlier Bookends settings"
+msgstr ""
+
+msgid "Include current page in pages-left tokens"
+msgstr ""
+
 msgid "Infinity"
 msgstr ""
 
@@ -660,6 +681,9 @@ msgid "Install"
 msgstr ""
 
 msgid "Install as"
+msgstr ""
+
+msgid "Install as new name…"
 msgstr ""
 
 msgid "Installation failed: "
@@ -776,6 +800,9 @@ msgstr ""
 msgid "My presets"
 msgstr ""
 
+msgid "My setup"
+msgstr ""
+
 msgid "No download available for this release."
 msgstr ""
 
@@ -828,9 +855,6 @@ msgid "Open the releases page in a browser?"
 msgstr ""
 
 msgid "Operators:  =  <  >"
-msgstr ""
-
-msgid "Overwrite"
 msgstr ""
 
 msgid "Page %1 of %2"
@@ -981,6 +1005,9 @@ msgid "Rename…"
 msgstr ""
 
 msgid "Rename preset"
+msgstr ""
+
+msgid "Replace"
 msgstr ""
 
 msgid "Reset"
@@ -1233,6 +1260,9 @@ msgid "Top-right"
 msgstr ""
 
 msgid "Total annotations (bookmarks + highlights + notes)"
+msgstr ""
+
+msgid "Total chapter count"
 msgstr ""
 
 msgid "Total pages"
