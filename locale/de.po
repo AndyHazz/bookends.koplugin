@@ -809,6 +809,12 @@ msgstr "Metro-Linienfarbe"
 msgid "Metro track color (% black)"
 msgstr "Metro-Linienfarbe (% schwarz)"
 
+msgid "Metro read color"
+msgstr ""
+
+msgid "Metro read color (% black)"
+msgstr ""
+
 msgid "Progress bar colors"
 msgstr "Farben der Fortschrittsbalken"
 

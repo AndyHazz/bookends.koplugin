@@ -809,6 +809,12 @@ msgstr "Cor da linha Metro"
 msgid "Metro track color (% black)"
 msgstr "Cor da linha Metro (% preto)"
 
+msgid "Metro read color"
+msgstr ""
+
+msgid "Metro read color (% black)"
+msgstr ""
+
 msgid "Progress bar colors"
 msgstr "Cores da barra de progresso"
 

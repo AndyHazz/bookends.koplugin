@@ -32,6 +32,12 @@ msgstr "Metro track colour"
 msgid "Metro track color (% black)"
 msgstr "Metro track colour (% black)"
 
+msgid "Metro read color"
+msgstr "Metro read colour"
+
+msgid "Metro read color (% black)"
+msgstr "Metro read colour (% black)"
+
 msgid "Prioritise left/right and truncate long center text"
 msgstr "Prioritise left/right and truncate long centre text"
 

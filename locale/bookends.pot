@@ -731,6 +731,12 @@ msgstr ""
 msgid "Metro track color (% black)"
 msgstr ""
 
+msgid "Metro read color"
+msgstr ""
+
+msgid "Metro read color (% black)"
+msgstr ""
+
 msgid "Middle dot"
 msgstr ""
 
