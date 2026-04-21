@@ -1,0 +1,1405 @@
+# Bookends — KOReader Plugin
+# Bulgarian translation
+msgid ""
+msgstr ""
+"Project-Id-Version: bookends\n"
+"POT-Creation-Date: 2026-04-20 07:58+0000\n"
+"PO-Revision-Date: 2026-04-21 14:00+0000\n"
+"Language-Team: Bulgarian\n"
+"Language: bg_BG\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "%1 presets in the approval queue"
+msgstr "%1 предварителни настройки в опашката за одобрение"
+
+msgid "%1, line %2"
+msgstr "%1, ред %2"
+
+msgid "'%1' already exists in your library.\n\nReplacing it will overwrite your local copy with the current gallery version. Any local edits will be lost.\n\nInstall under a new name to keep both."
+msgstr "„%1" вече съществува в библиотеката ви.\n\nЗамяната ще презапише локалното копие с текущата версия от галерията. Всички локални промени ще бъдат изгубени.\n\nИнсталирайте под ново име, за да запазите и двете."
+
+msgid "+ Progress bar"
+msgstr "+ Лента за напредъка"
+
+msgid "- Progress bar"
+msgstr "- Лента за напредъка"
+
+msgid "1 preset in the approval queue"
+msgstr "1 предварителна настройка в опашката за одобрение"
+
+msgid "12-hour clock"
+msgstr "12-часов часовник"
+
+msgid "24-hour clock"
+msgstr "24-часов часовник"
+
+msgid "A preset called '%1' is already in the gallery. Rename your preset (Manage… → Rename…) before submitting, so it doesn't collide with the existing entry."
+msgstr "Предварителна настройка с името „%1" вече съществува в галерията. Преименувайте я (Управление… → Преименуване…) преди да я изпратите, за да не се застъпва с вече съществуващата."
+
+msgid "A preset called '%1' is already in the gallery. Rename your preset (Manage… → Rename…) before submitting."
+msgstr "Предварителна настройка с името „%1" вече съществува в галерията. Преименувайте я (Управление… → Преименуване…) преди да я изпратите."
+
+msgid "A submission for '%1' is already awaiting review. Wait for that one to be reviewed, or rename your preset to submit under a different name."
+msgstr "Заявка за „%1" вече очаква преглед. Изчакайте тя да бъде прегледана или преименувайте настройката си, за да я изпратите под различно име."
+
+msgid "Add line"
+msgstr "Добавяне на ред"
+
+msgid "Adjust / contrast"
+msgstr "Настройка / контраст"
+
+msgid "Adjust margins"
+msgstr "Настройване на полета"
+
+msgid "Affects %L (pages left in book) and %l (pages left in chapter). Off (default): 'n−1 → 0'. On: 'n → 1'."
+msgstr "Влияе на %L (оставащи страници в книгата) и %l (оставащи страници в главата). Изкл. (по подразбиране): „n−1 → 0". Вкл.: „n → 1"."
+
+msgid "After 10pm"
+msgstr "След 22:00 ч."
+
+msgid "All pg"
+msgstr "Всички стр."
+
+msgid "Anchor"
+msgstr "Закрепване"
+
+msgid "Apply"
+msgstr "Прилагане"
+
+msgid "Arrow down"
+msgstr "Стрелка надолу"
+
+msgid "Arrow down then left"
+msgstr "Стрелка надолу, после наляво"
+
+msgid "Arrow down then right"
+msgstr "Стрелка надолу, после надясно"
+
+msgid "Arrow left"
+msgstr "Стрелка наляво"
+
+msgid "Arrow left hooked"
+msgstr "Стрелка наляво с кука"
+
+msgid "Arrow left to bar"
+msgstr "Стрелка наляво до черта"
+
+msgid "Arrow left with tail"
+msgstr "Стрелка наляво с опашка"
+
+msgid "Arrow right"
+msgstr "Стрелка надясно"
+
+msgid "Arrow right hooked"
+msgstr "Стрелка надясно с кука"
+
+msgid "Arrow right then down"
+msgstr "Стрелка надясно, после надолу"
+
+msgid "Arrow right then up"
+msgstr "Стрелка надясно, после нагоре"
+
+msgid "Arrow right to bar"
+msgstr "Стрелка надясно до черта"
+
+msgid "Arrow right with tail"
+msgstr "Стрелка надясно с опашка"
+
+msgid "Arrow up"
+msgstr "Стрелка нагоре"
+
+msgid "Arrow up then left"
+msgstr "Стрелка нагоре, после наляво"
+
+msgid "Arrow up then right"
+msgstr "Стрелка нагоре, после надясно"
+
+msgid "Arrowhead right"
+msgstr "Върх на стрелка надясно"
+
+msgid "Arrows"
+msgstr "Стрелки"
+
+msgid "Arrows left-right"
+msgstr "Стрелки наляво-надясно"
+
+msgid "Arrows when page-turn direction is flipped"
+msgstr "Стрелки при обърната посока на превъртане"
+
+msgid "Author(s)"
+msgstr "Автор(и)"
+
+msgid "Bar"
+msgstr "Лента"
+
+msgid "Bar %1"
+msgstr "Лента %1"
+
+msgid "Bar chart"
+msgstr "Стълбова диаграма"
+
+msgid "Bar thickness"
+msgstr "Дебелина на лентата"
+
+msgid "Battery (changes with level)"
+msgstr "Батерия (променя се според заряда)"
+
+msgid "Battery icon (dynamic)"
+msgstr "Икона на батерията (динамична)"
+
+msgid "Battery level"
+msgstr "Заряд на батерията"
+
+msgid "Bold"
+msgstr "Удебелен"
+
+msgid "Bold italic"
+msgstr "Удебелен курсив"
+
+msgid "Bolt icon when charging"
+msgstr "Икона с мълния при зареждане"
+
+msgid "Book"
+msgstr "Книга"
+
+msgid "Book language"
+msgstr "Език на книгата"
+
+msgid "Book percentage read"
+msgstr "Прочетен процент от книгата"
+
+msgid "Book+"
+msgstr "Книга+"
+
+msgid "Book++"
+msgstr "Книга++"
+
+msgid "Book+++"
+msgstr "Книга+++"
+
+msgid "Bookends"
+msgstr "Bookends"
+
+msgid "Bookends is up to date."
+msgstr "Bookends е актуален."
+
+msgid "Bookends settings"
+msgstr "Настройки на Bookends"
+
+msgid "Bookends update available: v"
+msgstr "Налична актуализация на Bookends: v"
+
+msgid "Bookends updated to v"
+msgstr "Bookends е актуализиран до v"
+
+msgid "Bookends: cycle preset"
+msgstr "Bookends: следваща предварителна настройка"
+
+msgid "Bookends: open preset library"
+msgstr "Bookends: отваряне на библиотека с настройки"
+
+msgid "Bookends: set visibility"
+msgstr "Bookends: задаване на видимост"
+
+msgid "Bookends: toggle visibility"
+msgstr "Bookends: превключване на видимостта"
+
+msgid "Bookmark (filled)"
+msgstr "Отметка (запълнена)"
+
+msgid "Bookmark (outline)"
+msgstr "Отметка (контур)"
+
+msgid "Books not in a series"
+msgstr "Книги, които не са от поредица"
+
+msgid "Books with many chapters"
+msgstr "Книги с много глави"
+
+msgid "Border"
+msgstr "Рамка"
+
+msgid "Border color"
+msgstr "Цвят на рамката"
+
+msgid "Border color (% black)"
+msgstr "Цвят на рамката (% черно)"
+
+msgid "Border thickness"
+msgstr "Дебелина на рамката"
+
+msgid "Bordered"
+msgstr "С рамка"
+
+msgid "Bottom"
+msgstr "Долу"
+
+msgid "Bottom center tap gesture"
+msgstr "Докосване в долния център"
+
+msgid "Bottom-center"
+msgstr "Долу в центъра"
+
+msgid "Bottom-left"
+msgstr "Долу вляво"
+
+msgid "Bottom-right"
+msgstr "Долу вдясно"
+
+msgid "Browse presets others have shared, preview them on your own status bar, and install the ones you like. Once installed, you can edit each preset freely on the My presets tab."
+msgstr "Разглеждайте споделените от другите предварителни настройки, преглеждайте ги на собствената си лента за състоянието и инсталирайте тези, които харесвате. След инсталиране можете да редактирате всяка настройка свободно в раздела „Моите настройки"."
+
+msgid "Bullet"
+msgstr "Точка"
+
+msgid "Calendar"
+msgstr "Календар"
+
+msgid "Calendar (checked)"
+msgstr "Календар (отметнат)"
+
+msgid "Cancel"
+msgstr "Отказ"
+
+msgid "Ch."
+msgstr "Гл."
+
+msgid "Chapter"
+msgstr "Глава"
+
+msgid "Chapter percentage read"
+msgstr "Прочетен процент от главата"
+
+msgid "Chapter ticks: all levels"
+msgstr "Отметки за глави: всички нива"
+
+msgid "Chapter ticks: off"
+msgstr "Отметки за глави: изкл."
+
+msgid "Chapter ticks: top 2 levels"
+msgstr "Отметки за глави: горните 2 нива"
+
+msgid "Chapter ticks: top level"
+msgstr "Отметки за глави: горно ниво"
+
+msgid "Chapter title (deepest)"
+msgstr "Заглавие на главата (най-дълбоко)"
+
+msgid "Chapter title at depth 1"
+msgstr "Заглавие на главата на ниво 1"
+
+msgid "Chapter title at depth 2"
+msgstr "Заглавие на главата на ниво 2"
+
+msgid "Chapter title at depth 3"
+msgstr "Заглавие на главата на ниво 3"
+
+msgid "Check"
+msgstr "Проверка"
+
+msgid "Check mark"
+msgstr "Отметка"
+
+msgid "Checking for updates..."
+msgstr "Проверка за актуализации..."
+
+msgid "Circle arrow left"
+msgstr "Кръгла стрелка наляво"
+
+msgid "Circle arrow right"
+msgstr "Кръгла стрелка надясно"
+
+msgid "Clock"
+msgstr "Часовник"
+
+msgid "Close"
+msgstr "Затваряне"
+
+msgid "Cloud"
+msgstr "Облак"
+
+msgid "Club"
+msgstr "Трефа"
+
+msgid "Cog"
+msgstr "Зъбно колело"
+
+msgid "Compare:  =  <  >     Boolean:  and  or  not  ( )"
+msgstr "Сравнение: =  <  >     Булево: and  or  not  ( )"
+
+msgid "Configure what happens when you tap the centre of the status bar area, and whether long-pressing a progress bar opens the skim dialog."
+msgstr "Настройте какво се случва при докосване на центъра на лентата за състоянието и дали продълженото натискане на лента за напредъка отваря диалога за прелистване."
+
+msgid "Copyright"
+msgstr "Авторски права"
+
+msgid "Could not check for updates."
+msgstr "Неуспешна проверка за актуализации."
+
+msgid "Could not preview preset"
+msgstr "Предварителната настройка не може да бъде прегледана"
+
+msgid "Couldn't download '%1'."
+msgstr "„%1" не можа да бъде изтеглен."
+
+msgid "Cross"
+msgstr "Кръст"
+
+msgid "Cross mark"
+msgstr "Знак „х""
+
+msgid "Current chapter number"
+msgstr "Номер на текущата глава"
+
+msgid "Current page number"
+msgstr "Номер на текущата страница"
+
+msgid "Cursive"
+msgstr "Ръкописен"
+
+msgid "Curved back arrow"
+msgstr "Извита стрелка назад"
+
+msgid "Custom colors and tick marks"
+msgstr "Персонализирани цветове и отметки"
+
+msgid "Custom fonts in this preset:"
+msgstr "Персонализирани шрифтове в тази настройка:"
+
+msgid "Cycle starred presets"
+msgstr "Смяна на отбелязаните настройки"
+
+msgid "Dagger"
+msgstr "Кинжал"
+
+msgid "Date long (28 March 2026)"
+msgstr "Пълна дата (28 март 2026)"
+
+msgid "Date numeric (28/03/2026)"
+msgstr "Цифрова дата (28/03/2026)"
+
+msgid "Date short (28 Mar)"
+msgstr "Кратка дата (28 март)"
+
+msgid "Default"
+msgstr "По подразбиране"
+
+msgid "Default font"
+msgstr "Шрифт по подразбиране"
+
+msgid "Delete"
+msgstr "Изтриване"
+
+msgid "Delete preset '%1'?"
+msgstr "Изтриване на настройката „%1"?"
+
+msgid "Device"
+msgstr "Устройство"
+
+msgid "Diamond"
+msgstr "Диамант"
+
+msgid "Diamond suit"
+msgstr "Каро"
+
+msgid "Different content on odd/even pages"
+msgstr "Различно съдържание на нечетни/четни страници"
+
+msgid "Disable stock status bar"
+msgstr "Изключване на вградената лента за състоянието"
+
+msgid "Discover more presets"
+msgstr "Открийте още настройки"
+
+msgid "Dismiss"
+msgstr "Затваряне"
+
+msgid "Division slash"
+msgstr "Наклонена черта за деление"
+
+msgid "Document format (EPUB, PDF, etc.)"
+msgstr "Формат на документа (EPUB, PDF и др.)"
+
+msgid "Document title"
+msgstr "Заглавие на документа"
+
+msgid "Double angle left"
+msgstr "Двойна ъглова скоба наляво"
+
+msgid "Double angle right"
+msgstr "Двойна ъглова скоба надясно"
+
+msgid "Double arrow down"
+msgstr "Двойна стрелка надолу"
+
+msgid "Double arrow left"
+msgstr "Двойна стрелка наляво"
+
+msgid "Double arrow right"
+msgstr "Двойна стрелка надясно"
+
+msgid "Double arrow up"
+msgstr "Двойна стрелка нагоре"
+
+msgid "Double arrows right"
+msgstr "Двойни стрелки надясно"
+
+msgid "Double dagger"
+msgstr "Двоен кинжал"
+
+msgid "Double slash"
+msgstr "Двойна наклонена черта"
+
+msgid "Download failed."
+msgstr "Изтеглянето е неуспешно."
+
+msgid "Downloading update..."
+msgstr "Изтегляне на актуализацията..."
+
+msgid "Duplicate"
+msgstr "Дублиране"
+
+msgid "Duplicate preset"
+msgstr "Дублиране на настройката"
+
+msgid "Dynamic"
+msgstr "Динамичен"
+
+msgid "Edge"
+msgstr "Ръб"
+
+msgid "Edit author"
+msgstr "Редактиране на автора"
+
+msgid "Edit author…"
+msgstr "Редактиране на автора…"
+
+msgid "Edit description"
+msgstr "Редактиране на описанието"
+
+msgid "Edit description…"
+msgstr "Редактиране на описанието…"
+
+msgid "Em dash"
+msgstr "Тире (em)"
+
+msgid "En dash"
+msgstr "Тире (en)"
+
+msgid "Enable"
+msgstr "Включване"
+
+msgid "Enable bookends"
+msgstr "Включване на Bookends"
+
+msgid "Enabled"
+msgstr "Включен"
+
+msgid "Even pg"
+msgstr "Четни стр."
+
+msgid "Examples"
+msgstr "Примери"
+
+msgid "Extra bottom margin"
+msgstr "Допълнително долно поле"
+
+msgid "Extra left margin"
+msgstr "Допълнително ляво поле"
+
+msgid "Extra right margin"
+msgstr "Допълнително дясно поле"
+
+msgid "Extra top margin"
+msgstr "Допълнително горно поле"
+
+msgid "Eye"
+msgstr "Око"
+
+msgid "Eye (hidden)"
+msgstr "Око (скрито)"
+
+msgid "Fantasy"
+msgstr "Фантазия"
+
+msgid "File name"
+msgstr "Име на файла"
+
+msgid "Fill: bottom to top"
+msgstr "Запълване: от долу нагоре"
+
+msgid "Fill: left to right"
+msgstr "Запълване: от ляво надясно"
+
+msgid "Fill: right to left"
+msgstr "Запълване: от дясно наляво"
+
+msgid "Fill: top to bottom"
+msgstr "Запълване: от горе надолу"
+
+msgid "Fixed-width progress bar (100px)"
+msgstr "Лента за напредъка с фиксирана ширина (100px)"
+
+msgid "Flag"
+msgstr "Знаме"
+
+msgid "Font"
+msgstr "Шрифт"
+
+msgid "Font scale"
+msgstr "Мащаб на шрифта"
+
+msgid "Font size"
+msgstr "Размер на шрифта"
+
+msgid "Font-family fonts"
+msgstr "Шрифтове по семейство"
+
+msgid "Font..."
+msgstr "Шрифт..."
+
+msgid "Fonts"
+msgstr "Шрифтове"
+
+msgid "Fraction slash"
+msgstr "Дробна наклонена черта"
+
+msgid "Frontlight brightness"
+msgstr "Яркост на предното осветление"
+
+msgid "Frontlight status"
+msgstr "Състояние на предното осветление"
+
+msgid "Frontlight warmth"
+msgstr "Топлина на предното осветление"
+
+msgid "Full width progress bars"
+msgstr "Ленти за напредъка на цяла ширина"
+
+msgid "Gallery"
+msgstr "Галерия"
+
+msgid "HDD / disk"
+msgstr "Твърд диск"
+
+msgid "Half-hour window (AND operator)"
+msgstr "Прозорец от половин час (оператор AND)"
+
+msgid "Heart"
+msgstr "Сърце"
+
+msgid "Heavy arrow right"
+msgstr "Плътна стрелка надясно"
+
+msgid "Heavy round arrow right"
+msgstr "Плътна кръгла стрелка надясно"
+
+msgid "Heavy triangle right"
+msgstr "Плътен триъгълник надясно"
+
+msgid "Hides KOReader's built-in status bar. This simplifies the render pipeline and can reduce e-ink flicker on some devices. All status bar features are available as Bookends tokens."
+msgstr "Скрива вградената лента за състоянието на KOReader. Това опростява процеса на изобразяване и може да намали трептенето на е-мастилото на някои устройства. Всички функции на лентата за състоянието са достъпни като токени на Bookends."
+
+msgid "High voltage"
+msgstr "Високо напрежение"
+
+msgid "Horizontal ellipsis"
+msgstr "Хоризонтално многоточие"
+
+msgid "Hot springs / warmth"
+msgstr "Горещи извори / топлина"
+
+msgid "Hourglass"
+msgstr "Пясъчен часовник"
+
+msgid "Hourglass (filled)"
+msgstr "Пясъчен часовник (запълнен)"
+
+msgid "If/Else conditional tokens"
+msgstr "Условни токени If/Else"
+
+msgid "Imported from your earlier Bookends settings"
+msgstr "Импортирано от предишните ви настройки на Bookends"
+
+msgid "Include current page in pages-left tokens"
+msgstr "Включване на текущата страница в токените за оставащи страници"
+
+msgid "Infinity"
+msgstr "Безкрайност"
+
+msgid "Info"
+msgstr "Информация"
+
+msgid "Inline progress bars can be added via the line editor"
+msgstr "Вградени ленти за напредъка могат да се добавят чрез редактора на редове"
+
+msgid "Insert conditional"
+msgstr "Вмъкване на условие"
+
+msgid "Insert symbol"
+msgstr "Вмъкване на символ"
+
+msgid "Insert token"
+msgstr "Вмъкване на токен"
+
+msgid "Install"
+msgstr "Инсталиране"
+
+msgid "Install as"
+msgstr "Инсталиране като"
+
+msgid "Install as new name…"
+msgstr "Инсталиране под ново име…"
+
+msgid "Installation failed: "
+msgstr "Инсталирането е неуспешно: "
+
+msgid "Installed version"
+msgstr "Инсталирана версия"
+
+msgid "Installed: "
+msgstr "Инсталиран: "
+
+msgid "Invert tick color on read portion"
+msgstr "Инвертиране на цвета на отметките върху прочетената част"
+
+msgid "Italic"
+msgstr "Курсив"
+
+msgid "Latest: "
+msgstr "Последна: "
+
+msgid "Left"
+msgstr "Ляво"
+
+msgid "Left harpoon with right arrow"
+msgstr "Харпун наляво със стрелка надясно"
+
+msgid "Lightbulb"
+msgstr "Крушка"
+
+msgid "Lightbulb emoji"
+msgstr "Емоджи крушка"
+
+msgid "Lightning bolt"
+msgstr "Мълния"
+
+msgid "Line"
+msgstr "Ред"
+
+msgid "Line %1: %2"
+msgstr "Ред %1: %2"
+
+msgid "Long arrow left"
+msgstr "Дълга стрелка наляво"
+
+msgid "Long arrow right"
+msgstr "Дълга стрелка надясно"
+
+msgid "Long press to change render order"
+msgstr "Продължено натискане за промяна на реда на изобразяване"
+
+msgid "Long-press progress bars to skim document"
+msgstr "Продължено натискане на лентите за напредъка за прелистване на документа"
+
+msgid "Made something worth sharing? Submit it with the Manage button while viewing one of your own presets."
+msgstr "Направили сте нещо, което си струва да споделите? Изпратете го с бутона „Управление" при преглед на ваша предварителна настройка."
+
+msgid "Manage…"
+msgstr "Управление…"
+
+msgid "Memory chip"
+msgstr "Чип памет"
+
+msgid "Message near end of book"
+msgstr "Съобщение близо до края на книгата"
+
+msgid "Metadata"
+msgstr "Описателни данни"
+
+msgid "Metro"
+msgstr "Метро"
+
+msgid "Metro track color"
+msgstr "Цвят на релсата (метро)"
+
+msgid "Metro track color (% black)"
+msgstr "Цвят на релсата в % черно (метро)"
+
+msgid "Middle dot"
+msgstr "Средна точка"
+
+msgid "Mobile"
+msgstr "Мобилен"
+
+msgid "Monospace"
+msgstr "Моноширочинен"
+
+msgid "Moon"
+msgstr "Луна"
+
+msgid "Move down"
+msgstr "Преместване надолу"
+
+msgid "Move to"
+msgstr "Преместване в"
+
+msgid "Move up"
+msgstr "Преместване нагоре"
+
+msgid "My presets"
+msgstr "Моите настройки"
+
+msgid "My setup"
+msgstr "Моята конфигурация"
+
+msgid "No download available for this release."
+msgstr "Няма наличен файл за изтегляне за тази версия."
+
+msgid "Notify on wake when update available"
+msgstr "Известяване при събуждане, ако има налична актуализация"
+
+msgid "Number of bookmarks"
+msgstr "Брой отметки"
+
+msgid "Number of highlights"
+msgstr "Брой маркирания"
+
+msgid "Number of notes"
+msgstr "Брой бележки"
+
+msgid "Numero"
+msgstr "Номер"
+
+msgid "Odd pg"
+msgstr "Нечетни стр."
+
+msgid "Offline — connect to preview this preset."
+msgstr "Офлайн — свържете се, за да прегледате тази настройка."
+
+msgid "Offline — connect to refresh"
+msgstr "Офлайн — свържете се за обновяване"
+
+msgid "One-line description of this preset"
+msgstr "Едноредово описание на тази настройка"
+
+msgid "Only show for PDF documents"
+msgstr "Показване само за PDF документи"
+
+msgid "Open"
+msgstr "Отваряне"
+
+msgid "Open preset library"
+msgstr "Отваряне на библиотека с настройки"
+
+msgid "Open the releases page in a browser?"
+msgstr "Отваряне на страницата с версиите в браузър?"
+
+msgid "Opens the skim dialog when you long-press on a full-width progress bar. Replaces the stock status bar's long-press to skim feature."
+msgstr "Отваря диалога за прелистване при продължено натискане на лента за напредъка на цяла ширина. Замества функцията за прелистване с продължено натискане на вградената лента за състоянието."
+
+msgid "Page %1 of %2"
+msgstr "Страница %1 от %2"
+
+msgid "Page / progress"
+msgstr "Страница / напредък"
+
+msgid "Page-turn direction \xE2\x87\x84 (shows when inverted)"
+msgstr "Посока на превъртане ⇄ (показва се при обърната)"
+
+msgid "Pages left in book"
+msgstr "Оставащи страници в книгата"
+
+msgid "Pages left in chapter"
+msgstr "Оставащи страници в главата"
+
+msgid "Pages read in chapter"
+msgstr "Прочетени страници в главата"
+
+msgid "Paper aeroplane"
+msgstr "Хартиен самолет"
+
+msgid "Pilcrow / paragraph"
+msgstr "Пилкроу / абзац"
+
+msgid "Pointing down"
+msgstr "Сочещ надолу"
+
+msgid "Pointing left"
+msgstr "Сочещ наляво"
+
+msgid "Pointing right"
+msgstr "Сочещ надясно"
+
+msgid "Pointing right (black)"
+msgstr "Сочещ надясно (черен)"
+
+msgid "Pointing up"
+msgstr "Сочещ нагоре"
+
+msgid "Position"
+msgstr "Позиция"
+
+msgid "Power"
+msgstr "Захранване"
+
+msgid "Preset"
+msgstr "Предварителна настройка"
+
+msgid "Preset error: %1"
+msgstr "Грешка в настройката: %1"
+
+msgid "Preset library"
+msgstr "Библиотека с настройки"
+
+msgid "Preset library…"
+msgstr "Библиотека с настройки…"
+
+msgid "Preset name"
+msgstr "Име на настройката"
+
+msgid "Preset: %1"
+msgstr "Предварителна настройка: %1"
+
+msgid "Prioritise left/right and truncate long center text"
+msgstr "Приоритет на ляво/дясно и съкращаване на дълъг централен текст"
+
+msgid "Progress bar (configure type in line editor)"
+msgstr "Лента за напредъка (настройте вида в редактора на редове)"
+
+msgid "Progress bar colors and tick marks"
+msgstr "Цветове и отметки на лентата за напредъка"
+
+msgid "Progress bar, 10px tall"
+msgstr "Лента за напредъка, 10px висока"
+
+msgid "Progress bar, 200px wide and 4px tall"
+msgstr "Лента за напредъка, 200px широка и 4px висока"
+
+msgid "Progress bars"
+msgstr "Ленти за напредъка"
+
+msgid "RAM used %"
+msgstr "Използвана RAM %"
+
+msgid "RAM used (MiB)"
+msgstr "Използвана RAM (МиБ)"
+
+msgid "Read color"
+msgstr "Цвят на прочетената част"
+
+msgid "Read color (% black)"
+msgstr "Цвят на прочетената част (% черно)"
+
+msgid "Reading"
+msgstr "Четене"
+
+msgid "Reading speed (pages/hour)"
+msgstr "Скорост на четене (стр./час)"
+
+msgid "Reference"
+msgstr "Справка"
+
+msgid "Refresh"
+msgstr "Обновяване"
+
+msgid "Refresh failed — tap Refresh to retry"
+msgstr "Обновяването е неуспешно — докоснете Обновяване за нов опит"
+
+msgid "Refreshing…"
+msgstr "Обновяване…"
+
+msgid "Regular"
+msgstr "Обикновен"
+
+msgid "Rename"
+msgstr "Преименуване"
+
+msgid "Rename preset"
+msgstr "Преименуване на настройката"
+
+msgid "Rename…"
+msgstr "Преименуване…"
+
+msgid "Replace"
+msgstr "Замяна"
+
+msgid "Reset"
+msgstr "Нулиране"
+
+msgid "Reset all to defaults"
+msgstr "Нулиране на всичко до стойностите по подразбиране"
+
+msgid "Reset custom to defaults"
+msgstr "Нулиране на персонализираното до стойностите по подразбиране"
+
+msgid "Restart"
+msgstr "Рестартиране"
+
+msgid "Restart KOReader now?"
+msgstr "Рестартиране на KOReader сега?"
+
+msgid "Right"
+msgstr "Дясно"
+
+msgid "Round"
+msgstr "Закръглен"
+
+msgid "Rounded"
+msgstr "Закръглена"
+
+msgid "Sans-serif"
+msgstr "Без засечки"
+
+msgid "Save"
+msgstr "Запазване"
+
+msgid "Save as new preset…"
+msgstr "Запазване като нова настройка…"
+
+msgid "Save preset"
+msgstr "Запазване на настройката"
+
+msgid "Saved preset:"
+msgstr "Запазена настройка:"
+
+msgid "Section sign"
+msgstr "Знак за раздел"
+
+msgid "Select font"
+msgstr "Избор на шрифт"
+
+msgid "Separators"
+msgstr "Разделители"
+
+msgid "Series with index"
+msgstr "Поредица с номер"
+
+msgid "Serif"
+msgstr "Със засечки"
+
+msgid "Session pages read"
+msgstr "Прочетени страници за сесията"
+
+msgid "Session reading time"
+msgstr "Време за четене за сесията"
+
+msgid "Session time, hidden at start"
+msgstr "Времетраене на сесията, скрито в началото"
+
+msgid "Set font"
+msgstr "Задаване на шрифт"
+
+msgid "Show wifi icon when connected"
+msgstr "Показване на иконата за Wi-Fi при свързване"
+
+msgid "Single angle left"
+msgstr "Единична ъглова скоба наляво"
+
+msgid "Single angle right"
+msgstr "Единична ъглова скоба надясно"
+
+msgid "Size"
+msgstr "Размер"
+
+msgid "Slash"
+msgstr "Наклонена черта"
+
+msgid "Sliders"
+msgstr "Плъзгачи"
+
+msgid "Snippets"
+msgstr "Фрагменти"
+
+msgid "Solid"
+msgstr "Плътна"
+
+msgid "Spade"
+msgstr "Пика"
+
+msgid "Speed, hidden until calculated"
+msgstr "Скорост, скрита докато се изчислява"
+
+msgid "Star (filled)"
+msgstr "Звезда (запълнена)"
+
+msgid "Star (outline)"
+msgstr "Звезда (контур)"
+
+msgid "Star = include in preset cycle gesture"
+msgstr "Звезда = включване в жеста за смяна на настройките"
+
+msgid "Status"
+msgstr "Състояние"
+
+msgid "Stopwatch"
+msgstr "Хронометър"
+
+msgid "Style"
+msgstr "Стил"
+
+msgid "Sub-chapter title when present"
+msgstr "Заглавие на подглавата, ако е налично"
+
+msgid "Submission failed — details in the KOReader log."
+msgstr "Изпращането е неуспешно — подробности в журнала на KOReader."
+
+msgid "Submission failed: %1"
+msgstr "Изпращането е неуспешно: %1"
+
+msgid "Submit"
+msgstr "Изпращане"
+
+msgid "Submit '%1' by %2 to the gallery? A pull request will be opened for review."
+msgstr "Изпращане на „%1" от %2 в галерията? Ще бъде отворена заявка за преглед."
+
+msgid "Submit anyway"
+msgstr "Изпращане въпреки това"
+
+msgid "Submit to gallery…"
+msgstr "Изпращане в галерията…"
+
+msgid "Submitting to gallery…"
+msgstr "Изпращане в галерията…"
+
+msgid "Sun (filled)"
+msgstr "Слънце (запълнено)"
+
+msgid "Sun (outline)"
+msgstr "Слънце (контур)"
+
+msgid "Symbol color"
+msgstr "Цвят на символа"
+
+msgid "Symbol color (% black)"
+msgstr "Цвят на символа (% черно)"
+
+msgid "Symbols"
+msgstr "Символи"
+
+msgid "Tachometer"
+msgstr "Тахометър"
+
+msgid "Tap Refresh above to load the gallery."
+msgstr "Докоснете „Обновяване" по-горе, за да заредите галерията."
+
+msgid "Text color"
+msgstr "Цвят на текста"
+
+msgid "Text color (% black)"
+msgstr "Цвят на текста (% черно)"
+
+msgid "Thanks! Your submission is PR #%1.\n\nThe maintainer will review it before it appears in the Gallery."
+msgstr "Благодаря! Вашата заявка е PR #%1.\n\nПоддържащият ще я прегледа, преди да се появи в Галерията."
+
+msgid "Thickness"
+msgstr "Дебелина"
+
+msgid "This preset appears invalid; skipping."
+msgstr "Тази настройка изглежда невалидна; пропускане."
+
+msgid "This preset uses specific fonts that won't exist on other devices. These overrides will be stripped from your submission so other users see their own default font."
+msgstr "Тази настройка използва конкретни шрифтове, които може да не съществуват на други устройства. Тези замени ще бъдат премахнати от вашата заявка, така че другите потребители да виждат собствения си шрифт по подразбиране."
+
+msgid "Tick color"
+msgstr "Цвят на отметките"
+
+msgid "Tick color (% black)"
+msgstr "Цвят на отметките (% черно)"
+
+msgid "Tick height"
+msgstr "Височина на отметките"
+
+msgid "Tick inversion color"
+msgstr "Цвят на инвертиране на отметките"
+
+msgid "Tick inversion color (% black)"
+msgstr "Цвят на инвертиране на отметките (% черно)"
+
+msgid "Tick width"
+msgstr "Ширина на отметките"
+
+msgid "Tilde"
+msgstr "Тилда"
+
+msgid "Time"
+msgstr "Час"
+
+msgid "Time / date"
+msgstr "Час / дата"
+
+msgid "Time left in book"
+msgstr "Оставащо време до края на книгата"
+
+msgid "Time left in chapter"
+msgstr "Оставащо време до края на главата"
+
+msgid "Tip: for portable presets, pick a Font-family font (Serif, Sans-serif, etc.) instead of a specific one — those adapt to each user's font settings."
+msgstr "Съвет: за преносими настройки изберете шрифт по семейство (Serif, Sans-serif и др.) вместо конкретен — те се адаптират към шрифтовите настройки на всеки потребител."
+
+msgid "Toggle bookends"
+msgstr "Превключване на Bookends"
+
+msgid "Tokens"
+msgstr "Токени"
+
+msgid "Top"
+msgstr "Горе"
+
+msgid "Top-center"
+msgstr "Горе в центъра"
+
+msgid "Top-left"
+msgstr "Горе вляво"
+
+msgid "Top-right"
+msgstr "Горе вдясно"
+
+msgid "Total annotations (bookmarks + highlights + notes)"
+msgstr "Всички анотации (отметки + маркирания + бележки)"
+
+msgid "Total chapter count"
+msgstr "Общ брой глави"
+
+msgid "Total pages"
+msgstr "Общ брой страници"
+
+msgid "Total pages in chapter"
+msgstr "Общ брой страници в главата"
+
+msgid "Total reading time for book"
+msgstr "Общо време за четене на книгата"
+
+msgid "Triangle down"
+msgstr "Триъгълник надолу"
+
+msgid "Triangle left"
+msgstr "Триъгълник наляво"
+
+msgid "Triangle right"
+msgstr "Триъгълник надясно"
+
+msgid "Triangle up"
+msgstr "Триъгълник нагоре"
+
+msgid "Triangle-head right"
+msgstr "Глава-триъгълник надясно"
+
+msgid "Triangular bullet"
+msgstr "Триъгълна точка"
+
+msgid "Truncation gap"
+msgstr "Разстояние при съкращаване"
+
+msgid "Truncation gap between regions"
+msgstr "Разстояние при съкращаване между областите"
+
+msgid "Type"
+msgstr "Вид"
+
+msgid "UI font"
+msgstr "Шрифт на интерфейса"
+
+msgid "Unread color"
+msgstr "Цвят на непрочетената част"
+
+msgid "Unread color (% black)"
+msgstr "Цвят на непрочетената част (% черно)"
+
+msgid "Update and restart"
+msgstr "Актуализиране и рестартиране"
+
+msgid "Update available"
+msgstr "Налична актуализация"
+
+msgid "Update available!"
+msgstr "Налична е актуализация!"
+
+msgid "Use custom colors"
+msgstr "Използване на персонализирани цветове"
+
+msgid "Version: "
+msgstr "Версия: "
+
+msgid "Vertical"
+msgstr "Вертикален"
+
+msgid "Vertical bar"
+msgstr "Вертикална черта"
+
+msgid "Vertical ellipsis"
+msgstr "Вертикално многоточие"
+
+msgid "Warning"
+msgstr "Предупреждение"
+
+msgid "Warning when battery below 20%"
+msgstr "Предупреждение при заряд на батерията под 20%"
+
+msgid "Watch"
+msgstr "Часовник"
+
+msgid "Wave"
+msgstr "Вълна"
+
+msgid "Weekday (Friday)"
+msgstr "Ден от седмицата (петък)"
+
+msgid "Weekday short (Fri)"
+msgstr "Кратък ден (пет)"
+
+msgid "Weekend days (OR operator)"
+msgstr "Уикенд дни (оператор OR)"
+
+msgid "Who should we credit as the author?"
+msgstr "Кого да посочим като автор?"
+
+msgid "Wi-Fi"
+msgstr "Wi-Fi"
+
+msgid "Wi-Fi (changes with status)"
+msgstr "Wi-Fi (променя се според статуса)"
+
+msgid "Wi-Fi icon (dynamic)"
+msgstr "Икона на Wi-Fi (динамична)"
+
+msgid "Wi-Fi is not enabled."
+msgstr "Wi-Fi не е включен."
+
+msgid "[if:key=value]if true[else]if false[/if]"
+msgstr "[if:ключ=стойност]ако е вярно[else]ако е невярно[/if]"
+
+msgid "[if:key=value]show when true[/if]"
+msgstr "[if:ключ=стойност]показване при вярно[/if]"
+
+msgid "author — author name"
+msgstr "author — име на автора"
+
+msgid "batt — 0 to 100"
+msgstr "batt — от 0 до 100"
+
+msgid "book"
+msgstr "книга"
+
+msgid "book_pct — 0 to 100 (book progress)"
+msgstr "book_pct — от 0 до 100 (напредък в книгата)"
+
+msgid "bottom"
+msgstr "долу"
+
+msgid "by"
+msgstr "от"
+
+msgid "chapter"
+msgstr "глава"
+
+msgid "chapter — current chapter number"
+msgstr "chapter — номер на текущата глава"
+
+msgid "chapter_pct — 0 to 100 (chapter progress)"
+msgstr "chapter_pct — от 0 до 100 (напредък в главата)"
+
+msgid "chapter_title — current chapter title"
+msgstr "chapter_title — заглавие на текущата глава"
+
+msgid "chapter_title_1/2/3 — title at depth 1/2/3"
+msgstr "chapter_title_1/2/3 — заглавие на ниво 1/2/3"
+
+msgid "chapters — total chapter count"
+msgstr "chapters — общ брой глави"
+
+msgid "charging — yes / no"
+msgstr "charging — да / не"
+
+msgid "connected — yes / no"
+msgstr "connected — да / не"
+
+msgid "copy"
+msgstr "копиране"
+
+msgid "cycle presets"
+msgstr "смяна на настройките"
+
+msgid "day — Mon Tue Wed Thu Fri Sat Sun"
+msgstr "day — Пон Вт Ср Чет Пет Съб Нед"
+
+msgid "default"
+msgstr "по подразбиране"
+
+msgid "format — EPUB / PDF / CBZ etc."
+msgstr "format — EPUB / PDF / CBZ и др."
+
+msgid "invert — yes / no (page-turn direction)"
+msgstr "invert — да / не (посока на превъртане)"
+
+msgid "left"
+msgstr "ляво"
+
+msgid "light — on / off"
+msgstr "light — вкл. / изкл."
+
+msgid "line"
+msgstr "ред"
+
+msgid "long press lines to manage"
+msgstr "продължено натискане на редовете за управление"
+
+msgid "off"
+msgstr "изкл."
+
+msgid "on"
+msgstr "вкл."
+
+msgid "page — odd / even"
+msgstr "page — нечетна / четна"
+
+msgid "per style"
+msgstr "по стил"
+
+msgid "plugin update available"
+msgstr "налична актуализация на плъгина"
+
+msgid "preset library"
+msgstr "библиотека с настройки"
+
+msgid "recommended"
+msgstr "препоръчано"
+
+msgid "right"
+msgstr "дясно"
+
+msgid "series — series + index, empty when standalone"
+msgstr "series — поредица + номер, празно при самостоятелна книга"
+
+msgid "session — minutes reading"
+msgstr "session — минути четене"
+
+msgid "session_pages — pages read this session"
+msgstr "session_pages — прочетени страници за сесията"
+
+msgid "speed — pages per hour"
+msgstr "speed — страници на час"
+
+msgid "text"
+msgstr "текст"
+
+msgid "time — use HH:MM (24h)"
+msgstr "time — използвайте ЧЧ:ММ (24 ч.)"
+
+msgid "title — book title (empty string is falsy)"
+msgstr "title — заглавие на книгата (празен низ е невярно)"
+
+msgid "toggle bookends"
+msgstr "превключване на Bookends"
+
+msgid "top"
+msgstr "горе"
+
+msgid "transparent"
+msgstr "прозрачен"
+
+msgid "wifi — on / off"
+msgstr "wifi — вкл. / изкл."
