@@ -19,7 +19,7 @@ msgid "%1, line %2"
 msgstr "%1, ред %2"
 
 msgid "'%1' already exists in your library.\n\nReplacing it will overwrite your local copy with the current gallery version. Any local edits will be lost.\n\nInstall under a new name to keep both."
-msgstr "„%1" вече съществува в библиотеката ви.\n\nЗамяната ще презапише локалното копие с текущата версия от галерията. Всички локални промени ще бъдат изгубени.\n\nИнсталирайте под ново име, за да запазите и двете."
+msgstr "„%1“ вече съществува в библиотеката ви.\n\nЗамяната ще презапише локалното копие с текущата версия от галерията. Всички локални промени ще бъдат изгубени.\n\nИнсталирайте под ново име, за да запазите и двете."
 
 msgid "+ Progress bar"
 msgstr "+ Лента за напредъка"
@@ -37,13 +37,13 @@ msgid "24-hour clock"
 msgstr "24-часов часовник"
 
 msgid "A preset called '%1' is already in the gallery. Rename your preset (Manage… → Rename…) before submitting, so it doesn't collide with the existing entry."
-msgstr "Предварителна настройка с името „%1" вече съществува в галерията. Преименувайте я (Управление… → Преименуване…) преди да я изпратите, за да не се застъпва с вече съществуващата."
+msgstr "Предварителна настройка с името „%1“ вече съществува в галерията. Преименувайте я (Управление… → Преименуване…) преди да я изпратите, за да не се застъпва с вече съществуващата."
 
 msgid "A preset called '%1' is already in the gallery. Rename your preset (Manage… → Rename…) before submitting."
-msgstr "Предварителна настройка с името „%1" вече съществува в галерията. Преименувайте я (Управление… → Преименуване…) преди да я изпратите."
+msgstr "Предварителна настройка с името „%1“ вече съществува в галерията. Преименувайте я (Управление… → Преименуване…) преди да я изпратите."
 
 msgid "A submission for '%1' is already awaiting review. Wait for that one to be reviewed, or rename your preset to submit under a different name."
-msgstr "Заявка за „%1" вече очаква преглед. Изчакайте тя да бъде прегледана или преименувайте настройката си, за да я изпратите под различно име."
+msgstr "Заявка за „%1“ вече очаква преглед. Изчакайте тя да бъде прегледана или преименувайте настройката си, за да я изпратите под различно име."
 
 msgid "Add line"
 msgstr "Добавяне на ред"
@@ -55,7 +55,7 @@ msgid "Adjust margins"
 msgstr "Настройване на полета"
 
 msgid "Affects %L (pages left in book) and %l (pages left in chapter). Off (default): 'n−1 → 0'. On: 'n → 1'."
-msgstr "Влияе на %L (оставащи страници в книгата) и %l (оставащи страници в главата). Изкл. (по подразбиране): „n−1 → 0". Вкл.: „n → 1"."
+msgstr "Влияе на %L (оставащи страници в книгата) и %l (оставащи страници в главата). Изкл. (по подразбиране): „n−1 → 0“. Вкл.: „n → 1“."
 
 msgid "After 10pm"
 msgstr "След 22:00 ч."
@@ -250,7 +250,7 @@ msgid "Bottom-right"
 msgstr "Долу вдясно"
 
 msgid "Browse presets others have shared, preview them on your own status bar, and install the ones you like. Once installed, you can edit each preset freely on the My presets tab."
-msgstr "Разглеждайте споделените от другите предварителни настройки, преглеждайте ги на собствената си лента за състоянието и инсталирайте тези, които харесвате. След инсталиране можете да редактирате всяка настройка свободно в раздела „Моите настройки"."
+msgstr "Разглеждайте споделените от другите предварителни настройки, преглеждайте ги на собствената си лента за състоянието и инсталирайте тези, които харесвате. След инсталиране можете да редактирате всяка настройка свободно в раздела „Моите настройки“."
 
 msgid "Bullet"
 msgstr "Точка"
@@ -343,13 +343,13 @@ msgid "Could not preview preset"
 msgstr "Предварителната настройка не може да бъде прегледана"
 
 msgid "Couldn't download '%1'."
-msgstr "„%1" не можа да бъде изтеглен."
+msgstr "„%1“ не можа да бъде изтеглен."
 
 msgid "Cross"
 msgstr "Кръст"
 
 msgid "Cross mark"
-msgstr "Знак „х""
+msgstr "Знак „х“"
 
 msgid "Current chapter number"
 msgstr "Номер на текущата глава"
@@ -394,7 +394,7 @@ msgid "Delete"
 msgstr "Изтриване"
 
 msgid "Delete preset '%1'?"
-msgstr "Изтриване на настройката „%1"?"
+msgstr "Изтриване на настройката „%1“?"
 
 msgid "Device"
 msgstr "Устройство"
@@ -706,7 +706,7 @@ msgid "Long-press progress bars to skim document"
 msgstr "Продължено натискане на лентите за напредъка за прелистване на документа"
 
 msgid "Made something worth sharing? Submit it with the Manage button while viewing one of your own presets."
-msgstr "Направили сте нещо, което си струва да споделите? Изпратете го с бутона „Управление" при преглед на ваша предварителна настройка."
+msgstr "Направили сте нещо, което си струва да споделите? Изпратете го с бутона „Управление“ при преглед на ваша предварителна настройка."
 
 msgid "Manage…"
 msgstr "Управление…"
@@ -1054,7 +1054,7 @@ msgid "Submit"
 msgstr "Изпращане"
 
 msgid "Submit '%1' by %2 to the gallery? A pull request will be opened for review."
-msgstr "Изпращане на „%1" от %2 в галерията? Ще бъде отворена заявка за преглед."
+msgstr "Изпращане на „%1“ от %2 в галерията? Ще бъде отворена заявка за преглед."
 
 msgid "Submit anyway"
 msgstr "Изпращане въпреки това"
@@ -1084,7 +1084,7 @@ msgid "Tachometer"
 msgstr "Тахометър"
 
 msgid "Tap Refresh above to load the gallery."
-msgstr "Докоснете „Обновяване" по-горе, за да заредите галерията."
+msgstr "Докоснете „Обновяване“ по-горе, за да заредите галерията."
 
 msgid "Text color"
 msgstr "Цвят на текста"
