@@ -960,14 +960,19 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
         local line_fill_start = reverse and (line_len - line_fill) or 0
 
         local metro_track = resolveColor(custom_track, Blitbuffer.COLOR_DARK_GRAY)
-        local metro_fill = resolveColor(custom_fill, Blitbuffer.COLOR_DARK_GRAY)
-        -- Track line (uniform colour — progress shown by dot only)
+        -- metro_fill: nil when user has not set a distinct fill (or set it to false/transparent)
+        local metro_fill = resolveColor(custom_metro_fill, nil)
+        -- Track line full length
         pr(line_ox, line_y, line_len, line_thick, metro_track)
+        -- Optional fill overlay on the read portion
+        if metro_fill then
+            pr(line_ox + line_fill_start, line_y, line_fill, line_thick, metro_fill)
+        end
 
         -- Chapter ticks: depth 1 above line (connected to trunk), depth 2 below
         -- When reversed, flip tick sides so the visual hierarchy mirrors the direction
         local metro_tick_h = math.max(1, math.floor(thickness * tick_height_pct / 100))
-        for _, tick in ipairs(ticks or {}) do
+        for _i, tick in ipairs(ticks or {}) do
             local tick_frac = type(tick) == "table" and tick[1] or tick
             local tick_w = type(tick) == "table" and tick[2] or 1
             local tick_depth = type(tick) == "table" and tick[3] or 1
@@ -982,10 +987,18 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
                 end
                 -- Vertical (side-anchored) bars: flip tick sides
                 if vertical then tick_above = not tick_above end
-                if tick_above then
-                    pr(line_ox + tick_pos, line_y - metro_tick_h, line_thick, metro_tick_h, metro_track)
+                -- Tick recolouring: ticks within the read portion paint in metro_fill
+                local is_read
+                if reverse then
+                    is_read = tick_pos >= line_len - line_fill
                 else
-                    pr(line_ox + tick_pos, line_y + line_thick, line_thick, metro_tick_h, metro_track)
+                    is_read = tick_pos <= line_fill
+                end
+                local tick_color = (metro_fill and is_read) and metro_fill or metro_track
+                if tick_above then
+                    pr(line_ox + tick_pos, line_y - metro_tick_h, line_thick, metro_tick_h, tick_color)
+                else
+                    pr(line_ox + tick_pos, line_y + line_thick, line_thick, metro_tick_h, tick_color)
                 end
             end
         end
