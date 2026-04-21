@@ -1090,7 +1090,8 @@ end
 local function computeBarRect(bar_cfg, x, y, screen_w, screen_h)
     local anchor = bar_cfg.v_anchor or "bottom"
     local vertical = anchor == "left" or anchor == "right"
-    local bar_thickness = bar_cfg.height or 20
+    local is_radial = (bar_cfg.style or "solid") == "radial" or bar_cfg.style == "radial_hollow"
+    local bar_thickness = bar_cfg.height or (is_radial and 60 or 20)
     if vertical then
         -- margin_left/right reinterpreted as top/bottom insets
         local bar_h = screen_h - (bar_cfg.margin_left or 0) - (bar_cfg.margin_right or 0)
@@ -1101,6 +1102,12 @@ local function computeBarRect(bar_cfg, x, y, screen_w, screen_h)
         else
             bar_x = x + screen_w - bar_thickness - (bar_cfg.margin_v or 0)
         end
+        -- Radial: shrink to a square centered along the long axis
+        if is_radial then
+            local side = math.min(bar_thickness, bar_h)
+            bar_y = bar_y + math.floor((bar_h - side) / 2)
+            bar_h = side
+        end
         return bar_x, bar_y, bar_thickness, bar_h, vertical
     else
         local bar_w = screen_w - (bar_cfg.margin_left or 0) - (bar_cfg.margin_right or 0)
@@ -1110,6 +1117,12 @@ local function computeBarRect(bar_cfg, x, y, screen_w, screen_h)
             bar_y = y + (bar_cfg.margin_v or 0)
         else
             bar_y = y + screen_h - bar_thickness - (bar_cfg.margin_v or 0)
+        end
+        -- Radial: shrink to a square centered along the long axis
+        if is_radial then
+            local side = math.min(bar_w, bar_thickness)
+            bar_x = bar_x + math.floor((bar_w - side) / 2)
+            bar_w = side
         end
         return bar_x, bar_y, bar_w, bar_thickness, vertical
     end

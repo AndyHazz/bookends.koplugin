@@ -171,7 +171,7 @@ function LineEditor.attach(Bookends)
         local bar_style_button = {
             text_func = function()
                 if not hasBarToken() then return "" end
-                local labels = { bordered = _("Border"), solid = _("Solid"), rounded = _("Round"), metro = _("Metro"), wavy = _("Wave") }
+                local labels = { bordered = _("Border"), solid = _("Solid"), rounded = _("Round"), metro = _("Metro"), wavy = _("Wave"), radial = _("Radial"), radial_hollow = _("Hollow") }
                 return labels[line_bar_style or "bordered"] or _("Border")
             end,
             enabled_func = hasBarToken,
@@ -213,7 +213,7 @@ function LineEditor.attach(Bookends)
         bar_style_button.callback = function()
             format_dialog:onCloseKeyboard()
             local next_style = Utils.cycleNext(
-                { "bordered", "solid", "rounded", "metro", "wavy" },
+                { "bordered", "solid", "rounded", "metro", "wavy", "radial", "radial_hollow" },
                 line_bar_style or "bordered")
             line_bar_style = next_style ~= "bordered" and next_style or nil
             applyLivePreview()

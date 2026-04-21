@@ -138,14 +138,14 @@ function Bookends:buildSingleBarMenu(bar_idx, bar_cfg)
         },
         {
             text_func = function()
-                local style_labels = { solid = _("Solid"), bordered = _("Bordered"), rounded = _("Rounded"), metro = _("Metro"), wavy = _("Wave") }
+                local style_labels = { solid = _("Solid"), bordered = _("Bordered"), rounded = _("Rounded"), metro = _("Metro"), wavy = _("Wave"), radial = _("Radial"), radial_hollow = _("Radial hollow") }
                 return _("Style") .. ": " .. (style_labels[bar_cfg.style] or _("Solid"))
             end,
             enabled_func = isEnabled,
             keep_menu_open = true,
             callback = function(touchmenu_instance)
                 bar_cfg.style = Utils.cycleNext(
-                    { "solid", "bordered", "rounded", "metro", "wavy" },
+                    { "solid", "bordered", "rounded", "metro", "wavy", "radial", "radial_hollow" },
                     bar_cfg.style or "solid")
                 saveBar()
                 if touchmenu_instance then touchmenu_instance:updateItems() end
@@ -211,12 +211,19 @@ function Bookends:buildSingleBarMenu(bar_idx, bar_cfg)
         },
         {
             text_func = function()
-                return _("Thickness") .. ": " .. (bar_cfg.height or 20) .. "px"
+                local is_radial = (bar_cfg.style or "solid") == "radial" or bar_cfg.style == "radial_hollow"
+                local label = is_radial and _("Diameter") or _("Thickness")
+                local default = is_radial and 60 or 20
+                return label .. ": " .. (bar_cfg.height or default) .. "px"
             end,
             enabled_func = isEnabled,
             keep_menu_open = true,
             callback = function(touchmenu_instance)
-                self:showNudgeDialog(_("Bar thickness"), bar_cfg.height or 20, 1, 60, 20, "px",
+                local is_radial = (bar_cfg.style or "solid") == "radial" or bar_cfg.style == "radial_hollow"
+                local label = is_radial and _("Diameter") or _("Bar thickness")
+                local default = is_radial and 60 or 20
+                local max_val = is_radial and 200 or 60
+                self:showNudgeDialog(label, bar_cfg.height or default, 1, max_val, default, "px",
                     function(val)
                         bar_cfg.height = val
                         saveBar()

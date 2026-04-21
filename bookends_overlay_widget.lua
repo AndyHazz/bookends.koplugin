@@ -293,6 +293,10 @@ local function buildBarLine(text, cfg, available_w, max_width)
     else
         bar_w = math.max(0, effective_w - text_total_w)
     end
+    -- Radial bars are circular — clamp width to height so they stay square
+    if bar_style == "radial" or bar_style == "radial_hollow" then
+        bar_w = math.min(bar_w, bar_h)
+    end
 
     if bar_w < 1 then
         -- No room for bar
@@ -755,6 +759,10 @@ function OverlayWidget.buildStyledLine(segments, cfg, available_w, max_width)
         else
             bar_w = math.max(0, effective_w - text_total_w)
         end
+        -- Radial bars are circular — clamp width to height so they stay square
+        if bar_style == "radial" or bar_style == "radial_hollow" then
+            bar_w = math.min(bar_w, bar_h)
+        end
 
         if bar_w >= 1 then
             local bar_widget = BarWidget:new{
@@ -1135,6 +1143,125 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
                 bb:paintRoundedRect(dot_dy, dot_cx, dot_r * 2, dot_r * 2, wave_dot, dot_r)
             else
                 bb:paintRoundedRect(dot_cx, dot_dy, dot_r * 2, dot_r * 2, wave_dot, dot_r)
+            end
+        end
+
+    elseif style == "radial" or style == "radial_hollow" then
+        -- Radial (pie-chart) style: a circle filled clockwise from 12 o'clock.
+        local diameter = math.min(vertical and h or w, vertical and w or h)
+        local radius = math.floor(diameter / 2)
+        if radius < 2 then radius = 2 end
+        -- Center the circle in the allocated rectangle
+        local cx = x + math.floor(w / 2)
+        local cy = y + math.floor(h / 2)
+
+        local radial_bg = resolveColor(custom_bg, Blitbuffer.COLOR_GRAY)
+        local radial_fill = resolveColor(custom_fill, Blitbuffer.COLOR_DARK_GRAY)
+        local radial_tick = resolveColor(custom_tick, Blitbuffer.COLOR_BLACK)
+        local radial_border_color = resolveColor(custom_border, Blitbuffer.COLOR_BLACK)
+
+        local r2 = radius * radius
+        local hollow = style == "radial_hollow"
+        local inner_radius = hollow and math.floor(radius * 0.55) or 0
+        local inner_r2 = inner_radius * inner_radius
+        local two_pi = 2 * math.pi
+
+        -- Paint the pie circle pixel by pixel.
+        -- Angle 0 = 12 o'clock (top), increasing clockwise.
+        for py = -radius, radius - 1 do
+            for px = -radius, radius - 1 do
+                -- Offset to pixel center for smoother circle
+                local dx = px + 0.5
+                local dy = py + 0.5
+                local d2 = dx * dx + dy * dy
+                if d2 <= r2 and d2 > inner_r2 then
+                    -- Compute angle from top, clockwise: atan2(dx, -dy) mapped to [0, 2π)
+                    local angle = math.atan2(dx, -dy)
+                    if angle < 0 then angle = angle + two_pi end
+                    local pixel_frac = angle / two_pi
+
+                    local in_fill
+                    if reverse then
+                        in_fill = pixel_frac >= (1 - fraction)
+                    else
+                        in_fill = pixel_frac <= fraction
+                    end
+                    local color = in_fill and radial_fill or radial_bg
+                    if color then
+                        bb:paintRect(cx + px, cy + py, 1, 1, color)
+                    end
+                end
+            end
+        end
+
+        -- Chapter tick marks: radial lines from center to edge at each chapter boundary
+        for _, tick in ipairs(ticks or {}) do
+            local tick_frac = type(tick) == "table" and tick[1] or tick
+            local tick_w = type(tick) == "table" and tick[2] or 1
+            if reverse then tick_frac = 1 - tick_frac end
+            local tick_angle = tick_frac * two_pi - math.pi / 2  -- 0 = top (12 o'clock)
+            -- Adjusted: tick at fraction 0 points up. tick_angle measured from 3 o'clock.
+            -- Recalculate: from 12 o'clock clockwise
+            tick_angle = tick_frac * two_pi
+            local cos_a = math.cos(tick_angle - math.pi / 2)
+            local sin_a = math.sin(tick_angle - math.pi / 2)
+
+            -- Draw tick as a line from 60% of radius to the edge
+            local inner_r = math.floor(radius * (1 - tick_height_pct / 100))
+            if inner_r < inner_radius then inner_r = inner_radius end
+            for t = inner_r, radius do
+                local lx = cx + math.floor(t * cos_a)
+                local ly = cy + math.floor(t * sin_a)
+                -- Determine if this tick position is in the filled region
+                local pix_angle = math.atan2(t * cos_a, -(t * sin_a))
+                if pix_angle < 0 then pix_angle = pix_angle + two_pi end
+                local pix_frac = pix_angle / two_pi
+                local in_fill
+                if reverse then
+                    in_fill = pix_frac >= (1 - fraction)
+                else
+                    in_fill = pix_frac <= fraction
+                end
+                local tick_color
+                if invert_read_ticks ~= false and in_fill then
+                    tick_color = resolveColor(custom_invert, Blitbuffer.COLOR_WHITE)
+                else
+                    tick_color = radial_tick
+                end
+                if tick_color then
+                    bb:paintRect(lx, ly, tick_w, tick_w, tick_color)
+                end
+            end
+        end
+
+        -- Optional border circle (1px ring at the outer edge)
+        if radial_border_color then
+            local border_r2_outer = radius * radius
+            local border_r2_inner = (radius - 1) * (radius - 1)
+            for py = -radius, radius - 1 do
+                for px = -radius, radius - 1 do
+                    local dx = px + 0.5
+                    local dy = py + 0.5
+                    local d2 = dx * dx + dy * dy
+                    if d2 <= border_r2_outer and d2 > border_r2_inner then
+                        bb:paintRect(cx + px, cy + py, 1, 1, radial_border_color)
+                    end
+                end
+            end
+            -- Inner border ring for hollow variant
+            if hollow then
+                local ib_r2_outer = inner_radius * inner_radius
+                local ib_r2_inner = (inner_radius - 1) * (inner_radius - 1)
+                for py = -inner_radius, inner_radius - 1 do
+                    for px = -inner_radius, inner_radius - 1 do
+                        local dx = px + 0.5
+                        local dy = py + 0.5
+                        local d2 = dx * dx + dy * dy
+                        if d2 <= ib_r2_outer and d2 > ib_r2_inner then
+                            bb:paintRect(cx + px, cy + py, 1, 1, radial_border_color)
+                        end
+                    end
+                end
             end
         end
 
