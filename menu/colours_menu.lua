@@ -310,10 +310,46 @@ function Bookends:buildColoursMenu()
 end
 
 function Bookends:buildTextColourMenu()
-    local text_color = self.settings:readSetting("text_color")
-    local symbol_color = self.settings:readSetting("symbol_color")
+    local function textColorPickerOrNudge(field, title, default_label_suffix, touchmenu_instance)
+        local stored = self.settings:readSetting(field)
+        if Device:screen():isColorEnabled() then
+            local current_hex
+            if stored and stored.hex then
+                current_hex = stored.hex
+            elseif stored and stored.grey then
+                local g = string.format("%02X", stored.grey)
+                current_hex = "#" .. g .. g .. g
+            end
+            self:showColourPicker(title, current_hex, Colour.defaultHexFor(field),
+                function(new_hex)
+                    self.settings:saveSetting(field, { hex = new_hex })
+                    self:markDirty()
+                end,
+                function()
+                    self.settings:delSetting(field)
+                    self:markDirty()
+                end,
+                touchmenu_instance)
+            return
+        end
+        -- Greyscale: existing nudge path.
+        local byte = (stored and stored.grey) or nil
+        local current = byte and math.floor((0xFF - byte) * 100 / 0xFF + 0.5) or 100
+        self:showNudgeDialog(title, current, 0, 100, 100, "%",
+            function(val)
+                self.settings:saveSetting(field, { grey = 0xFF - math.floor(val * 0xFF / 100 + 0.5) })
+                self:markDirty()
+            end,
+            nil, nil, nil, touchmenu_instance,
+            function()
+                self.settings:delSetting(field)
+                self:markDirty()
+            end,
+            _("Default") .. " (" .. default_label_suffix .. ")")
+    end
 
     local function textPctLabel()
+        local text_color = self.settings:readSetting("text_color")
         if text_color then
             local pct = math.floor((0xFF - text_color.grey) * 100 / 0xFF + 0.5)
             if pct == 0 then return _("transparent") end
@@ -323,6 +359,7 @@ function Bookends:buildTextColourMenu()
     end
 
     local function symbolPctLabel()
+        local symbol_color = self.settings:readSetting("symbol_color")
         if symbol_color then
             local pct = math.floor((0xFF - symbol_color.grey) * 100 / 0xFF + 0.5)
             if pct == 0 then return _("transparent") end
@@ -338,23 +375,9 @@ function Bookends:buildTextColourMenu()
             end,
             keep_menu_open = true,
             callback = function(touchmenu_instance)
-                local current = text_color and math.floor((0xFF - text_color.grey) * 100 / 0xFF + 0.5) or 100
-                self:showNudgeDialog(_("Text color (% black)"), current, 0, 100, 100, "%",
-                    function(val)
-                        text_color = { grey = 0xFF - math.floor(val * 0xFF / 100 + 0.5) }
-                        self.settings:saveSetting("text_color", text_color)
-                        self:markDirty()
-                    end,
-                    nil, nil, nil, touchmenu_instance,
-                    function()
-                        text_color = nil
-                        self.settings:delSetting("text_color")
-                        self:markDirty()
-                    end,
-                    _("Default") .. " (" .. _("book") .. ")")
+                textColorPickerOrNudge("text_color", _("Text color"), _("book"), touchmenu_instance)
             end,
             hold_callback = function(touchmenu_instance)
-                text_color = nil
                 self.settings:delSetting("text_color")
                 self:markDirty()
                 if touchmenu_instance then touchmenu_instance:updateItems() end
@@ -366,23 +389,9 @@ function Bookends:buildTextColourMenu()
             end,
             keep_menu_open = true,
             callback = function(touchmenu_instance)
-                local current = symbol_color and math.floor((0xFF - symbol_color.grey) * 100 / 0xFF + 0.5) or 100
-                self:showNudgeDialog(_("Symbol color (% black)"), current, 0, 100, 100, "%",
-                    function(val)
-                        symbol_color = { grey = 0xFF - math.floor(val * 0xFF / 100 + 0.5) }
-                        self.settings:saveSetting("symbol_color", symbol_color)
-                        self:markDirty()
-                    end,
-                    nil, nil, nil, touchmenu_instance,
-                    function()
-                        symbol_color = nil
-                        self.settings:delSetting("symbol_color")
-                        self:markDirty()
-                    end,
-                    _("Default") .. " (" .. _("text") .. ")")
+                textColorPickerOrNudge("symbol_color", _("Symbol color"), _("text"), touchmenu_instance)
             end,
             hold_callback = function(touchmenu_instance)
-                symbol_color = nil
                 self.settings:delSetting("symbol_color")
                 self:markDirty()
                 if touchmenu_instance then touchmenu_instance:updateItems() end
