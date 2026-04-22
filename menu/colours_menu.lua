@@ -14,11 +14,12 @@ return function(Bookends)
 function Bookends:_buildColorItems(bc, saveColors, is_per_bar)
     local function colorNudge(title, field, default_pct, touchmenu_instance)
         if Screen:isColorEnabled() then
-            -- Colour device: show HSV picker. Hex-shape takes priority; if
+            -- Colour device: show palette picker. Hex-shape takes priority; if
             -- the field still holds a legacy raw byte or {grey=N}, render
             -- the equivalent greyscale hex so the picker opens on the
             -- user's currently-stored value.
             local v = bc[field]
+            local original = v  -- capture verbatim for revert
             local current_hex
             if type(v) == "table" and v.hex then
                 current_hex = v.hex
@@ -37,6 +38,10 @@ function Bookends:_buildColorItems(bc, saveColors, is_per_bar)
                 end,
                 function()
                     bc[field] = nil
+                    saveColors()
+                end,
+                function()
+                    bc[field] = original  -- restore exact pre-picker shape
                     saveColors()
                 end,
                 touchmenu_instance)
@@ -314,6 +319,7 @@ function Bookends:buildTextColourMenu()
     local function textColorPickerOrNudge(field, title, default_label_suffix, touchmenu_instance)
         local stored = self.settings:readSetting(field)
         if Screen:isColorEnabled() then
+            local original = stored  -- capture verbatim for revert
             local current_hex
             if stored and stored.hex then
                 current_hex = stored.hex
@@ -328,6 +334,14 @@ function Bookends:buildTextColourMenu()
                 end,
                 function()
                     self.settings:delSetting(field)
+                    self:markDirty()
+                end,
+                function()
+                    if original == nil then
+                        self.settings:delSetting(field)
+                    else
+                        self.settings:saveSetting(field, original)
+                    end
                     self:markDirty()
                 end,
                 touchmenu_instance)
