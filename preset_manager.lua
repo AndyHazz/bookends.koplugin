@@ -103,7 +103,6 @@ local function validatePreset(data)
         positions = "table",
         progress_bars = "table",
         bar_colors = "table",
-        metadata = "table",
         tick_width_multiplier = "number",
         tick_height_pct = "number",
     }
@@ -138,15 +137,6 @@ PresetManager.validatePreset = validatePreset
 local function writePresetContents(path, name, preset_data)
     local fout = io.open(path, "w")
     if fout then
-        preset_data.metadata = preset_data.metadata or {}
-        if hasColour(preset_data) then
-            preset_data.metadata.has_colour = true
-        else
-            preset_data.metadata.has_colour = nil
-        end
-        if next(preset_data.metadata) == nil then
-            preset_data.metadata = nil
-        end
         fout:write("-- Bookends preset: " .. name .. "\n")
         fout:write("return " .. serializeTable(preset_data) .. "\n")
         fout:close()
