@@ -44,7 +44,7 @@ local ColourFlag = WidgetContainer:extend{
 function ColourFlag:init()
     -- Luminance-distinct trio matching the palette's dark/light/dark pattern.
     local function c(r, g, b)
-        if Screen:isColorEnabled() then
+        if Device.screen:isColorEnabled() then
             return Blitbuffer.ColorRGB32(r, g, b, 0xFF)
         else
             return Blitbuffer.Color8(math.floor(0.299 * r + 0.587 * g + 0.114 * b + 0.5))
