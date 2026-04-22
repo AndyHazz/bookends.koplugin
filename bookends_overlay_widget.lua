@@ -1,9 +1,17 @@
 local Blitbuffer = require("ffi/blitbuffer")
+local Colour = require("bookends_colour")
 local Device = require("device")
 local Font = require("ui/font")
 local TextWidget = require("ui/widget/textwidget")
 local Utf8Proc = require("ffi/utf8proc")
 local Screen = Device.screen
+
+-- Helper: resolve a text/symbol colour table ({grey=N} or {hex=H}) to a
+-- Blitbuffer colour object on the current screen. Returns nil when v is nil.
+local function resolveTextColor(v)
+    if v == nil then return nil end
+    return Colour.parseColorValue(v, Device:screen():isColorEnabled())
+end
 
 local OverlayWidget = {}
 
@@ -255,7 +263,7 @@ local function buildBarLine(text, cfg, available_w, max_width)
     local function addTextSegment(t)
         if t == "" then return end
         local display = cfg.uppercase and Utf8Proc.uppercase_dumb(t) or t
-        local text_fgcolor = cfg.text_color and Blitbuffer.Color8(cfg.text_color.grey) or nil
+        local text_fgcolor = resolveTextColor(cfg.text_color)
         local tw = TextWidget:new(textWidgetOpts({
             text = display,
             face = cfg.face,
@@ -375,7 +383,7 @@ function OverlayWidget.buildTextWidget(text, line_configs, h_anchor, max_width, 
         end
         -- Plain text — fast path
         local display_text = cfg.uppercase and Utf8Proc.uppercase_dumb(lines[1]) or lines[1]
-        local text_fgcolor = cfg.text_color and Blitbuffer.Color8(cfg.text_color.grey) or nil
+        local text_fgcolor = resolveTextColor(cfg.text_color)
         local tw = TextWidget:new(textWidgetOpts({
             text = display_text,
             face = cfg.face,
@@ -409,7 +417,7 @@ function OverlayWidget.buildTextWidget(text, line_configs, h_anchor, max_width, 
             widget, w, h = buildBarLine(line, cfg, available_w or Screen:getWidth(), max_width)
         else
             local display_text = cfg.uppercase and Utf8Proc.uppercase_dumb(line) or line
-            local text_fgcolor = cfg.text_color and Blitbuffer.Color8(cfg.text_color.grey) or nil
+            local text_fgcolor = resolveTextColor(cfg.text_color)
             widget = TextWidget:new(textWidgetOpts({
                 text = display_text,
                 face = cfg.face,
@@ -718,7 +726,7 @@ function OverlayWidget.buildStyledLine(segments, cfg, available_w, max_width)
                 if seg.color then
                     seg_fgcolor = Blitbuffer.Color8(seg.color.grey)
                 elseif cfg.text_color then
-                    seg_fgcolor = Blitbuffer.Color8(cfg.text_color.grey)
+                    seg_fgcolor = resolveTextColor(cfg.text_color)
                 end
 
                 local tw = TextWidget:new(textWidgetOpts({
