@@ -62,6 +62,21 @@ local function serializeTable(tbl, indent)
 end
 PresetManager.serializeTable = serializeTable
 
+--- Detect whether a preset payload uses any colour (hex) values.
+--- Walks the table recursively; returns true on the first `hex` key hit.
+--- Permissive: any non-empty `hex` string field flags the preset as
+--- colour-authored (gallery UI treats false positives as benign — an
+--- unused `hex` key is still authoring intent).
+local function hasColour(t)
+    if type(t) ~= "table" then return false end
+    if type(t.hex) == "string" and t.hex ~= "" then return true end
+    for _k, v in pairs(t) do
+        if type(v) == "table" and hasColour(v) then return true end
+    end
+    return false
+end
+PresetManager.hasColour = hasColour
+
 --- Load a preset .lua file in a sandboxed environment.
 --- The file can only return a plain data table — no access to os, io, require, etc.
 local function loadPresetFile(path)
@@ -88,6 +103,7 @@ local function validatePreset(data)
         positions = "table",
         progress_bars = "table",
         bar_colors = "table",
+        metadata = "table",
         tick_width_multiplier = "number",
         tick_height_pct = "number",
     }
@@ -122,6 +138,15 @@ PresetManager.validatePreset = validatePreset
 local function writePresetContents(path, name, preset_data)
     local fout = io.open(path, "w")
     if fout then
+        preset_data.metadata = preset_data.metadata or {}
+        if hasColour(preset_data) then
+            preset_data.metadata.has_colour = true
+        else
+            preset_data.metadata.has_colour = nil
+        end
+        if next(preset_data.metadata) == nil then
+            preset_data.metadata = nil
+        end
         fout:write("-- Bookends preset: " .. name .. "\n")
         fout:write("return " .. serializeTable(preset_data) .. "\n")
         fout:close()
