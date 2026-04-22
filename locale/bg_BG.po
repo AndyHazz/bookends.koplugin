@@ -730,10 +730,10 @@ msgid "Metro track color (% black)"
 msgstr "Цвят на релсата в % черно (метро)"
 
 msgid "Metro read color"
-msgstr ""
+msgstr "Цвят на прочетената част (метро)"
 
 msgid "Metro read color (% black)"
-msgstr ""
+msgstr "Цвят на прочетената част в % черно (метро)"
 
 msgid "Middle dot"
 msgstr "Средна точка"
