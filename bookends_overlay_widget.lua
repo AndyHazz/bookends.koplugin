@@ -1,3 +1,4 @@
+local ffi = require("ffi")
 local Blitbuffer = require("ffi/blitbuffer")
 local Colour = require("bookends_colour")
 local Device = require("device")
@@ -6,11 +7,45 @@ local TextWidget = require("ui/widget/textwidget")
 local Utf8Proc = require("ffi/utf8proc")
 local Screen = Device.screen
 
+local ColorRGB32_t = ffi.typeof("ColorRGB32")
+
 -- Helper: resolve a text/symbol colour table ({grey=N} or {hex=H}) to a
 -- Blitbuffer colour object on the current screen. Returns nil when v is nil.
 local function resolveTextColor(v)
     if v == nil then return nil end
     return Colour.parseColorValue(v, Screen:isColorEnabled())
+end
+
+-- Blitbuffer's plain paintRect / paintRoundedRect / paintBorder always flatten
+-- their colour argument to luminance via getColor8(), so painting a ColorRGB32
+-- through them renders as grey on a colour buffer. KOReader exposes parallel
+-- *RGB32 variants for true-colour fills; these wrappers dispatch by colour
+-- type so all the call-sites in paintProgressBar can stay shape-agnostic.
+local function bbPaintRect(bb, x, y, w, h, c)
+    if not c then return end
+    if ffi.istype(ColorRGB32_t, c) then
+        bb:paintRectRGB32(x, y, w, h, c)
+    else
+        bb:paintRect(x, y, w, h, c)
+    end
+end
+
+local function bbPaintRoundedRect(bb, x, y, w, h, c, r)
+    if not c then return end
+    if ffi.istype(ColorRGB32_t, c) then
+        bb:paintRoundedRectRGB32(x, y, w, h, c, r)
+    else
+        bb:paintRoundedRect(x, y, w, h, c, r)
+    end
+end
+
+local function bbPaintBorder(bb, x, y, w, h, bw, c, r)
+    if not c then return end
+    if ffi.istype(ColorRGB32_t, c) then
+        bb:paintBorderRGB32(x, y, w, h, bw, c, r)
+    else
+        bb:paintBorder(x, y, w, h, bw, c, r)
+    end
 end
 
 local OverlayWidget = {}
@@ -943,9 +978,9 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
     local function pr(rx, ry, rw, rh, color)
         if not color then return end
         if vertical then
-            bb:paintRect(ry, rx, rh, rw, color)
+            bbPaintRect(bb, ry, rx, rh, rw, color)
         else
-            bb:paintRect(rx, ry, rw, rh, color)
+            bbPaintRect(bb, rx, ry, rw, rh, color)
         end
     end
 
@@ -1023,9 +1058,9 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
         local function paintCircle(cx, cy, r, color)
             if not color then return end
             if vertical then
-                bb:paintRoundedRect(cy, cx, r * 2, r * 2, color, r)
+                bbPaintRoundedRect(bb, cy, cx, r * 2, r * 2, color, r)
             else
-                bb:paintRoundedRect(cx, cy, r * 2, r * 2, color, r)
+                bbPaintRoundedRect(bb, cx, cy, r * 2, r * 2, color, r)
             end
         end
 
@@ -1088,9 +1123,9 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
             local rx, ry = cx - cap_r, cy - cap_r
             local d = cap_r * 2
             if vertical then
-                bb:paintRoundedRect(ry, rx, d, d, color, cap_r)
+                bbPaintRoundedRect(bb, ry, rx, d, d, color, cap_r)
             else
-                bb:paintRoundedRect(rx, ry, d, d, color, cap_r)
+                bbPaintRoundedRect(bb, rx, ry, d, d, color, cap_r)
             end
         end
         paintCap(ox, wave_y(0), start_color)
@@ -1104,9 +1139,9 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
             local color = in_fill and wave_fill or wave_track
             if color then
                 if vertical then
-                    bb:paintRect(ry, ox + i, ribbon_h, 1, color)
+                    bbPaintRect(bb, ry, ox + i, ribbon_h, 1, color)
                 else
-                    bb:paintRect(ox + i, ry, 1, ribbon_h, color)
+                    bbPaintRect(bb, ox + i, ry, 1, ribbon_h, color)
                 end
             end
         end
@@ -1131,9 +1166,9 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
                         tick_color = base_tick
                     end
                     if vertical then
-                        bb:paintRect(ty, ox + tick_pos, th, tick_w, tick_color)
+                        bbPaintRect(bb, ty, ox + tick_pos, th, tick_w, tick_color)
                     else
-                        bb:paintRect(ox + tick_pos, ty, tick_w, th, tick_color)
+                        bbPaintRect(bb, ox + tick_pos, ty, tick_w, th, tick_color)
                     end
                 end
             end
@@ -1148,9 +1183,9 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
             local dot_cx = ox + pos_i - dot_r
             local dot_dy = dot_cy - dot_r
             if vertical then
-                bb:paintRoundedRect(dot_dy, dot_cx, dot_r * 2, dot_r * 2, wave_dot, dot_r)
+                bbPaintRoundedRect(bb, dot_dy, dot_cx, dot_r * 2, dot_r * 2, wave_dot, dot_r)
             else
-                bb:paintRoundedRect(dot_cx, dot_dy, dot_r * 2, dot_r * 2, wave_dot, dot_r)
+                bbPaintRoundedRect(bb, dot_cx, dot_dy, dot_r * 2, dot_r * 2, wave_dot, dot_r)
             end
         end
 
@@ -1191,7 +1226,7 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
                     local in_fill = pixel_frac <= fraction
                     local color = in_fill and radial_fill or radial_bg
                     if color then
-                        bb:paintRect(cx + px, cy + py, 1, 1, color)
+                        bbPaintRect(bb, cx + px, cy + py, 1, 1, color)
                     end
                 end
             end
@@ -1227,7 +1262,7 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
                     tick_color = radial_tick
                 end
                 if tick_color then
-                    bb:paintRect(lx, ly, tick_w, tick_w, tick_color)
+                    bbPaintRect(bb, lx, ly, tick_w, tick_w, tick_color)
                 end
             end
         end
@@ -1242,7 +1277,7 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
                     local dy = py + 0.5
                     local d2 = dx * dx + dy * dy
                     if d2 <= border_r2_outer and d2 > border_r2_inner then
-                        bb:paintRect(cx + px, cy + py, 1, 1, radial_border_color)
+                        bbPaintRect(bb, cx + px, cy + py, 1, 1, radial_border_color)
                     end
                 end
             end
@@ -1256,7 +1291,7 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
                         local dy = py + 0.5
                         local d2 = dx * dx + dy * dy
                         if d2 <= ib_r2_outer and d2 > ib_r2_inner then
-                            bb:paintRect(cx + px, cy + py, 1, 1, radial_border_color)
+                            bbPaintRect(bb, cx + px, cy + py, 1, 1, radial_border_color)
                         end
                     end
                 end
@@ -1304,11 +1339,11 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
         -- Background (use real coordinates for rounded rect API)
         if radius > 0 then
             if border_bg then
-                bb:paintRoundedRect(x, y, w, h, border_bg, radius)
+                bbPaintRoundedRect(bb, x, y, w, h, border_bg, radius)
             end
         else
             if border_bg then
-                bb:paintRect(x, y, w, h, border_bg)
+                bbPaintRect(bb, x, y, w, h, border_bg)
             end
         end
         local padding = math.max(1, math.floor(thickness * 0.1))
@@ -1328,21 +1363,21 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
                 local fill_len = math.floor(inner_len * fraction)
                 -- Background (unfilled) first as full rounded rect
                 if border_bg then
-                    bb:paintRoundedRect(inner_x, inner_y, inner_w, inner_h, border_bg, inner_r)
+                    bbPaintRoundedRect(bb, inner_x, inner_y, inner_w, inner_h, border_bg, inner_r)
                 end
                 -- Fill (read portion) on top — its rounded corners overlay the background
                 if fill_len > 0 and border_fill then
                     if vertical then
                         if reverse then
-                            bb:paintRoundedRect(inner_x, inner_y + inner_h - fill_len, inner_w, fill_len, border_fill, inner_r)
+                            bbPaintRoundedRect(bb, inner_x, inner_y + inner_h - fill_len, inner_w, fill_len, border_fill, inner_r)
                         else
-                            bb:paintRoundedRect(inner_x, inner_y, inner_w, fill_len, border_fill, inner_r)
+                            bbPaintRoundedRect(bb, inner_x, inner_y, inner_w, fill_len, border_fill, inner_r)
                         end
                     else
                         if reverse then
-                            bb:paintRoundedRect(inner_x + inner_w - fill_len, inner_y, fill_len, inner_h, border_fill, inner_r)
+                            bbPaintRoundedRect(bb, inner_x + inner_w - fill_len, inner_y, fill_len, inner_h, border_fill, inner_r)
                         else
-                            bb:paintRoundedRect(inner_x, inner_y, fill_len, inner_h, border_fill, inner_r)
+                            bbPaintRoundedRect(bb, inner_x, inner_y, fill_len, inner_h, border_fill, inner_r)
                         end
                     end
                 end
@@ -1367,14 +1402,14 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
         local border_color = resolveColor(custom_border, Blitbuffer.COLOR_BLACK)
         if radius > 0 then
             if border_color then
-                bb:paintBorder(x, y, w, h, border, border_color, radius)
+                bbPaintBorder(bb, x, y, w, h, border, border_color, radius)
             end
         else
             if border_color then
-                bb:paintRect(x, y, w, border, border_color)
-                bb:paintRect(x, y + h - border, w, border, border_color)
-                bb:paintRect(x, y, border, h, border_color)
-                bb:paintRect(x + w - border, y, border, h, border_color)
+                bbPaintRect(bb, x, y, w, border, border_color)
+                bbPaintRect(bb, x, y + h - border, w, border, border_color)
+                bbPaintRect(bb, x, y, border, h, border_color)
+                bbPaintRect(bb, x + w - border, y, border, h, border_color)
             end
         end
         -- Chapter ticks
