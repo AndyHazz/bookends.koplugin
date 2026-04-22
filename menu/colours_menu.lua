@@ -2,6 +2,7 @@
 -- Attached onto the Bookends class by main.lua on plugin load.
 local _ = require("bookends_i18n").gettext
 local Device = require("device")
+local Screen = Device.screen
 local Colour = require("bookends_colour")
 
 return function(Bookends)
@@ -12,7 +13,7 @@ return function(Bookends)
 --- bar_colors.border_thickness as its default instead of the hard-coded 1px.
 function Bookends:_buildColorItems(bc, saveColors, is_per_bar)
     local function colorNudge(title, field, default_pct, touchmenu_instance)
-        if Device:screen():isColorEnabled() then
+        if Screen:isColorEnabled() then
             -- Colour device: show HSV picker. Hex-shape takes priority; if
             -- the field still holds a legacy raw byte or {grey=N}, render
             -- the equivalent greyscale hex so the picker opens on the
@@ -312,7 +313,7 @@ end
 function Bookends:buildTextColourMenu()
     local function textColorPickerOrNudge(field, title, default_label_suffix, touchmenu_instance)
         local stored = self.settings:readSetting(field)
-        if Device:screen():isColorEnabled() then
+        if Screen:isColorEnabled() then
             local current_hex
             if stored and stored.hex then
                 current_hex = stored.hex

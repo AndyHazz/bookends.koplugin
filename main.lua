@@ -989,7 +989,7 @@ end
 --- and greyscale-fallback are consistent with text_color / symbol_color.
 local function resolveBarColors(bc)
     local Colour = require("bookends_colour")
-    local is_color_enabled = Device:screen():isColorEnabled()
+    local is_color_enabled = Screen:isColorEnabled()
     local function cv(v) return Colour.parseColorValue(v, is_color_enabled) end
     return {
         fill = cv(bc.fill),

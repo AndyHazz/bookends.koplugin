@@ -10,7 +10,7 @@ local Screen = Device.screen
 -- Blitbuffer colour object on the current screen. Returns nil when v is nil.
 local function resolveTextColor(v)
     if v == nil then return nil end
-    return Colour.parseColorValue(v, Device:screen():isColorEnabled())
+    return Colour.parseColorValue(v, Screen:isColorEnabled())
 end
 
 local OverlayWidget = {}
