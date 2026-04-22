@@ -328,5 +328,83 @@ test("alias: new state key name + legacy predicate name both resolve", function(
     eq(r, "many")
 end)
 
+-- ----------------------------------------------------------------------------
+-- Cross-reference with @ref and != operator
+-- ----------------------------------------------------------------------------
+
+test("@ref: chapter_title_1 = @title when they match", function()
+    eq(P("[if:chapter_title_1=@title]SAME[/if]",
+         {chapter_title_1="My Book", title="My Book"}), "SAME")
+end)
+
+test("@ref: chapter_title_1 = @title when they differ", function()
+    eq(P("[if:chapter_title_1=@title]SAME[/if]",
+         {chapter_title_1="Part 1", title="My Book"}), "")
+end)
+
+test("@ref: not chapter_title_1 = @title (the motivating use-case)", function()
+    -- Book with parts: chapter_title_1 is "Part 1", title is "My Book" → show it
+    eq(P("[if:not chapter_title_1=@title]%C1[/if]",
+         {chapter_title_1="Part 1", title="My Book"}), "%C1")
+    -- Book without parts: chapter_title_1 IS the title → hide it
+    eq(P("[if:not chapter_title_1=@title]%C1[/if]",
+         {chapter_title_1="My Book", title="My Book"}), "")
+end)
+
+test("@ref: missing ref key treated as empty string", function()
+    eq(P("[if:title=@nonexistent]X[/if]", {title="Foo"}), "")
+    eq(P("[if:title=@nonexistent]X[/if]", {title=""}), "X")
+end)
+
+test("@ref: numeric cross-reference", function()
+    eq(P("[if:chapter=@chapters]last[/if]", {chapter=10, chapters=10}), "last")
+    eq(P("[if:chapter=@chapters]last[/if]", {chapter=5, chapters=10}), "")
+end)
+
+test("!=: basic not-equals with literal", function()
+    eq(P("[if:a!=1]X[/if]", {a=1}), "")
+    eq(P("[if:a!=1]X[/if]", {a=2}), "X")
+end)
+
+test("!=: string not-equals", function()
+    eq(P("[if:author!=Anonymous]named[/if]", {author="Ursula K. Le Guin"}), "named")
+    eq(P("[if:author!=Anonymous]named[/if]", {author="Anonymous"}), "")
+end)
+
+test("!=: with @ref", function()
+    eq(P("[if:chapter_title_1!=@title]%C1[/if]",
+         {chapter_title_1="Part 1", title="My Book"}), "%C1")
+    eq(P("[if:chapter_title_1!=@title]%C1[/if]",
+         {chapter_title_1="My Book", title="My Book"}), "")
+end)
+
+test("!=: nil key with != returns true", function()
+    eq(P("[if:missing!=hello]X[/if]", {}), "X")
+end)
+
+test("!=: numeric not-equals", function()
+    eq(P("[if:batt!=100]not full[/if]", {batt=85}), "not full")
+    eq(P("[if:batt!=100]not full[/if]", {batt=100}), "")
+end)
+
+test("@ref: works with else branch", function()
+    eq(P("[if:chapter_title_1=@title]dup[else]%C1[/if]",
+         {chapter_title_1="Part 1", title="My Book"}), "%C1")
+    eq(P("[if:chapter_title_1=@title]dup[else]%C1[/if]",
+         {chapter_title_1="My Book", title="My Book"}), "dup")
+end)
+
+test("@ref: combined with and/or operators", function()
+    eq(P("[if:chapter_title_1!=@title and series]%S \xC2\xB7 %C1[/if]",
+         {chapter_title_1="Part 1", title="My Book", series="Saga #1"}), "%S \xC2\xB7 %C1")
+    eq(P("[if:chapter_title_1!=@title and series]%S \xC2\xB7 %C1[/if]",
+         {chapter_title_1="My Book", title="My Book", series="Saga #1"}), "")
+end)
+
+test("@ref: v5 state keys resolve via alias on ref lookup", function()
+    -- @chapters (legacy name) should find state.chap_count via STATE_ALIAS
+    eq(P("[if:chap_num=@chapters]last[/if]", {chap_num=10, chap_count=10}), "last")
+end)
+
 io.stdout:write(string.format("%d passed, %d failed\n", pass, fail))
 os.exit(fail == 0 and 0 or 1)

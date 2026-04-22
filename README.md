@@ -188,9 +188,11 @@ Show or hide content based on device state, reading progress, time, and more usi
 [if:not series]Standalone[/if]
 [if:day=Sat or day=Sun]Weekend[/if]
 [if:format=PDF]%page_num / %page_count[/if]
+[if:chap_title_1!=@title]%chap_title_1 · [/if]
+[if:batt!=100]charging…[/if]
 ```
 
-Comparison operators: `=` (equals), `<` (less than), `>` (greater than). Boolean operators: `and`, `or`, `not`, with parens `()` for grouping. Conditionals can be nested to any depth — `[if:A][if:B]…[/if][/if]` — and compose with `[else]`.
+Comparison operators: `=` (equals), `!=` (not equals), `<` (less than), `>` (greater than). Boolean operators: `and`, `or`, `not`, with parens `()` for grouping. Conditionals can be nested to any depth — `[if:A][if:B]…[/if][/if]` — and compose with `[else]`.
 
 | Condition | Values | Description |
 |-----------|--------|-------------|
@@ -222,6 +224,8 @@ Comparison operators: `=` (equals), `<` (less than), `>` (greater than). Boolean
 String predicates evaluate as falsy when the string is empty, so `[if:not series]` means "book isn't in a series" and `[if:chap_title_2]` means "we're in a sub-chapter at depth 2".
 
 > Legacy predicate names (`chapters`, `chapter_pct`, `chapter_title`, `percent`, `pages`) still evaluate — they're aliased to their v5 equivalents automatically.
+
+The right-hand side of a comparison can reference another state value with `@`. For example, `[if:chap_title_1!=@title]` is true when the depth-1 chapter title differs from the book title — useful for hiding duplicate headings when a book's only top-level TOC entry is the title itself. Any `@key` that doesn't exist in the state table resolves to an empty string.
 
 Conditions evaluate live — the charging icon appears the moment you plug in, the wifi icon vanishes when you disconnect. The token picker has a dedicated **If/Else conditional tokens** submenu with syntax help, examples, and a complete reference.
 

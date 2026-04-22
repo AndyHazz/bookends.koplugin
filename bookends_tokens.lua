@@ -222,29 +222,56 @@ local function parseNumericValue(val)
 end
 
 --- Evaluate a single condition string against a state table.
--- Supports operators =, <, > for comparisons.
+-- Supports operators =, !=, <, > for comparisons.
+-- When the right-hand value starts with @, it is resolved as a state-table
+-- key reference (e.g. chapter_title_1=@title compares two state values).
 -- Without an operator, checks if the value is truthy (non-nil, non-empty, non-zero, not "off"/"no").
 local function evaluateCondition(cond_str, state)
-    -- Try operator: key=value, key<value, key>value
+    -- Try operator: key=value, key!=value, key<value, key>value
     -- Key pattern allows underscores ([%w_]+) to support names like book_pct.
-    local key, op, value = cond_str:match("^([%w_]+)([=<>])(.+)$")
+    -- Operator pattern matches =, !=, <, >.
+    local key, op, value = cond_str:match("^([%w_]+)(!=)(.+)$")
+    if not key then
+        key, op, value = cond_str:match("^([%w_]+)([=<>])(.+)$")
+    end
     if key and op and value then
         -- Try the key as-is first; fall back to aliased key if not found.
         -- This allows both old and new state-key names to work simultaneously.
         local state_val = state[key]
         if state_val == nil then
+            -- Fall back to aliased key for legacy state-key names (chapters,
+            -- chapter_pct, etc.).
             local aliased_key = STATE_ALIAS[key]
             if aliased_key then
                 state_val = state[aliased_key]
             end
         end
-        if state_val == nil then return false end
+        if state_val == nil then
+            -- Missing key: != returns true (nil isn't equal to anything),
+            -- other operators return false.
+            return op == "!="
+        end
+        -- Resolve @ref on the right-hand side: look up value from state table,
+        -- applying the same alias fallback so @chapters works alongside @chap_count.
+        if value:sub(1, 1) == "@" then
+            local ref_key = value:sub(2)
+            local ref_val = state[ref_key]
+            if ref_val == nil then
+                local aliased_ref = STATE_ALIAS[ref_key]
+                if aliased_ref then ref_val = state[aliased_ref] end
+            end
+            value = ref_val or ""
+        end
         -- Try numeric comparison (supports HH:MM → minutes)
         local num_state = tonumber(state_val)
-        local num_val = parseNumericValue(value)
+        local num_val = parseNumericValue(tostring(value))
         if op == "=" then
             if num_state and num_val then return num_state == num_val end
-            return tostring(state_val) == value
+            return tostring(state_val) == tostring(value)
+        end
+        if op == "!=" then
+            if num_state and num_val then return num_state ~= num_val end
+            return tostring(state_val) ~= tostring(value)
         end
         if not num_state or not num_val then return false end
         if op == "<" then return num_state < num_val end
@@ -547,17 +574,28 @@ end
 --- Rewrite legacy predicate-key names inside [if:...] openers.
 -- Walks each opener's predicate via tokeniseExpression, rewrites the KEY
 -- portion of each atom (the leading [%w_]+ run before any operator), leaves
--- values untouched. Boolean operators (and/or/not/parens) pass through.
+-- literal values untouched but rewrites any @ref RHS via the same alias map.
+-- Handles =, !=, <, > operators; Boolean operators (and/or/not/parens) pass
+-- through unchanged.
 local function rewriteConditionalKeys(s)
     return (s:gsub("%[if:([^%]]-)%]", function(pred)
         local toks = tokeniseExpression(pred)
         local out = {}
         for _i, tok in ipairs(toks) do
             if tok.kind == "atom" then
-                -- atom = "key", "key=value", "key<value", "key>value" (same
-                -- shape as evaluateCondition parses). Split on first operator.
-                local key, op, rest = tok.value:match("^([%w_]+)([=<>])(.*)$")
+                -- atom = "key", "key=value", "key!=value", "key<value",
+                -- "key>value". Try != first (two-char), then single-char ops.
+                local key, op, rest = tok.value:match("^([%w_]+)(!=)(.*)$")
+                if not key then
+                    key, op, rest = tok.value:match("^([%w_]+)([=<>])(.*)$")
+                end
                 if key and op then
+                    -- Rewrite @key references on the RHS too.
+                    if rest:sub(1, 1) == "@" then
+                        local ref_key = rest:sub(2)
+                        local new_ref = STATE_ALIAS[ref_key] or ref_key
+                        rest = "@" .. new_ref
+                    end
                     local new_key = STATE_ALIAS[key] or key
                     table.insert(out, new_key .. op .. rest)
                 else
