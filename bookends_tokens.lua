@@ -212,6 +212,48 @@ function Tokens.getChapterTitlesByDepth(ui, pageno)
     return out
 end
 
+--- Parse an index specifier string into a filter function.
+-- The filter function accepts an item count and returns a set of 1-based indices to keep.
+-- Supported specifiers:
+--   "3"       → single item at index 3
+--   "1...3"   → items 1 through 3 inclusive
+--   "...3"    → items 1 through 3 (shorthand)
+--   "2..."    → items 2 through end
+--   "1,3,5"   → specific items by index
+-- Returns nil for invalid specifiers.
+local function parseIndexSpec(spec)
+    -- Comma-separated explicit list: "1,3,5"
+    if spec:find(",") then
+        local indices = {}
+        for num in spec:gmatch("(%d+)") do
+            local n = tonumber(num)
+            if n and n > 0 then indices[n] = true end
+        end
+        if not next(indices) then return nil end
+        return function(_count) return indices end
+    end
+    -- Range with "...": "1...3", "...3", "2..."
+    local s, e = spec:match("^(%d*)%.%.%.(%d*)$")
+    if s ~= nil then
+        local start = s ~= "" and tonumber(s) or 1
+        local stop  = e ~= "" and tonumber(e) or nil  -- nil = through end
+        if start < 1 then start = 1 end
+        return function(count)
+            local indices = {}
+            local last = stop or count
+            if last > count then last = count end
+            for i = start, last do indices[i] = true end
+            return indices
+        end
+    end
+    -- Plain number: "3" → single item at index 3
+    local n = tonumber(spec)
+    if n and n > 0 then
+        return function(_count) return { [n] = true } end
+    end
+    return nil
+end
+
 --- Parse a comparison value, handling HH:MM time format as minutes since midnight.
 local function parseNumericValue(val)
     local h, m = val:match("^(%d+):(%d+)$")
@@ -265,6 +307,21 @@ local function evaluateCondition(cond_str, state)
         -- Try numeric comparison (supports HH:MM → minutes)
         local num_state = tonumber(state_val)
         local num_val = parseNumericValue(tostring(value))
+        -- When the state value isn't numeric but the comparison value is,
+        -- count newline-separated items so list-like fields (e.g. author)
+        -- support [if:author>1] to test how many entries are present.
+        if not num_state and num_val then
+            local sv = tostring(state_val)
+            if sv:find("\n") then
+                local count = 1
+                for _ in sv:gmatch("\n") do count = count + 1 end
+                num_state = count
+            elseif sv ~= "" then
+                num_state = 1
+            else
+                num_state = 0
+            end
+        end
         if op == "=" then
             if num_state and num_val then return num_state == num_val end
             return tostring(state_val) == tostring(value)
@@ -686,7 +743,10 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     --   %bar{v10}           auto width, 10px tall
     --   %bar{100v10}        100px wide, 10px tall
     --   %<text-token>{N}    pixel-width cap
+    --   %<text-token>{<spec>i}   index filter for list tokens
+    --   %<text-token>{<spec>iN}  index filter + pixel-width cap
     local token_limits = {}  -- { ["%author"] = { [1] = 200 }, ... }
+    local token_index_limits = {}  -- { ["%author"] = { [1] = <filter_fn> } }
     local bar_limit_w = nil
     local bar_limit_h = nil
 
@@ -716,6 +776,27 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
             local formatted = os.date(content) or ""
             if saved_locale then os.setlocale(saved_locale, "time") end
             return formatted
+        end
+        -- Index filter: {<spec>i} or {<spec>i<px>}
+        -- <spec> is parsed by parseIndexSpec (e.g. 1, 2...4, ...3, 1,3,5)
+        local spec_str, px_str = content:match("^([%d,%.]+)i(%d*)$")
+        if spec_str then
+            local key = "%" .. name
+            local filter = parseIndexSpec(spec_str)
+            if filter then
+                if not token_index_limits[key] then
+                    token_index_limits[key] = {}
+                end
+                table.insert(token_index_limits[key], filter)
+            end
+            if px_str ~= "" then
+                local px = tonumber(px_str)
+                if px and px > 0 then
+                    if not token_limits[key] then token_limits[key] = {} end
+                    table.insert(token_limits[key], px)
+                end
+            end
+            return "%" .. name
         end
         -- Default: pixel-width cap (digits only).
         local n = content:match("^(%d+)$")
@@ -787,6 +868,21 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         end)
         r = r:gsub("%%chap_title_(%d)", function(depth)
             return "[ch." .. depth .. "]"
+        end)
+        -- Handle {<spec>i<px>} and {<spec>i} before plain {N}
+        r = r:gsub("%%([%a_][%w_]*){([%d,%.]+)i(%d+)}", function(token, spec, px)
+            local label = preview[token]
+            if label then
+                return "{" .. label:sub(2, -2) .. "[" .. spec .. "]<=" .. px .. "}"
+            end
+            return "%" .. token .. "{" .. spec .. "i" .. px .. "}"
+        end)
+        r = r:gsub("%%([%a_][%w_]*){([%d,%.]+)i}", function(token, spec)
+            local label = preview[token]
+            if label then
+                return "{" .. label:sub(2, -2) .. "[" .. spec .. "]}"
+            end
+            return "%" .. token .. "{" .. spec .. "i}"
         end)
         -- Legacy %C1/2/3 already rewritten to %chap_title_1/2/3 by the
         -- alias pass at the top of expand().
@@ -1342,15 +1438,36 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         local val = replace[ident]
         if val == nil then return "%" .. ident end  -- unknown, leave as-is
         has_token = true
+        -- Apply index filter: select specific newline-separated items
+        local key = "%" .. ident
+        if token_index_limits[key] then
+            token_occurrence[key] = (token_occurrence[key] or 0) + 1
+            local filter = token_index_limits[key][token_occurrence[key]]
+            if filter and val:find("\n") then
+                local all_items = {}
+                for item in val:gmatch("([^\n]+)") do
+                    table.insert(all_items, item)
+                end
+                local keep = filter(#all_items)
+                local filtered = {}
+                for i, item in ipairs(all_items) do
+                    if keep[i] then
+                        table.insert(filtered, item)
+                    end
+                end
+                val = table.concat(filtered, "\n")
+            end
+        end
         if (val ~= "" and val ~= "0") or always_content[ident] then
             all_empty = false
         end
         -- Wrap with markers if this occurrence has a pixel limit.
         -- Apply markers per-line so they don't span newlines (the
         -- renderer splits on \n before processing markers).
-        local key = "%" .. ident
         if token_limits[key] then
-            token_occurrence[key] = (token_occurrence[key] or 0) + 1
+            if not token_index_limits[key] then
+                token_occurrence[key] = (token_occurrence[key] or 0) + 1
+            end
             local px = token_limits[key][token_occurrence[key]]
             if px then
                 if val:find("\n") then

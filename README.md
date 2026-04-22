@@ -217,7 +217,7 @@ Comparison operators: `=` (equals), `!=` (not equals), `<` (less than), `>` (gre
 | `day` | Mon–Sun | Day of week |
 | `invert` | yes / no | Page-turn direction flipped |
 | `title` | string | Book title (matches `%title`) — test with `[if:not title]` or `[if:title=…]` |
-| `author` | string | Author (matches `%author`) |
+| `author` | string / count | Author (matches `%author`) — numeric comparisons (`>`, `<`, `=`) count authors: `[if:author>1]` is true for multi-author books |
 | `series` | string | Series, e.g. `"Foo #2"` (matches `%series`) — empty when not in a series |
 | `chap_title` | string | Current chapter title (matches `%chap_title`) |
 | `chap_title_1` | string | Chapter title at depth 1 (matches `%chap_title_1`) |
@@ -302,6 +302,7 @@ Tags override the line's per-line style. If a line is set to Bold, `[i]text[/i]`
 
 - **Auto-hide** — Lines where all tokens resolve to empty or zero are automatically hidden
 - **Token width limits** — Append `{N}` to any token to cap its width at N pixels: `%chap_title{200} - %chap_read/%chap_pages` truncates the chapter title with ellipsis if it exceeds 200 pixels. Works with `%bar{400}` to set a fixed bar width instead of auto-fill.
+- **Index filter** — For tokens that can contain multiple values (e.g. `%author` with multiple authors), append `{<spec>i}` to select which items to show. Supports several formats: `%author{2i}` second author, `%author{1...3i}` authors 1 through 3, `%author{...3i}` shorthand for 1 through 3, `%author{2...i}` second author through end, `%author{1,3,5i}` specific authors by index. Combine with a pixel limit: `%author{1i300}` shows the first author, truncated to 300 pixels.
 - **Pluralisation** — Write `%highlights highlight(s)` and it becomes `1 highlight` or `3 highlights`
 - **Odd/even pages** — Set any line to appear on all pages, odd pages only, or even pages only
 - **Auto-refresh** — Clock and other dynamic tokens update every 60 seconds
