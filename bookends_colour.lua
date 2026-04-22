@@ -45,6 +45,19 @@ local DEFAULT_HEX = {
 
 function Colour.defaultHexFor(field) return DEFAULT_HEX[field] end
 
+-- Is this hex string a real colour (r != g or g != b), as opposed to a
+-- neutral that would collapse to {grey=N}? Returns false on malformed input.
+-- Used by hasColour() to avoid false-positives when a line contains
+-- [c=#222]…[/c] — syntactically hex but visually pure grey.
+function Colour.isColourHex(hex)
+    local norm = Colour.normaliseHex(hex)
+    if not norm then return false end
+    local r = tonumber(norm:sub(2, 3), 16)
+    local g = tonumber(norm:sub(4, 5), 16)
+    local b = tonumber(norm:sub(6, 7), 16)
+    return not (r == g and g == b)
+end
+
 -- Return a normalised storage-shape table for a hex value: {grey=N} when
 -- the hex collapses to a neutral (r==g==b), otherwise {hex="#RRGGBB"}.
 -- Returns nil if the hex is malformed. Keeps presets clean on cross-device
