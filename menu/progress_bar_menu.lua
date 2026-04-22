@@ -177,6 +177,10 @@ function Bookends:buildSingleBarMenu(bar_idx, bar_cfg)
         },
         {
             text_func = function()
+                local style = bar_cfg.style or "solid"
+                if style == "radial" or style == "radial_hollow" then
+                    return _("Fill: clockwise")
+                end
                 local labels = {
                     ltr = _("Fill: left to right"),
                     rtl = _("Fill: right to left"),
@@ -187,11 +191,16 @@ function Bookends:buildSingleBarMenu(bar_idx, bar_cfg)
                 local default_dir = is_side and "ttb" or "ltr"
                 return labels[bar_cfg.direction or default_dir]
             end,
-            enabled_func = isEnabled,
+            enabled_func = function()
+                if not isEnabled() then return false end
+                local style = bar_cfg.style or "solid"
+                return style ~= "radial" and style ~= "radial_hollow"
+            end,
             keep_menu_open = true,
             callback = function(touchmenu_instance)
-                local is_side = bar_cfg.v_anchor == "left" or bar_cfg.v_anchor == "right"
                 local style = bar_cfg.style or "solid"
+                if style == "radial" or style == "radial_hollow" then return end
+                local is_side = bar_cfg.v_anchor == "left" or bar_cfg.v_anchor == "right"
                 local axis_locked = style == "metro" or style == "wavy"
                 local cycle
                 if axis_locked and is_side then

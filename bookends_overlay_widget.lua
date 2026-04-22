@@ -1180,12 +1180,7 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
                     if angle < 0 then angle = angle + two_pi end
                     local pixel_frac = angle / two_pi
 
-                    local in_fill
-                    if reverse then
-                        in_fill = pixel_frac >= (1 - fraction)
-                    else
-                        in_fill = pixel_frac <= fraction
-                    end
+                    local in_fill = pixel_frac <= fraction
                     local color = in_fill and radial_fill or radial_bg
                     if color then
                         bb:paintRect(cx + px, cy + py, 1, 1, color)
@@ -1198,7 +1193,7 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
         for _, tick in ipairs(ticks or {}) do
             local tick_frac = type(tick) == "table" and tick[1] or tick
             local tick_w = type(tick) == "table" and tick[2] or 1
-            if reverse then tick_frac = 1 - tick_frac end
+
             local tick_angle = tick_frac * two_pi - math.pi / 2  -- 0 = top (12 o'clock)
             -- Adjusted: tick at fraction 0 points up. tick_angle measured from 3 o'clock.
             -- Recalculate: from 12 o'clock clockwise
@@ -1216,12 +1211,7 @@ function OverlayWidget.paintProgressBar(bb, x, y, w, h, fraction, ticks, style, 
                 local pix_angle = math.atan2(t * cos_a, -(t * sin_a))
                 if pix_angle < 0 then pix_angle = pix_angle + two_pi end
                 local pix_frac = pix_angle / two_pi
-                local in_fill
-                if reverse then
-                    in_fill = pix_frac >= (1 - fraction)
-                else
-                    in_fill = pix_frac <= fraction
-                end
+                local in_fill = pix_frac <= fraction
                 local tick_color
                 if invert_read_ticks ~= false and in_fill then
                     tick_color = resolveColor(custom_invert, Blitbuffer.COLOR_WHITE)
