@@ -236,6 +236,9 @@ msgstr "Marca de cruz"
 msgid "Current page number"
 msgstr "Número de página actual"
 
+msgid "Current time (24h, same as %time_24h)"
+msgstr "Hora actual (24h, igual que %time_24h)"
+
 msgid "Custom presets"
 msgstr "Presets personalizados"
 
@@ -376,6 +379,9 @@ msgstr "Tamaño de fuente de línea"
 
 msgid "Fraction slash"
 msgstr "Barra de fracción"
+
+msgid "Free disk space"
+msgstr "Espacio libre en disco"
 
 msgid "Frontlight brightness"
 msgstr "Brillo de luz frontal"
@@ -566,9 +572,6 @@ msgstr "Barras de progreso"
 msgid "RAM used %"
 msgstr "RAM usada %"
 
-msgid "Reading"
-msgstr "Leyendo"
-
 msgid "Reading speed (pages/hour)"
 msgstr "Velocidad de lectura (pág/hora)"
 
@@ -605,14 +608,23 @@ msgstr "Guardar"
 msgid "Section sign"
 msgstr "Signo de sección"
 
+msgid "Series name only"
+msgstr "Solo nombre de la serie"
+
+msgid "Series number only"
+msgstr "Solo número de la serie"
+
+msgid "Series with index (combined)"
+msgstr "Serie con índice (combinado)"
+
 msgid "Select font"
 msgstr "Seleccionar fuente"
 
 msgid "Separators"
 msgstr "Separadores"
 
-msgid "Series with index"
-msgstr "Serie con índice"
+msgid "Session / reading"
+msgstr "Sesión / lectura"
 
 msgid "Session pages read"
 msgstr "Páginas leídas en sesión"
@@ -952,20 +964,20 @@ msgstr "Explora los presets que otros han compartido, previsualízalos en tu pro
 msgid "by"
 msgstr "por"
 
-msgid "chapter — current chapter number"
-msgstr "chapter — número del capítulo actual"
+msgid "chap_count — total chapter count"
+msgstr "chap_count — número total de capítulos"
 
-msgid "chapter_pct — 0 to 100 (chapter progress)"
-msgstr "chapter_pct — 0 a 100 (progreso del capítulo)"
+msgid "chap_num — current chapter number"
+msgstr "chap_num — número del capítulo actual"
 
-msgid "chapter_title — current chapter title"
-msgstr "chapter_title — título del capítulo actual"
+msgid "chap_pct — 0 to 100 (chapter progress)"
+msgstr "chap_pct — 0 a 100 (progreso del capítulo)"
 
-msgid "chapter_title_1/2/3 — title at depth 1/2/3"
-msgstr "chapter_title_1/2/3 — título en el nivel 1/2/3"
+msgid "chap_title — current chapter title"
+msgstr "chap_title — título del capítulo actual"
 
-msgid "chapters — total chapter count"
-msgstr "chapters — número total de capítulos"
+msgid "chap_title_1/2/3 — title at depth 1/2/3"
+msgstr "chap_title_1/2/3 — título en el nivel 1/2/3"
 
 msgid "Chapter title at depth 1"
 msgstr "Título de capítulo de nivel 1"
@@ -1014,6 +1026,9 @@ msgstr "Flecha curva de retorno"
 
 msgid "Custom colors and tick marks"
 msgstr "Colores y marcas personalizadas"
+
+msgid "Custom date/time format (strftime spec)"
+msgstr "Formato de fecha/hora personalizado (strftime spec)"
 
 msgid "Custom fonts in this preset:"
 msgstr "Fuentes personalizadas en este preset:"
