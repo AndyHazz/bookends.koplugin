@@ -51,6 +51,80 @@ test("smoke: Tokens module loads", function()
 end)
 
 -- ============================================================================
+-- Legacy token rewrite (TOKEN_ALIAS)
+-- ============================================================================
+test("rewrite: %A → %author", function()
+    eq(Tokens._rewriteLegacyTokens("%A"), "%author")
+end)
+
+test("rewrite: %J → %chap_count", function()
+    eq(Tokens._rewriteLegacyTokens("%J"), "%chap_count")
+end)
+
+test("rewrite: %C1 → %chap_title_1", function()
+    eq(Tokens._rewriteLegacyTokens("%C1"), "%chap_title_1")
+end)
+
+test("rewrite: %C2 → %chap_title_2", function()
+    eq(Tokens._rewriteLegacyTokens("%C2"), "%chap_title_2")
+end)
+
+test("rewrite preserves braces: %A{200} → %author{200}", function()
+    eq(Tokens._rewriteLegacyTokens("%A{200}"), "%author{200}")
+end)
+
+test("rewrite preserves braces: %C1{300} → %chap_title_1{300}", function()
+    eq(Tokens._rewriteLegacyTokens("%C1{300}"), "%chap_title_1{300}")
+end)
+
+test("rewrite idempotent: %author unchanged", function()
+    eq(Tokens._rewriteLegacyTokens("%author"), "%author")
+end)
+
+test("rewrite idempotent: %chap_title_1 unchanged", function()
+    eq(Tokens._rewriteLegacyTokens("%chap_title_1"), "%chap_title_1")
+end)
+
+test("rewrite mixed: '%A — %title' → '%author — %title'", function()
+    eq(Tokens._rewriteLegacyTokens("%A — %title"), "%author — %title")
+end)
+
+test("rewrite leaves unknown tokens alone: %zzz unchanged", function()
+    eq(Tokens._rewriteLegacyTokens("%zzz"), "%zzz")
+end)
+
+test("rewrite leaves literal % alone: 100%% unchanged", function()
+    -- %% in a format string is literal %; our rewrite should not touch it.
+    eq(Tokens._rewriteLegacyTokens("100%% read"), "100%% read")
+end)
+
+test("rewrite handles all legacy single-letter aliases", function()
+    local cases = {
+        {"%c", "%page_num"}, {"%t", "%page_count"}, {"%p", "%book_pct"},
+        {"%P", "%chap_pct"}, {"%g", "%chap_read"}, {"%G", "%chap_pages"},
+        {"%l", "%chap_pages_left"}, {"%L", "%pages_left"},
+        {"%j", "%chap_num"}, {"%J", "%chap_count"},
+        {"%T", "%title"}, {"%A", "%author"}, {"%S", "%series"},
+        {"%C", "%chap_title"}, {"%N", "%filename"}, {"%i", "%lang"},
+        {"%o", "%format"}, {"%q", "%highlights"}, {"%Q", "%notes"},
+        {"%x", "%bookmarks"}, {"%X", "%annotations"},
+        {"%k", "%time_12h"}, {"%K", "%time_24h"},
+        {"%d", "%date"}, {"%D", "%date_long"}, {"%n", "%date_numeric"},
+        {"%w", "%weekday"}, {"%a", "%weekday_short"},
+        {"%R", "%session_time"}, {"%s", "%session_pages"},
+        {"%r", "%speed"}, {"%E", "%book_read_time"},
+        {"%h", "%chap_time_left"}, {"%H", "%book_time_left"},
+        {"%b", "%batt"}, {"%B", "%batt_icon"},
+        {"%W", "%wifi"}, {"%V", "%invert"},
+        {"%f", "%light"}, {"%F", "%warmth"},
+        {"%m", "%mem"}, {"%M", "%ram"}, {"%v", "%disk"},
+    }
+    for _i, pair in ipairs(cases) do
+        eq(Tokens._rewriteLegacyTokens(pair[1]), pair[2], "case " .. pair[1])
+    end
+end)
+
+-- ============================================================================
 -- (More tests added by subsequent tasks.)
 -- ============================================================================
 

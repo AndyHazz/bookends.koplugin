@@ -9,6 +9,48 @@ local Tokens = {}
 -- Default false matches stock KOReader's default behaviour.
 Tokens.pages_left_includes_current = false
 
+-- Legacy token → new-name alias map. See
+-- docs/superpowers/specs/2026-04-23-v5-token-system-design.md for full rationale.
+-- Single-letter keys only; %C1/%C2/%C3 handled via pattern in rewriteLegacyTokens.
+local TOKEN_ALIAS = {
+    A = "author", T = "title", S = "series", C = "chap_title",
+    J = "chap_count", j = "chap_num",
+    p = "book_pct", P = "chap_pct",
+    c = "page_num", t = "page_count", L = "pages_left", l = "chap_pages_left",
+    g = "chap_read", G = "chap_pages",
+    k = "time_12h", K = "time_24h",
+    d = "date", D = "date_long", n = "date_numeric",
+    w = "weekday", a = "weekday_short",
+    R = "session_time", s = "session_pages",
+    r = "speed", E = "book_read_time",
+    h = "chap_time_left", H = "book_time_left",
+    b = "batt", B = "batt_icon",
+    W = "wifi", V = "invert",
+    f = "light", F = "warmth",
+    m = "mem", M = "ram", v = "disk",
+    N = "filename", i = "lang", o = "format",
+    q = "highlights", Q = "notes", x = "bookmarks", X = "annotations",
+}
+
+--- Rewrite legacy single-letter tokens (%A, %J, %C1, ...) to their v5 names.
+-- Single-pass greedy-identifier match: %author captures "author" (length > 1,
+-- untouched); %A captures "A" (length 1, in TOKEN_ALIAS, rewritten); %C1 is
+-- matched separately via the ^C(%d)$ sub-pattern. Any {...} following a token
+-- is preserved verbatim — this function does not touch braces.
+-- Idempotent: applying twice gives the same result.
+local function rewriteLegacyTokens(format_str)
+    return (format_str:gsub("%%([%a_][%w_]*)", function(ident)
+        if #ident == 1 and TOKEN_ALIAS[ident] then
+            return "%" .. TOKEN_ALIAS[ident]
+        end
+        local depth = ident:match("^C(%d)$")
+        if depth then
+            return "%chap_title_" .. depth
+        end
+        return nil  -- keep as-is
+    end))
+end
+
 -- Map KOReader UI language to a system locale for localized date strings.
 -- Caches per language to avoid repeated locale probing.
 local _date_locale_cache = {} -- lang -> locale string or false
@@ -1130,5 +1172,6 @@ end
 Tokens._processConditionals = processConditionals
 Tokens._evaluateCondition   = evaluateCondition
 Tokens._evaluateExpression  = evaluateExpression
+Tokens._rewriteLegacyTokens = rewriteLegacyTokens
 
 return Tokens
