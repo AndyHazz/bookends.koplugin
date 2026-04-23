@@ -999,8 +999,8 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     local title = ""
     local authors = ""
     local series = ""
-    local series_name = ""   -- Task 10 will populate from doc_props
-    local series_num = ""    -- Task 10 will populate from doc_props
+    local series_name = ""
+    local series_num = ""
     local book_language = ""
     if needs("title", "author", "series", "series_name", "series_num", "lang") then
         local doc_props = ui.doc_props or {}
@@ -1008,8 +1008,10 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         if not ok then props = {} end
         title = doc_props.display_title or props.title or ""
         authors = doc_props.authors or props.authors or ""
-        series = doc_props.series or props.series or ""
+        series_name = doc_props.series or props.series or ""
         local series_index = doc_props.series_index or props.series_index
+        series_num = series_index and tostring(series_index) or ""
+        series = series_name
         if series ~= "" and series_index then
             series = series .. " #" .. series_index
         end

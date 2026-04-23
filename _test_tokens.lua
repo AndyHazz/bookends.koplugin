@@ -439,5 +439,29 @@ test("mixed legacy + new: '%A — %title' → 'Isaac Asimov — Foundation'", fu
     eq(r, "Isaac Asimov — Foundation")
 end)
 
+-- ============================================================================
+-- series split: %series, %series_name, %series_num
+-- ============================================================================
+test("series: %series unchanged (combined 'Foundation #1')", function()
+    local r = Tokens.expand("%series", stubUiForExpand(), nil, nil, false, 2, nil)
+    eq(r, "Foundation #1")
+end)
+
+test("series: %series_name alone gives 'Foundation'", function()
+    local r = Tokens.expand("%series_name", stubUiForExpand(), nil, nil, false, 2, nil)
+    eq(r, "Foundation")
+end)
+
+test("series: %series_num alone gives '1'", function()
+    local r = Tokens.expand("%series_num", stubUiForExpand(), nil, nil, false, 2, nil)
+    eq(r, "1")
+end)
+
+test("series: custom layout '%series_name, book %series_num'", function()
+    local r = Tokens.expand("%series_name, book %series_num",
+        stubUiForExpand(), nil, nil, false, 2, nil)
+    eq(r, "Foundation, book 1")
+end)
+
 io.write(string.format("\n%d passed, %d failed\n", pass, fail))
 os.exit(fail == 0 and 0 or 1)
