@@ -6,6 +6,7 @@ local Config = require("bookends_config")
 local Device = require("device")
 local Font = require("ui/font")
 local InputDialog = require("ui/widget/inputdialog")
+local Tokens = require("bookends_tokens")
 local UIManager = require("ui/uimanager")
 local Utils = require("bookends_utils")
 local util = require("util")
@@ -42,7 +43,7 @@ function LineEditor.attach(Bookends)
 
         local pos_settings = self.positions[pos.key]
 
-        local current_text = pos_settings.lines[line_idx] or ""
+        local current_text = Tokens.canonicaliseLegacy(pos_settings.lines[line_idx] or "")
 
         -- Per-line style state
         pos_settings.line_style = pos_settings.line_style or {}
@@ -317,6 +318,7 @@ function LineEditor.attach(Bookends)
                 {
                     text = _("Cancel"),
                     callback = function()
+                        self._live_edit_mode = nil
                         self.positions[pos.key] = util.tableDeepCopy(original_settings)
                         self:savePositionSetting(pos.key)
                         UIManager:close(format_dialog)
@@ -349,6 +351,7 @@ function LineEditor.attach(Bookends)
                     text = _("Save"),
                     is_enter_default = true,
                     callback = function()
+                        self._live_edit_mode = nil
                         local new_text = format_dialog:getInputText()
                         if new_text == "" then
                             table.remove(pos_settings.lines, line_idx)
@@ -382,6 +385,7 @@ function LineEditor.attach(Bookends)
         local input_text_height = measure:getLineHeight() * 2
         measure:free(true)
 
+        self._live_edit_mode = true
         format_dialog = InputDialog:new{
             title = pos.label .. " \xE2\x80\x94 " .. _("Line") .. " " .. line_idx,
             input = current_text,

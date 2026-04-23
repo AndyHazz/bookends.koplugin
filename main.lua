@@ -1225,7 +1225,8 @@ function Bookends:_paintToInner(bb, x, y)
                 for j, line in ipairs(visible_lines) do
                     local result, is_empty, line_bar = Tokens.expand(line, self.ui, session_elapsed, session_pages,
                         nil, self.settings:readSetting("tick_width_multiplier", self.DEFAULT_TICK_WIDTH_MULTIPLIER),
-                        symbol_color, paint_ctx)
+                        symbol_color, paint_ctx,
+                        { legacy_literal = self._live_edit_mode or false })
                     if not is_empty then
                         table.insert(expanded_lines, result)
                         table.insert(final_indices, visible_indices[j])
