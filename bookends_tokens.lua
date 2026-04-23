@@ -1077,11 +1077,20 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         if (val ~= "" and val ~= "0") or always_content[token] then
             all_empty = false
         end
-        -- Wrap with markers if this occurrence has a pixel limit
+        -- Wrap with markers if this occurrence has a pixel limit.
+        -- Apply markers per-line so they don't span newlines (the
+        -- renderer splits on \n before processing markers).
         if token_limits[token] then
             token_occurrence[token] = (token_occurrence[token] or 0) + 1
             local px = token_limits[token][token_occurrence[token]]
             if px then
+                if val:find("\n") then
+                    local wrapped = {}
+                    for line in val:gmatch("([^\n]+)") do
+                        table.insert(wrapped, "\x01" .. tostring(px) .. "\x02" .. line .. "\x03")
+                    end
+                    return table.concat(wrapped, "\n")
+                end
                 -- \x01 N \x02 value \x03
                 return "\x01" .. tostring(px) .. "\x02" .. val .. "\x03"
             end
