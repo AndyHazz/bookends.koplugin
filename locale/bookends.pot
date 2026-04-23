@@ -363,7 +363,13 @@ msgstr ""
 msgid "Current page number"
 msgstr ""
 
+msgid "Current time (24h, same as %time_24h)"
+msgstr ""
+
 msgid "Cursive"
+msgstr ""
+
+msgid "Custom date/time format (strftime spec)"
 msgstr ""
 
 msgid "Curved back arrow"
@@ -574,6 +580,9 @@ msgid "Font..."
 msgstr ""
 
 msgid "Fonts"
+msgstr ""
+
+msgid "Free disk space"
 msgstr ""
 
 msgid "Fraction slash"
@@ -933,9 +942,6 @@ msgstr ""
 msgid "Read color (% black)"
 msgstr ""
 
-msgid "Reading"
-msgstr ""
-
 msgid "Reading speed (pages/hour)"
 msgstr ""
 
@@ -1020,7 +1026,13 @@ msgstr ""
 msgid "Separators"
 msgstr ""
 
-msgid "Series with index"
+msgid "Series name only"
+msgstr ""
+
+msgid "Series number only"
+msgstr ""
+
+msgid "Series with index (combined)"
 msgstr ""
 
 msgid "Serif"
@@ -1033,6 +1045,9 @@ msgid "Session reading time"
 msgstr ""
 
 msgid "Session time, hidden at start"
+msgstr ""
+
+msgid "Session / reading"
 msgstr ""
 
 msgid "Set"
@@ -1338,19 +1353,19 @@ msgstr ""
 msgid "chapter"
 msgstr ""
 
-msgid "chapter — current chapter number"
+msgid "chap_count — total chapter count"
 msgstr ""
 
-msgid "chapter_pct — 0 to 100 (chapter progress)"
+msgid "chap_num — current chapter number"
 msgstr ""
 
-msgid "chapter_title — current chapter title"
+msgid "chap_pct — 0 to 100 (chapter progress)"
 msgstr ""
 
-msgid "chapter_title_1/2/3 — title at depth 1/2/3"
+msgid "chap_title — current chapter title"
 msgstr ""
 
-msgid "chapters — total chapter count"
+msgid "chap_title_1/2/3 — title at depth 1/2/3"
 msgstr ""
 
 msgid "charging — yes / no"
