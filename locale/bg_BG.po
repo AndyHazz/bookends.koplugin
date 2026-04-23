@@ -1411,32 +1411,35 @@ msgid "wifi — on / off"
 msgstr "wifi — вкл. / изкл."
 
 msgid "Applies to Nerd Font and FontAwesome icon glyphs (the Private Use Area range, e.g. %W, %B, %k). Unicode symbols in the regular text ranges (like the hourglass \"⌛\") follow the text color instead.\n\nAn inline [c=#RRGGBB]…[/c] tag in a line overrides the icon color for any glyphs inside it."
-msgstr ""
+msgstr "Важи за икони в Nerd Font и FontAwesome (диапазон Private Use Area, напр. %W, %B, %k). Unicode символи в обикновените текстови диапазони (като пясъчния часовник \"⌛\") следват цвета на текста.\n\nВградена етикета [c=#RRGGBB]…[/c] в ред замества цвета на икони за всички глифи вътре."
 
 msgid "Diameter"
-msgstr ""
+msgstr "Диаметър"
 
 msgid "Fill: clockwise"
-msgstr ""
+msgstr "Запълване: по часовниковата стрелка"
 
 msgid "Hex:"
-msgstr ""
+msgstr "Hex:"
 
 msgid "Hollow"
-msgstr ""
+msgstr "Кух"
 
 msgid "Icon color"
-msgstr ""
+msgstr "Цвят на икона"
 
 msgid "Invalid hex colour (use #RGB or #RRGGBB)"
-msgstr ""
+msgstr "Невалиден хекс цвят (използвайте #RGB или #RRGGBB)"
 
 msgid "Pick a color"
-msgstr ""
+msgstr "Избор на цвят"
 
 msgid "Radial"
-msgstr ""
+msgstr "Радиален"
 
 msgid "Radial hollow"
-msgstr ""
+msgstr "Радиален кух"
+
+msgid "Set"
+msgstr "Задаване"
 
