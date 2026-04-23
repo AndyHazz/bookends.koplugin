@@ -125,6 +125,59 @@ test("rewrite handles all legacy single-letter aliases", function()
 end)
 
 -- ============================================================================
+-- STATE_ALIAS: legacy predicate names resolve to new state keys
+-- ============================================================================
+test("state alias: [if:percent>50] reads state.book_pct (pre-v4.1 gallery compat)", function()
+    local r = Tokens._processConditionals(
+        "[if:percent>50]past[/if]", { book_pct = 75 })
+    eq(r, "past")
+end)
+
+test("state alias: [if:pages>20] reads state.session_pages (pre-v4.1 gallery compat)", function()
+    local r = Tokens._processConditionals(
+        "[if:pages>20]long[/if]", { session_pages = 30 })
+    eq(r, "long")
+end)
+
+test("state alias: [if:percent<=50] reads state.book_pct with < operator", function()
+    local r = Tokens._processConditionals(
+        "[if:percent<50]early[/if]", { book_pct = 25 })
+    eq(r, "early")
+end)
+
+test("state alias: [if:pages<=10] false with < operator", function()
+    local r = Tokens._processConditionals(
+        "[if:pages<10]short[/if]", { session_pages = 20 })
+    eq(r, "")
+end)
+
+test("state alias: new key [if:book_pct>50] direct access still works", function()
+    local r = Tokens._processConditionals(
+        "[if:book_pct>50]past[/if]", { book_pct = 75 })
+    eq(r, "past")
+end)
+
+test("state alias: new key [if:session_pages>20] direct access still works", function()
+    local r = Tokens._processConditionals(
+        "[if:session_pages>20]long[/if]", { session_pages = 30 })
+    eq(r, "long")
+end)
+
+test("state alias: [if:title=chapters] preserves literal value 'chapters'", function()
+    -- The key 'title' isn't aliased; value 'chapters' must NOT be rewritten.
+    local r = Tokens._processConditionals(
+        "[if:title=chapters]match[/if]", { title = "chapters" })
+    eq(r, "match")
+end)
+
+test("state alias: combined legacy predicates with aliased keys", function()
+    local r = Tokens._processConditionals(
+        "[if:percent>50 and pages>20]both[/if]",
+        { book_pct = 75, session_pages = 30 })
+    eq(r, "both")
+end)
+
+-- ============================================================================
 -- (More tests added by subsequent tasks.)
 -- ============================================================================
 

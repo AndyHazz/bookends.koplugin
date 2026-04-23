@@ -51,6 +51,16 @@ local function rewriteLegacyTokens(format_str)
     end))
 end
 
+-- Legacy conditional-state key → v5 state key. Resolved at lookup time inside
+-- evaluateCondition (not as a string rewrite on predicates, so literal string
+-- values like [if:title=chapters] keep their value unchanged).
+-- For now, only pre-v4.1 gallery names are aliased; v4.1 names will be added
+-- in Task 8 when buildConditionState is updated to populate the v5 key names.
+local STATE_ALIAS = {
+    percent         = "book_pct",      -- pre-v4.1 gallery compat
+    pages           = "session_pages", -- pre-v4.1 gallery compat
+}
+
 -- Map KOReader UI language to a system locale for localized date strings.
 -- Caches per language to avoid repeated locale probing.
 local _date_locale_cache = {} -- lang -> locale string or false
@@ -165,7 +175,15 @@ local function evaluateCondition(cond_str, state)
     -- Key pattern allows underscores ([%w_]+) to support names like book_pct.
     local key, op, value = cond_str:match("^([%w_]+)([=<>])(.+)$")
     if key and op and value then
+        -- Try the key as-is first; fall back to aliased key if not found.
+        -- This allows both old and new state-key names to work simultaneously.
         local state_val = state[key]
+        if state_val == nil then
+            local aliased_key = STATE_ALIAS[key]
+            if aliased_key then
+                state_val = state[aliased_key]
+            end
+        end
         if state_val == nil then return false end
         -- Try numeric comparison (supports HH:MM → minutes)
         local num_state = tonumber(state_val)
@@ -182,7 +200,14 @@ local function evaluateCondition(cond_str, state)
     -- No operator: truthy check
     local key_only = cond_str:match("^([%w_]+)$")
     if key_only then
+        -- Try the key as-is first; fall back to aliased key if not found.
         local v = state[key_only]
+        if v == nil then
+            local aliased_key = STATE_ALIAS[key_only]
+            if aliased_key then
+                v = state[aliased_key]
+            end
+        end
         return v ~= nil and v ~= "" and v ~= false and v ~= 0 and v ~= "off" and v ~= "no"
     end
     return false
