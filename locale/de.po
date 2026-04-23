@@ -241,6 +241,12 @@ msgstr "Kreuzzeichen"
 msgid "Current page number"
 msgstr "Aktuelle Seitenzahl"
 
+msgid "Current time (24h, same as %time_24h)"
+msgstr "Aktuelle Uhrzeit (24 h, wie %time_24h)"
+
+msgid "Custom date/time format (strftime spec)"
+msgstr "Benutzerdefiniertes Datums-/Zeitformat (strftime-Angabe)"
+
 msgid "Custom presets"
 msgstr "Eigene Voreinstellungen"
 
@@ -381,6 +387,9 @@ msgstr "Schriftgröße für Zeile"
 
 msgid "Fraction slash"
 msgstr "Bruchschrägstrich"
+
+msgid "Free disk space"
+msgstr "Freier Speicherplatz"
 
 msgid "Frontlight brightness"
 msgstr "Frontlicht-Helligkeit"
@@ -565,9 +574,6 @@ msgstr "Fortschrittsbalken"
 msgid "RAM used %"
 msgstr "RAM belegt %"
 
-msgid "Reading"
-msgstr "Lesen"
-
 msgid "Reading speed (pages/hour)"
 msgstr "Lesegeschwindigkeit (Seiten/Stunde)"
 
@@ -604,14 +610,23 @@ msgstr "Speichern"
 msgid "Section sign"
 msgstr "Paragrafzeichen"
 
+msgid "Series name only"
+msgstr "Nur Reihenname"
+
+msgid "Series number only"
+msgstr "Nur Reihennummer"
+
+msgid "Series with index (combined)"
+msgstr "Reihe mit Index (kombiniert)"
+
 msgid "Select font"
 msgstr "Schrift auswählen"
 
 msgid "Separators"
 msgstr "Trennzeichen"
 
-msgid "Series with index"
-msgstr "Reihe mit Index"
+msgid "Session / reading"
+msgstr "Sitzung / Lesen"
 
 msgid "Session pages read"
 msgstr "Sitzung gelesene Seiten"
@@ -899,6 +914,21 @@ msgstr "Balkendicke"
 
 msgid "batt — 0 to 100"
 msgstr "batt — 0 bis 100"
+
+msgid "chap_count — total chapter count"
+msgstr "chap_count — Gesamtanzahl der Kapitel"
+
+msgid "chap_num — current chapter number"
+msgstr "chap_num — aktuelle Kapitelnummer"
+
+msgid "chap_pct — 0 to 100 (chapter progress)"
+msgstr "chap_pct — 0 bis 100 (Kapitelfortschritt)"
+
+msgid "chap_title — current chapter title"
+msgstr "chap_title — aktueller Kapiteltitel"
+
+msgid "chap_title_1/2/3 — title at depth 1/2/3"
+msgstr "chap_title_1/2/3 — Titel auf Ebene 1/2/3"
 
 msgid "Bolt icon when charging"
 msgstr "Blitzsymbol beim Laden"
@@ -1460,21 +1490,6 @@ msgstr "Bücher, die nicht zu einer Reihe gehören"
 
 msgid "Books with many chapters"
 msgstr "Bücher mit vielen Kapiteln"
-
-msgid "chapter — current chapter number"
-msgstr "chapter — aktuelle Kapitelnummer"
-
-msgid "chapter_pct — 0 to 100 (chapter progress)"
-msgstr "chapter_pct — 0 bis 100 (Kapitelfortschritt)"
-
-msgid "chapter_title — current chapter title"
-msgstr "chapter_title — aktueller Kapiteltitel"
-
-msgid "chapter_title_1/2/3 — title at depth 1/2/3"
-msgstr "chapter_title_1/2/3 — Titel auf Ebene 1/2/3"
-
-msgid "chapters — total chapter count"
-msgstr "chapters — Gesamtanzahl der Kapitel"
 
 msgid "Compare:  =  <  >     Boolean:  and  or  not  ( )"
 msgstr "Vergleich:  =  <  >     Boole'sch:  and  or  not  ( )"

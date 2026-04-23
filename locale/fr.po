@@ -179,21 +179,6 @@ msgstr "Ch."
 msgid "chapter"
 msgstr "chapitre"
 
-msgid "chapter — current chapter number"
-msgstr "chapter — numéro du chapitre actuel"
-
-msgid "chapter_pct — 0 to 100 (chapter progress)"
-msgstr "chapter_pct — 0 à 100 (progression du chapitre)"
-
-msgid "chapter_title — current chapter title"
-msgstr "chapter_title — titre du chapitre actuel"
-
-msgid "chapter_title_1/2/3 — title at depth 1/2/3"
-msgstr "chapter_title_1/2/3 — titre au niveau 1/2/3"
-
-msgid "chapters — total chapter count"
-msgstr "chapters — nombre total de chapitres"
-
 msgid "Chapter"
 msgstr "Chapitre"
 
@@ -599,9 +584,6 @@ msgstr "Barres de progression"
 msgid "RAM used %"
 msgstr "RAM utilisée %"
 
-msgid "Reading"
-msgstr "Lecture"
-
 msgid "Reading speed (pages/hour)"
 msgstr "Vitesse de lecture (pages/heure)"
 
@@ -643,9 +625,6 @@ msgstr "Choisir une police"
 
 msgid "Separators"
 msgstr "Séparateurs"
-
-msgid "Series with index"
-msgstr "Série avec index"
 
 msgid "Session pages read"
 msgstr "Pages lues cette session"
@@ -988,6 +967,21 @@ msgstr "Titre de chapitre (plus profond)"
 msgid "charging — yes / no"
 msgstr "charging — oui / non"
 
+msgid "chap_count — total chapter count"
+msgstr "chap_count — nombre total de chapitres"
+
+msgid "chap_num — current chapter number"
+msgstr "chap_num — numéro du chapitre actuel"
+
+msgid "chap_pct — 0 to 100 (chapter progress)"
+msgstr "chap_pct — 0 à 100 (progression du chapitre)"
+
+msgid "chap_title — current chapter title"
+msgstr "chap_title — titre du chapitre actuel"
+
+msgid "chap_title_1/2/3 — title at depth 1/2/3"
+msgstr "chap_title_1/2/3 — titre au niveau 1/2/3"
+
 msgid "Circle arrow left"
 msgstr "Flèche circulaire gauche"
 
@@ -1017,6 +1011,9 @@ msgstr "Flèche courbée en arrière"
 
 msgid "Custom colors and tick marks"
 msgstr "Couleurs et graduations personnalisées"
+
+msgid "Custom date/time format (strftime spec)"
+msgstr "Format de date/heure personnalisé (spec strftime)"
 
 msgid "Custom fonts in this preset:"
 msgstr "Polices personnalisées dans ce preset :"
@@ -1098,6 +1095,9 @@ msgstr "Taille de police"
 
 msgid "format — EPUB / PDF / CBZ etc."
 msgstr "format — EPUB / PDF / CBZ etc."
+
+msgid "Free disk space"
+msgstr "Espace disque libre"
 
 msgid "Frontlight status"
 msgstr "État de l'éclairage frontal"
@@ -1324,11 +1324,23 @@ msgstr "series — série + index, vide si indépendant"
 msgid "Serif"
 msgstr "Serif"
 
+msgid "Series name only"
+msgstr "Nom de série uniquement"
+
+msgid "Series number only"
+msgstr "Numéro de série uniquement"
+
+msgid "Series with index (combined)"
+msgstr "Série avec index (combiné)"
+
 msgid "session — minutes reading"
 msgstr "session — minutes de lecture"
 
 msgid "session_pages — pages read this session"
 msgstr "session_pages — pages lues cette session"
+
+msgid "Session / reading"
+msgstr "Session / lecture"
 
 msgid "Session time, hidden at start"
 msgstr "Durée de la session, masquée au départ"
@@ -1479,6 +1491,9 @@ msgstr "Un envoi pour « %1 » est déjà en attente de relecture. Attendez sa r
 
 msgid "Current chapter number"
 msgstr "Numéro du chapitre actuel"
+
+msgid "Current time (24h, same as %time_24h)"
+msgstr "Heure actuelle (24h, identique à %time_24h)"
 
 msgid "Imported from your earlier Bookends settings"
 msgstr "Importé depuis vos précédents paramètres Bookends"
