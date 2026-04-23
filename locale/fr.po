@@ -578,6 +578,12 @@ msgstr "Préréglages"
 msgid "Prioritise left/right and truncate long center text"
 msgstr "Priorité gauche/droite, tronquer le texte central long"
 
+msgid "+ New blank preset"
+msgstr "+ Nouveau preset vierge"
+
+msgid "+ New preset"
+msgstr "+ Nouveau préréglage"
+
 msgid "+ Progress bar"
 msgstr "+ Barre de progression"
 
@@ -1291,11 +1297,17 @@ msgstr "Renommer…"
 msgid "Rename preset"
 msgstr "Renommer le preset"
 
+msgid "Rename this preset…"
+msgstr "Renommer ce preset…"
+
 msgid "Reset custom to defaults"
 msgstr "Réinitialiser les personnalisations aux valeurs par défaut"
 
 msgid "Sans-serif"
 msgstr "Sans-serif"
+
+msgid "Save current as new preset…"
+msgstr "Enregistrer le courant comme nouveau preset…"
 
 msgid "Save as new preset…"
 msgstr "Enregistrer comme nouveau preset…"
@@ -1428,6 +1440,9 @@ msgstr "Espace de troncature"
 
 msgid "UI font"
 msgstr "Police de l'interface"
+
+msgid "Untitled"
+msgstr "Sans titre"
 
 msgid "Update available"
 msgstr "Mise à jour disponible"

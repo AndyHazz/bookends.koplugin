@@ -21,6 +21,7 @@ local LeftContainer = require("ui/widget/container/leftcontainer")
 local LineWidget = require("ui/widget/linewidget")
 local Notification = require("ui/widget/notification")
 local PresetManager = require("preset_manager")
+local PresetNaming = require("preset_naming")
 local Size = require("ui/size")
 local TextBoxWidget = require("ui/widget/textboxwidget")
 local TextWidget = require("ui/widget/textwidget")
@@ -85,6 +86,19 @@ local _ = require("bookends_i18n").gettext
 local T = require("ffi/util").template
 
 local Screen = Device.screen
+
+local function buildBlankPreset(name)
+    return {
+        name = name,
+        description = "",
+        author = "",
+        positions = {
+            tl = { lines = {} }, tc = { lines = {} }, tr = { lines = {} },
+            bl = { lines = {} }, bc = { lines = {} }, br = { lines = {} },
+        },
+        progress_bars = {},
+    }
+end
 
 local PresetManagerModal = {}
 
@@ -534,28 +548,39 @@ function PresetManagerModal._renderLocalRows(self, vg, width, row_height, font_s
     -- don't need to displace a card.
     local presets = self.bookends:readPresetFiles()
     local ROWS_PER_PAGE = 5
-    local total_pages = math.max(1, math.ceil(#presets / ROWS_PER_PAGE))
+    local TILE_SLOT = 1  -- the synthetic "+ New preset" tile after the last card
+    local total_items = #presets + TILE_SLOT
+    local total_pages = math.max(1, math.ceil(total_items / ROWS_PER_PAGE))
     if self.page > total_pages then self.page = total_pages end
     local start_idx = (self.page - 1) * ROWS_PER_PAGE + 1
-    local end_idx = math.min(start_idx + ROWS_PER_PAGE - 1, #presets)
+    local end_idx = math.min(start_idx + ROWS_PER_PAGE - 1, total_items)
     for i = start_idx, end_idx do
-        local p = presets[i]
-        local has_colour = PresetManager.hasColour(p.preset) or false
-        PresetManagerModal._addRow(self, vg, width, row_height, font_size, baseline, left_pad, {
-            display = p.name,
-            description = p.preset.description,
-            author = p.preset.author,
-            star_key = p.filename,
-            has_colour = has_colour,
-            on_preview = function() self.previewLocal(p) end,
-            on_hold = function() PresetManagerModal._openOverflow(self, p) end,
-            is_selected = (selected_key == p.filename),
-        })
+        if i <= #presets then
+            local p = presets[i]
+            local has_colour = PresetManager.hasColour(p.preset) or false
+            PresetManagerModal._addRow(self, vg, width, row_height, font_size, baseline, left_pad, {
+                display = p.name,
+                description = p.preset.description,
+                author = p.preset.author,
+                star_key = p.filename,
+                has_colour = has_colour,
+                on_preview = function() self.previewLocal(p) end,
+                on_hold = function() PresetManagerModal._openOverflow(self, p) end,
+                is_selected = (selected_key == p.filename),
+            })
+        else
+            -- Synthetic tile: final slot on the last page.
+            PresetManagerModal._addRow(self, vg, width, row_height, font_size, baseline, left_pad, {
+                display = _("+ New blank preset"),
+                is_virtual = true,
+                on_preview = function() PresetManagerModal._createBlankPreset(self) end,
+            })
+        end
     end
 
     -- Pad out short pages so the modal height stays stable regardless of
-    -- how many real presets fit the page. Each pad slot equals one card
-    -- plus the 8px gap _addRow adds after every rendered card.
+    -- how many items fit the page. Each pad slot equals one card plus the
+    -- 8px gap _addRow adds after every rendered card.
     local rendered = end_idx - start_idx + 1
     local card_slot_h = Screen:scaleBySize(64) + Screen:scaleBySize(8)
     for _ = rendered + 1, ROWS_PER_PAGE do
@@ -642,11 +667,11 @@ function PresetManagerModal._addRow(self, vg, width, row_height, font_size, base
     local title_widget = TextWidget:new{
         text = opts.display,
         face = Font:getFace("cfont", 18),
-        bold = opts.is_selected or false,
+        bold = opts.is_selected or opts.is_virtual or false,
         forced_height = title_h,
         forced_baseline = title_bl,
         max_width = content_w,
-        fgcolor = Blitbuffer.COLOR_BLACK,
+        fgcolor = opts.is_virtual and Blitbuffer.COLOR_DARK_GRAY or Blitbuffer.COLOR_BLACK,
     }
     local title_line = HorizontalGroup:new{ title_widget }
     if not opts.is_virtual and opts.author and opts.author ~= "" then
@@ -678,15 +703,26 @@ function PresetManagerModal._addRow(self, vg, width, row_height, font_size, base
         }
     end
 
-    local content_group = VerticalGroup:new{ align = "left", title_line }
+    local content_group = VerticalGroup:new{
+        align = opts.is_virtual and "center" or "left",
+        title_line,
+    }
     if description_widget then
         table.insert(content_group, description_widget)
     end
 
-    local content_row = LeftContainer:new{
-        dimen = Geom:new{ w = content_w, h = card_height - 2 * Size.border.thin },
-        content_group,
-    }
+    local content_row
+    if opts.is_virtual then
+        content_row = CenterContainer:new{
+            dimen = Geom:new{ w = content_w, h = card_height - 2 * Size.border.thin },
+            content_group,
+        }
+    else
+        content_row = LeftContainer:new{
+            dimen = Geom:new{ w = content_w, h = card_height - 2 * Size.border.thin },
+            content_group,
+        }
+    end
 
     -- Card frame: thin border always; background fills light-gray when selected.
     local card_bg = opts.is_selected
@@ -814,6 +850,57 @@ function PresetManagerModal._saveCurrentAsPreset(self)
     }
     UIManager:show(dlg)
     dlg:onShowKeyboard()
+end
+
+--- Open the reader menu and drop the user straight into the Bookends
+--- submenu, so the full tab bar is visible but they land on
+--- "Preset (Untitled)" with empty position items ready to populate.
+--- Done by opening the reader menu (which builds its own TouchMenu),
+--- finding the "bookends" item inside its tab_item_table, and firing
+--- onMenuSelect on it — same as a user tap.
+local function openBookendsMenu(bookends)
+    local reader_menu = bookends.ui and bookends.ui.menu
+    if not reader_menu then return end
+    reader_menu:onShowMenu()
+    local container = reader_menu.menu_container
+    local main_menu = container and container[1]
+    if not main_menu or not main_menu.tab_item_table then return end
+    for tab_idx, tab in ipairs(main_menu.tab_item_table) do
+        for _, item in ipairs(tab) do
+            if item.id == "bookends" then
+                -- Mirror the user-tap flow: bar.switchToTab invokes the icon
+                -- widget's callback, which updates the bar's selected-icon
+                -- visual AND calls menu:switchMenuTab. Calling switchMenuTab
+                -- directly only updates menu state, leaving the bar showing
+                -- whichever tab the user last had open.
+                if main_menu.cur_tab ~= tab_idx then
+                    main_menu.bar:switchToTab(tab_idx)
+                end
+                main_menu:onMenuSelect(item)
+                return
+            end
+        end
+    end
+end
+
+function PresetManagerModal._createBlankPreset(self)
+    local presets = self.bookends:readPresetFiles()
+    local name = PresetNaming.nextUntitledName(presets, _("Untitled"))
+    local preset = buildBlankPreset(name)
+    local filename = self.bookends:writePresetFile(name, preset)
+    -- applyPresetFile loads the blank into memory before setting it active,
+    -- so the debounced autosave can't clobber the on-disk file with the
+    -- previously-active preset's data.
+    self.bookends:applyPresetFile(filename)
+    -- Close the modal and drop the user straight into the Bookends menu, so
+    -- they see "Preset (Untitled)" + the empty position items ready to edit.
+    -- nextTick lets the modal's close flush before the TouchMenu shows.
+    if self.modal_widget then
+        UIManager:close(self.modal_widget)
+        self.modal_widget = nil
+    end
+    local bookends = self.bookends
+    UIManager:nextTick(function() openBookendsMenu(bookends) end)
 end
 
 function PresetManagerModal._openOverflow(self, preset_entry)

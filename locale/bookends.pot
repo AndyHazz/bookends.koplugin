@@ -18,6 +18,12 @@ msgstr ""
 msgid "'%1' already exists in your library.\n\nReplacing it will overwrite your local copy with the current gallery version. Any local edits will be lost.\n\nInstall under a new name to keep both."
 msgstr ""
 
+msgid "+ New blank preset"
+msgstr ""
+
+msgid "+ New preset"
+msgstr ""
+
 msgid "+ Progress bar"
 msgstr ""
 
@@ -954,6 +960,9 @@ msgstr ""
 msgid "Rename preset"
 msgstr ""
 
+msgid "Rename this preset…"
+msgstr ""
+
 msgid "Rename…"
 msgstr ""
 
@@ -991,6 +1000,9 @@ msgid "Save"
 msgstr ""
 
 msgid "Save as new preset…"
+msgstr ""
+
+msgid "Save current as new preset…"
 msgstr ""
 
 msgid "Save preset"
@@ -1234,6 +1246,9 @@ msgid "Unread color"
 msgstr ""
 
 msgid "Unread color (% black)"
+msgstr ""
+
+msgid "Untitled"
 msgstr ""
 
 msgid "Update and restart"

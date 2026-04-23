@@ -551,6 +551,12 @@ msgstr "Preset"
 msgid "Prioritise left/right and truncate long center text"
 msgstr "Priorità sinistra/destra, tronca testo centrale lungo"
 
+msgid "+ New blank preset"
+msgstr "+ Nuovo preset vuoto"
+
+msgid "+ New preset"
+msgstr "+ Nuovo preset"
+
 msgid "+ Progress bar"
 msgstr "+ Barra avanzamento"
 
@@ -1288,6 +1294,9 @@ msgstr "Rinomina…"
 msgid "Rename preset"
 msgstr "Rinomina preset"
 
+msgid "Rename this preset…"
+msgstr "Rinomina questo preset…"
+
 msgid "Reset custom to defaults"
 msgstr "Ripristina personalizzati ai valori predefiniti"
 
@@ -1296,6 +1305,9 @@ msgstr "Sans-serif"
 
 msgid "Save as new preset…"
 msgstr "Salva come nuovo preset…"
+
+msgid "Save current as new preset…"
+msgstr "Salva corrente come nuovo preset…"
 
 msgid "Saved preset:"
 msgstr "Preset salvato:"
@@ -1431,6 +1443,9 @@ msgstr "Aggiornamento disponibile"
 
 msgid "Use custom colors"
 msgstr "Usa colori personalizzati"
+
+msgid "Untitled"
+msgstr "Senza titolo"
 
 msgid "Warning when battery below 20%"
 msgstr "Avviso quando la batteria è sotto il 20%"

@@ -7,6 +7,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "+ New blank preset"
+msgstr "+ Neue leere Voreinstellung"
+
+msgid "+ New preset"
+msgstr "+ Neue Voreinstellung"
 
 msgid "12-hour clock"
 msgstr "12-Stunden-Uhr"
@@ -749,6 +754,9 @@ msgstr "Kürzungsabstand zwischen Bereichen (px)"
 msgid "Type"
 msgstr "Typ"
 
+msgid "Untitled"
+msgstr "Unbenannt"
+
 msgid "Update and restart"
 msgstr "Aktualisieren und neu starten"
 
@@ -1252,6 +1260,9 @@ msgstr "Umbenennen"
 msgid "Rename…"
 msgstr "Umbenennen…"
 
+msgid "Rename this preset…"
+msgstr "Diese Voreinstellung umbenennen…"
+
 msgid "Rename preset"
 msgstr "Preset umbenennen"
 
@@ -1263,6 +1274,9 @@ msgstr "Sans-serif"
 
 msgid "Save as new preset…"
 msgstr "Als neues Preset speichern…"
+
+msgid "Save current as new preset…"
+msgstr "Aktuelle Einstellung als neues Preset speichern…"
 
 msgid "Saved preset:"
 msgstr "Gespeichertes Preset:"

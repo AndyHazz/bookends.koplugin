@@ -545,6 +545,12 @@ msgstr "Predefinições"
 msgid "Prioritise left/right and truncate long center text"
 msgstr "Priorizar esq./dir. e truncar centro longo"
 
+msgid "+ New blank preset"
+msgstr "+ Novo preset em branco"
+
+msgid "+ New preset"
+msgstr "+ Novo preset"
+
 msgid "+ Progress bar"
 msgstr "+ Barra de progresso"
 
@@ -835,6 +841,10 @@ msgstr "Cor não lida"
 
 msgid "Unread color (% black)"
 msgstr "Cor não lida (% preto)"
+
+msgid "Untitled"
+msgstr "Sem título"
+
 msgid "%1, line %2"
 msgstr "%1, linha %2"
 
@@ -1292,6 +1302,9 @@ msgstr "Renomear…"
 msgid "Rename preset"
 msgstr "Renomear preset"
 
+msgid "Rename this preset…"
+msgstr "Renomear este preset…"
+
 msgid "Reset custom to defaults"
 msgstr "Restaurar personalizado ao padrão"
 
@@ -1300,6 +1313,9 @@ msgstr "Sem serifa"
 
 msgid "Save as new preset…"
 msgstr "Salvar como novo preset…"
+
+msgid "Save current as new preset…"
+msgstr "Salvar atual como novo preset…"
 
 msgid "Saved preset:"
 msgstr "Preset salvo:"

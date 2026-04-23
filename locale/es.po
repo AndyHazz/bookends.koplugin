@@ -545,6 +545,12 @@ msgstr "Presets"
 msgid "Prioritise left/right and truncate long center text"
 msgstr "Priorizar izq/der y truncar texto central largo"
 
+msgid "+ New blank preset"
+msgstr "+ Nuevo preset en blanco"
+
+msgid "+ New preset"
+msgstr "+ Nuevo preset"
+
 msgid "+ Progress bar"
 msgstr "+ Barra de progreso"
 
@@ -754,6 +760,9 @@ msgstr "Actualizar y reiniciar"
 
 msgid "Update available!"
 msgstr "¡Actualización disponible!"
+
+msgid "Untitled"
+msgstr "Sin título"
 
 msgid "Version: "
 msgstr "Versión: "
@@ -1288,6 +1297,9 @@ msgstr "Renombrar…"
 msgid "Rename preset"
 msgstr "Renombrar preset"
 
+msgid "Rename this preset…"
+msgstr "Renombrar este preset…"
+
 msgid "Reset custom to defaults"
 msgstr "Restablecer personalizados a valores predeterminados"
 
@@ -1296,6 +1308,9 @@ msgstr "Sans-serif"
 
 msgid "Save as new preset…"
 msgstr "Guardar como nuevo preset…"
+
+msgid "Save current as new preset…"
+msgstr "Guardar actual como nuevo preset…"
 
 msgid "Saved preset:"
 msgstr "Preset guardado:"

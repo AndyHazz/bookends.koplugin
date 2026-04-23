@@ -27,6 +27,12 @@ msgstr "+ Лента за напредъка"
 msgid "- Progress bar"
 msgstr "- Лента за напредъка"
 
+msgid "+ New blank preset"
+msgstr "+ Нова празна настройка"
+
+msgid "+ New preset"
+msgstr "+ Нова предварителна настройка"
+
 msgid "1 preset in the approval queue"
 msgstr "1 предварителна настройка в опашката за одобрение"
 
@@ -927,6 +933,9 @@ msgstr "Преименуване"
 msgid "Rename preset"
 msgstr "Преименуване на настройката"
 
+msgid "Rename this preset…"
+msgstr "Преименуване на тази настройка…"
+
 msgid "Rename…"
 msgstr "Преименуване…"
 
@@ -965,6 +974,9 @@ msgstr "Запазване"
 
 msgid "Save as new preset…"
 msgstr "Запазване като нова настройка…"
+
+msgid "Save current as new preset…"
+msgstr "Запазване на текущата като нова настройка…"
 
 msgid "Save preset"
 msgstr "Запазване на настройката"
@@ -1214,6 +1226,9 @@ msgstr "Цвят на непрочетената част"
 
 msgid "Unread color (% black)"
 msgstr "Цвят на непрочетената част (% черно)"
+
+msgid "Untitled"
+msgstr "Без заглавие"
 
 msgid "Update and restart"
 msgstr "Актуализиране и рестартиране"

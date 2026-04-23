@@ -52,6 +52,51 @@ local function saveAsNewPresetDialog(self)
     dlg:onShowKeyboard()
 end
 
+--- Rename the currently-active preset. Prompts for a new name and uses
+--- renamePresetFile to rewrite the on-disk file; cycle entries and the
+--- active-preset setting are patched to point at the new filename. When
+--- invoked from a TouchMenu, `touchmenu_instance:updateItems()` is called
+--- after a successful rename so the item's text_func re-renders with the
+--- new name without having to close and re-open the menu.
+local function renameActivePresetDialog(self, touchmenu_instance)
+    local InputDialog = require("ui/widget/inputdialog")
+    local UIManager = require("ui/uimanager")
+    local old_filename = self:getActivePresetFilename()
+    if not old_filename then return end
+    local old_name = self:getActivePresetName() or ""
+    local dlg
+    dlg = InputDialog:new{
+        title = _("Rename preset"),
+        input = old_name,
+        buttons = {{
+            { text = _("Cancel"), id = "close",
+              callback = function() UIManager:close(dlg) end },
+            { text = _("Rename"), is_enter_default = true, callback = function()
+                local new_name = dlg:getInputText()
+                local renamed = false
+                if new_name and new_name ~= "" and new_name ~= old_name then
+                    local new_filename = self:renamePresetFile(old_filename, new_name)
+                    if new_filename then
+                        local cycle = self.settings:readSetting("preset_cycle") or {}
+                        for i, f in ipairs(cycle) do
+                            if f == old_filename then cycle[i] = new_filename; break end
+                        end
+                        self.settings:saveSetting("preset_cycle", cycle)
+                        self:setActivePresetFilename(new_filename)
+                        renamed = true
+                    end
+                end
+                UIManager:close(dlg)
+                if renamed and touchmenu_instance then
+                    touchmenu_instance:updateItems()
+                end
+            end },
+        }},
+    }
+    UIManager:show(dlg)
+    dlg:onShowKeyboard()
+end
+
 function Bookends:buildMainMenu()
     local menu = {}
 
@@ -136,9 +181,11 @@ function Bookends:buildMainMenu()
         separator = true,
     })
 
-    -- Save as new preset — reads as "save everything above as a preset".
+    -- Save current as new preset — duplicates the live overlay state into a
+    -- separate preset file. Keep the text explicit about the duplication so
+    -- users don't confuse it with saving in-progress edits (those autosave).
     table.insert(menu, {
-        text = _("Save as new preset…"),
+        text = _("Save current as new preset…"),
         enabled_func = function() return self.enabled end,
         keep_menu_open = false,
         callback = function(touchmenu_instance)
@@ -363,6 +410,26 @@ function Bookends:buildPresetAdjustmentsMenu()
             end
             local PresetManagerModal = require("menu/preset_manager_modal")
             PresetManagerModal.show(self)
+        end,
+        separator = true,
+    })
+
+    -- Rename row doubles as the "which preset am I editing?" indicator —
+    -- its text shows the active preset name in parens, and tapping opens
+    -- an inline rename dialog that updates the row on success (menu stays
+    -- open). Uses the same (name) convention as the parent "Preset (…)"
+    -- label so the two read as a matched pair.
+    table.insert(items, {
+        text_func = function()
+            local name = self:getActivePresetName() or ""
+            return _("Rename") .. " (" .. name .. ")…"
+        end,
+        enabled_func = function()
+            return self.enabled and self:getActivePresetFilename() ~= nil
+        end,
+        keep_menu_open = true,
+        callback = function(touchmenu_instance)
+            renameActivePresetDialog(self, touchmenu_instance)
         end,
         separator = true,
     })
