@@ -424,17 +424,17 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
                 local chapter_end = next_chapter or (doc:getPageCount() + 1)
                 local total = chapter_end - chapter_start
                 if total > 1 then
-                    state.chapter_pct = math.floor((pageno - chapter_start) / (total - 1) * 100)
+                    state.chap_pct = math.floor((pageno - chapter_start) / (total - 1) * 100)
                 elseif total > 0 then
-                    state.chapter_pct = 100
+                    state.chap_pct = 100
                 end
             end
         end
 
-        -- Chapter number / total count — same source as %j / %J tokens.
+        -- Chapter number / total count — match %chap_num / %chap_count tokens.
         local titles = Tokens.getChapterTitlesByDepth(ui, pageno)
-        if titles.chapter_num  > 0 then state.chapter  = titles.chapter_num  end
-        if titles.chapter_count > 0 then state.chapters = titles.chapter_count end
+        if titles.chapter_num  > 0 then state.chap_num   = titles.chapter_num  end
+        if titles.chapter_count > 0 then state.chap_count = titles.chapter_count end
 
         -- Odd/even page
         state.page = (pageno % 2 == 1) and "odd" or "even"
@@ -461,13 +461,13 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
         state.series = series
     end
 
-    -- Chapter titles (reuses the helper already called for state.chapter/chapters)
+    -- Chapter titles (reuses the helper already called for state.chap_num/chap_count)
     if pageno and ui.toc then
         local titles = Tokens.getChapterTitlesByDepth(ui, pageno)
-        state.chapter_title   = titles.chapter_title or ""
-        state.chapter_title_1 = titles.chapter_titles_by_depth[1] or ""
-        state.chapter_title_2 = titles.chapter_titles_by_depth[2] or ""
-        state.chapter_title_3 = titles.chapter_titles_by_depth[3] or ""
+        state.chap_title   = titles.chapter_title or ""
+        state.chap_title_1 = titles.chapter_titles_by_depth[1] or ""
+        state.chap_title_2 = titles.chapter_titles_by_depth[2] or ""
+        state.chap_title_3 = titles.chapter_titles_by_depth[3] or ""
     end
 
     -- Time (minutes since midnight, compare with HH:MM or raw minutes)

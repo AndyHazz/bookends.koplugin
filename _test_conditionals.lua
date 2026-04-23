@@ -254,7 +254,7 @@ test("rename: book_pct is the new name for book percent", function()
 end)
 
 test("rename: chapter_pct is the new name for chapter percent", function()
-    eq(P("[if:chapter_pct>50]x[/if]", {chapter_pct=75}), "x")
+    eq(P("[if:chapter_pct>50]x[/if]", {chap_pct=75}), "x")
 end)
 
 test("rename: session_pages is the new name for session pages read", function()
@@ -272,20 +272,20 @@ end)
 -- ----------------------------------------------------------------------------
 
 test("new: chapters>20 true", function()
-    eq(P("[if:chapters>20]long[/if]", {chapters=25}), "long")
+    eq(P("[if:chapters>20]long[/if]", {chap_count=25}), "long")
 end)
 
 test("new: chapters>20 false", function()
-    eq(P("[if:chapters>20]long[/if]", {chapters=15}), "")
+    eq(P("[if:chapters>20]long[/if]", {chap_count=15}), "")
 end)
 
 test("new: chapter=1 (first chapter)", function()
-    eq(P("[if:chapter=1]intro[/if]", {chapter=1}), "intro")
-    eq(P("[if:chapter=1]intro[/if]", {chapter=2}), "")
+    eq(P("[if:chapter=1]intro[/if]", {chap_num=1}), "intro")
+    eq(P("[if:chapter=1]intro[/if]", {chap_num=2}), "")
 end)
 
 test("new: combined chapter + chapters", function()
-    eq(P("[if:chapter=1 and chapters>20]long intro[/if]", {chapter=1, chapters=25}), "long intro")
+    eq(P("[if:chapter=1 and chapters>20]long intro[/if]", {chap_num=1, chap_count=25}), "long intro")
 end)
 
 -- ----------------------------------------------------------------------------
@@ -293,11 +293,11 @@ end)
 -- ----------------------------------------------------------------------------
 
 test("string: chapter_title_2 empty falls to else", function()
-    eq(P("[if:chapter_title_2]%C2[else]%C1[/if]", {chapter_title_2=""}), "%C1")
+    eq(P("[if:chapter_title_2]%C2[else]%C1[/if]", {chap_title_2=""}), "%C1")
 end)
 
 test("string: chapter_title_2 present takes if", function()
-    eq(P("[if:chapter_title_2]%C2[else]%C1[/if]", {chapter_title_2="Subchapter A"}), "%C2")
+    eq(P("[if:chapter_title_2]%C2[else]%C1[/if]", {chap_title_2="Subchapter A"}), "%C2")
 end)
 
 test("string: not series → standalone", function()
@@ -313,14 +313,19 @@ end)
 test("string: combined with operators", function()
     eq(
         P("[if:series and not chapter_title_2]%S \xC2\xB7 %C1[/if]",
-          {series="Foo #2", chapter_title_2=""}),
+          {series="Foo #2", chap_title_2=""}),
         "%S \xC2\xB7 %C1"
     )
     eq(
         P("[if:series and not chapter_title_2]%S \xC2\xB7 %C1[/if]",
-          {series="Foo #2", chapter_title_2="Sub"}),
+          {series="Foo #2", chap_title_2="Sub"}),
         ""
     )
+end)
+
+test("alias: new state key name + legacy predicate name both resolve", function()
+    local r = Tokens._processConditionals("[if:chapters>5]many[/if]", { chap_count = 10 })
+    eq(r, "many")
 end)
 
 io.stdout:write(string.format("%d passed, %d failed\n", pass, fail))

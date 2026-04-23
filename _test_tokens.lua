@@ -313,5 +313,71 @@ end)
 -- (More tests added by subsequent tasks.)
 -- ============================================================================
 
+-- ============================================================================
+-- buildConditionState populates v5 state key names
+-- ============================================================================
+-- Build a minimal stub ui/doc/toc that exercises the chapter-state path.
+local function stubUi(page, total_pages, chapter_data)
+    return {
+        view = { state = { page = page } },
+        document = {
+            file = "/book.epub",
+            getPageCount = function() return total_pages end,
+            hasHiddenFlows = function() return false end,
+            getProps = function() return {} end,
+        },
+        toc = chapter_data and {
+            toc = chapter_data.toc,
+            getTocTitleByPage = function(_, _) return chapter_data.title or "" end,
+            getTocTicks = function() return {} end,
+            getMaxDepth = function() return 1 end,
+            getPreviousChapter = function(_, _) return chapter_data.start end,
+            getNextChapter = function(_, _) return chapter_data.next end,
+            isChapterStart = function(_, _) return false end,
+            getChapterPagesDone = function(_, _) return 0 end,
+            getChapterPageCount = function(_, _) return 1 end,
+            getChapterPagesLeft = function(_, _) return 0 end,
+        } or nil,
+        doc_props = {},
+        annotation = nil,
+        statistics = nil,
+    }
+end
+
+test("state: chap_num / chap_count populated (new v5 names)", function()
+    local ui = stubUi(5, 100, {
+        toc = { { page = 1, depth = 1, title = "C1" }, { page = 10, depth = 1, title = "C2" } },
+        start = 1, next = 10,
+    })
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.chap_num, 1, "chap_num")
+    eq(s.chap_count, 2, "chap_count")
+    eq(s.chapter_num, nil, "chapter_num should not be set on new-vocab state")
+    eq(s.chapters, nil, "chapters should not be set on new-vocab state")
+end)
+
+test("state: chap_title / chap_title_1 populated (new v5 names)", function()
+    local ui = stubUi(5, 100, {
+        toc = { { page = 1, depth = 1, title = "C1" } },
+        title = "C1",
+        start = 1, next = 10,
+    })
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.chap_title, "C1")
+    eq(s.chap_title_1, "C1")
+    eq(s.chapter_title, nil, "chapter_title should not be set on new-vocab state")
+end)
+
+test("state: legacy [if:chapters>0] still evaluates via STATE_ALIAS", function()
+    local ui = stubUi(5, 100, {
+        toc = { { page = 1, depth = 1, title = "C1" }, { page = 10, depth = 1, title = "C2" } },
+        start = 1, next = 10,
+    })
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    -- Even though state.chapters is nil, the predicate still works via alias.
+    local r = Tokens._processConditionals("[if:chapters>0]ok[/if]", s)
+    eq(r, "ok")
+end)
+
 io.write(string.format("\n%d passed, %d failed\n", pass, fail))
 os.exit(fail == 0 and 0 or 1)
