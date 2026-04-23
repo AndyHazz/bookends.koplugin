@@ -1484,32 +1484,32 @@ msgid "Total chapter count"
 msgstr "Número total de capítulos"
 
 msgid "Applies to Nerd Font and FontAwesome icon glyphs (the Private Use Area range, e.g. %W, %B, %k). Unicode symbols in the regular text ranges (like the hourglass \"⌛\") follow the text color instead.\n\nAn inline [c=#RRGGBB]…[/c] tag in a line overrides the icon color for any glyphs inside it."
-msgstr ""
+msgstr "Se aplica a glifos de iconos Nerd Font y FontAwesome (el rango de uso privado, p. ej. %W, %B, %k). Los símbolos Unicode en rangos de texto regular (como el reloj de arena \"⌛\") siguen el color del texto.\n\nUna etiqueta [c=#RRGGBB]…[/c] dentro de una línea anula el color del icono para cualquier glifo en su interior."
 
 msgid "Diameter"
-msgstr ""
+msgstr "Diámetro"
 
 msgid "Fill: clockwise"
-msgstr ""
+msgstr "Relleno: sentido de reloj"
 
 msgid "Hex:"
-msgstr ""
+msgstr "Hex:"
 
 msgid "Hollow"
-msgstr ""
+msgstr "Hueco"
 
 msgid "Icon color"
-msgstr ""
+msgstr "Color del icono"
 
 msgid "Invalid hex colour (use #RGB or #RRGGBB)"
-msgstr ""
+msgstr "Color hex inválido (usa #RGB o #RRGGBB)"
 
 msgid "Pick a color"
-msgstr ""
+msgstr "Elige un color"
 
 msgid "Radial"
-msgstr ""
+msgstr "Radial"
 
 msgid "Radial hollow"
-msgstr ""
+msgstr "Radial hueco"
 
