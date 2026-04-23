@@ -160,6 +160,8 @@ require("menu.main_menu")(Bookends)
 require("menu.position_menu")(Bookends)
 require("menu.progress_bar_menu")(Bookends)
 require("menu.token_picker")(Bookends)
+require("bookends_colour_palette").attach(Bookends)
+require("bookends_textwidget_patch")  -- TextWidget: paint ColorRGB32 fgcolor as true colour
 
 function Bookends:init()
     -- Install custom icons (chevron.down) into KOReader's user icons dir
@@ -866,6 +868,18 @@ function Bookends:onReaderFooterVisibilityChange()
 end
 function Bookends:onSetDimensions() self:markDirty() end
 
+--- KOReader broadcasts ColorRenderingUpdate when the user toggles colour
+--- rendering in Settings → Screen (screen_color_menu_table.lua, single
+--- broadcast site).  Flush the hex cache so the next paint reconstructs
+--- Blitbuffer values in the new mode, then mark the overlay dirty so it
+--- repaints.  The defensive auto-flush in parseColorValue is a belt-and-
+--- braces fallback in case the event fires before our handler is registered
+--- or a future KOReader refactor moves the broadcast site.
+function Bookends:onColorRenderingUpdate()
+    require("bookends_colour").flushCache()
+    self:markDirty()
+end
+
 -- Repaint after system events that change token values (battery, frontlight, etc.).
 -- These events don't trigger a ReaderView repaint on their own, so we need
 -- markDirty() to request one.  Use a nextTick to avoid interrupting the
@@ -970,30 +984,22 @@ function Bookends:paintTo(bb, x, y)
     end
 end
 
---- Convert a settings-stored color value (number grey, {grey=N}, or nil) to a
---- Blitbuffer Color8 or false (fully transparent). Returns nil if not set.
+--- Convert a settings-stored color value (number, {grey=N}, {hex="#RRGGBB"},
+--- false, or nil) to a Blitbuffer colour object (or false for transparent).
+--- Delegates per-value parsing + memoisation to bookends_colour so hex → RGB
+--- and greyscale-fallback are consistent with text_color / symbol_color.
 local function resolveBarColors(bc)
-    local Blitbuffer = require("ffi/blitbuffer")
-    local function colorOrTransparent(v)
-        if not v then return nil end
-        if type(v) == "table" then
-            if v.grey then
-                if v.grey >= 0xFF then return false end
-                return Blitbuffer.Color8(v.grey)
-            end
-            return nil
-        end
-        if v >= 0xFF then return false end
-        return Blitbuffer.Color8(v)
-    end
+    local Colour = require("bookends_colour")
+    local is_color_enabled = Screen:isColorEnabled()
+    local function cv(v) return Colour.parseColorValue(v, is_color_enabled) end
     return {
-        fill = colorOrTransparent(bc.fill),
-        bg = colorOrTransparent(bc.bg),
-        track = colorOrTransparent(bc.track),
-        tick = colorOrTransparent(bc.tick),
-        border = colorOrTransparent(bc.border),
-        invert = colorOrTransparent(bc.invert),
-        metro_fill = colorOrTransparent(bc.metro_fill),
+        fill = cv(bc.fill),
+        bg = cv(bc.bg),
+        track = cv(bc.track),
+        tick = cv(bc.tick),
+        border = cv(bc.border),
+        invert = cv(bc.invert),
+        metro_fill = cv(bc.metro_fill),
         invert_read_ticks = bc.invert_read_ticks,
         tick_height_pct = bc.tick_height_pct,
         border_thickness = bc.border_thickness,
@@ -1298,6 +1304,7 @@ function Bookends:_paintToInner(bb, x, y)
             cfg.h_nudge = (pos_settings.line_h_nudge and pos_settings.line_h_nudge[i]) or 0
             cfg.uppercase = (pos_settings.line_uppercase and pos_settings.line_uppercase[i]) or false
             cfg.text_color = text_color
+            cfg.symbol_color = symbol_color
             -- Bar data (keyed by expanded line index, same order as line_configs)
             local expanded_idx = #line_configs + 1
             if bar_data[key] and bar_data[key][expanded_idx] then

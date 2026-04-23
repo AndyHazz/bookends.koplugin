@@ -20,13 +20,66 @@ local InputDialog = require("ui/widget/inputdialog")
 local LeftContainer = require("ui/widget/container/leftcontainer")
 local LineWidget = require("ui/widget/linewidget")
 local Notification = require("ui/widget/notification")
+local PresetManager = require("preset_manager")
 local Size = require("ui/size")
 local TextBoxWidget = require("ui/widget/textboxwidget")
 local TextWidget = require("ui/widget/textwidget")
 local UIManager = require("ui/uimanager")
 local VerticalGroup = require("ui/widget/verticalgroup")
 local VerticalSpan = require("ui/widget/verticalspan")
+local OverlapGroup = require("ui/widget/overlapgroup")
 local WidgetContainer = require("ui/widget/container/widgetcontainer")
+local ffi = require("ffi")
+local ColorRGB32_t = ffi.typeof("ColorRGB32")
+
+-- Tiny indicator painted on a preset card when the preset uses hex colours.
+-- Rather than a 🎨 emoji (U+1F3A8, not in cfont and too easily missing on
+-- e-readers), paint four coloured rectangles stacked horizontally with a
+-- luminance ramp dark→light. On colour screens they read as a miniature
+-- palette; on greyscale the monotonic darkness gradient reads as "this
+-- preset has colour" unambiguously (flat-grey stripes would just look like
+-- a single rectangle).
+local ColourFlag = WidgetContainer:extend{
+    side   = nil,  -- single stripe side in px (height = side, total width = side * 4)
+    dimen  = nil,
+}
+
+function ColourFlag:init()
+    local function c(r, g, b)
+        if Device.screen:isColorEnabled() then
+            return Blitbuffer.ColorRGB32(r, g, b, 0xFF)
+        else
+            return Blitbuffer.Color8(math.floor(0.299 * r + 0.587 * g + 0.114 * b + 0.5))
+        end
+    end
+    -- Luminance ramp ~23 → ~57 → ~136 → ~202 (Rec.601): even visual spacing
+    -- on greyscale, distinct hues on colour.
+    self._stripes = {
+        c(0x00, 0x00, 0xCD),   -- medium blue (lum 23 — darkest)
+        c(0xC0, 0x00, 0x00),   -- red (lum 57)
+        c(0xFF, 0x66, 0x00),   -- orange (lum 136)
+        c(0xFF, 0xD7, 0x00),   -- gold (lum 202 — lightest)
+    }
+end
+
+function ColourFlag:getSize()
+    return Geom:new{ w = self.side * 4, h = self.side }
+end
+
+function ColourFlag:paintTo(bb, x, y)
+    self.dimen = Geom:new{ x = x, y = y, w = self.side * 4, h = self.side }
+    for i = 1, 4 do
+        local sx = x + (i - 1) * self.side
+        local c = self._stripes[i]
+        if ffi.istype(ColorRGB32_t, c) then
+            bb:paintRectRGB32(sx, y, self.side, self.side, c)
+        else
+            bb:paintRect(sx, y, self.side, self.side, c)
+        end
+    end
+    -- Thin outline so the flag keeps a silhouette against the card background.
+    bb:paintBorder(x, y, self.side * 4, self.side, 1, Blitbuffer.COLOR_DARK_GRAY)
+end
 local util = require("util")
 local _ = require("bookends_i18n").gettext
 local T = require("ffi/util").template
@@ -487,11 +540,13 @@ function PresetManagerModal._renderLocalRows(self, vg, width, row_height, font_s
     local end_idx = math.min(start_idx + ROWS_PER_PAGE - 1, #presets)
     for i = start_idx, end_idx do
         local p = presets[i]
+        local has_colour = PresetManager.hasColour(p.preset) or false
         PresetManagerModal._addRow(self, vg, width, row_height, font_size, baseline, left_pad, {
             display = p.name,
             description = p.preset.description,
             author = p.preset.author,
             star_key = p.filename,
+            has_colour = has_colour,
             on_preview = function() self.previewLocal(p) end,
             on_hold = function() PresetManagerModal._openOverflow(self, p) end,
             is_selected = (selected_key == p.filename),
@@ -606,6 +661,12 @@ function PresetManagerModal._addRow(self, vg, width, row_height, font_size, base
         })
     end
 
+    -- ColourFlag is positioned in the top-right corner of the card itself
+    -- (see the OverlapGroup below the FrameContainer construction), not
+    -- inline in the title_line, so it reads as a card-level indicator and
+    -- sits flush inside the rounded border rather than bumping against
+    -- the author/title text.
+
     -- Description-only second line (author is in the title line now).
     local description_widget
     if not opts.is_virtual and opts.description and opts.description ~= "" then
@@ -644,10 +705,33 @@ function PresetManagerModal._addRow(self, vg, width, row_height, font_size, base
         content_row,
     }
 
+    -- Overlay the ColourFlag in the top-right corner of the card, flush
+    -- inside the rounded border. OverlapGroup supports an overlap_offset
+    -- field on each child that positions it at {x, y} within the group —
+    -- we compute offsets that put the flag `inset` pixels in from the
+    -- top and right edges so the rounded corner isn't visually clipped.
+    local card_w, card_h = card_frame:getSize().w, card_frame:getSize().h
+    local card_stack
+    if opts.has_colour then
+        local flag_inset = Screen:scaleBySize(6)
+        local flag_side = Screen:scaleBySize(8)
+        local flag_w = flag_side * 4
+        local flag = ColourFlag:new{ side = flag_side }
+        flag.overlap_offset = { card_w - flag_w - flag_inset, flag_inset }
+        card_stack = OverlapGroup:new{
+            dimen = Geom:new{ w = card_w, h = card_h },
+            allow_mirroring = false,
+            card_frame,
+            flag,
+        }
+    else
+        card_stack = card_frame
+    end
+
     -- Tap/hold on the card previews / opens overflow.
     local card = InputContainer:new{
-        dimen = Geom:new{ w = card_frame:getSize().w, h = card_frame:getSize().h },
-        card_frame,
+        dimen = Geom:new{ w = card_w, h = card_h },
+        card_stack,
     }
     card.ges_events = { TapSelect = { GestureRange:new{ ges = "tap", range = card.dimen } } }
     card.onTapSelect = function() opts.on_preview(); return true end
@@ -1296,6 +1380,7 @@ function PresetManagerModal._renderGalleryRows(self, vg, width, row_height, font
             display = entry.name,
             description = entry.description,
             author = entry.author,
+            has_colour = entry.has_colour or false,
             on_preview = function() PresetManagerModal._previewGallery(self, captured) end,
             is_selected = is_selected,
             installed = local_names[entry.name] == true,

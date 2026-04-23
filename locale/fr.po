@@ -440,9 +440,6 @@ msgstr "Sablier"
 msgid "Hourglass (filled)"
 msgstr "Sablier (plein)"
 
-msgid "Symbols"
-msgstr "Symboles"
-
 msgid "Infinity"
 msgstr "Infini"
 
@@ -1485,4 +1482,34 @@ msgstr "Remplacer"
 
 msgid "Total chapter count"
 msgstr "Nombre total de chapitres"
+
+msgid "Applies to Nerd Font and FontAwesome icon glyphs (the Private Use Area range, e.g. %W, %B, %k). Unicode symbols in the regular text ranges (like the hourglass \"⌛\") follow the text color instead.\n\nAn inline [c=#RRGGBB]…[/c] tag in a line overrides the icon color for any glyphs inside it."
+msgstr "S'applique aux glyphes d'icônes Nerd Font et FontAwesome (la plage Private Use Area, par exemple %W, %B, %k). Les symboles Unicode dans les plages de texte régulières (comme le sablier \"⌛\") suivent plutôt la couleur du texte.\n\nUne balise en ligne [c=#RRGGBB]…[/c] dans une ligne remplace la couleur des icônes pour tous les glyphes qu'elle contient."
+
+msgid "Diameter"
+msgstr "Diamètre"
+
+msgid "Fill: clockwise"
+msgstr "Remplissage : sens horaire"
+
+msgid "Hex:"
+msgstr "Hex :"
+
+msgid "Hollow"
+msgstr "Creux"
+
+msgid "Icon color"
+msgstr "Couleur des icônes"
+
+msgid "Invalid hex colour (use #RGB or #RRGGBB)"
+msgstr "Couleur hexadécimale invalide (utilisez #RGB ou #RRGGBB)"
+
+msgid "Pick a color"
+msgstr "Choisir une couleur"
+
+msgid "Radial"
+msgstr "Radial"
+
+msgid "Radial hollow"
+msgstr "Radial creux"
 

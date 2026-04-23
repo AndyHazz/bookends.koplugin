@@ -1,6 +1,9 @@
 --- Colour-related menus: text/symbol colours and bar colours/ticks.
 -- Attached onto the Bookends class by main.lua on plugin load.
 local _ = require("bookends_i18n").gettext
+local Device = require("device")
+local Screen = Device.screen
+local Colour = require("bookends_colour")
 
 return function(Bookends)
 
@@ -10,10 +13,50 @@ return function(Bookends)
 --- bar_colors.border_thickness as its default instead of the hard-coded 1px.
 function Bookends:_buildColorItems(bc, saveColors, is_per_bar)
     local function colorNudge(title, field, default_pct, touchmenu_instance)
-        local current = bc[field] and math.floor((0xFF - bc[field]) * 100 / 0xFF + 0.5) or default_pct
+        if Screen:isColorEnabled() then
+            -- Colour device: show palette picker. Hex-shape takes priority; if
+            -- the field still holds a legacy raw byte or {grey=N}, render
+            -- the equivalent greyscale hex so the picker opens on the
+            -- user's currently-stored value.
+            local v = bc[field]
+            local original = v  -- capture verbatim for revert
+            local current_hex
+            if type(v) == "table" and v.hex then
+                current_hex = v.hex
+            elseif type(v) == "table" and v.grey then
+                local g = string.format("%02X", v.grey)
+                current_hex = "#" .. g .. g .. g
+            elseif type(v) == "number" then
+                local g = string.format("%02X", v)
+                current_hex = "#" .. g .. g .. g
+            end
+            local default_hex = Colour.defaultHexFor(field)
+            self:showColourPicker(title, current_hex, default_hex,
+                function(new_hex)
+                    bc[field] = Colour.toStorageShape(new_hex)
+                    saveColors()
+                end,
+                function()
+                    bc[field] = nil
+                    saveColors()
+                end,
+                function()
+                    bc[field] = original  -- restore exact pre-picker shape
+                    saveColors()
+                end,
+                touchmenu_instance)
+            return
+        end
+        -- Greyscale device: existing nudge path, unchanged.
+        local v = bc[field]
+        local byte
+        if type(v) == "table" and v.grey then byte = v.grey
+        elseif type(v) == "number" then byte = v
+        end
+        local current = byte and math.floor((0xFF - byte) * 100 / 0xFF + 0.5) or default_pct
         self:showNudgeDialog(title, current, 0, 100, default_pct, "%",
             function(val)
-                bc[field] = 0xFF - math.floor(val * 0xFF / 100 + 0.5)
+                bc[field] = { grey = 0xFF - math.floor(val * 0xFF / 100 + 0.5) }
                 saveColors()
             end,
             nil, nil, nil, touchmenu_instance,
@@ -24,8 +67,15 @@ function Bookends:_buildColorItems(bc, saveColors, is_per_bar)
     end
 
     local function pctLabel(field)
-        if bc[field] then
-            local pct = math.floor((0xFF - bc[field]) * 100 / 0xFF + 0.5)
+        local v = bc[field]
+        if not v then return _("default") end
+        if type(v) == "table" and v.hex then return v.hex end
+        local byte
+        if type(v) == "table" and v.grey then byte = v.grey
+        elseif type(v) == "number" then byte = v
+        end
+        if byte then
+            local pct = math.floor((0xFF - byte) * 100 / 0xFF + 0.5)
             if pct == 0 then return _("transparent") end
             return pct .. "%"
         end
@@ -266,11 +316,59 @@ function Bookends:buildColoursMenu()
 end
 
 function Bookends:buildTextColourMenu()
-    local text_color = self.settings:readSetting("text_color")
-    local symbol_color = self.settings:readSetting("symbol_color")
+    local function textColorNudge(field, title, default_label_suffix, touchmenu_instance)
+        local stored = self.settings:readSetting(field)
+        if Screen:isColorEnabled() then
+            local original = stored  -- capture verbatim for revert
+            local current_hex
+            if stored and stored.hex then
+                current_hex = stored.hex
+            elseif stored and stored.grey then
+                local g = string.format("%02X", stored.grey)
+                current_hex = "#" .. g .. g .. g
+            end
+            self:showColourPicker(title, current_hex, Colour.defaultHexFor(field),
+                function(new_hex)
+                    self.settings:saveSetting(field, Colour.toStorageShape(new_hex))
+                    self:markDirty()
+                end,
+                function()
+                    self.settings:delSetting(field)
+                    self:markDirty()
+                end,
+                function()
+                    if original == nil then
+                        self.settings:delSetting(field)
+                    else
+                        self.settings:saveSetting(field, original)
+                    end
+                    self:markDirty()
+                end,
+                touchmenu_instance)
+            return
+        end
+        local byte = (stored and stored.grey) or nil
+        local current = byte and math.floor((0xFF - byte) * 100 / 0xFF + 0.5) or 100
+        self:showNudgeDialog(title, current, 0, 100, 100, "%",
+            function(val)
+                self.settings:saveSetting(field, { grey = 0xFF - math.floor(val * 0xFF / 100 + 0.5) })
+                self:markDirty()
+            end,
+            nil, nil, nil, touchmenu_instance,
+            function()
+                self.settings:delSetting(field)
+                self:markDirty()
+            end,
+            _("Default") .. " (" .. default_label_suffix .. ")")
+    end
 
     local function textPctLabel()
-        if text_color then
+        local text_color = self.settings:readSetting("text_color")
+        if not text_color then
+            return _("default") .. " (" .. _("book") .. ")"
+        end
+        if text_color.hex then return text_color.hex end
+        if text_color.grey then
             local pct = math.floor((0xFF - text_color.grey) * 100 / 0xFF + 0.5)
             if pct == 0 then return _("transparent") end
             return pct .. "%"
@@ -279,7 +377,12 @@ function Bookends:buildTextColourMenu()
     end
 
     local function symbolPctLabel()
-        if symbol_color then
+        local symbol_color = self.settings:readSetting("symbol_color")
+        if not symbol_color then
+            return _("default") .. " (" .. _("text") .. ")"
+        end
+        if symbol_color.hex then return symbol_color.hex end
+        if symbol_color.grey then
             local pct = math.floor((0xFF - symbol_color.grey) * 100 / 0xFF + 0.5)
             if pct == 0 then return _("transparent") end
             return pct .. "%"
@@ -294,23 +397,9 @@ function Bookends:buildTextColourMenu()
             end,
             keep_menu_open = true,
             callback = function(touchmenu_instance)
-                local current = text_color and math.floor((0xFF - text_color.grey) * 100 / 0xFF + 0.5) or 100
-                self:showNudgeDialog(_("Text color (% black)"), current, 0, 100, 100, "%",
-                    function(val)
-                        text_color = { grey = 0xFF - math.floor(val * 0xFF / 100 + 0.5) }
-                        self.settings:saveSetting("text_color", text_color)
-                        self:markDirty()
-                    end,
-                    nil, nil, nil, touchmenu_instance,
-                    function()
-                        text_color = nil
-                        self.settings:delSetting("text_color")
-                        self:markDirty()
-                    end,
-                    _("Default") .. " (" .. _("book") .. ")")
+                textColorNudge("text_color", _("Text color"), _("book"), touchmenu_instance)
             end,
             hold_callback = function(touchmenu_instance)
-                text_color = nil
                 self.settings:delSetting("text_color")
                 self:markDirty()
                 if touchmenu_instance then touchmenu_instance:updateItems() end
@@ -318,27 +407,14 @@ function Bookends:buildTextColourMenu()
         },
         {
             text_func = function()
-                return _("Symbol color") .. ": " .. symbolPctLabel()
+                return _("Icon color") .. ": " .. symbolPctLabel()
             end,
+            help_text = _("Applies to Nerd Font and FontAwesome icon glyphs (the Private Use Area range, e.g. %W, %B, %k). Unicode symbols in the regular text ranges (like the hourglass \"⌛\") follow the text color instead.\n\nAn inline [c=#RRGGBB]…[/c] tag in a line overrides the icon colour for any glyphs inside it."),
             keep_menu_open = true,
             callback = function(touchmenu_instance)
-                local current = symbol_color and math.floor((0xFF - symbol_color.grey) * 100 / 0xFF + 0.5) or 100
-                self:showNudgeDialog(_("Symbol color (% black)"), current, 0, 100, 100, "%",
-                    function(val)
-                        symbol_color = { grey = 0xFF - math.floor(val * 0xFF / 100 + 0.5) }
-                        self.settings:saveSetting("symbol_color", symbol_color)
-                        self:markDirty()
-                    end,
-                    nil, nil, nil, touchmenu_instance,
-                    function()
-                        symbol_color = nil
-                        self.settings:delSetting("symbol_color")
-                        self:markDirty()
-                    end,
-                    _("Default") .. " (" .. _("text") .. ")")
+                textColorNudge("symbol_color", _("Icon color"), _("text"), touchmenu_instance)
             end,
             hold_callback = function(touchmenu_instance)
-                symbol_color = nil
                 self.settings:delSetting("symbol_color")
                 self:markDirty()
                 if touchmenu_instance then touchmenu_instance:updateItems() end

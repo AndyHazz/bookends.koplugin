@@ -1098,12 +1098,13 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     -- These are icon font glyphs (Nerd Fonts, FontAwesome) — never regular text.
     -- Detection is by UTF-8 byte pattern: 0xEE xx xx = U+E000-U+EFFF,
     -- 0xEF [0x80-0xA3] xx = U+F000-U+F8FF.
-    if symbol_color and symbol_color.grey then
-        local pct = math.floor((0xFF - symbol_color.grey) * 100 / 0xFF + 0.5)
-        local wrap = "[c=" .. pct .. "]%1[/c]"
-        result = result:gsub("(\xEE[\x80-\xBF][\x80-\xBF])", wrap)
-        result = result:gsub("(\xEF[\x80-\xA3][\x80-\xBF])", wrap)
-    end
+    -- Icon colour for PUA glyphs is applied at parse time by the overlay
+    -- widget (see OverlayWidget.parseStyledSegments' emitPua path) — this
+    -- function no longer injects [c=…]PUA[/c] wraps, so mid-edit unclosed
+    -- user tags can't cause ghost auto-wrap tags to appear in the fallback
+    -- plain-text rendering. `symbol_color` is still accepted in the
+    -- signature for caller compatibility, but it's now ignored here.
+    local _ignored_symbol_color = symbol_color
 
     -- A line with a bar token is never considered empty
     local is_empty = has_token and all_empty and not bar_info

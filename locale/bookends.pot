@@ -2,16 +2,11 @@
 # Translation template
 msgid ""
 msgstr ""
-"Project-Id-Version: bookends
-"
-"POT-Creation-Date: 2026-04-20 07:58+0000
-"
-"MIME-Version: 1.0
-"
-"Content-Type: text/plain; charset=UTF-8
-"
-"Content-Transfer-Encoding: 8bit
-"
+"Project-Id-Version: bookends\n"
+"POT-Creation-Date: 2026-04-22 23:59+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
 
 
 msgid "%1 presets in the approval queue"
@@ -69,6 +64,9 @@ msgid "Anchor"
 msgstr ""
 
 msgid "Apply"
+msgstr ""
+
+msgid "Applies to Nerd Font and FontAwesome icon glyphs (the Private Use Area range, e.g. %W, %B, %k). Unicode symbols in the regular text ranges (like the hourglass \"⌛\") follow the text color instead.\n\nAn inline [c=#RRGGBB]…[/c] tag in a line overrides the icon color for any glyphs inside it."
 msgstr ""
 
 msgid "Arrow down"
@@ -416,6 +414,9 @@ msgstr ""
 msgid "Discover more presets"
 msgstr ""
 
+msgid "Diameter"
+msgstr ""
+
 msgid "Dismiss"
 msgstr ""
 
@@ -533,6 +534,9 @@ msgstr ""
 msgid "Fill: bottom to top"
 msgstr ""
 
+msgid "Fill: clockwise"
+msgstr ""
+
 msgid "Fill: left to right"
 msgstr ""
 
@@ -602,6 +606,9 @@ msgstr ""
 msgid "Heavy triangle right"
 msgstr ""
 
+msgid "Hex:"
+msgstr ""
+
 msgid "Hides KOReader's built-in status bar. This simplifies the render pipeline and can reduce e-ink flicker on some devices. All status bar features are available as Bookends tokens."
 msgstr ""
 
@@ -620,6 +627,9 @@ msgstr ""
 msgid "Hourglass (filled)"
 msgstr ""
 
+msgid "Hollow"
+msgstr ""
+
 msgid "If/Else conditional tokens"
 msgstr ""
 
@@ -633,6 +643,9 @@ msgid "Infinity"
 msgstr ""
 
 msgid "Info"
+msgstr ""
+
+msgid "Icon color"
 msgstr ""
 
 msgid "Inline progress bars can be added via the line editor"
@@ -669,6 +682,9 @@ msgid "Invert tick color on read portion"
 msgstr ""
 
 msgid "Italic"
+msgstr ""
+
+msgid "Invalid hex colour (use #RGB or #RRGGBB)"
 msgstr ""
 
 msgid "Latest: "
@@ -830,6 +846,9 @@ msgstr ""
 msgid "Paper aeroplane"
 msgstr ""
 
+msgid "Pick a color"
+msgstr ""
+
 msgid "Pilcrow / paragraph"
 msgstr ""
 
@@ -894,6 +913,12 @@ msgid "RAM used %"
 msgstr ""
 
 msgid "RAM used (MiB)"
+msgstr ""
+
+msgid "Radial"
+msgstr ""
+
+msgid "Radial hollow"
 msgstr ""
 
 msgid "Read color"
@@ -998,6 +1023,9 @@ msgstr ""
 msgid "Session time, hidden at start"
 msgstr ""
 
+msgid "Set"
+msgstr ""
+
 msgid "Set font"
 msgstr ""
 
@@ -1079,12 +1107,6 @@ msgstr ""
 msgid "Sun (outline)"
 msgstr ""
 
-msgid "Symbol color"
-msgstr ""
-
-msgid "Symbol color (% black)"
-msgstr ""
-
 msgid "Symbols"
 msgstr ""
 
@@ -1095,9 +1117,6 @@ msgid "Tap Refresh above to load the gallery."
 msgstr ""
 
 msgid "Text color"
-msgstr ""
-
-msgid "Text color (% black)"
 msgstr ""
 
 msgid "Thanks! Your submission is PR #%1.\n\nThe maintainer will review it before it appears in the Gallery."

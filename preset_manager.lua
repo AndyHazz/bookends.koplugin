@@ -62,6 +62,48 @@ local function serializeTable(tbl, indent)
 end
 PresetManager.serializeTable = serializeTable
 
+--- Detect whether a preset payload uses any colour (hex) values.
+--- Walks the table recursively; returns true on the first:
+---   (a) `{hex = "#..."}` field — colour stored as a setting;
+---   (b) inline `[c=#RGB]` or `[c=#RRGGBB]` tag inside a string value —
+---       colour authored inside a line's text (e.g. format strings in
+---       `positions.<pos>.lines`).
+--- Greyscale-only authoring (`{grey = N}` fields, `[c=N]` percent tags)
+--- does NOT flag the preset, so a preset that uses only neutrals stays
+--- portable to greyscale devices without a "uses colour" annotation.
+local function hasColour(t)
+    local tt = type(t)
+    if tt == "string" then
+        -- Inline [c=#RGB] or [c=#RRGGBB] — but only flag if the hex is a
+        -- real colour. Greyscale hex like [c=#222] (== [c=#222222]) is
+        -- visually pure grey; treating it as colour would misfire on
+        -- presets that happen to use hex syntax for a neutral.
+        local Colour = require("bookends_colour")
+        for hex in t:gmatch("%[c=(#%x%x%x)%]") do
+            if Colour.isColourHex(hex) then return true end
+        end
+        for hex in t:gmatch("%[c=(#%x%x%x%x%x%x)%]") do
+            if Colour.isColourHex(hex) then return true end
+        end
+        return false
+    end
+    if tt ~= "table" then return false end
+    -- {hex=…} storage: only flag when the hex is a real colour. A preset
+    -- authored pre-toStorageShape could have {hex="#404040"}; same visual
+    -- result as {grey=64}, shouldn't light up the flag.
+    if type(t.hex) == "string" and t.hex ~= "" then
+        local Colour = require("bookends_colour")
+        if Colour.isColourHex(t.hex) then return true end
+        -- grey hex stored in a {hex=…} field: keep walking siblings but
+        -- don't flag on this one.
+    end
+    for _k, v in pairs(t) do
+        if hasColour(v) then return true end
+    end
+    return false
+end
+PresetManager.hasColour = hasColour
+
 --- Load a preset .lua file in a sandboxed environment.
 --- The file can only return a plain data table — no access to os, io, require, etc.
 local function loadPresetFile(path)

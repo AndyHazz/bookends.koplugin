@@ -407,9 +407,6 @@ msgstr "Sanduhr"
 msgid "Hourglass (filled)"
 msgstr "Sanduhr (gefüllt)"
 
-msgid "Symbols"
-msgstr "Symbole"
-
 msgid "Infinity"
 msgstr "Unendlichkeit"
 
@@ -1485,4 +1482,34 @@ msgstr "title — Buchtitel (leerer String gilt als falsch)"
 
 msgid "Weekend days (OR operator)"
 msgstr "Wochenendtage (OR-Operator)"
+
+msgid "Applies to Nerd Font and FontAwesome icon glyphs (the Private Use Area range, e.g. %W, %B, %k). Unicode symbols in the regular text ranges (like the hourglass \"⌛\") follow the text color instead.\n\nAn inline [c=#RRGGBB]…[/c] tag in a line overrides the icon color for any glyphs inside it."
+msgstr "Gilt für Nerd Font und FontAwesome Icon-Glyphen (der Private Use Area Range, z.B. %W, %B, %k). Unicode-Symbole in den normalen Textbereichen (wie das Sanduhr-Symbol \"⌛\") folgen stattdessen der Textfarbe.\n\nEin Inline-[c=#RRGGBB]…[/c]-Tag in einer Zeile überschreibt die Symbol-Farbe für alle darin enthaltenen Glyphen."
+
+msgid "Diameter"
+msgstr "Durchmesser"
+
+msgid "Fill: clockwise"
+msgstr "Füllung: im Uhrzeigersinn"
+
+msgid "Hex:"
+msgstr "Hex:"
+
+msgid "Hollow"
+msgstr "Leer"
+
+msgid "Icon color"
+msgstr "Symbol-Farbe"
+
+msgid "Invalid hex colour (use #RGB or #RRGGBB)"
+msgstr "Ungültige Hex-Farbe (verwende #RGB oder #RRGGBB)"
+
+msgid "Pick a color"
+msgstr "Wähle eine Farbe"
+
+msgid "Radial"
+msgstr "Radial"
+
+msgid "Radial hollow"
+msgstr "Radial leer"
 

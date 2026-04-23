@@ -413,9 +413,6 @@ msgstr "Clessidra"
 msgid "Hourglass (filled)"
 msgstr "Clessidra (piena)"
 
-msgid "Symbols"
-msgstr "Simboli"
-
 msgid "Infinity"
 msgstr "Infinito"
 
@@ -1485,4 +1482,34 @@ msgstr "Sostituisci"
 
 msgid "Total chapter count"
 msgstr "Numero totale di capitoli"
+
+msgid "Applies to Nerd Font and FontAwesome icon glyphs (the Private Use Area range, e.g. %W, %B, %k). Unicode symbols in the regular text ranges (like the hourglass \"⌛\") follow the text color instead.\n\nAn inline [c=#RRGGBB]…[/c] tag in a line overrides the icon color for any glyphs inside it."
+msgstr "Si applica ai glifi delle icone Nerd Font e FontAwesome (intervallo Area di uso privato, ad es. %W, %B, %k). I simboli Unicode negli intervalli di testo regolare (come la clessidra \"⌛\") seguono il colore del testo.\n\nUn tag inline [c=#RRGGBB]…[/c] in una riga ignora il colore dell'icona per i glifi al suo interno."
+
+msgid "Diameter"
+msgstr "Diametro"
+
+msgid "Fill: clockwise"
+msgstr "Riempimento: In senso orario"
+
+msgid "Hex:"
+msgstr "Esadecimale:"
+
+msgid "Hollow"
+msgstr "Vuoto"
+
+msgid "Icon color"
+msgstr "Colore icona"
+
+msgid "Invalid hex colour (use #RGB or #RRGGBB)"
+msgstr "Colore esadecimale non valido (usa #RGB o #RRGGBB)"
+
+msgid "Pick a color"
+msgstr "Scegli un colore"
+
+msgid "Radial"
+msgstr "Radiale"
+
+msgid "Radial hollow"
+msgstr "Radiale vuoto"
 
