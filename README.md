@@ -204,6 +204,9 @@ Comparison operators: `=` (equals), `!=` (not equals), `<` (less than), `>` (gre
 | `chap_pct` | 0–100 | Chapter progress percentage (matches `%chap_pct`) |
 | `chap_num` | 1–N | Current chapter number (matches `%chap_num`) |
 | `chap_count` | count | Total chapter count (matches `%chap_count`) |
+| `page_num` | 1–N | Current page number (matches `%page_num`) |
+| `page_count` | count | Total page count (matches `%page_count`) |
+| `pages_left` | count | Pages left in book (matches `%pages_left`) |
 | `speed` | pages/hr | Reading speed |
 | `session` | minutes | Session reading time |
 | `session_pages` | count | Session pages read |
