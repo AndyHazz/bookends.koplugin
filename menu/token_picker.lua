@@ -163,15 +163,21 @@ function Bookends:buildTokenItems(catalog, on_select)
                     text = display,
                     insert_value = token,
                 })
+            elseif token:sub(1, 4) == "[if:" then
+                -- Conditional row: the expression itself is what the user
+                -- needs to see — a value like "2" or "60 pg/hr" doesn't
+                -- explain what the conditional actually does. Show the
+                -- raw [if:…] expression in the dim right column.
+                table.insert(items, {
+                    text = desc,
+                    mandatory = token,
+                    mandatory_dim = true,
+                    insert_value = token,
+                })
             else
-                -- Regular token / conditional row: description is the primary
-                -- scannable label. The token syntax is intentionally hidden
-                -- from the picker — users tap to insert, they don't copy the
-                -- syntax by eye. Mandatory carries only the live value (if
-                -- any), so it stays short enough to fit without squeezing
-                -- the description column or tripping KOReader's TextWidget
-                -- on zero-width rendering (see crash.log entry for long
-                -- conditional expressions overflowing mandatory_w).
+                -- Regular token row: description is the primary scannable
+                -- label, live value sits dim on the right. Token syntax is
+                -- deliberately not shown — users tap to insert.
                 table.insert(items, {
                     text = desc,
                     mandatory = current ~= "" and ("\xE2\x86\x92 " .. current) or nil,
