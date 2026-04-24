@@ -164,13 +164,15 @@ function Bookends:buildTokenItems(catalog, on_select)
                     insert_value = token,
                 })
             elseif token:sub(1, 4) == "[if:" then
-                -- Conditional row: two-line layout — description on the
-                -- first line, raw [if:…] expression on the second. The
-                -- surrounding picker menu is opened with multiline=true
-                -- (see showTokenPicker below) so \n forces the break.
-                -- Both items_per_page halved to give taller rows room.
+                -- Conditional row: expression is what an advanced user needs
+                -- to see at a glance — put it in the primary text field so
+                -- long expressions get Menu's own ellipsis treatment instead
+                -- of overflowing mandatory_w. Description sits dim on the
+                -- right as secondary orientation.
                 table.insert(items, {
-                    text = desc .. "\n" .. token,
+                    text = token,
+                    mandatory = desc,
+                    mandatory_dim = true,
                     insert_value = token,
                 })
             else
@@ -211,7 +213,7 @@ function Bookends:showTokenPicker(on_select)
             end
             IconPicker.showPickerMenu(_("Insert conditional"), cond_items, function(item)
                 on_select(item.insert_value)
-            end, { multiline = true, items_per_page = 7 })
+            end)
         end,
     })
 
