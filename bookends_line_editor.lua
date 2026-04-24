@@ -45,6 +45,14 @@ function LineEditor.attach(Bookends)
 
         local current_text = Tokens.canonicaliseLegacy(pos_settings.lines[line_idx] or "")
 
+        -- Migrate stored text on open. canonicaliseLegacy is semantically a
+        -- no-op (aliases render both forms identically), so we always persist
+        -- the v5 form — no Cancel-revert needed for this transformation.
+        if current_text ~= (pos_settings.lines[line_idx] or "") then
+            pos_settings.lines[line_idx] = current_text
+            self:markDirty()
+        end
+
         -- Per-line style state
         pos_settings.line_style = pos_settings.line_style or {}
         pos_settings.line_font_size = pos_settings.line_font_size or {}
@@ -57,19 +65,10 @@ function LineEditor.attach(Bookends)
         pos_settings.line_bar_height = pos_settings.line_bar_height or {}
         pos_settings.line_bar_style = pos_settings.line_bar_style or {}
 
-        -- Snapshot for cancel/restore (captured BEFORE applying any
-        -- canonicalise-on-open migration below, so Cancel reverts to the
-        -- original legacy text).
+        -- Snapshot for cancel/restore (style / font / nudge / etc.; the
+        -- canonicalise migration above is already baked into this snapshot
+        -- on purpose, so Cancel keeps it).
         local original_settings = util.tableDeepCopy(pos_settings)
-
-        -- If canonicaliseLegacy changed the stored line, apply it now so the
-        -- on-screen preview of this line also renders v5 vocabulary — not
-        -- the literal legacy tokens frozen by the legacy_literal flag.
-        -- Save commits the migration; Cancel rolls it back via the snapshot.
-        if current_text ~= (pos_settings.lines[line_idx] or "") then
-            pos_settings.lines[line_idx] = current_text
-            self:markDirty()
-        end
 
         local line_style = pos_settings.line_style[line_idx] or "regular"
         local line_size = pos_settings.line_font_size[line_idx] -- nil = use default
