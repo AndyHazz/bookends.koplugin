@@ -172,9 +172,11 @@ end
 --                    conditional picker where desc + expression need both).
 --   items_per_page — override the default. Lower when multiline so taller
 --                    rows still fit comfortably.
---   width_pct      — portion of screen width to use (0.0–1.0, default 0.8).
---                    Bumped higher (0.9–0.95) for the conditional picker
---                    where long [if:…] expressions need more horizontal room.
+--   width_pct      — portion of screen width to use (0.0–1.0, default 0.9).
+--                    0.9 chosen so the conditional picker's long [if:…]
+--                    expressions fit without truncation, and kept uniform
+--                    across the token and icon pickers so switching between
+--                    them doesn't visually jump.
 function IconPicker.showPickerMenu(title, items, on_choice, opts)
     opts = opts or {}
     local Device = require("device")
@@ -185,7 +187,7 @@ function IconPicker.showPickerMenu(title, items, on_choice, opts)
     menu = Menu:new{
         title = title,
         item_table = items,
-        width = math.floor(Screen:getWidth() * (opts.width_pct or 0.8)),
+        width = math.floor(Screen:getWidth() * (opts.width_pct or 0.9)),
         height = math.floor(Screen:getHeight() * 0.8),
         items_per_page = opts.items_per_page or 14,
         multilines_show_more_text = opts.multiline or false,

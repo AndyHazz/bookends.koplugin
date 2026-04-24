@@ -84,24 +84,6 @@ Bookends.TOKEN_CATALOG = {
 }
 
 Bookends.CONDITIONAL_CATALOG = {
-    { _("Examples"), {
-        { "[if:wifi=on]%wifi[/if]", _("Wi-Fi icon when connected") },
-        { "[if:batt<20]LOW %batt[/if]", _("Low-battery warning") },
-        { "[if:charging=yes]\xE2\x9A\xA1[/if] %batt", _("Bolt when charging") },
-        { "[if:invert=yes]\xE2\x87\x84[/if]", _("Arrow when page-turn flipped") },
-        { "[if:speed>0]%speed pg/hr[/if]", _("Speed once calculated") },
-        { "[if:session>0]%session_time[/if]", _("Session time after start") },
-        { "[if:page=odd]%page_num[else]%page_num[/if]", _("Odd/even variations") },
-        { "[if:book_pct>90]Almost done![/if]", _("Near end of book") },
-        { "[if:light=off]Light off[else]Light on[/if]", _("Frontlight on/off label") },
-        { "[if:format=PDF]%page_num / %page_count[/if]", _("Only for PDFs") },
-        { "[if:time>22:00]Late night reading![/if]", _("Late-night reading") },
-        { "[if:day=Sat or day=Sun]Weekend![/if]", _("Weekends") },
-        { "[if:time>=18:00 and time<18:30]6\xE2\x80\x936:30[/if]", _("Time window") },
-        { "[if:not series]Standalone[/if]", _("Non-series books") },
-        { "[if:chap_title_2]%chap_title_2[else]%chap_title_1[/if]", _("Fall back to shallower chapter") },
-        { "[if:chap_count>20]Long read[/if]", _("Long books (20+ chapters)") },
-    }},
     { _("Reference"), {
         { "[if:wifi=on]...[/if]", _("If Wi-Fi is on") },
         { "[if:connected=yes]...[/if]", _("If connected") },
@@ -125,6 +107,24 @@ Bookends.CONDITIONAL_CATALOG = {
         { "[if:series]...[/if]", _("If book in series") },
         { "[if:chap_title]...[/if]", _("If chapter has title") },
         { "[if:chap_title_2]...[/if]", _("Chapter title at depth 1/2/3") },
+    }},
+    { _("Examples"), {
+        { "[if:wifi=on]%wifi[/if]", _("Wi-Fi icon when connected") },
+        { "[if:batt<20]LOW %batt[/if]", _("Low-battery warning") },
+        { "[if:charging=yes]\xE2\x9A\xA1[/if] %batt", _("Bolt when charging") },
+        { "[if:invert=yes]\xE2\x87\x84[/if]", _("Arrow when page-turn flipped") },
+        { "[if:speed>0]%speed pg/hr[/if]", _("Speed once calculated") },
+        { "[if:session>0]%session_time[/if]", _("Session time after start") },
+        { "[if:page=odd]%page_num[else]%page_num[/if]", _("Odd/even variations") },
+        { "[if:book_pct>90]Almost done![/if]", _("Near end of book") },
+        { "[if:light=off]Light off[else]Light on[/if]", _("Frontlight on/off label") },
+        { "[if:format=PDF]%page_num / %page_count[/if]", _("Only for PDFs") },
+        { "[if:time>22:00]Late night reading![/if]", _("Late-night reading") },
+        { "[if:day=Sat or day=Sun]Weekend![/if]", _("Weekends") },
+        { "[if:time>=18:00 and time<18:30]6\xE2\x80\x936:30[/if]", _("Time window") },
+        { "[if:not series]Standalone[/if]", _("Non-series books") },
+        { "[if:chap_title_2]%chap_title_2[else]%chap_title_1[/if]", _("Fall back to shallower chapter") },
+        { "[if:chap_count>20]Long read[/if]", _("Long books (20+ chapters)") },
     }},
 }
 
@@ -213,7 +213,7 @@ function Bookends:showTokenPicker(on_select)
             end
             IconPicker.showPickerMenu(_("Insert conditional"), cond_items, function(item)
                 on_select(item.insert_value)
-            end, { width_pct = 0.9 })
+            end)
         end,
     })
 
