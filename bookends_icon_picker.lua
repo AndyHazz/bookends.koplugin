@@ -166,7 +166,14 @@ function IconPicker:buildItemTable()
 end
 
 --- Show a centered Menu popup for picker UIs (tokens, icons, etc.)
-function IconPicker.showPickerMenu(title, items, on_choice)
+-- opts:
+--   multiline      — if true, items may wrap to multiple lines (enables \n
+--                    in text to produce a two-line row, e.g. for the
+--                    conditional picker where desc + expression need both).
+--   items_per_page — override the default. Lower when multiline so taller
+--                    rows still fit comfortably.
+function IconPicker.showPickerMenu(title, items, on_choice, opts)
+    opts = opts or {}
     local Device = require("device")
     local Screen = Device.screen
     local Size = require("ui/size")
@@ -177,7 +184,8 @@ function IconPicker.showPickerMenu(title, items, on_choice)
         item_table = items,
         width = math.floor(Screen:getWidth() * 0.8),
         height = math.floor(Screen:getHeight() * 0.8),
-        items_per_page = 14,
+        items_per_page = opts.items_per_page or 14,
+        multilines_show_more_text = opts.multiline or false,
         onMenuChoice = function(_, item)
             if item.callback then
                 item.callback(menu)
