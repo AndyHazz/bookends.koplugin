@@ -659,28 +659,29 @@ end
 --- gallery presets, so this migration is a local-data cleanup — not load-
 --- bearing for compatibility.
 function Bookends:migrateSchemaIfNeeded()
-    -- Positions: tracked by a single settings-level schema_version. Migrate
-    -- once per user, then short-circuit forever.
-    local stored = self.settings:readSetting("schema_version") or 1
-    if stored < Config.SCHEMA_VERSION then
-        for _, pos in ipairs(self.POSITIONS) do
-            local pos_settings = self.positions[pos.key]
-            if pos_settings and pos_settings.lines then
-                local changed = false
-                for i, line in ipairs(pos_settings.lines) do
-                    local new_line = Tokens.canonicaliseLegacy(line or "")
-                    if new_line ~= line then
-                        pos_settings.lines[i] = new_line
-                        changed = true
-                    end
-                end
-                if changed then
-                    self.settings:saveSetting("pos_" .. pos.key, pos_settings)
+    -- Positions: canonicaliseLegacy is idempotent and cheap, so we run it
+    -- every startup rather than gating on schema_version. Gating only fixed
+    -- the "upgrade from v4" case; a legacy token introduced later (manual
+    -- edit, gallery install before its own file-level migration completes)
+    -- would otherwise persist forever. The per-line `changed` guard keeps
+    -- startup cost near zero when there's nothing to rewrite.
+    for _, pos in ipairs(self.POSITIONS) do
+        local pos_settings = self.positions[pos.key]
+        if pos_settings and pos_settings.lines then
+            local changed = false
+            for i, line in ipairs(pos_settings.lines) do
+                local new_line = Tokens.canonicaliseLegacy(line or "")
+                if new_line ~= line then
+                    pos_settings.lines[i] = new_line
+                    changed = true
                 end
             end
+            if changed then
+                self.settings:saveSetting("pos_" .. pos.key, pos_settings)
+            end
         end
-        self.settings:saveSetting("schema_version", Config.SCHEMA_VERSION)
     end
+    self.settings:saveSetting("schema_version", Config.SCHEMA_VERSION)
 
     -- Preset files on disk: each file carries its own schema_version so
     -- newly-dropped legacy files (e.g. from a backup, a shared snippet, or
@@ -755,7 +756,16 @@ function Bookends:loadPreset(preset)
     if preset.positions then
         for _, pos in ipairs(self.POSITIONS) do
             if preset.positions[pos.key] then
-                self.positions[pos.key] = util.tableDeepCopy(preset.positions[pos.key])
+                local copy = util.tableDeepCopy(preset.positions[pos.key])
+                -- Canonicalise any legacy tokens on the way in, so gallery
+                -- presets or side-loaded files don't leak %T/%A/etc. into
+                -- live position state ahead of the next startup migration.
+                if type(copy.lines) == "table" then
+                    for i, line in ipairs(copy.lines) do
+                        copy.lines[i] = Tokens.canonicaliseLegacy(line or "")
+                    end
+                end
+                self.positions[pos.key] = copy
                 self:savePositionSetting(pos.key)
             end
         end
@@ -2091,17 +2101,20 @@ function Bookends:showFontPicker(current_face, on_select, default_face)
             table.insert(list_group, item_container)
         end
 
-        -- Page navigation row using icon buttons (matching KOReader style)
+        -- Page navigation: compact chevrons + label, matching the preset
+        -- library's reduced pagination (vs. stock 40px icons).
+        local chev_size = Screen:scaleBySize(32)
         local page_info_text = Button:new{
             text = T(_("Page %1 of %2"), page, total_pages),
-            text_font_size = 16,
-            text_font_bold = false,
+            text_font_size = 15,
+            -- Default (Button.text_font_bold = true) to match the preset
+            -- library's pagination weight.
             callback = function() end,
             bordersize = 0,
             show_parent = picker,
         }
         local page_first = Button:new{
-            icon = "chevron.first",
+            icon = "chevron.first", icon_width = chev_size, icon_height = chev_size,
             callback = function()
                 page = 1
                 picker:rebuild()
@@ -2111,7 +2124,7 @@ function Bookends:showFontPicker(current_face, on_select, default_face)
             show_parent = picker,
         }
         local page_info_left = Button:new{
-            icon = "chevron.left",
+            icon = "chevron.left", icon_width = chev_size, icon_height = chev_size,
             callback = function()
                 page = page - 1
                 picker:rebuild()
@@ -2121,7 +2134,7 @@ function Bookends:showFontPicker(current_face, on_select, default_face)
             show_parent = picker,
         }
         local page_info_right = Button:new{
-            icon = "chevron.right",
+            icon = "chevron.right", icon_width = chev_size, icon_height = chev_size,
             callback = function()
                 page = page + 1
                 picker:rebuild()
@@ -2131,7 +2144,7 @@ function Bookends:showFontPicker(current_face, on_select, default_face)
             show_parent = picker,
         }
         local page_last = Button:new{
-            icon = "chevron.last",
+            icon = "chevron.last", icon_width = chev_size, icon_height = chev_size,
             callback = function()
                 page = total_pages
                 picker:rebuild()
@@ -2141,17 +2154,20 @@ function Bookends:showFontPicker(current_face, on_select, default_face)
             show_parent = picker,
         }
 
-        local nav_spacing = HorizontalSpan:new{ width = Screen:scaleBySize(8) }
+        -- Uniform 32px gap between every element (matches the stock Menu
+        -- widget's page_info_spacer so pagination reads identically across
+        -- the plugin's custom and stock paginators).
+        local nav_span = Screen:scaleBySize(32)
         local page_nav = HorizontalGroup:new{
             align = "center",
             page_first,
-            nav_spacing,
+            HorizontalSpan:new{ width = nav_span },
             page_info_left,
-            HorizontalSpan:new{ width = Screen:scaleBySize(16) },
+            HorizontalSpan:new{ width = nav_span },
             page_info_text,
-            HorizontalSpan:new{ width = Screen:scaleBySize(16) },
+            HorizontalSpan:new{ width = nav_span },
             page_info_right,
-            nav_spacing,
+            HorizontalSpan:new{ width = nav_span },
             page_last,
         }
 

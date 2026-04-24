@@ -470,19 +470,35 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
     local pageno = ui.view and ui.view.state and ui.view.state.page
     local doc = ui.document
     if pageno and doc then
-        -- Book percent
+        -- Page number / count / remaining — exposed as conditional state so
+        -- users can write [if:page_num=page_count]last page![/if] or compare
+        -- via @-ref (e.g. [if:page_num!=@page_count]). Mirrors the tokens of
+        -- the same name that render in overlay output. Uses flow-aware totals
+        -- when available so hidden-flow books report the reading sequence.
+        local page_count_val
         if doc:hasHiddenFlows() then
             local flow = doc:getPageFlow(pageno)
             local flow_page = doc:getPageNumberInFlow(pageno)
             local flow_total = doc:getTotalPagesInFlow(flow)
             if flow_total and flow_total > 0 then
                 state.book_pct = math.floor(flow_page / flow_total * 100 + 0.5)
+                state.page_num = flow_page
+                state.page_count = flow_total
+                page_count_val = flow_total
             end
         else
             local raw_total = doc:getPageCount()
             if raw_total and raw_total > 0 then
                 state.book_pct = math.floor(pageno / raw_total * 100 + 0.5)
+                state.page_num = pageno
+                state.page_count = raw_total
+                page_count_val = raw_total
             end
+        end
+        if page_count_val and state.page_num then
+            local left = page_count_val - state.page_num
+            if Tokens.pages_left_includes_current then left = left + 1 end
+            state.pages_left = math.max(0, left)
         end
 
         -- Chapter percent

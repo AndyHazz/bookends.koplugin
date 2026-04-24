@@ -8,6 +8,8 @@ local Gallery = {}
 local INDEX_URL = "https://raw.githubusercontent.com/AndyHazz/bookends-presets/main/index.json"
 local BASE_URL  = "https://raw.githubusercontent.com/AndyHazz/bookends-presets/main/"
 local SUBMIT_URL = "https://bookends-submit.andy-nmc.workers.dev/submit"
+local INSTALL_URL = "https://bookends-submit.andy-nmc.workers.dev/install"
+local COUNTS_URL  = "https://bookends-submit.andy-nmc.workers.dev/counts"
 -- GitHub Pulls API — returns open PRs on the presets repo. 100/page is the
 -- max without pagination; the gallery's approval queue is never close to
 -- that in practice so we trust the first page as the total.
@@ -169,6 +171,54 @@ function Gallery.fetchApprovalQueueCount(user_agent, callback)
         return
     end
     callback(#data, nil)
+end
+
+--- Fire-and-forget install ping. Shells out to a detached background curl so
+-- the UI never waits on the network (LuaSocket is synchronous on the main
+-- thread; we don't want the modal close to stall for a few hundred ms).
+-- All errors are silently swallowed — popularity tracking must NEVER block
+-- or surface to the user.
+function Gallery.recordInstall(slug, user_agent)
+    -- Re-validate the slug locally: it ends up in a shell command string and
+    -- the worker's regex is our backstop, not our front door. Belt-and-braces.
+    if type(slug) ~= "string" or not slug:match("^[a-z0-9-]+$") or #slug > 64 then
+        return
+    end
+    if not Gallery.isOnline() then return end
+    local ua = (user_agent or "KOReader-Bookends"):gsub("'", "")
+    -- Backgrounded via `&` inside a subshell, stdio redirected to /dev/null,
+    -- so the io.popen handle unblocks as soon as the shell has forked curl.
+    -- -m 10 caps the ping so runaway curls can't pile up.
+    local cmd = string.format(
+        "(curl -s -m 10 -X POST -H 'User-Agent: %s' -H 'Content-Type: application/json' --data '{\"slug\":\"%s\"}' %q) >/dev/null 2>&1 &",
+        ua, slug, INSTALL_URL)
+    local ok, handle = pcall(io.popen, cmd)
+    if ok and handle then pcall(handle.close, handle) end
+end
+
+--- GET /counts → { slug = count, ... }. Edge-cached 60s server-side so
+-- tapping Refresh repeatedly within a minute is cheap. Called as a secondary
+-- fetch alongside the approval-queue count; failure is non-fatal, the UI
+-- just hides the Popular sort until a refresh succeeds.
+function Gallery.fetchCounts(user_agent, callback)
+    if not Gallery.isOnline() then
+        callback(nil, "offline")
+        return
+    end
+    local body = httpGet(COUNTS_URL .. "?ts=" .. tostring(os.time()),
+                         user_agent or "KOReader-Bookends")
+    if not body then
+        callback(nil, "fetch failed")
+        return
+    end
+    local ok_req, json = pcall(require, "json")
+    if not ok_req then callback(nil, "json module missing"); return end
+    local ok, data = pcall(json.decode, body)
+    if not ok or type(data) ~= "table" or type(data.counts) ~= "table" then
+        callback(nil, "invalid response")
+        return
+    end
+    callback(data.counts, nil)
 end
 
 function Gallery.downloadPreset(slug, preset_url, user_agent, callback)

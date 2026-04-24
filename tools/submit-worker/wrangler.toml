@@ -8,6 +8,15 @@ GITHUB_OWNER = "AndyHazz"
 GITHUB_REPO = "bookends-presets"
 MAX_OPEN_PRS = "20"
 IP_COOLDOWN_SECONDS = "300"
+INSTALL_DEDUPE_TTL_SECONDS = "86400"
+COUNTS_CACHE_SECONDS = "60"
 
 # GITHUB_TOKEN is a secret — set via:
 #   wrangler secret put GITHUB_TOKEN
+
+# Install-popularity counters. Create the namespace once with:
+#   wrangler kv namespace create INSTALL_COUNTS
+# then paste the printed id below.
+[[kv_namespaces]]
+binding = "INSTALL_COUNTS"
+id = "f4da648b2be24e3894456f9d8d8f39be"

@@ -201,6 +201,57 @@ function IconPicker.showPickerMenu(title, items, on_choice, opts)
         end,
     }
     if menu[1] then menu[1].radius = Size.radius.window end
+    -- Shrink the stock pagination (default icons = 40, font size stock)
+    -- to match the preset library's 28px / 14pt compact style. We reach
+    -- into the Menu widget's named chevron + page-info-text Buttons, poke
+    -- new sizes, and trigger a full relayout via updateItems so the Menu's
+    -- cached bottom_height recomputes against the smaller content — without
+    -- this step the pagination row still reserves its stock-sized footprint
+    -- and the chevrons float inside the over-tall area.
+    local chev_size = Screen:scaleBySize(32)
+    local function patchIconBtn(btn)
+        if not btn then return end
+        btn.icon_width = chev_size
+        btn.icon_height = chev_size
+        if btn.label_widget then btn.label_widget:free() end
+        btn:init()
+    end
+    patchIconBtn(menu.page_info_left_chev)
+    patchIconBtn(menu.page_info_right_chev)
+    patchIconBtn(menu.page_info_first_chev)
+    patchIconBtn(menu.page_info_last_chev)
+    if menu.page_info_text then
+        menu.page_info_text.text_font_size = 15
+        -- Match the preset library pagination, which inherits Button's default
+        -- text_font_bold = true. The stock Menu explicitly opts out of bold.
+        menu.page_info_text.text_font_bold = true
+        if menu.page_info_text.label_widget then
+            menu.page_info_text.label_widget:free()
+        end
+        menu.page_info_text:init()
+    end
+    pcall(function() menu:updateItems() end)
+
+    -- The footer is a BottomContainer that pins page_info's bottom edge to
+    -- the dialog's inner bottom. With our shrunken pagination content, that
+    -- left the pagination row flush with the dialog edge and a big gap
+    -- above it. Shrinking the footer's dimen.h by a fixed amount pulls the
+    -- pinning point up, visually centring the pagination in the reserved
+    -- bottom region. We locate the footer by identity match on menu.page_info
+    -- rather than by index so we're not depending on OverlapGroup child order.
+    do
+        local frame = menu[1]
+        local overlap = frame and frame[1]
+        if overlap then
+            for i = 1, #overlap do
+                local c = overlap[i]
+                if c and c[1] == menu.page_info and c.dimen then
+                    c.dimen.h = c.dimen.h - Screen:scaleBySize(5)
+                    break
+                end
+            end
+        end
+    end
     local x = math.floor((Screen:getWidth() - menu.dimen.w) / 2)
     local y = math.floor((Screen:getHeight() - menu.dimen.h) / 2)
     UIManager:show(menu, nil, nil, x, y)
