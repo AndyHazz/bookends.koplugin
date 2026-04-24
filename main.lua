@@ -659,30 +659,33 @@ end
 --- gallery presets, so this migration is a local-data cleanup — not load-
 --- bearing for compatibility.
 function Bookends:migrateSchemaIfNeeded()
+    -- Positions: tracked by a single settings-level schema_version. Migrate
+    -- once per user, then short-circuit forever.
     local stored = self.settings:readSetting("schema_version") or 1
-    if stored >= Config.SCHEMA_VERSION then return end
-
-    -- Migrate live positions + their saved copies in self.settings.
-    for _, pos in ipairs(self.POSITIONS) do
-        local pos_settings = self.positions[pos.key]
-        if pos_settings and pos_settings.lines then
-            local changed = false
-            for i, line in ipairs(pos_settings.lines) do
-                local new_line = Tokens.canonicaliseLegacy(line or "")
-                if new_line ~= line then
-                    pos_settings.lines[i] = new_line
-                    changed = true
+    if stored < Config.SCHEMA_VERSION then
+        for _, pos in ipairs(self.POSITIONS) do
+            local pos_settings = self.positions[pos.key]
+            if pos_settings and pos_settings.lines then
+                local changed = false
+                for i, line in ipairs(pos_settings.lines) do
+                    local new_line = Tokens.canonicaliseLegacy(line or "")
+                    if new_line ~= line then
+                        pos_settings.lines[i] = new_line
+                        changed = true
+                    end
+                end
+                if changed then
+                    self.settings:saveSetting("pos_" .. pos.key, pos_settings)
                 end
             end
-            if changed then
-                self.settings:saveSetting("pos_" .. pos.key, pos_settings)
-            end
         end
+        self.settings:saveSetting("schema_version", Config.SCHEMA_VERSION)
     end
 
-    -- Migrate on-disk preset files one-shot. Defensive: skip files that
-    -- already declare schema_version >= current, so we don't rewrite files
-    -- that somehow got ahead of our session (e.g. sync from another device).
+    -- Preset files on disk: each file carries its own schema_version so
+    -- newly-dropped legacy files (e.g. from a backup, a shared snippet, or
+    -- a gallery install) get migrated on the next startup even after the
+    -- settings-level flag has already been bumped.
     local preset_infos = self:readPresetFiles() or {}
     for _, info in ipairs(preset_infos) do
         local data = self.loadPresetFile(info.path)
@@ -703,8 +706,6 @@ function Bookends:migrateSchemaIfNeeded()
             end
         end
     end
-
-    self.settings:saveSetting("schema_version", Config.SCHEMA_VERSION)
 end
 
 function Bookends:buildPreset()
