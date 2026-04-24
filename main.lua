@@ -685,10 +685,12 @@ function Bookends:migrateSchemaIfNeeded()
     -- Preset files on disk: each file carries its own schema_version so
     -- newly-dropped legacy files (e.g. from a backup, a shared snippet, or
     -- a gallery install) get migrated on the next startup even after the
-    -- settings-level flag has already been bumped.
+    -- settings-level flag has already been bumped. readPresetFiles() returns
+    -- entries of shape { name, filename, preset } — `preset` is the parsed
+    -- table already; no need to reload via loadPresetFile.
     local preset_infos = self:readPresetFiles() or {}
     for _, info in ipairs(preset_infos) do
-        local data = self.loadPresetFile(info.path)
+        local data = info.preset
         if data then
             local file_version = tonumber(data.schema_version) or 1
             if file_version < Config.SCHEMA_VERSION then
