@@ -2329,10 +2329,12 @@ function Bookends:checkForUpdates()
     if dev_branch ~= "" then
         Updater.installBranch(dev_branch, function()
             settings:saveSetting("last_install_source", "branch:" .. dev_branch)
+            settings:flush()
         end)
     else
         Updater.check(function()
             settings:saveSetting("last_install_source", "release")
+            settings:flush()
         end)
     end
 end
@@ -2353,6 +2355,7 @@ function Bookends:editDevBranch(touchmenu_instance)
                 local trimmed = raw:gsub("^%s+", ""):gsub("%s+$", "")
                 self.dev_branch = trimmed
                 self.settings:saveSetting("dev_branch", trimmed)
+                self.settings:flush()
                 UIManagerMod:close(dlg)
                 if touchmenu_instance then touchmenu_instance:updateItems() end
             end },
@@ -2371,9 +2374,11 @@ function Bookends:resetToStableRelease()
         ok_callback = function()
             self.dev_branch = ""
             self.settings:saveSetting("dev_branch", "")
+            self.settings:flush()
             local settings = self.settings
             Updater.installLatestStable(function()
                 settings:saveSetting("last_install_source", "release")
+                settings:flush()
             end)
         end,
     })
