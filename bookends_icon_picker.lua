@@ -123,6 +123,18 @@ IconPicker.CATALOG = {
         { "\xE2\x98\x9D", _("Pointing up") },           -- U+261D
         { "\xE2\x98\x9F", _("Pointing down") },         -- U+261F
     }},
+    { _("Progress blocks"), {
+        { "\xE2\x96\xB0", _("Slant block") },           -- U+25B0 BLACK PARALLELOGRAM
+        { "\xE2\x96\xB1", _("Slant block (empty)") },   -- U+25B1 WHITE PARALLELOGRAM
+        { "\xE2\x96\xAE", _("Vertical block") },        -- U+25AE BLACK VERTICAL RECTANGLE
+        { "\xE2\x96\xAF", _("Vertical block (empty)") },-- U+25AF WHITE VERTICAL RECTANGLE
+        { "\xE2\x96\xA0", _("Square (filled)") },       -- U+25A0 BLACK SQUARE
+        { "\xE2\x96\xA1", _("Square (empty)") },        -- U+25A1 WHITE SQUARE
+        { "\xE2\x96\x88", _("Block (full)") },          -- U+2588 FULL BLOCK
+        { "\xE2\x96\x93", _("Block (dark)") },          -- U+2593 DARK SHADE
+        { "\xE2\x96\x92", _("Block (medium)") },        -- U+2592 MEDIUM SHADE
+        { "\xE2\x96\x91", _("Block (light)") },         -- U+2591 LIGHT SHADE
+    }},
     { _("Separators"), {
         { "|",             _("Vertical bar") },          -- U+007C
         { "\xE2\x80\xA2", _("Bullet") },                -- U+2022
