@@ -2362,6 +2362,23 @@ function Bookends:editDevBranch(touchmenu_instance)
     dlg:onShowKeyboard()
 end
 
+function Bookends:resetToStableRelease()
+    local ConfirmBoxMod = require("ui/widget/confirmbox")
+    local UIManagerMod = require("ui/uimanager")
+    UIManagerMod:show(ConfirmBoxMod:new{
+        text = _("This will clear the development branch setting and install the latest stable release of Bookends, then restart KOReader. Continue?"),
+        ok_text = _("Reset"),
+        ok_callback = function()
+            self.dev_branch = ""
+            self.settings:saveSetting("dev_branch", "")
+            local settings = self.settings
+            Updater.installLatestStable(function()
+                settings:saveSetting("last_install_source", "release")
+            end)
+        end,
+    })
+end
+
 function Bookends:backgroundUpdateCheck()
     if not self.check_updates then return end
     Updater.checkBackground(function(ver)
