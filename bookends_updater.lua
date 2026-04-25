@@ -296,7 +296,7 @@ function Updater.check()
     end)
 end
 
-function Updater.install(zip_url, old_version, new_version)
+function Updater.install(zip_url, old_version, new_version, on_success)
 
     local DataStorage = require("datastorage")
     local lfs = require("libs/libkoreader-lfs")
@@ -370,6 +370,15 @@ function Updater.install(zip_url, old_version, new_version)
                 timeout = 5,
             })
             return
+        end
+
+        -- Stamp install context (e.g. last_install_source) before the restart
+        -- prompt fires; runs only when unpack succeeded.
+        if on_success then
+            local ok_cb = pcall(on_success)
+            if not ok_cb then
+                -- Don't let a misbehaving callback abort the restart prompt.
+            end
         end
 
         -- Restart KOReader to load the new version
