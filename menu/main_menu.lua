@@ -382,10 +382,16 @@ function Bookends:buildBookendsSettingsMenu()
             text_func = function()
                 local current = Updater.getInstalledVersion()
                 local available = Updater.getAvailableUpdate()
-                if available then
-                    return _("Update available") .. ": v" .. current .. " \xE2\x86\x92 v" .. available
+                local source = self.last_install_source or "release"
+                local source_suffix = ""
+                if source ~= "release" then
+                    local branch = source:match("^branch:(.+)$") or source
+                    source_suffix = " (branch: " .. branch .. ")"
                 end
-                return _("Installed version") .. ": v" .. current
+                if available then
+                    return _("Update available") .. ": v" .. current .. source_suffix .. " \xE2\x86\x92 v" .. available
+                end
+                return _("Installed version") .. ": v" .. current .. source_suffix
             end,
             keep_menu_open = true,
             callback = function()
@@ -406,6 +412,19 @@ function Bookends:buildBookendsSettingsMenu()
                     keep_menu_open = true,
                     callback = function(touchmenu_instance)
                         self:editDevBranch(touchmenu_instance)
+                    end,
+                },
+                {
+                    text_func = function()
+                        local b = self.dev_branch or ""
+                        if b == "" then
+                            return _("Check for updates")
+                        end
+                        return _("Install branch") .. ": " .. b
+                    end,
+                    keep_menu_open = true,
+                    callback = function()
+                        self:checkForUpdates()
                     end,
                 },
                 {
