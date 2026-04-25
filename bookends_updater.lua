@@ -171,7 +171,7 @@ function Updater.checkBackground(on_update_found)
     end)
 end
 
-function Updater.check()
+function Updater.check(on_success)
 
     local installed_version = Updater.getInstalledVersion()
 
@@ -279,7 +279,7 @@ function Updater.check()
                             })
                             return
                         end
-                        Updater.install(latest_zip_url, installed_version, latest_version)
+                        Updater.install(latest_zip_url, installed_version, latest_version, on_success)
                     end,
                 },
             },
