@@ -513,7 +513,7 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
             state.pages_left = math.max(0, left)
         end
 
-        -- Chapter percent
+        -- Chapter percent + chapter page counts (read / total / left)
         if ui.toc then
             local chapter_start = ui.toc:getPreviousChapter(pageno)
             if ui.toc:isChapterStart(pageno) then
@@ -529,12 +529,26 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
                     state.chap_pct = 100
                 end
             end
+            local pages_left_offset = Tokens.pages_left_includes_current and 1 or 0
+            local done = ui.toc:getChapterPagesDone(pageno)
+            local total = ui.toc:getChapterPageCount(pageno)
+            if done and total and total > 0 then
+                state.chap_read = math.max(0, done + 1)
+                state.chap_pages = total
+            end
+            local left = ui.toc:getChapterPagesLeft(pageno)
+            if left then
+                state.chap_pages_left = math.max(0, left + pages_left_offset)
+            end
         end
 
         -- Chapter number / total count — match %chap_num / %chap_count tokens.
+        -- Always assign (including 0) so [if:chap_count=0] works for chapterless
+        -- books and [if:chap_count] reads as the natural "has chapters?" test
+        -- (the truthy check excludes 0).
         local titles = Tokens.getChapterTitlesByDepth(ui, pageno)
-        if titles.chapter_num  > 0 then state.chap_num   = titles.chapter_num  end
-        if titles.chapter_count > 0 then state.chap_count = titles.chapter_count end
+        state.chap_num   = titles.chapter_num
+        state.chap_count = titles.chapter_count
 
         -- Odd/even page
         state.page = (pageno % 2 == 1) and "odd" or "even"

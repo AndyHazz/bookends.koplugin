@@ -203,7 +203,10 @@ Comparison operators: `=` (equals), `!=` (not equals), `<` (less than), `>` (gre
 | `book_pct` | 0–100 | Book progress percentage (matches `%book_pct`) |
 | `chap_pct` | 0–100 | Chapter progress percentage (matches `%chap_pct`) |
 | `chap_num` | 1–N | Current chapter number (matches `%chap_num`) |
-| `chap_count` | count | Total chapter count (matches `%chap_count`) |
+| `chap_count` | count | Total chapter count, 0 for chapterless books (matches `%chap_count`) |
+| `chap_read` | count | Pages read in current chapter (matches `%chap_read`) |
+| `chap_pages` | count | Total pages in current chapter (matches `%chap_pages`) |
+| `chap_pages_left` | count | Pages left in current chapter (matches `%chap_pages_left`) |
 | `page_num` | 1–N | Current page number (matches `%page_num`) |
 | `page_count` | count | Total page count (matches `%page_count`) |
 | `pages_left` | count | Pages left in book (matches `%pages_left`) |
