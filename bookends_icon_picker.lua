@@ -9,8 +9,8 @@ local IconPicker = {}
 -- All icons are from KOReader's bundled Nerd Fonts symbols.ttf or basic Unicode
 IconPicker.CATALOG = {
     { _("Dynamic"), {
-        { "\xEE\x9E\x90", _("Battery (changes with level)"), "%B" },     -- U+E790
-        { "\xEE\xB2\xA8", _("Wi-Fi (changes with status)"), "%W" },      -- U+ECA8
+        { "\xEE\x9E\x90", _("Battery (changes with level)"), "%batt_icon" }, -- U+E790
+        { "\xEE\xB2\xA8", _("Wi-Fi (changes with status)"), "%wifi" },       -- U+ECA8
     }},
     { _("Device"), {
         { "\xEF\x83\xAB", _("Lightbulb") },             -- U+F0EB fa-lightbulb-o

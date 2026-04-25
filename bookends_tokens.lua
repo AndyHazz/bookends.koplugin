@@ -115,6 +115,17 @@ local STATE_ALIAS = {
     pages           = "session_pages", -- pre-v4.1 gallery compat
 }
 
+-- Split KOReader's newline-separated authors string into a list. Drops empties
+-- because KOReader can yield trailing "\n" or "\n\n" runs from messy metadata.
+local function splitAuthors(authors_raw)
+    local list = {}
+    if not authors_raw or authors_raw == "" then return list end
+    for a in (authors_raw .. "\n"):gmatch("([^\n]*)\n") do
+        if a ~= "" then table.insert(list, a) end
+    end
+    return list
+end
+
 -- Map KOReader UI language to a system locale for localized date strings.
 -- Caches per language to avoid repeated locale probing.
 local _date_locale_cache = {} -- lang -> locale string or false
@@ -569,7 +580,15 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
         local ok, props = pcall(doc.getProps, doc)
         if not ok then props = {} end
         state.title  = doc_props.display_title or props.title   or ""
-        state.author = doc_props.authors       or props.authors or ""
+        local authors_raw = doc_props.authors  or props.authors or ""
+        local authors_list = splitAuthors(authors_raw)
+        state.author   = authors_list[1] or ""
+        state.author_1 = authors_list[1] or ""
+        state.author_2 = authors_list[2] or ""
+        state.author_3 = authors_list[3] or ""
+        state.author_4 = authors_list[4] or ""
+        state.author_5 = authors_list[5] or ""
+        state.authors  = #authors_list
         local series = doc_props.series        or props.series  or ""
         local series_index = doc_props.series_index or props.series_index
         if series ~= "" and series_index then
@@ -1085,16 +1104,23 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     -- Document metadata
     local title = ""
     local authors = ""
+    local first_author = ""
+    local authors_list = {}
     local series = ""
     local series_name = ""
     local series_num = ""
     local book_language = ""
-    if needs("title", "author", "series", "series_name", "series_num", "lang") then
+    if needs("title", "author", "authors",
+             "author_1", "author_2", "author_3", "author_4", "author_5",
+             "series", "series_name", "series_num", "lang") then
         local doc_props = ui.doc_props or {}
         local ok, props = pcall(doc.getProps, doc)
         if not ok then props = {} end
         title = doc_props.display_title or props.title or ""
-        authors = doc_props.authors or props.authors or ""
+        local authors_raw = doc_props.authors or props.authors or ""
+        authors_list = splitAuthors(authors_raw)
+        first_author = authors_list[1] or ""
+        authors = table.concat(authors_list, ", ")
         series_name = doc_props.series or props.series or ""
         local series_index = doc_props.series_index or props.series_index
         series_num = series_index and tostring(series_index) or ""
@@ -1174,17 +1200,18 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         end
     end
 
-    -- Wi-Fi
+    -- Wi-Fi: always renders. The bundled symbol font ships only two wifi
+    -- glyphs (U+ECA8 wifi, U+ECA9 wifi-off), so "off" and "enabled-but-no-link"
+    -- share the wifi-off glyph — both communicate "no working connection".
+    -- Use [if:wifi=on]%wifi[/if] to hide on disabled, or [if:connected=yes] for
+    -- connected-only.
     local wifi_symbol = ""
     if needs("wifi") then
         local NetworkMgr = require("ui/network/manager")
-        if NetworkMgr:isWifiOn() then
-            if NetworkMgr:isConnected() then
-                wifi_symbol = "\xEE\xB2\xA8" -- U+ECA8 wifi connected
-            else
-                wifi_symbol = "\xEE\xB2\xA9" -- U+ECA9 wifi enabled, not connected
-            end
-        -- else: wifi disabled, leave as "" (hidden)
+        if NetworkMgr:isWifiOn() and NetworkMgr:isConnected() then
+            wifi_symbol = "\xEE\xB2\xA8" -- U+ECA8 wifi connected
+        else
+            wifi_symbol = "\xEE\xB2\xA9" -- U+ECA9 wifi-off (off or no link)
         end
     end
 
@@ -1309,7 +1336,13 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         session_pages = tostring(session_pages),
         -- Metadata
         title       = tostring(title),
-        author      = tostring(authors),
+        author      = first_author,
+        authors     = authors,
+        author_1    = authors_list[1] or "",
+        author_2    = authors_list[2] or "",
+        author_3    = authors_list[3] or "",
+        author_4    = authors_list[4] or "",
+        author_5    = authors_list[5] or "",
         series      = tostring(series),
         series_name = tostring(series_name or ""),   -- populated in Task 10
         series_num  = tostring(series_num or ""),    -- populated in Task 10
