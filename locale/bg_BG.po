@@ -1564,6 +1564,46 @@ msgstr "горе"
 msgid "transparent"
 msgstr "прозрачен"
 
+msgid "Advanced"
+msgstr "Разширени"
+
+msgid "Branch name (leave empty for stable)"
+msgstr "Име на клон (оставете празно за стабилна версия)"
+
+msgid "Check for updates"
+msgstr "Проверка за актуализации"
+
+msgid "Could not fetch latest release."
+msgstr "Последната версия не можа да бъде изтеглена."
+
+msgid "Could not install branch:"
+msgstr "Клонът не можа да бъде инсталиран:"
+
+msgid "Development branch"
+msgstr "Разработен клон"
+
+msgid "Downloading latest release..."
+msgstr "Изтегляне на последната версия..."
+
+msgid "Install branch"
+msgstr "Инсталиране на клон"
+
+msgid "Installed: v"
+msgstr "Инсталиран: v"
+
+msgid "Latest release has no downloadable zip."
+msgstr "Последната версия няма zip файл за изтегляне."
+
+msgid "Reset to latest stable release"
+msgstr "Нулиране до последната стабилна версия"
+
+msgid ""
+"This will clear the development branch setting and install the latest stable "
+"release of Bookends, then restart KOReader. Continue?"
+msgstr ""
+"Това ще изчисти настройката за разработен клон и ще инсталира последната "
+"стабилна версия на Bookends, след което ще рестартира KOReader. Продължаване?"
+
 #~ msgid "+ New preset"
 #~ msgstr "+ Нова предварителна настройка"
 

@@ -1566,6 +1566,47 @@ msgstr "oben"
 msgid "transparent"
 msgstr "transparent"
 
+msgid "Advanced"
+msgstr "Erweitert"
+
+msgid "Branch name (leave empty for stable)"
+msgstr "Branch-Name (leer lassen für stabile Version)"
+
+msgid "Check for updates"
+msgstr "Nach Updates suchen"
+
+msgid "Could not fetch latest release."
+msgstr "Aktuellstes Release konnte nicht abgerufen werden."
+
+msgid "Could not install branch:"
+msgstr "Branch konnte nicht installiert werden:"
+
+msgid "Development branch"
+msgstr "Entwicklungs-Branch"
+
+msgid "Downloading latest release..."
+msgstr "Aktuellstes Release wird heruntergeladen..."
+
+msgid "Install branch"
+msgstr "Branch installieren"
+
+msgid "Installed: v"
+msgstr "Installiert: v"
+
+msgid "Latest release has no downloadable zip."
+msgstr "Das aktuellste Release enthält keine herunterladbare ZIP-Datei."
+
+msgid "Reset to latest stable release"
+msgstr "Auf aktuellstes stabiles Release zurücksetzen"
+
+msgid ""
+"This will clear the development branch setting and install the latest stable "
+"release of Bookends, then restart KOReader. Continue?"
+msgstr ""
+"Dadurch wird die Entwicklungs-Branch-Einstellung zurückgesetzt und das "
+"aktuellste stabile Release von Bookends installiert, dann wird KOReader neu "
+"gestartet. Fortfahren?"
+
 #~ msgid "+ New preset"
 #~ msgstr "+ Neue Voreinstellung"
 
@@ -1586,9 +1627,6 @@ msgstr "transparent"
 
 #~ msgid "Built-in presets"
 #~ msgstr "Eingebaute Voreinstellungen"
-
-#~ msgid "Check for updates"
-#~ msgstr "Nach Updates suchen"
 
 #~ msgid "Classic alternating"
 #~ msgstr "Klassisch wechselnd"

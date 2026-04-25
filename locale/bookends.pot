@@ -2,8 +2,8 @@
 # Translation template
 msgid ""
 msgstr ""
-"Project-Id-Version: bookends 5.0.0\n"
-"POT-Creation-Date: 2026-04-24 20:00+0000\n"
+"Project-Id-Version: bookends 5.2.0\n"
+"POT-Creation-Date: 2026-04-25 20:00+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1507,4 +1507,40 @@ msgid "top"
 msgstr ""
 
 msgid "transparent"
+msgstr ""
+
+msgid "Advanced"
+msgstr ""
+
+msgid "Branch name (leave empty for stable)"
+msgstr ""
+
+msgid "Check for updates"
+msgstr ""
+
+msgid "Could not fetch latest release."
+msgstr ""
+
+msgid "Could not install branch:"
+msgstr ""
+
+msgid "Development branch"
+msgstr ""
+
+msgid "Downloading latest release..."
+msgstr ""
+
+msgid "Install branch"
+msgstr ""
+
+msgid "Installed: v"
+msgstr ""
+
+msgid "Latest release has no downloadable zip."
+msgstr ""
+
+msgid "Reset to latest stable release"
+msgstr ""
+
+msgid "This will clear the development branch setting and install the latest stable release of Bookends, then restart KOReader. Continue?"
 msgstr ""
