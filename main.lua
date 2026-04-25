@@ -834,22 +834,19 @@ function Bookends:anyActiveLineUses(token_names)
     return false
 end
 
-function Bookends:markDirty(refresh_mode)
+-- Shared dirty-flag bookkeeping + nextTick debounce. Callers supply the
+-- dispatcher that decides which setDirty calls to actually issue.
+function Bookends:_scheduleRepaint(dispatcher)
     self.dirty = true
     self._tick_cache = nil
     if not self._error_disabled then
         self.enabled = self.settings:isTrue("enabled")
     end
-    -- Debounce: coalesce multiple markDirty calls within the same tick.
-    -- Skip if a KOReader paint cycle already consumed the dirty flag.
     if not self._repaint_scheduled then
         self._repaint_scheduled = true
-        local mode = refresh_mode or "ui"
         UIManager:nextTick(function()
             self._repaint_scheduled = false
-            if self.dirty then
-                UIManager:setDirty(self.ui, mode)
-            end
+            if self.dirty then dispatcher() end
         end)
     end
 
@@ -866,6 +863,37 @@ function Bookends:markDirty(refresh_mode)
         pcall(self.autosaveActivePreset, self)
     end
     UIManager:scheduleIn(2, self._pending_autosave)
+end
+
+function Bookends:markDirty(refresh_mode)
+    local mode = refresh_mode or "ui"
+    self:_scheduleRepaint(function()
+        UIManager:setDirty(self.ui, mode)
+    end)
+end
+
+-- Targeted refresh of just the overlay regions populated by the last paint.
+-- Used by value-tick repaints (heartbeat timer, gated system events) where
+-- the overlay's geometry hasn't changed — only the rendered content has.
+-- Two benefits:
+--   1. The setDirty calls carry a region, so user patches that hook _refresh
+--      and look for "ui" + nil-region (e.g. 2-dim-during-refresh.lua) won't
+--      treat our refresh as a flashing one and won't dim the frontlight.
+--   2. Smaller dirty area = smaller nightmode flash and less battery.
+-- Falls back to the full markDirty path until the first paint has populated
+-- the region cache (chicken-and-egg: we don't know the dimen pre-paint).
+function Bookends:markOverlayDirty()
+    if not self._top_paint_rect and not self._bottom_paint_rect then
+        return self:markDirty()
+    end
+    self:_scheduleRepaint(function()
+        if self._top_paint_rect then
+            UIManager:setDirty(self.ui, "ui", self._top_paint_rect)
+        end
+        if self._bottom_paint_rect then
+            UIManager:setDirty(self.ui, "ui", self._bottom_paint_rect)
+        end
+    end)
 end
 
 --- Compute chapter tick fractions for book progress bars (cached per dirty cycle).
@@ -999,11 +1027,11 @@ function Bookends:gatedRepaint(token_names, debounce)
         end
         self._gated_repaint_pending = function()
             self._gated_repaint_pending = nil
-            self:markDirty()
+            self:markOverlayDirty()
         end
         UIManager:scheduleIn(debounce, self._gated_repaint_pending)
     else
-        self:delayedRepaint()
+        UIManager:nextTick(function() self:markOverlayDirty() end)
     end
 end
 
@@ -1639,6 +1667,39 @@ function Bookends:_paintToInner(bb, x, y)
         self.position_cache[key] = text
     end
 
+    -- Cache top/bottom-row paint regions for markOverlayDirty. Vertical bars
+    -- (full-height) are folded into both rows so any value-tick refresh still
+    -- covers them. Each Geom is a union of rects whose centre falls in that
+    -- half of the screen.
+    local function unionRect(target, r)
+        if not target then return Geom:new{ x = r.x, y = r.y, w = r.w, h = r.h } end
+        local x1 = math.min(target.x, r.x)
+        local y1 = math.min(target.y, r.y)
+        local x2 = math.max(target.x + target.w, r.x + r.w)
+        local y2 = math.max(target.y + target.h, r.y + r.h)
+        target.x, target.y, target.w, target.h = x1, y1, x2 - x1, y2 - y1
+        return target
+    end
+    local top_rect, bot_rect
+    for key, entry in pairs(self.widget_cache) do
+        local size = entry.widget.getSize and entry.widget:getSize() or { w = 0, h = 0 }
+        local rect = { x = x + entry.x, y = y + entry.y, w = size.w, h = size.h }
+        if key:sub(1, 1) == "t" then top_rect = unionRect(top_rect, rect)
+        else                          bot_rect = unionRect(bot_rect, rect) end
+    end
+    for _, r in ipairs(self._hold_rects) do
+        if r.h > screen_h * 0.5 then
+            top_rect = unionRect(top_rect, r)
+            bot_rect = unionRect(bot_rect, r)
+        elseif (r.y + r.h * 0.5) < screen_h * 0.5 then
+            top_rect = unionRect(top_rect, r)
+        else
+            bot_rect = unionRect(bot_rect, r)
+        end
+    end
+    self._top_paint_rect = top_rect
+    self._bottom_paint_rect = bot_rect
+
     -- Dogear and flipping-icon halo both paint from toast overlays
     -- registered on UIManager, above the ReaderView paint pipeline.
     -- An in-paintTo repaint here would be lost if this function errored
@@ -1655,6 +1716,8 @@ function Bookends:onCloseWidget()
         OverlayWidget.freeWidgets(self.widget_cache)
         self.widget_cache = nil
     end
+    self._top_paint_rect = nil
+    self._bottom_paint_rect = nil
     if self.settings then
         self.settings:flush()
     end
@@ -1687,7 +1750,7 @@ function Bookends:startRefreshTimer()
     self.refresh_timer_func = function()
         if not self.refresh_timer_active then return end
         if self:anyActiveLineUses(TIMER_TOKENS) then
-            self:markDirty()
+            self:markOverlayDirty()
         end
         UIManager:scheduleIn(60, self.refresh_timer_func)
     end
