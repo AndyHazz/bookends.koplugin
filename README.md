@@ -216,7 +216,7 @@ Comparison operators: `=` (equals), `!=` (not equals), `<` (less than), `>` (gre
 | `time` | HH:MM (24h) | Time of day |
 | `day` | Mon–Sun | Day of week |
 | `invert` | yes / no | Page-turn direction flipped |
-| `title` | string | Book title (matches `%title`) — test with `[if:not title]` or `[if:title=…]` |
+| `title` | string | Book title (matches `%title`) — test with `[if:not title]` or `[if:title="A Book"]` |
 | `author` | string | Author (matches `%author`) |
 | `series` | string | Series, e.g. `"Foo #2"` (matches `%series`) — empty when not in a series |
 | `chap_title` | string | Current chapter title (matches `%chap_title`) |
@@ -224,7 +224,7 @@ Comparison operators: `=` (equals), `!=` (not equals), `<` (less than), `>` (gre
 | `chap_title_2` | string | Chapter title at depth 2 (matches `%chap_title_2`) |
 | `chap_title_3` | string | Chapter title at depth 3 (matches `%chap_title_3`) |
 
-String predicates evaluate as falsy when the string is empty, so `[if:not series]` means "book isn't in a series" and `[if:chap_title_2]` means "we're in a sub-chapter at depth 2".
+String predicates evaluate as falsy when the string is empty, so `[if:not series]` means "book isn't in a series" and `[if:chap_title_2]` means "we're in a sub-chapter at depth 2". For exact-match comparisons, wrap multi-word values in double quotes — e.g. `[if:author="J.R.R. Tolkien"]` or `[if:title!="Untitled"]`.
 
 > Legacy predicate names (`chapters`, `chapter_pct`, `chapter_title`, `percent`, `pages`) still evaluate — they're aliased to their v5 equivalents automatically.
 

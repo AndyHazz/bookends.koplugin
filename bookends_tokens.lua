@@ -235,6 +235,11 @@ local function evaluateCondition(cond_str, state)
         key, op, value = cond_str:match("^([%w_]+)([=<>])(.+)$")
     end
     if key and op and value then
+        -- Strip surrounding double quotes from the RHS so users can match
+        -- multi-word string values (e.g. [if:author="J.R.R. Tolkien"]).
+        if #value >= 2 and value:sub(1, 1) == '"' and value:sub(-1) == '"' then
+            value = value:sub(2, -2)
+        end
         -- Try the key as-is first; fall back to aliased key if not found.
         -- This allows both old and new state-key names to work simultaneously.
         local state_val = state[key]
@@ -297,6 +302,8 @@ end
 --- Tokenise a conditional-expression string into keyword / paren / atom tokens.
 -- Whitespace separates tokens. "(" and ")" are always single tokens.
 -- The words "and", "or", "not" (lowercase, exact match) are keywords.
+-- Double-quoted runs ("...") are kept inside the current atom so RHS values
+-- can contain spaces (e.g. author="J.R.R. Tolkien").
 -- Everything else is an atom, passed verbatim to evaluateCondition.
 local function tokeniseExpression(cond_str)
     local tokens = {}
@@ -310,9 +317,14 @@ local function tokeniseExpression(cond_str)
             i = i + 1
         else
             local j = i
+            local in_quote = false
             while j <= len do
                 local cj = cond_str:sub(j, j)
-                if cj == " " or cj == "\t" or cj == "(" or cj == ")" then break end
+                if cj == '"' then
+                    in_quote = not in_quote
+                elseif not in_quote and (cj == " " or cj == "\t" or cj == "(" or cj == ")") then
+                    break
+                end
                 j = j + 1
             end
             local word = cond_str:sub(i, j - 1)

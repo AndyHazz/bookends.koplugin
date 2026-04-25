@@ -310,6 +310,41 @@ test("string: author = Anonymous", function()
     eq(P("[if:author=Anonymous]?[/if]", {author="Ursula K. Le Guin"}), "")
 end)
 
+test("string: quoted RHS with spaces matches", function()
+    eq(P([=[[if:author="J.R.R. Tolkien"]match[/if]]=],
+         {author="J.R.R. Tolkien"}), "match")
+    eq(P([=[[if:author="J.R.R. Tolkien"]match[/if]]=],
+         {author="Ursula K. Le Guin"}), "")
+end)
+
+test("string: quoted RHS with != and spaces", function()
+    eq(P([=[[if:author!="J.R.R. Tolkien"]other[/if]]=],
+         {author="Ursula K. Le Guin"}), "other")
+    eq(P([=[[if:author!="J.R.R. Tolkien"]other[/if]]=],
+         {author="J.R.R. Tolkien"}), "")
+end)
+
+test("string: quoted RHS composes with boolean operators", function()
+    eq(P([=[[if:series="Foo Bar #2" and not chapter_title_2]hit[/if]]=],
+         {series="Foo Bar #2", chap_title_2=""}), "hit")
+    eq(P([=[[if:series="Foo Bar #2" and not chapter_title_2]hit[/if]]=],
+         {series="Other", chap_title_2=""}), "")
+end)
+
+test("string: empty quoted RHS matches empty state", function()
+    eq(P([=[[if:series=""]nope[/if]]=], {series=""}), "nope")
+    eq(P([=[[if:series=""]nope[/if]]=], {series="Foo #1"}), "")
+end)
+
+test("string: quoted RHS works through legacy-alias rewrite", function()
+    -- chapter_title_1 is the legacy alias for chap_title_1; quoted RHS must
+    -- survive the alias-rewrite pass unchanged.
+    eq(P([=[[if:chapter_title_1="The Awakening"]hit[/if]]=],
+         {chap_title_1="The Awakening"}), "hit")
+    eq(P([=[[if:chapter_title_1="The Awakening"]hit[/if]]=],
+         {chap_title_1="Other"}), "")
+end)
+
 test("string: combined with operators", function()
     eq(
         P("[if:series and not chapter_title_2]%S \xC2\xB7 %C1[/if]",
