@@ -412,4 +412,52 @@ function Updater.installBranch(branch, on_success)
     Updater.install(zip_url, installed_version, "branch:" .. branch, on_success)
 end
 
+--- Install the latest stable (non-prerelease) release, regardless of installed version.
+-- Used by the "Reset to latest stable release" entry: even when on a branch whose
+-- _meta.lua reports a higher version than the current release, we still want to
+-- pull the release zip and re-stamp last_install_source = "release".
+-- @param on_success function or nil: fired after successful unpack
+function Updater.installLatestStable(on_success)
+    local NetworkMgr = require("ui/network/manager")
+    if not NetworkMgr:isWifiOn() then
+        UIManager:show(InfoMessage:new{
+            text = _("Wi-Fi is not enabled."),
+            timeout = 3,
+        })
+        return
+    end
+
+    UIManager:show(InfoMessage:new{
+        text = _("Downloading latest release..."),
+        timeout = 1,
+    })
+
+    UIManager:scheduleIn(0.1, function()
+        local installed_version = Updater.getInstalledVersion()
+        local user_agent = "KOReader-Bookends/" .. installed_version
+        local release = httpGetJSON(
+            "https://api.github.com/repos/AndyHazz/bookends.koplugin/releases/latest",
+            user_agent)
+        if not release or not release.tag_name or release.draft or release.prerelease then
+            Updater.offerReleasesPage(_("Could not fetch latest release."))
+            return
+        end
+        local zip_url
+        if release.assets then
+            for _, asset in ipairs(release.assets) do
+                if asset.name:match("%.zip$") then
+                    zip_url = asset.browser_download_url
+                    break
+                end
+            end
+        end
+        if not zip_url then
+            Updater.offerReleasesPage(_("Latest release has no downloadable zip."))
+            return
+        end
+        local new_version = release.tag_name:gsub("^v", "")
+        Updater.install(zip_url, installed_version, new_version, on_success)
+    end)
+end
+
 return Updater
