@@ -296,7 +296,7 @@ function Updater.check(on_success)
     end)
 end
 
-function Updater.install(zip_url, old_version, new_version, on_success)
+function Updater.install(zip_url, old_version, new_version, on_success, error_label)
 
     local DataStorage = require("datastorage")
     local lfs = require("libs/libkoreader-lfs")
@@ -346,16 +346,26 @@ function Updater.install(zip_url, old_version, new_version, on_success)
                 downloaded = ok_dl and code == 200
             end
         end
-        -- Fallback: curl (available on Android, desktop)
+        -- Fallback: curl (available on Android, desktop). The -f flag makes
+        -- curl exit non-zero on HTTP errors (e.g. 404 for a missing branch);
+        -- without it, curl would write the 404 HTML body to the zip file and
+        -- the unpack step would surface a misleading "extracting failed".
         if not downloaded then
             pcall(os.remove, zip_path)
             local ret = os.execute(string.format(
-                "curl -s -L -o %q %q", zip_path, zip_url))
+                "curl -sfL -o %q %q", zip_path, zip_url))
             downloaded = ret == 0 or ret == true
         end
         if not downloaded then
             pcall(os.remove, zip_path)
-            Updater.offerReleasesPage(_("Download failed."))
+            if error_label then
+                UIManager:show(InfoMessage:new{
+                    text = error_label,
+                    timeout = 3,
+                })
+            else
+                Updater.offerReleasesPage(_("Download failed."))
+            end
             return
         end
 
@@ -366,7 +376,7 @@ function Updater.install(zip_url, old_version, new_version, on_success)
 
         if not ok then
             UIManager:show(InfoMessage:new{
-                text = _("Installation failed: ") .. tostring(err),
+                text = error_label or (_("Installation failed: ") .. tostring(err)),
                 timeout = 5,
             })
             return
@@ -409,7 +419,8 @@ function Updater.installBranch(branch, on_success)
 
     local installed_version = Updater.getInstalledVersion()
     local zip_url = Updater.composeBranchUrl(branch)
-    Updater.install(zip_url, installed_version, "branch:" .. branch, on_success)
+    local error_label = _("Could not install branch:") .. " " .. branch
+    Updater.install(zip_url, installed_version, "branch:" .. branch, on_success, error_label)
 end
 
 --- Install the latest stable (non-prerelease) release, regardless of installed version.
