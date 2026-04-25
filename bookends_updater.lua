@@ -393,4 +393,23 @@ function Updater.install(zip_url, old_version, new_version, on_success)
     end)
 end
 
+--- Install from a GitHub branch's archive zip.
+-- Same install pipeline as the release path; just composes a different URL.
+-- @param branch string: branch name (e.g. "feature/v5.2-test")
+-- @param on_success function or nil: fired after successful unpack
+function Updater.installBranch(branch, on_success)
+    local NetworkMgr = require("ui/network/manager")
+    if not NetworkMgr:isWifiOn() then
+        UIManager:show(InfoMessage:new{
+            text = _("Wi-Fi is not enabled."),
+            timeout = 3,
+        })
+        return
+    end
+
+    local installed_version = Updater.getInstalledVersion()
+    local zip_url = Updater.composeBranchUrl(branch)
+    Updater.install(zip_url, installed_version, "branch:" .. branch, on_success)
+end
+
 return Updater
