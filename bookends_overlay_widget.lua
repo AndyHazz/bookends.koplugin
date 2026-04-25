@@ -962,11 +962,20 @@ function OverlayWidget.calculateRowLimits(left_w, center_w, right_w, screen_w, g
     else
         if left_w and right_w then
             local half = math.floor(screen_w / 2) - math.floor(gap / 2)
-            if left_w > half - h_offset then
-                limits.left = math.max(0, half - h_offset)
-            end
-            if right_w > half - h_offset then
-                limits.right = math.max(0, half - h_offset)
+            local effective_half = math.max(0, half - h_offset)
+            -- Flex: when one side fits in its half, give the other side the
+            -- remaining width rather than locking it to half. Falls back to
+            -- symmetric half/half only when both sides individually want
+            -- more than half.
+            if left_w <= effective_half and right_w <= effective_half then
+                -- Both fit naturally; no caps needed.
+            elseif left_w <= effective_half then
+                limits.right = math.max(0, screen_w - gap - 2 * h_offset - left_w)
+            elseif right_w <= effective_half then
+                limits.left = math.max(0, screen_w - gap - 2 * h_offset - right_w)
+            else
+                limits.left = effective_half
+                limits.right = effective_half
             end
         end
         if left_w and not right_w then
