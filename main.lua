@@ -2337,6 +2337,31 @@ function Bookends:checkForUpdates()
     end
 end
 
+function Bookends:editDevBranch(touchmenu_instance)
+    local InputDialogMod = require("ui/widget/inputdialog")
+    local UIManagerMod = require("ui/uimanager")
+    local dlg
+    dlg = InputDialogMod:new{
+        title = _("Development branch"),
+        input = self.dev_branch or "",
+        input_hint = _("Branch name (leave empty for stable)"),
+        buttons = {{
+            { text = _("Cancel"), id = "close",
+              callback = function() UIManagerMod:close(dlg) end },
+            { text = _("Save"), is_enter_default = true, callback = function()
+                local raw = dlg:getInputText() or ""
+                local trimmed = raw:gsub("^%s+", ""):gsub("%s+$", "")
+                self.dev_branch = trimmed
+                self.settings:saveSetting("dev_branch", trimmed)
+                UIManagerMod:close(dlg)
+                if touchmenu_instance then touchmenu_instance:updateItems() end
+            end },
+        }},
+    }
+    UIManagerMod:show(dlg)
+    dlg:onShowKeyboard()
+end
+
 function Bookends:backgroundUpdateCheck()
     if not self.check_updates then return end
     Updater.checkBackground(function(ver)
