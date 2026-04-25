@@ -914,6 +914,27 @@ end
 function OverlayWidget.calculateRowLimits(left_w, center_w, right_w, screen_w, gap, h_offset, priority)
     local limits = { left = nil, center = nil, right = nil }
 
+    -- No centre, both sides: flex layout regardless of priority. The priority
+    -- toggle only matters when a centre exists (it decides who gets truncated
+    -- first when content overflows). When there's no centre, both modes
+    -- should produce identical results: a small side lets the other side use
+    -- the full remaining width, with symmetric half/half as the fallback.
+    if not center_w and left_w and right_w then
+        local half = math.floor(screen_w / 2) - math.floor(gap / 2)
+        local effective_half = math.max(0, half - h_offset)
+        if left_w <= effective_half and right_w <= effective_half then
+            -- Both fit naturally; no caps needed.
+        elseif left_w <= effective_half then
+            limits.right = math.max(0, screen_w - gap - 2 * h_offset - left_w)
+        elseif right_w <= effective_half then
+            limits.left = math.max(0, screen_w - gap - 2 * h_offset - right_w)
+        else
+            limits.left = effective_half
+            limits.right = effective_half
+        end
+        return limits
+    end
+
     if priority == "sides" then
         -- Sides-first: left and right claim their natural width, center gets the remainder.
         -- Center is positioned symmetrically, so its max width is constrained by
@@ -960,24 +981,8 @@ function OverlayWidget.calculateRowLimits(left_w, center_w, right_w, screen_w, g
             limits.right = math.max(0, available_side - h_offset)
         end
     else
-        if left_w and right_w then
-            local half = math.floor(screen_w / 2) - math.floor(gap / 2)
-            local effective_half = math.max(0, half - h_offset)
-            -- Flex: when one side fits in its half, give the other side the
-            -- remaining width rather than locking it to half. Falls back to
-            -- symmetric half/half only when both sides individually want
-            -- more than half.
-            if left_w <= effective_half and right_w <= effective_half then
-                -- Both fit naturally; no caps needed.
-            elseif left_w <= effective_half then
-                limits.right = math.max(0, screen_w - gap - 2 * h_offset - left_w)
-            elseif right_w <= effective_half then
-                limits.left = math.max(0, screen_w - gap - 2 * h_offset - right_w)
-            else
-                limits.left = effective_half
-                limits.right = effective_half
-            end
-        end
+        -- No centre, both sides handled by the early-return flex block above.
+        -- This branch only handles the left-only and right-only cases.
         if left_w and not right_w then
             local max = math.max(0, screen_w - h_offset)
             if left_w > max then limits.left = max end
