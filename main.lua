@@ -815,6 +815,25 @@ function Bookends:isPositionActive(key)
     return self.enabled and #self.positions[key].lines > 0 and not self.positions[key].disabled
 end
 
+--- Returns true if any active line's format string references one of the
+--- given v5 bareword tokens (e.g. {"light", "warmth"}). Mirrors the
+--- non-ident word-boundary rule used by Tokens.expand's `needs()` helper.
+function Bookends:anyActiveLineUses(token_names)
+    if not self.enabled then return false end
+    for _, pos in ipairs(self.POSITIONS) do
+        if self:isPositionActive(pos.key) then
+            for _, line in ipairs(self.positions[pos.key].lines) do
+                for _, name in ipairs(token_names) do
+                    if line:find("%%" .. name .. "[^%w_]") or line:match("%%" .. name .. "$") then
+                        return true
+                    end
+                end
+            end
+        end
+    end
+    return false
+end
+
 function Bookends:markDirty(refresh_mode)
     self.dirty = true
     self._tick_cache = nil
@@ -963,12 +982,41 @@ function Bookends:delayedRepaint()
         self:markDirty()
     end)
 end
-Bookends.onFrontlightStateChanged = Bookends.delayedRepaint
-Bookends.onCharging               = Bookends.delayedRepaint
-Bookends.onNotCharging            = Bookends.delayedRepaint
-Bookends.onNetworkConnected       = Bookends.delayedRepaint
-Bookends.onNetworkDisconnected    = Bookends.delayedRepaint
-Bookends.onToggleReadingOrder     = Bookends.delayedRepaint
+
+-- Token-gated, optionally debounced repaint. Skips entirely when no active
+-- line uses any of the given tokens — both an efficiency win and, for
+-- frontlight events, the cure for a feedback loop with user patches like
+-- 2-dim-during-refresh.lua: that patch calls setIntensity() inside its
+-- _refresh hook, which broadcasts FrontlightStateChanged, which used to
+-- schedule another "ui" refresh here, which the patch would then dim again.
+-- The debounce coalesces the patch's dim/restore pair so any repaint we
+-- do schedule lands outside the patch's 0.17 s `restoring` window.
+function Bookends:gatedRepaint(token_names, debounce)
+    if not self:anyActiveLineUses(token_names) then return end
+    if debounce and debounce > 0 then
+        if self._gated_repaint_pending then
+            UIManager:unschedule(self._gated_repaint_pending)
+        end
+        self._gated_repaint_pending = function()
+            self._gated_repaint_pending = nil
+            self:markDirty()
+        end
+        UIManager:scheduleIn(debounce, self._gated_repaint_pending)
+    else
+        self:delayedRepaint()
+    end
+end
+
+local FRONTLIGHT_TOKENS = { "light", "warmth" }
+local BATTERY_TOKENS    = { "batt", "batt_icon" }
+local WIFI_TOKENS       = { "wifi" }
+
+function Bookends:onFrontlightStateChanged() self:gatedRepaint(FRONTLIGHT_TOKENS, 1.0) end
+function Bookends:onCharging()               self:gatedRepaint(BATTERY_TOKENS) end
+function Bookends:onNotCharging()            self:gatedRepaint(BATTERY_TOKENS) end
+function Bookends:onNetworkConnected()       self:gatedRepaint(WIFI_TOKENS) end
+function Bookends:onNetworkDisconnected()    self:gatedRepaint(WIFI_TOKENS) end
+Bookends.onToggleReadingOrder = Bookends.delayedRepaint
 function Bookends:onAnnotationsModified()
     self:markDirty()
 end
@@ -1621,12 +1669,26 @@ function Bookends:onFlushSettings()
     end
 end
 
+-- Tokens whose displayed value changes purely with wall-clock time (no event
+-- fires — they need the 60s heartbeat to stay current). Battery percent is
+-- here because charging/uncharging events handle the icon state change but
+-- the numeric % only drifts as time passes.
+local TIMER_TOKENS = {
+    "time", "time_12h", "time_24h",
+    "date", "date_long", "date_numeric", "weekday", "weekday_short",
+    "session_time", "book_time_left", "chap_time_left",
+    "speed", "book_read_time",
+    "batt", "batt_icon",
+}
+
 function Bookends:startRefreshTimer()
     if self.refresh_timer_active then return end
     self.refresh_timer_active = true
     self.refresh_timer_func = function()
         if not self.refresh_timer_active then return end
-        self:markDirty()
+        if self:anyActiveLineUses(TIMER_TOKENS) then
+            self:markDirty()
+        end
         UIManager:scheduleIn(60, self.refresh_timer_func)
     end
     UIManager:scheduleIn(60, self.refresh_timer_func)
