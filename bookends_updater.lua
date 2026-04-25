@@ -38,6 +38,18 @@ local function isNewer(v1, v2)
     return false
 end
 
+--- Compose the GitHub branch-archive URL for a given branch name.
+-- Branch path is URL-encoded except for alnum, dash, underscore, dot, tilde
+-- and forward slash (so feature/foo keeps its slash).
+function Updater.composeBranchUrl(branch)
+    local encoded = branch:gsub("[^%w%-_/.~]", function(c)
+        return string.format("%%%02X", c:byte())
+    end)
+    return string.format(
+        "https://github.com/AndyHazz/bookends.koplugin/archive/refs/heads/%s.zip",
+        encoded)
+end
+
 --- Try LuaSocket first, fall back to curl for platforms where SSL crashes.
 local function httpGetJSON(url, user_agent)
     local json = require("json")

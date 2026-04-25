@@ -38,5 +38,21 @@ test("module loads", function()
     assert(type(Updater.getInstalledVersion) == "function")
 end)
 
+test("composeBranchUrl: simple branch", function()
+    eq(Updater.composeBranchUrl("master"),
+       "https://github.com/AndyHazz/bookends.koplugin/archive/refs/heads/master.zip")
+end)
+
+test("composeBranchUrl: branch with slash kept literal", function()
+    eq(Updater.composeBranchUrl("feature/v5.2-test"),
+       "https://github.com/AndyHazz/bookends.koplugin/archive/refs/heads/feature/v5.2-test.zip")
+end)
+
+test("composeBranchUrl: special chars are URL-encoded", function()
+    -- Spaces, semicolons, etc. encoded; alnum/-/_/./~// preserved
+    eq(Updater.composeBranchUrl("a b;c"),
+       "https://github.com/AndyHazz/bookends.koplugin/archive/refs/heads/a%20b%3Bc.zip")
+end)
+
 print(pass .. " passed, " .. fail .. " failed")
 os.exit(fail == 0 and 0 or 1)
