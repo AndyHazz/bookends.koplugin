@@ -110,10 +110,10 @@ Bookends.CONDITIONAL_CATALOG = {
         { "[if:series]...[/if]", _("If book in series") },
         { "[if:chap_title]...[/if]", _("If chapter has title") },
         { "[if:chap_title_2]...[/if]", _("Chapter title at depth 1/2/3") },
-        { "[if:authors>=2]...[/if]", _("If book has 2+ authors") },
+        { "[if:authors>1]...[/if]", _("If book has 2+ authors") },
     }},
     { _("Examples"), {
-        { "[if:authors>=2]%author, et al.[else]%author[/if]", _("Author with et al. for multi-author") },
+        { "[if:authors>1]%author, et al.[else]%author[/if]", _("Author with et al. for multi-author") },
         { "[if:wifi=on]%wifi[/if]", _("Wi-Fi icon only when Wi-Fi enabled") },
         { "[if:batt<20]LOW %batt[/if]", _("Low-battery warning") },
         { "[if:charging=yes]\xE2\x9A\xA1[/if] %batt", _("Bolt when charging") },
