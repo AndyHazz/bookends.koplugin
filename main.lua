@@ -2324,7 +2324,17 @@ end
 -- ─── Token picker ────────────────────────────────────────
 
 function Bookends:checkForUpdates()
-    Updater.check()
+    local settings = self.settings
+    local dev_branch = self.dev_branch or ""
+    if dev_branch ~= "" then
+        Updater.installBranch(dev_branch, function()
+            settings:saveSetting("last_install_source", "branch:" .. dev_branch)
+        end)
+    else
+        Updater.check(function()
+            settings:saveSetting("last_install_source", "release")
+        end)
+    end
 end
 
 function Bookends:backgroundUpdateCheck()
