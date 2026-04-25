@@ -171,8 +171,20 @@ msgstr "Setas"
 msgid "Arrows left-right"
 msgstr "Setas esq-dir"
 
-msgid "Author(s)"
-msgstr "Autor(es)"
+msgid "All authors"
+msgstr "Todos os autores"
+
+msgid "Author with et al. for multi-author"
+msgstr "Autor com et al. para vários autores"
+
+msgid "First author"
+msgstr "Primeiro autor"
+
+msgid "If book has 2+ authors"
+msgstr "Se o livro tem 2+ autores"
+
+msgid "Second author (empty if none)"
+msgstr "Segundo autor (vazio se nenhum)"
 
 msgid "Bar"
 msgstr "Barra"
@@ -1477,8 +1489,8 @@ msgstr "Wi-Fi (muda com status)"
 msgid "Wi-Fi icon (dynamic)"
 msgstr "Ícone Wi-Fi (dinâmico)"
 
-msgid "Wi-Fi icon when connected"
-msgstr "Ícone Wi-Fi quando conectado"
+msgid "Wi-Fi icon only when Wi-Fi enabled"
+msgstr "Ícone Wi-Fi só quando Wi-Fi ativado"
 
 msgid "Wi-Fi is not enabled."
 msgstr "Wi-Fi não está ativado."

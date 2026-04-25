@@ -173,8 +173,20 @@ msgstr "Flèches"
 msgid "Arrows left-right"
 msgstr "Flèches gauche-droite"
 
-msgid "Author(s)"
-msgstr "Auteur(s)"
+msgid "All authors"
+msgstr "Tous les auteurs"
+
+msgid "Author with et al. for multi-author"
+msgstr "Auteur avec et al. pour plusieurs auteurs"
+
+msgid "First author"
+msgstr "Premier auteur"
+
+msgid "If book has 2+ authors"
+msgstr "Si le livre a 2+ auteurs"
+
+msgid "Second author (empty if none)"
+msgstr "Deuxième auteur (vide si absent)"
 
 msgid "Bar"
 msgstr "Barre"
@@ -1481,8 +1493,8 @@ msgstr "Wi-Fi (change selon l'état)"
 msgid "Wi-Fi icon (dynamic)"
 msgstr "Icône Wi-Fi (dynamique)"
 
-msgid "Wi-Fi icon when connected"
-msgstr "Icône Wi-Fi quand connecté"
+msgid "Wi-Fi icon only when Wi-Fi enabled"
+msgstr "Icône Wi-Fi seulement quand Wi-Fi activé"
 
 msgid "Wi-Fi is not enabled."
 msgstr "Le Wi-Fi n'est pas activé."

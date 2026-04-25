@@ -179,8 +179,20 @@ msgstr "Pfeile"
 msgid "Arrows left-right"
 msgstr "Pfeile links-rechts"
 
-msgid "Author(s)"
-msgstr "Autor(en)"
+msgid "All authors"
+msgstr "Alle Autoren"
+
+msgid "Author with et al. for multi-author"
+msgstr "Autor mit et al. bei mehreren Autoren"
+
+msgid "First author"
+msgstr "Erster Autor"
+
+msgid "If book has 2+ authors"
+msgstr "Wenn das Buch 2+ Autoren hat"
+
+msgid "Second author (empty if none)"
+msgstr "Zweiter Autor (leer wenn keiner)"
 
 msgid "Bar"
 msgstr "Balken"
@@ -1488,8 +1500,8 @@ msgstr "WLAN (ändert sich mit Status)"
 msgid "Wi-Fi icon (dynamic)"
 msgstr "WLAN-Symbol (dynamisch)"
 
-msgid "Wi-Fi icon when connected"
-msgstr "WLAN-Symbol bei Verbindung"
+msgid "Wi-Fi icon only when Wi-Fi enabled"
+msgstr "WLAN-Symbol nur bei aktivem WLAN"
 
 msgid "Wi-Fi is not enabled."
 msgstr "WLAN ist nicht aktiviert."

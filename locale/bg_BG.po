@@ -176,8 +176,20 @@ msgstr "Стрелки"
 msgid "Arrows left-right"
 msgstr "Стрелки наляво-надясно"
 
-msgid "Author(s)"
-msgstr "Автор(и)"
+msgid "All authors"
+msgstr "Всички автори"
+
+msgid "Author with et al. for multi-author"
+msgstr "Автор с et al. за много автори"
+
+msgid "First author"
+msgstr "Първи автор"
+
+msgid "If book has 2+ authors"
+msgstr "Ако книгата има 2+ автори"
+
+msgid "Second author (empty if none)"
+msgstr "Втори автор (празно, ако няма)"
 
 msgid "Bar"
 msgstr "Лента"
@@ -1486,8 +1498,8 @@ msgstr "Wi-Fi (променя се според статуса)"
 msgid "Wi-Fi icon (dynamic)"
 msgstr "Икона на Wi-Fi (динамична)"
 
-msgid "Wi-Fi icon when connected"
-msgstr "Икона на Wi-Fi, когато е свързан"
+msgid "Wi-Fi icon only when Wi-Fi enabled"
+msgstr "Икона на Wi-Fi само когато Wi-Fi е включен"
 
 msgid "Wi-Fi is not enabled."
 msgstr "Wi-Fi не е включен."
