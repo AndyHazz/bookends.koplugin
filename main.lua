@@ -607,6 +607,8 @@ function Bookends:loadSettings()
 
     self.skim_on_hold = self.settings:readSetting("skim_on_hold", true)
     self.check_updates = self.settings:readSetting("check_updates", false)
+    self.dev_branch = self.settings:readSetting("dev_branch", "")
+    self.last_install_source = self.settings:readSetting("last_install_source", "release")
     self.stock_bar_disabled = self.settings:readSetting("stock_bar_disabled", false)
     -- Mirror to the Tokens module so %L / %l can read without a settings
     -- handle. main.lua owns the settings; Tokens just consults the flag.
