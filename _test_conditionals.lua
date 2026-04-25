@@ -82,6 +82,48 @@ test("time>=18:30 when time=1110 (18:30) → true", function()
     eq(r, "evening")
 end)
 
+-- >= and <= operators (boundary inclusive)
+test(">=: state == value → true", function()
+    eq(Tokens._processConditionals("[if:batt>=50]ok[/if]", { batt = 50 }), "ok")
+end)
+
+test(">=: state > value → true", function()
+    eq(Tokens._processConditionals("[if:batt>=50]ok[/if]", { batt = 75 }), "ok")
+end)
+
+test(">=: state < value → false", function()
+    eq(Tokens._processConditionals("[if:batt>=50]ok[/if]", { batt = 49 }), "")
+end)
+
+test("<=: state == value → true", function()
+    eq(Tokens._processConditionals("[if:batt<=20]low[/if]", { batt = 20 }), "low")
+end)
+
+test("<=: state < value → true", function()
+    eq(Tokens._processConditionals("[if:batt<=20]low[/if]", { batt = 5 }), "low")
+end)
+
+test("<=: state > value → false", function()
+    eq(Tokens._processConditionals("[if:batt<=20]low[/if]", { batt = 50 }), "")
+end)
+
+test(">=: HH:MM coercion", function()
+    eq(Tokens._processConditionals("[if:time>=18:00]evening[/if]", { time = 18*60 }), "evening")
+    eq(Tokens._processConditionals("[if:time>=18:00]evening[/if]", { time = 17*60 + 59 }), "")
+end)
+
+test(">= and <= compose with boolean operators", function()
+    eq(Tokens._processConditionals("[if:batt>=50 and batt<=80]mid[/if]", { batt = 65 }), "mid")
+    eq(Tokens._processConditionals("[if:batt>=50 and batt<=80]mid[/if]", { batt = 30 }), "")
+    eq(Tokens._processConditionals("[if:batt>=50 and batt<=80]mid[/if]", { batt = 90 }), "")
+end)
+
+test(">= via legacy alias rewrite", function()
+    -- chapters is the legacy alias for chap_count
+    eq(Tokens._processConditionals("[if:chapters>=10]many[/if]", { chap_count = 12 }), "many")
+    eq(Tokens._processConditionals("[if:chapters>=10]many[/if]", { chap_count = 9 }), "")
+end)
+
 -- [else] branch
 test("[else] branch when predicate false", function()
     local r = Tokens._processConditionals("[if:a=1]A[else]B[/if]", { a = 2 })

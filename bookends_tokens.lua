@@ -229,11 +229,12 @@ end
 local function evaluateCondition(cond_str, state)
     -- Try operator: key=value, key!=value, key<value, key>value
     -- Key pattern allows underscores ([%w_]+) to support names like book_pct.
-    -- Operator pattern matches =, !=, <, >.
-    local key, op, value = cond_str:match("^([%w_]+)(!=)(.+)$")
-    if not key then
-        key, op, value = cond_str:match("^([%w_]+)([=<>])(.+)$")
-    end
+    -- Operator pattern matches =, !=, <, >, <=, >=.
+    -- Two-char operators are tried first so the longer match wins.
+    local key, op, value = cond_str:match("^([%w_]+)(>=)(.+)$")
+    if not key then key, op, value = cond_str:match("^([%w_]+)(<=)(.+)$") end
+    if not key then key, op, value = cond_str:match("^([%w_]+)(!=)(.+)$") end
+    if not key then key, op, value = cond_str:match("^([%w_]+)([=<>])(.+)$") end
     if key and op and value then
         -- Strip surrounding double quotes from the RHS so users can match
         -- multi-word string values (e.g. [if:author="J.R.R. Tolkien"]).
@@ -279,8 +280,10 @@ local function evaluateCondition(cond_str, state)
             return tostring(state_val) ~= tostring(value)
         end
         if not num_state or not num_val then return false end
-        if op == "<" then return num_state < num_val end
-        if op == ">" then return num_state > num_val end
+        if op == "<"  then return num_state <  num_val end
+        if op == ">"  then return num_state >  num_val end
+        if op == "<=" then return num_state <= num_val end
+        if op == ">=" then return num_state >= num_val end
         return false
     end
     -- No operator: truthy check
@@ -617,8 +620,8 @@ end
 -- Walks each opener's predicate via tokeniseExpression, rewrites the KEY
 -- portion of each atom (the leading [%w_]+ run before any operator), leaves
 -- literal values untouched but rewrites any @ref RHS via the same alias map.
--- Handles =, !=, <, > operators; Boolean operators (and/or/not/parens) pass
--- through unchanged.
+-- Handles =, !=, <, >, <=, >= operators; Boolean operators (and/or/not/parens)
+-- pass through unchanged.
 local function rewriteConditionalKeys(s)
     return (s:gsub("%[if:([^%]]-)%]", function(pred)
         local toks = tokeniseExpression(pred)
@@ -626,11 +629,12 @@ local function rewriteConditionalKeys(s)
         for _i, tok in ipairs(toks) do
             if tok.kind == "atom" then
                 -- atom = "key", "key=value", "key!=value", "key<value",
-                -- "key>value". Try != first (two-char), then single-char ops.
-                local key, op, rest = tok.value:match("^([%w_]+)(!=)(.*)$")
-                if not key then
-                    key, op, rest = tok.value:match("^([%w_]+)([=<>])(.*)$")
-                end
+                -- "key>value", "key<=value", "key>=value". Try two-char
+                -- operators first so the longer match wins.
+                local key, op, rest = tok.value:match("^([%w_]+)(>=)(.*)$")
+                if not key then key, op, rest = tok.value:match("^([%w_]+)(<=)(.*)$") end
+                if not key then key, op, rest = tok.value:match("^([%w_]+)(!=)(.*)$") end
+                if not key then key, op, rest = tok.value:match("^([%w_]+)([=<>])(.*)$") end
                 if key and op then
                     -- Rewrite @key references on the RHS too.
                     if rest:sub(1, 1) == "@" then

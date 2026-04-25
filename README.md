@@ -192,7 +192,7 @@ Show or hide content based on device state, reading progress, time, and more usi
 [if:batt!=100]charging…[/if]
 ```
 
-Comparison operators: `=` (equals), `!=` (not equals), `<` (less than), `>` (greater than). Boolean operators: `and`, `or`, `not`, with parens `()` for grouping. Conditionals can be nested to any depth — `[if:A][if:B]…[/if][/if]` — and compose with `[else]`.
+Comparison operators: `=` (equals), `!=` (not equals), `<` (less than), `>` (greater than), `<=` (less than or equal), `>=` (greater than or equal). Boolean operators: `and`, `or`, `not`, with parens `()` for grouping. Conditionals can be nested to any depth — `[if:A][if:B]…[/if][/if]` — and compose with `[else]`.
 
 | Condition | Values | Description |
 |-----------|--------|-------------|
