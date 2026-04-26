@@ -15,13 +15,13 @@ Customisable text overlays for KOReader — page numbers, reading stats, progres
 |:---:|:---:|:---:|
 | ![Title page](screenshots/title-page.png) | ![Main menu](screenshots/main-menu.png) | ![Token picker](screenshots/token-picker.png) |
 
-| Line editor | Symbol picker | Progress bar styles |
-|:---:|:---:|:---:|
-| ![Line editor](screenshots/line-editor.png) | ![Symbol picker](screenshots/icon-picker.png) | ![Progress bar styles](screenshots/progress-bars-styles.png) |
-
-| Adjust margins | Progress bar line editor |
+| Symbol picker | Adjust margins |
 |:---:|:---:|
-| ![Adjust margins](screenshots/adjust-margins.png) | ![Progress bar line editor](screenshots/progress-bars-line-editor.png) |
+| ![Symbol picker](screenshots/icon-picker.png) | ![Adjust margins](screenshots/adjust-margins.png) |
+
+| Line editor | Progress bar styles |
+|:---:|:---:|
+| ![Line editor](screenshots/line-editor.png) | ![Progress bar styles](screenshots/progress-bars-styles.png) |
 
 ### Quick start
 
