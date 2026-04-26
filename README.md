@@ -1,3 +1,10 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="bookends-logo-dark.png">
+    <img alt="Bookends" src="bookends-logo.png" width="320">
+  </picture>
+</p>
+
 # Bookends
 
 Customisable text overlays for KOReader — page numbers, reading stats, progress bars, clocks, and more, placed anywhere on the reading screen.
