@@ -71,7 +71,6 @@ IconPicker.CATALOG = {
         { "\xC2\xB6",     _("Pilcrow / paragraph") },   -- U+00B6
         { "\xE2\x80\xA0", _("Dagger") },                -- U+2020
         { "\xE2\x80\xA1", _("Double dagger") },         -- U+2021
-        { "\xE2\x81\x84\xE2\x81\x84", _("Double fraction slash (stock chapter style)") }, -- U+2044 ×2
         { "\xC2\xA9",     _("Copyright") },             -- U+00A9
         { "\xE2\x84\x96", _("Numero") },                -- U+2116
         { "\xE2\x9A\xA1", _("High voltage") },          -- U+26A1
@@ -148,7 +147,7 @@ IconPicker.CATALOG = {
         { "/",             _("Slash") },                 -- U+002F
         { "\xE2\x88\x95", _("Division slash") },        -- U+2215
         { "\xE2\x81\x84", _("Fraction slash") },        -- U+2044
-        { "//",            _("Double slash") },
+        { "\xE2\x81\x84\xE2\x81\x84", _("Double fraction slash") }, -- U+2044 ×2 (matches stock chapter progress)
         { "~",             _("Tilde") },                 -- U+007E
         { "\xE2\x80\xA3", _("Triangular bullet") },     -- U+2023
     }},

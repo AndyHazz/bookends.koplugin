@@ -550,21 +550,33 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
                     state.chap_pct = 100
                 end
             end
+            -- chap_pct fallback to book_pct when no chapter info (mirrors token-side
+            -- fallback and stock's getChapterProgress get_percentage path).
+            if state.chap_pct == nil and state.book_pct ~= nil then
+                state.chap_pct = state.book_pct
+            end
             local pages_left_offset = Tokens.pages_left_includes_current and 1 or 0
             local done = ui.toc:getChapterPagesDone(pageno)
             local total = ui.toc:getChapterPageCount(pageno)
             if done and total and total > 0 then
                 state.chap_read = math.max(0, done + 1)
                 state.chap_pages = total
+            elseif state.page_num and state.page_count then
+                -- Fallback: treat whole book as one chapter (matches stock readerfooter)
+                state.chap_read  = state.page_num
+                state.chap_pages = state.page_count
             end
             local left = ui.toc:getChapterPagesLeft(pageno)
             if left then
                 state.chap_pages_left = math.max(0, left + pages_left_offset)
+            elseif state.pages_left then
+                state.chap_pages_left = state.pages_left
             end
             -- Time-left in chapter, in minutes (for [if:chap_time_left>15]
             -- and bareword "is data available?" tests). Uses statistics
             -- avg_time directly to keep this a pure numeric, vs the token
-            -- form which renders a formatted duration string.
+            -- form which renders a formatted duration string. Falls back to
+            -- whole-book time-left when chapter pages-left isn't available.
             if state.chap_pages_left and ui.statistics and ui.statistics.avg_time
                 and ui.statistics.avg_time > 0 then
                 state.chap_time_left = math.floor(state.chap_pages_left * ui.statistics.avg_time / 60)
@@ -995,16 +1007,31 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
                 end
             end
         end
-        -- Stable page counts for %g (done), %G (total), %l (left)
+        -- Stable page counts for %chap_read / %chap_pages / %chap_pages_left.
+        -- Match stock readerfooter's "treat whole book as one chapter" fallback
+        -- when the TOC API returns nil (chapterless books, last chapter of any
+        -- book): %chap_read falls back to current page, %chap_pages to total
+        -- pages, %chap_pages_left to whole-book pages-left. See
+        -- ReaderFooter:getChapterProgress and the pages_left footer item.
         local done = ui.toc:getChapterPagesDone(pageno)
         local total = ui.toc:getChapterPageCount(pageno)
         if done and total and total > 0 then
             chapter_pages_done = math.max(0, done + 1)
             chapter_total_pages = total
+        elseif page_idx and page_count and page_count > 0 then
+            chapter_pages_done = page_idx
+            chapter_total_pages = page_count
         end
         local left = ui.toc:getChapterPagesLeft(pageno)
         if left then
             chapter_pages_left = math.max(0, left + pages_left_offset)
+        elseif pages_left_book ~= "" then
+            chapter_pages_left = pages_left_book
+        end
+        -- chap_pct fallback: when the chapter API didn't yield a value,
+        -- use book percent (matches stock's getChapterProgress get_percentage path).
+        if chapter_pct == "" and percent ~= "" then
+            chapter_pct = percent
         end
         local titles = Tokens.getChapterTitlesByDepth(ui, pageno)
         if titles.chapter_title ~= "" then chapter_title = titles.chapter_title end
@@ -1071,12 +1098,17 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     -- Session pages read
     local session_pages = math.max(0, session_pages_read or 0)
 
-    -- Time left in chapter / document (via statistics plugin)
+    -- Time left in chapter / document (via statistics plugin).
+    -- chap_time_left falls back to whole-book pages-left when no chapter info,
+    -- matching stock readerfooter's chapter_time_to_read fallback.
     local time_left_chapter = ""
     local time_left_doc = ""
     if needs("chap_time_left", "book_time_left") and pageno and ui.statistics and ui.statistics.getTimeForPages then
         if needs("chap_time_left") then
             local ch_left = ui.toc and ui.toc:getChapterPagesLeft(pageno, true)
+            if not ch_left then
+                ch_left = doc:getTotalPagesLeft(pageno)
+            end
             if ch_left then
                 ch_left = math.max(0, ch_left)
                 if ch_left > 0 then
