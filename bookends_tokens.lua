@@ -1417,38 +1417,39 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     end
 
     -- Session reading time (skip-aware via ReaderStatistics with fallback
-    -- to wall-clock when stats is disabled). Output respects the user's
-    -- duration_format preference (Settings → Device → Time and date).
+    -- to wall-clock when stats is disabled). Always renders — a zero
+    -- duration formats as "0m"/"00:00"/"0'" rather than blanking, so the
+    -- containing line stays visible while time accrues. Output respects
+    -- duration_format (Settings → Device → Time and date).
     local session_time = ""
     if needs("session_time") then
         local stats_session = Tokens._readStatsBookSession(ui)
         local secs
         if stats_session then
-            secs = stats_session.duration
-        elseif session_elapsed then
-            secs = session_elapsed
+            secs = stats_session.duration or 0
+        else
+            secs = session_elapsed or 0
         end
-        if secs and secs > 0 then
-            local user_duration_format = G_reader_settings:readSetting("duration_format", "classic")
-            session_time = datetime.secondsToClockDuration(user_duration_format, secs, true)
-        end
+        local user_duration_format = G_reader_settings:readSetting("duration_format", "classic")
+        session_time = datetime.secondsToClockDuration(user_duration_format, secs, true)
     end
 
     -- Today's totals (across all books) from ReaderStatistics. Single
     -- call covers both pages_today and time_today; gate is needs(...)
-    -- on either token.
+    -- on either token. Always renders zeros so the line stays visible
+    -- before any reading has been logged today.
     local pages_today_str = ""
     local time_today_str = ""
     if needs("pages_today", "time_today") then
         local stats_today = Tokens._readStatsToday(ui)
-        if stats_today then
-            if needs("pages_today") and stats_today.pages > 0 then
-                pages_today_str = tostring(math.floor(stats_today.pages))
-            end
-            if needs("time_today") and stats_today.duration > 0 then
-                local user_duration_format = G_reader_settings:readSetting("duration_format", "classic")
-                time_today_str = datetime.secondsToClockDuration(user_duration_format, stats_today.duration, true)
-            end
+        local today_pages = (stats_today and tonumber(stats_today.pages)) or 0
+        local today_dur   = (stats_today and tonumber(stats_today.duration)) or 0
+        if needs("pages_today") then
+            pages_today_str = tostring(math.floor(today_pages))
+        end
+        if needs("time_today") then
+            local user_duration_format = G_reader_settings:readSetting("duration_format", "classic")
+            time_today_str = datetime.secondsToClockDuration(user_duration_format, today_dur, true)
         end
     end
 

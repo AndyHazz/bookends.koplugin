@@ -600,6 +600,61 @@ test("[if:pages_today>10] evaluates against state", function()
     eq(r, "ok")
 end)
 
+-- Regression: 5.6.0 shipped with `> 0` guards that blanked these tokens
+-- when no time/pages had accrued, breaking the bl preset's "⏳ %session_time
+-- session" line on freshly-opened books. Tokens must always render — a
+-- zero duration formats per duration_format, never blank.
+test("session_time: renders zero duration on freshly-opened book (stats=0)", function()
+    local prev = package.loaded["datetime"].secondsToClockDuration
+    package.loaded["datetime"].secondsToClockDuration = function(_fmt, secs, _hp)
+        return "DUR:" .. tostring(secs)
+    end
+    local ui = stubUiWithStats({ current_duration = 0 })
+    local r = Tokens.expand("%session_time", ui, 0, 0, false, 2, nil)
+    eq(r, "DUR:0")
+    package.loaded["datetime"].secondsToClockDuration = prev
+end)
+
+test("session_time: renders zero duration when stats disabled and no wall-clock", function()
+    local prev = package.loaded["datetime"].secondsToClockDuration
+    package.loaded["datetime"].secondsToClockDuration = function(_fmt, secs, _hp)
+        return "DUR:" .. tostring(secs)
+    end
+    local ui = { statistics = nil, view = { state = { page = 5 } },
+                 document = { file = "/b.epub", getPageCount = function() return 100 end,
+                              hasHiddenFlows = function() return false end,
+                              getProps = function() return {} end } }
+    local r = Tokens.expand("%session_time", ui, nil, nil, false, 2, nil)
+    eq(r, "DUR:0")
+    package.loaded["datetime"].secondsToClockDuration = prev
+end)
+
+test("pages_today: renders 0 when nothing read today", function()
+    local ui = stubUiWithStats({ today_pages = 0 })
+    local r = Tokens.expand("%pages_today", ui, 0, 0, false, 2, nil)
+    eq(r, "0")
+end)
+
+test("pages_today: renders 0 when stats unavailable", function()
+    local ui = { statistics = nil, view = { state = { page = 5 } },
+                 document = { file = "/b.epub", getPageCount = function() return 100 end,
+                              hasHiddenFlows = function() return false end,
+                              getProps = function() return {} end } }
+    local r = Tokens.expand("%pages_today", ui, 0, 0, false, 2, nil)
+    eq(r, "0")
+end)
+
+test("time_today: renders zero duration when nothing read today", function()
+    local prev = package.loaded["datetime"].secondsToClockDuration
+    package.loaded["datetime"].secondsToClockDuration = function(_fmt, secs, _hp)
+        return "DUR:" .. tostring(secs)
+    end
+    local ui = stubUiWithStats({ today_duration = 0 })
+    local r = Tokens.expand("%time_today", ui, 0, 0, false, 2, nil)
+    eq(r, "DUR:0")
+    package.loaded["datetime"].secondsToClockDuration = prev
+end)
+
 test("book_pages_read: renders cached instance field", function()
     local ui = stubUiWithStats({ book_read_pages = 87 })
     local r = Tokens.expand("%book_pages_read", ui, 0, 0, false, 2, nil)
