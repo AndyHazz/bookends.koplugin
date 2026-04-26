@@ -1464,7 +1464,10 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
        and tonumber(ui.statistics.avg_time)
        and ui.statistics.avg_time > 0 then
         local user_duration_format = G_reader_settings:readSetting("duration_format", "classic")
-        avg_page_time_str = datetime.secondsToClockDuration(user_duration_format, ui.statistics.avg_time, true)
+        -- Pass withoutSeconds=false so per-page averages keep their second-level
+        -- resolution (typical values are 30-90s; rounding to whole minutes loses
+        -- meaningful precision unlike the longer session/today durations).
+        avg_page_time_str = datetime.secondsToClockDuration(user_duration_format, ui.statistics.avg_time, false)
     end
 
     local book_pct_read_str = ""
