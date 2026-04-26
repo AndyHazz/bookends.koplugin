@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 380" width="900" height="380">
+  <!-- Metro-style frame: rectangle border with filled corner station markers -->
+  <rect x="50" y="50" width="800" height="280"
+        fill="none" stroke="#000000" stroke-width="10" stroke-linejoin="miter" />
+  <g fill="#000000" stroke="none">
+    <circle cx="50"  cy="50"  r="22" />
+    <circle cx="850" cy="50"  r="22" />
+    <circle cx="50"  cy="330" r="22" />
+    <circle cx="850" cy="330" r="22" />
+  </g>
+  <!-- BOOKENDS in bold geometric caps, sized to leave breathing room inside the frame -->
+  <text x="450" y="222"
+        text-anchor="middle"
+        font-family="Adwaita Sans, DejaVu Sans, Liberation Sans, Arial, sans-serif"
+        font-weight="900"
+        font-size="92"
+        letter-spacing="6"
+        fill="#000000">BOOKENDS</text>
+</svg>
