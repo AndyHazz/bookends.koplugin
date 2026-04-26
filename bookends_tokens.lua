@@ -143,6 +143,44 @@ function Tokens._readStatsToday(ui)
     return { duration = tonumber(dur) or 0, pages = tonumber(pages) or 0 }
 end
 
+-- Cache of book-first-open timestamps keyed by ReaderStatistics' id_curr_book.
+-- Populated lazily by _readBookFirstOpen on first access; tests can pre-populate
+-- it directly to avoid needing real SQLite during pure-Lua test runs.
+Tokens._first_open_cache = {}
+
+-- Return the unix timestamp of the first stats-recorded page view for the
+-- current book, or nil if unavailable. Caches per-book so the SQL fires at
+-- most once per book per process.
+function Tokens._readBookFirstOpen(ui)
+    if not ui or not ui.statistics or not ui.statistics.id_curr_book then return nil end
+    local id_book = ui.statistics.id_curr_book
+    local cached = Tokens._first_open_cache[id_book]
+    if cached ~= nil then
+        if cached == false then return nil end
+        return cached
+    end
+    local ok, ts = pcall(function()
+        local SQ3 = require("lua-ljsqlite3/init")
+        local DataStorage = require("datastorage")
+        local db_location = DataStorage:getSettingsDir() .. "/statistics.sqlite3"
+        local conn = SQ3.open(db_location)
+        local sql = string.format(
+            "SELECT min(start_time) FROM page_stat WHERE id_book = %d;", id_book)
+        local stmt = conn:prepare(sql)
+        local rows, nrows = stmt:reset():resultset("i")
+        stmt:close()
+        conn:close()
+        if not nrows or nrows == 0 then return nil end
+        return tonumber(rows[1][1])
+    end)
+    if not ok or not ts then
+        Tokens._first_open_cache[id_book] = false
+        return nil
+    end
+    Tokens._first_open_cache[id_book] = ts
+    return ts
+end
+
 -- Split KOReader's newline-separated authors string into a list. Drops empties
 -- because KOReader can yield trailing "\n" or "\n\n" runs from messy metadata.
 local function splitAuthors(authors_raw)
@@ -751,6 +789,23 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
             state.book_pct_read = math.min(100, math.floor((read / total) * 100))
         else
             state.book_pct_read = 0
+        end
+    end
+
+    -- Days since first open of this book + derived per-day pace.
+    do
+        local first_open = Tokens._readBookFirstOpen(ui)
+        if first_open and first_open > 0 then
+            state.days_reading_book = math.max(0, math.floor((os.time() - first_open) / 86400))
+        else
+            state.days_reading_book = 0
+        end
+        local read = state.book_pages_read or 0
+        local days = math.max(state.days_reading_book, 1)
+        if read > 0 then
+            state.pages_per_day = math.floor(read / days)
+        else
+            state.pages_per_day = 0
         end
     end
 
@@ -1399,6 +1454,25 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         end
     end
 
+    local days_reading_str = ""
+    local pages_per_day_str = ""
+    if needs("days_reading_book", "pages_per_day") then
+        local first_open = Tokens._readBookFirstOpen(ui)
+        local days = 0
+        if first_open and first_open > 0 then
+            days = math.max(0, math.floor((os.time() - first_open) / 86400))
+        end
+        if needs("days_reading_book") and days > 0 then
+            days_reading_str = tostring(days)
+        end
+        if needs("pages_per_day") then
+            local read = (ui.statistics and tonumber(ui.statistics.book_read_pages)) or 0
+            if read > 0 then
+                pages_per_day_str = tostring(math.floor(read / math.max(days, 1)))
+            end
+        end
+    end
+
     -- Document metadata
     local title = ""
     local authors = ""
@@ -1647,9 +1721,11 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         session_pages = tostring(session_pages),
         pages_today      = pages_today_str,
         time_today       = time_today_str,
-        book_pages_read  = book_pages_read_str,
-        avg_page_time    = avg_page_time_str,
-        book_pct_read    = book_pct_read_str,
+        book_pages_read   = book_pages_read_str,
+        avg_page_time     = avg_page_time_str,
+        book_pct_read     = book_pct_read_str,
+        days_reading_book = days_reading_str,
+        pages_per_day     = pages_per_day_str,
         -- Metadata
         title       = tostring(title),
         author      = first_author,

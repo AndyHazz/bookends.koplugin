@@ -645,6 +645,51 @@ test("book_pct_read: clamps to 100 when read pages exceed total", function()
     eq(s.book_pct_read, 100)
 end)
 
+test("days_reading_book: 14 days from cached first-open ts", function()
+    local fourteen_days_ago = os.time() - (14 * 86400)
+    local ui = stubUiWithStats({ first_open_ts = fourteen_days_ago, id_curr_book = 100 })
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.days_reading_book, 14)
+end)
+
+test("days_reading_book: 0 when stats absent", function()
+    local ui = { statistics = nil, view = { state = { page = 5 } },
+                 document = { file = "/b.epub", getPageCount = function() return 100 end,
+                              hasHiddenFlows = function() return false end,
+                              getProps = function() return {} end } }
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.days_reading_book, 0)
+end)
+
+test("pages_per_day: book_pages_read / days_reading_book", function()
+    local fourteen_days_ago = os.time() - (14 * 86400)
+    local ui = stubUiWithStats({ book_read_pages = 70, first_open_ts = fourteen_days_ago, id_curr_book = 101 })
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.pages_per_day, 5)
+end)
+
+test("pages_per_day: zero-day handling — fresh book returns book_pages_read", function()
+    local ui = stubUiWithStats({ book_read_pages = 5, first_open_ts = os.time(), id_curr_book = 102 })
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.pages_per_day, 5)
+end)
+
+test("pages_per_day: 0 when stats absent", function()
+    local ui = { statistics = nil, view = { state = { page = 5 } },
+                 document = { file = "/b.epub", getPageCount = function() return 100 end,
+                              hasHiddenFlows = function() return false end,
+                              getProps = function() return {} end } }
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.pages_per_day, 0)
+end)
+
+test("days_reading_book: render path", function()
+    local seven_days_ago = os.time() - (7 * 86400)
+    local ui = stubUiWithStats({ first_open_ts = seven_days_ago, id_curr_book = 103 })
+    local r = Tokens.expand("%days_reading_book", ui, 0, 0, false, 2, nil)
+    eq(r, "7")
+end)
+
 test("v5 tokens: %author expands to author name", function()
     local r = Tokens.expand("%author", stubUiForExpand(), nil, nil, false, 2, nil)
     eq(r, "Isaac Asimov")
