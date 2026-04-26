@@ -115,6 +115,34 @@ local STATE_ALIAS = {
     pages           = "session_pages", -- pre-v4.1 gallery compat
 }
 
+-- Read pages/duration for the current reading session from KOReader's
+-- ReaderStatistics plugin. Returns { pages = N, duration = secs } when the
+-- plugin is available and the call succeeds; nil otherwise. The caller
+-- falls back to bookends' own session counters.
+function Tokens._readStatsBookSession(ui)
+    if not ui or not ui.statistics or type(ui.statistics.getCurrentBookStats) ~= "function" then
+        return nil
+    end
+    local ok, dur, pages = pcall(function()
+        return ui.statistics:getCurrentBookStats()
+    end)
+    if not ok then return nil end
+    return { duration = tonumber(dur) or 0, pages = tonumber(pages) or 0 }
+end
+
+-- Read pages/duration for everything read today across all books from
+-- ReaderStatistics. Same nil-on-failure contract as _readStatsBookSession.
+function Tokens._readStatsToday(ui)
+    if not ui or not ui.statistics or type(ui.statistics.getTodayBookStats) ~= "function" then
+        return nil
+    end
+    local ok, dur, pages = pcall(function()
+        return ui.statistics:getTodayBookStats()
+    end)
+    if not ok then return nil end
+    return { duration = tonumber(dur) or 0, pages = tonumber(pages) or 0 }
+end
+
 -- Split KOReader's newline-separated authors string into a list. Drops empties
 -- because KOReader can yield trailing "\n" or "\n\n" runs from messy metadata.
 local function splitAuthors(authors_raw)

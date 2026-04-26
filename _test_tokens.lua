@@ -464,6 +464,39 @@ test("stats stub: smoke — getTodayBookStats returns injected values", function
     eq(d, 1800, "today duration")
 end)
 
+test("stats helper: readStatsBookSession returns table when stats present", function()
+    local ui = stubUiWithStats({ current_pages = 5, current_duration = 300 })
+    local result = Tokens._readStatsBookSession(ui)
+    assert(result, "expected non-nil result")
+    eq(result.pages, 5, "pages")
+    eq(result.duration, 300, "duration")
+end)
+
+test("stats helper: readStatsBookSession returns nil when stats absent", function()
+    eq(Tokens._readStatsBookSession({ statistics = nil }), nil)
+end)
+
+test("stats helper: readStatsBookSession returns nil when method missing", function()
+    eq(Tokens._readStatsBookSession({ statistics = { } }), nil)
+end)
+
+test("stats helper: readStatsToday returns table when stats present", function()
+    local ui = stubUiWithStats({ today_pages = 12, today_duration = 720 })
+    local result = Tokens._readStatsToday(ui)
+    assert(result, "expected non-nil result")
+    eq(result.pages, 12, "today pages")
+    eq(result.duration, 720, "today duration")
+end)
+
+test("stats helper: readStatsToday returns nil when stats absent", function()
+    eq(Tokens._readStatsToday({}), nil)
+end)
+
+test("stats helper: readStatsBookSession swallows method errors", function()
+    local ui = { statistics = { getCurrentBookStats = function() error("db locked") end } }
+    eq(Tokens._readStatsBookSession(ui), nil)
+end)
+
 test("v5 tokens: %author expands to author name", function()
     local r = Tokens.expand("%author", stubUiForExpand(), nil, nil, false, 2, nil)
     eq(r, "Isaac Asimov")
