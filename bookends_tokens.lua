@@ -703,16 +703,18 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
     local weekdays = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"}
     state.day = weekdays[now.wday]
 
-    -- Session
-    state.session = session_elapsed and math.floor(session_elapsed / 60) or 0
-    state.session_time = state.session  -- alias matching the %session_time token name
+    -- Session (prefer ReaderStatistics' skip-aware values; fall back to
+    -- our wall-clock measurement and max-page counter when stats is disabled).
     do
         local stats_session = Tokens._readStatsBookSession(ui)
         if stats_session then
+            state.session = math.floor(stats_session.duration / 60)
             state.session_pages = math.max(0, stats_session.pages)
         else
+            state.session = session_elapsed and math.floor(session_elapsed / 60) or 0
             state.session_pages = math.max(0, session_pages_read or 0)
         end
+        state.session_time = state.session
     end
 
     -- Reading speed (pages/hr)
@@ -1299,11 +1301,22 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         end
     end
 
-    -- Session reading time
+    -- Session reading time (skip-aware via ReaderStatistics with fallback
+    -- to wall-clock when stats is disabled). Output respects the user's
+    -- duration_format preference (Settings → Device → Time and date).
     local session_time = ""
-    if needs("session_time") and session_elapsed then
-        local user_duration_format = G_reader_settings:readSetting("duration_format", "classic")
-        session_time = datetime.secondsToClockDuration(user_duration_format, session_elapsed, true)
+    if needs("session_time") then
+        local stats_session = Tokens._readStatsBookSession(ui)
+        local secs
+        if stats_session then
+            secs = stats_session.duration
+        elseif session_elapsed then
+            secs = session_elapsed
+        end
+        if secs and secs > 0 then
+            local user_duration_format = G_reader_settings:readSetting("duration_format", "classic")
+            session_time = datetime.secondsToClockDuration(user_duration_format, secs, true)
+        end
     end
 
     -- Document metadata

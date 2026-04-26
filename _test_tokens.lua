@@ -516,6 +516,21 @@ test("session_pages: render path also uses stats value", function()
     eq(r, "5")
 end)
 
+test("session_time: stats-backed duration preferred over wall-clock arg", function()
+    -- session_elapsed (wall clock) = 1800s (30 min).
+    -- Stats says actual reading duration = 600s (10 min).
+    local ui = stubUiWithStats({ current_duration = 600 })
+    local s = Tokens.buildConditionState(ui, 1800, 0)
+    eq(s.session_time, 10, "should use stats duration in minutes (600s/60)")
+    eq(s.session, 10, "session alias matches")
+end)
+
+test("session_time: falls back to wall-clock arg when stats unavailable", function()
+    local ui = { statistics = nil, view = { state = { page = 5 } } }
+    local s = Tokens.buildConditionState(ui, 1800, 0)
+    eq(s.session_time, 30, "fallback: 1800/60 = 30 min")
+end)
+
 test("v5 tokens: %author expands to author name", function()
     local r = Tokens.expand("%author", stubUiForExpand(), nil, nil, false, 2, nil)
     eq(r, "Isaac Asimov")
