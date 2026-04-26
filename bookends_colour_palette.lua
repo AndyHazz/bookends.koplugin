@@ -256,7 +256,13 @@ function ColourPaletteWidget:update()
         focused        = false,
         parent         = self,
         enter_callback = function() self:onHexSubmit() end,
-        edit_callback  = function() self:_updatePreview() end,
+        -- InputText fires edit_callback during its own init() with edited=false
+        -- (also on programmatic setText). Filtering on `edited=true` keeps
+        -- _updatePreview from running during update()'s widget rebuild — which
+        -- otherwise reads from a stale self.hex_input reference (the field
+        -- pointer hasn't been reassigned yet at that point) and reverts the
+        -- just-applied selected_hex back to the prior value.
+        edit_callback  = function(edited) if edited then self:_updatePreview() end end,
     }
     -- Preview swatch on the right. Refreshes on every keystroke via
     -- _updatePreview (which only re-paints the swatch's bounds), so the
