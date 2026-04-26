@@ -1029,6 +1029,9 @@ msgstr "Избор на цвят"
 msgid "Pilcrow / paragraph"
 msgstr "Пилкроу / абзац"
 
+msgid "Plugin content (dynamic)"
+msgstr "Съдържание от плъгин (динамично)"
+
 msgid "Pointing down"
 msgstr "Сочещ надолу"
 

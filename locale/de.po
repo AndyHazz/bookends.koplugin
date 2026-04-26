@@ -1028,6 +1028,9 @@ msgstr "Wähle eine Farbe"
 msgid "Pilcrow / paragraph"
 msgstr "Pilcrow / Absatz"
 
+msgid "Plugin content (dynamic)"
+msgstr "Plugin-Inhalt (dynamisch)"
+
 msgid "Pointing down"
 msgstr "Nach unten zeigend"
 
