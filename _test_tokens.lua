@@ -404,6 +404,316 @@ local function stubUiForExpand()
     }
 end
 
+-- Builds a UI stub with a configurable mock ui.statistics. Pass a `stats`
+-- table whose fields override the defaults below. Setting any field to
+-- `false` removes it (useful for testing nil-guard fallbacks).
+local function stubUiWithStats(stats)
+    stats = stats or {}
+    local function pick(k, default)
+        if stats[k] == false then return nil end
+        if stats[k] == nil then return default end
+        return stats[k]
+    end
+    local id_curr_book = pick("id_curr_book", 1)
+    local cur_pages    = pick("current_pages", 0)
+    local cur_duration = pick("current_duration", 0)
+    local today_pages    = pick("today_pages", 0)
+    local today_duration = pick("today_duration", 0)
+    -- Pre-populate the first-open cache for this book if a value is provided.
+    if stats.first_open_ts and id_curr_book then
+        Tokens._first_open_cache = Tokens._first_open_cache or {}
+        Tokens._first_open_cache[id_curr_book] = stats.first_open_ts
+    end
+    return {
+        view = { state = { page = 5 } },
+        document = {
+            file = "/book.epub",
+            getPageCount = function() return pick("page_count", 100) end,
+            hasHiddenFlows = function() return false end,
+            getProps = function() return {} end,
+        },
+        doc_props = {},
+        toc = nil,
+        annotation = nil,
+        statistics = {
+            id_curr_book    = id_curr_book,
+            book_read_pages = pick("book_read_pages", 0),
+            book_read_time  = pick("book_read_time", 0),
+            avg_time        = pick("avg_time", 0),
+            mem_read_pages  = pick("mem_read_pages", 0),
+            mem_read_time   = pick("mem_read_time", 0),
+            getCurrentBookStats = function(_)
+                return cur_duration, cur_pages
+            end,
+            getTodayBookStats = function(_)
+                return today_duration, today_pages
+            end,
+        },
+    }
+end
+
+test("stats stub: smoke — getCurrentBookStats returns injected values", function()
+    local ui = stubUiWithStats({ current_pages = 7, current_duration = 600 })
+    local d, p = ui.statistics:getCurrentBookStats()
+    eq(p, 7, "pages")
+    eq(d, 600, "duration")
+end)
+
+test("stats stub: smoke — getTodayBookStats returns injected values", function()
+    local ui = stubUiWithStats({ today_pages = 30, today_duration = 1800 })
+    local d, p = ui.statistics:getTodayBookStats()
+    eq(p, 30, "today pages")
+    eq(d, 1800, "today duration")
+end)
+
+test("stats helper: readStatsBookSession returns table when stats present", function()
+    local ui = stubUiWithStats({ current_pages = 5, current_duration = 300 })
+    local result = Tokens._readStatsBookSession(ui)
+    assert(result, "expected non-nil result")
+    eq(result.pages, 5, "pages")
+    eq(result.duration, 300, "duration")
+end)
+
+test("stats helper: readStatsBookSession returns nil when stats absent", function()
+    eq(Tokens._readStatsBookSession({ statistics = nil }), nil)
+end)
+
+test("stats helper: readStatsBookSession returns nil when method missing", function()
+    eq(Tokens._readStatsBookSession({ statistics = { } }), nil)
+end)
+
+test("stats helper: readStatsToday returns table when stats present", function()
+    local ui = stubUiWithStats({ today_pages = 12, today_duration = 720 })
+    local result = Tokens._readStatsToday(ui)
+    assert(result, "expected non-nil result")
+    eq(result.pages, 12, "today pages")
+    eq(result.duration, 720, "today duration")
+end)
+
+test("stats helper: readStatsToday returns nil when stats absent", function()
+    eq(Tokens._readStatsToday({}), nil)
+end)
+
+test("stats helper: readStatsBookSession swallows method errors", function()
+    local ui = { statistics = { getCurrentBookStats = function() error("db locked") end } }
+    eq(Tokens._readStatsBookSession(ui), nil)
+end)
+
+test("stats helper: readStatsBookSession adds mem_read deltas to DB result", function()
+    -- DB has 5 pages flushed at 300s; in-memory has 2 more pages and 90s
+    -- since the last flush. Total reflects everything read this session.
+    local ui = stubUiWithStats({
+        current_pages = 5, current_duration = 300,
+        mem_read_pages = 2, mem_read_time = 90,
+    })
+    local result = Tokens._readStatsBookSession(ui)
+    eq(result.pages, 7, "5 flushed + 2 in-memory")
+    eq(result.duration, 390, "300 flushed + 90 in-memory")
+end)
+
+test("stats helper: readStatsToday adds mem_read deltas to DB result", function()
+    local ui = stubUiWithStats({
+        today_pages = 20, today_duration = 1800,
+        mem_read_pages = 3, mem_read_time = 120,
+    })
+    local result = Tokens._readStatsToday(ui)
+    eq(result.pages, 23, "20 flushed + 3 in-memory")
+    eq(result.duration, 1920, "1800 flushed + 120 in-memory")
+end)
+
+test("session_pages: stats-backed value preferred over arg", function()
+    -- Arg says 24 (jumped from page 1 to 25), stats says 5 (actually dwelled).
+    local ui = stubUiWithStats({ current_pages = 5 })
+    local s = Tokens.buildConditionState(ui, 0, 24)
+    eq(s.session_pages, 5, "should reflect skip-aware stats value")
+end)
+
+test("session_pages: falls back to arg when stats unavailable", function()
+    local ui = { statistics = nil, view = { state = { page = 5 } } }
+    local s = Tokens.buildConditionState(ui, 0, 24)
+    eq(s.session_pages, 24, "fallback to legacy max-page counter")
+end)
+
+test("session_pages: render path also uses stats value", function()
+    local ui = stubUiWithStats({ current_pages = 5 })
+    local r = Tokens.expand("%session_pages", ui, 0, 24, false, 2, nil)
+    eq(r, "5")
+end)
+
+test("session_time: stats-backed duration preferred over wall-clock arg", function()
+    -- session_elapsed (wall clock) = 1800s (30 min).
+    -- Stats says actual reading duration = 600s (10 min).
+    local ui = stubUiWithStats({ current_duration = 600 })
+    local s = Tokens.buildConditionState(ui, 1800, 0)
+    eq(s.session_time, 10, "should use stats duration in minutes (600s/60)")
+    eq(s.session, 10, "session alias matches")
+end)
+
+test("session_time: falls back to wall-clock arg when stats unavailable", function()
+    local ui = { statistics = nil, view = { state = { page = 5 } } }
+    local s = Tokens.buildConditionState(ui, 1800, 0)
+    eq(s.session_time, 30, "fallback: 1800/60 = 30 min")
+end)
+
+test("pages_today: renders today's page count from stats", function()
+    local ui = stubUiWithStats({ today_pages = 42 })
+    local r = Tokens.expand("%pages_today", ui, 0, 0, false, 2, nil)
+    eq(r, "42")
+end)
+
+test("pages_today: 0 when stats unavailable", function()
+    local ui = { statistics = nil, view = { state = { page = 5 } },
+                 document = { file = "/b.epub", getPageCount = function() return 100 end,
+                              hasHiddenFlows = function() return false end,
+                              getProps = function() return {} end } }
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.pages_today, 0)
+end)
+
+test("time_today: renders formatted clock duration", function()
+    local prev = package.loaded["datetime"].secondsToClockDuration
+    package.loaded["datetime"].secondsToClockDuration = function(_fmt, secs, _hp)
+        return "DUR:" .. tostring(secs)
+    end
+    local ui = stubUiWithStats({ today_duration = 1800 })
+    local r = Tokens.expand("%time_today", ui, 0, 0, false, 2, nil)
+    eq(r, "DUR:1800")
+    package.loaded["datetime"].secondsToClockDuration = prev
+end)
+
+test("time_today: state value is integer minutes", function()
+    local ui = stubUiWithStats({ today_duration = 1800 })
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.time_today, 30)
+end)
+
+test("pages_today: state value is integer", function()
+    local ui = stubUiWithStats({ today_pages = 17 })
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.pages_today, 17)
+end)
+
+test("[if:pages_today>10] evaluates against state", function()
+    local ui = stubUiWithStats({ today_pages = 17 })
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    local r = Tokens._processConditionals("[if:pages_today>10]ok[/if]", s)
+    eq(r, "ok")
+end)
+
+test("book_pages_read: renders cached instance field", function()
+    local ui = stubUiWithStats({ book_read_pages = 87 })
+    local r = Tokens.expand("%book_pages_read", ui, 0, 0, false, 2, nil)
+    eq(r, "87")
+end)
+
+test("book_pages_read: state value populated", function()
+    local ui = stubUiWithStats({ book_read_pages = 87 })
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.book_pages_read, 87)
+end)
+
+test("book_pages_read: 0 when stats absent", function()
+    local ui = { statistics = nil, view = { state = { page = 5 } },
+                 document = { file = "/b.epub", getPageCount = function() return 100 end,
+                              hasHiddenFlows = function() return false end,
+                              getProps = function() return {} end } }
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.book_pages_read, 0)
+end)
+
+test("avg_page_time: renders formatted duration", function()
+    local prev = package.loaded["datetime"].secondsToClockDuration
+    package.loaded["datetime"].secondsToClockDuration = function(_f, s, _h) return "AVG:" .. tostring(s) end
+    local ui = stubUiWithStats({ avg_time = 45.3 })
+    local r = Tokens.expand("%avg_page_time", ui, 0, 0, false, 2, nil)
+    eq(r, "AVG:45.3")
+    package.loaded["datetime"].secondsToClockDuration = prev
+end)
+
+test("avg_page_time: state value is integer seconds", function()
+    local ui = stubUiWithStats({ avg_time = 45.7 })
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.avg_page_time, 45)
+end)
+
+test("book_pct_read: renders integer 0-100", function()
+    local ui = stubUiWithStats({ book_read_pages = 50, page_count = 200 })
+    local r = Tokens.expand("%book_pct_read", ui, 0, 0, false, 2, nil)
+    eq(r, "25")
+end)
+
+test("book_pct_read: state value populated", function()
+    local ui = stubUiWithStats({ book_read_pages = 50, page_count = 200 })
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.book_pct_read, 25)
+end)
+
+test("book_pct_read: 0 when page_count is 0", function()
+    local ui = stubUiWithStats({ book_read_pages = 50, page_count = 0 })
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.book_pct_read, 0)
+end)
+
+test("book_pct_read: 0 when stats absent", function()
+    local ui = { statistics = nil, view = { state = { page = 5 } },
+                 document = { file = "/b.epub", getPageCount = function() return 100 end,
+                              hasHiddenFlows = function() return false end,
+                              getProps = function() return {} end } }
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.book_pct_read, 0)
+end)
+
+test("book_pct_read: clamps to 100 when read pages exceed total", function()
+    local ui = stubUiWithStats({ book_read_pages = 250, page_count = 200 })
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.book_pct_read, 100)
+end)
+
+test("days_reading_book: 14 days from cached first-open ts", function()
+    local fourteen_days_ago = os.time() - (14 * 86400)
+    local ui = stubUiWithStats({ first_open_ts = fourteen_days_ago, id_curr_book = 100 })
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.days_reading_book, 14)
+end)
+
+test("days_reading_book: 0 when stats absent", function()
+    local ui = { statistics = nil, view = { state = { page = 5 } },
+                 document = { file = "/b.epub", getPageCount = function() return 100 end,
+                              hasHiddenFlows = function() return false end,
+                              getProps = function() return {} end } }
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.days_reading_book, 0)
+end)
+
+test("pages_per_day: book_pages_read / days_reading_book", function()
+    local fourteen_days_ago = os.time() - (14 * 86400)
+    local ui = stubUiWithStats({ book_read_pages = 70, first_open_ts = fourteen_days_ago, id_curr_book = 101 })
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.pages_per_day, 5)
+end)
+
+test("pages_per_day: zero-day handling — fresh book returns book_pages_read", function()
+    local ui = stubUiWithStats({ book_read_pages = 5, first_open_ts = os.time(), id_curr_book = 102 })
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.pages_per_day, 5)
+end)
+
+test("pages_per_day: 0 when stats absent", function()
+    local ui = { statistics = nil, view = { state = { page = 5 } },
+                 document = { file = "/b.epub", getPageCount = function() return 100 end,
+                              hasHiddenFlows = function() return false end,
+                              getProps = function() return {} end } }
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.pages_per_day, 0)
+end)
+
+test("days_reading_book: render path", function()
+    local seven_days_ago = os.time() - (7 * 86400)
+    local ui = stubUiWithStats({ first_open_ts = seven_days_ago, id_curr_book = 103 })
+    local r = Tokens.expand("%days_reading_book", ui, 0, 0, false, 2, nil)
+    eq(r, "7")
+end)
+
 test("v5 tokens: %author expands to author name", function()
     local r = Tokens.expand("%author", stubUiForExpand(), nil, nil, false, 2, nil)
     eq(r, "Isaac Asimov")

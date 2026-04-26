@@ -115,6 +115,95 @@ local STATE_ALIAS = {
     pages           = "session_pages", -- pre-v4.1 gallery compat
 }
 
+-- Read pages/duration for the current reading session from KOReader's
+-- ReaderStatistics plugin. Returns { pages = N, duration = secs } when the
+-- plugin is available and the call succeeds; nil otherwise. The caller
+-- falls back to bookends' own session counters.
+--
+-- The DB query only sees pages that have been flushed via insertDB, so we
+-- add the in-memory mem_read_pages / mem_read_time counters on top —
+-- those track skip-aware reads since the last flush. Together they reflect
+-- what the user has actually read this session, with no extra disk writes.
+function Tokens._readStatsBookSession(ui)
+    if not ui or not ui.statistics or type(ui.statistics.getCurrentBookStats) ~= "function" then
+        return nil
+    end
+    local ok, dur, pages = pcall(function()
+        return ui.statistics:getCurrentBookStats()
+    end)
+    if not ok then return nil end
+    local mem_pages = tonumber(ui.statistics.mem_read_pages) or 0
+    local mem_time = tonumber(ui.statistics.mem_read_time) or 0
+    return {
+        duration = (tonumber(dur) or 0) + mem_time,
+        pages    = (tonumber(pages) or 0) + mem_pages,
+    }
+end
+
+-- Read pages/duration for everything read today across all books from
+-- ReaderStatistics. Same nil-on-failure contract as _readStatsBookSession.
+--
+-- KOReader only flushes its in-memory page-stats to the DB every 50 page
+-- turns (MAX_PAGETURNS_BEFORE_FLUSH). To avoid showing stale "today"
+-- counts between flushes, we add the current book's in-memory deltas
+-- (mem_read_pages / mem_read_time) on top of the DB query result. For
+-- single-book reading sessions the math is exact; for multi-book sessions
+-- it can slightly over-count if the previous book's deltas haven't flushed
+-- — small and bounded, and still better than reporting frozen counts.
+function Tokens._readStatsToday(ui)
+    if not ui or not ui.statistics or type(ui.statistics.getTodayBookStats) ~= "function" then
+        return nil
+    end
+    local ok, dur, pages = pcall(function()
+        return ui.statistics:getTodayBookStats()
+    end)
+    if not ok then return nil end
+    local mem_pages = tonumber(ui.statistics.mem_read_pages) or 0
+    local mem_time = tonumber(ui.statistics.mem_read_time) or 0
+    return {
+        duration = (tonumber(dur) or 0) + mem_time,
+        pages    = (tonumber(pages) or 0) + mem_pages,
+    }
+end
+
+-- Cache of book-first-open timestamps keyed by ReaderStatistics' id_curr_book.
+-- Populated lazily by _readBookFirstOpen on first access; tests can pre-populate
+-- it directly to avoid needing real SQLite during pure-Lua test runs.
+Tokens._first_open_cache = {}
+
+-- Return the unix timestamp of the first stats-recorded page view for the
+-- current book, or nil if unavailable. Caches per-book so the SQL fires at
+-- most once per book per process.
+function Tokens._readBookFirstOpen(ui)
+    if not ui or not ui.statistics or not ui.statistics.id_curr_book then return nil end
+    local id_book = ui.statistics.id_curr_book
+    local cached = Tokens._first_open_cache[id_book]
+    if cached ~= nil then
+        if cached == false then return nil end
+        return cached
+    end
+    local ok, ts = pcall(function()
+        local SQ3 = require("lua-ljsqlite3/init")
+        local DataStorage = require("datastorage")
+        local db_location = DataStorage:getSettingsDir() .. "/statistics.sqlite3"
+        local conn = SQ3.open(db_location)
+        local sql = string.format(
+            "SELECT min(start_time) FROM page_stat WHERE id_book = %d;", id_book)
+        local stmt = conn:prepare(sql)
+        local rows, nrows = stmt:reset():resultset("i")
+        stmt:close()
+        conn:close()
+        if not nrows or nrows == 0 then return nil end
+        return tonumber(rows[1][1])
+    end)
+    if not ok or not ts then
+        Tokens._first_open_cache[id_book] = false
+        return nil
+    end
+    Tokens._first_open_cache[id_book] = ts
+    return ts
+end
+
 -- Split KOReader's newline-separated authors string into a list. Drops empties
 -- because KOReader can yield trailing "\n" or "\n\n" runs from messy metadata.
 local function splitAuthors(authors_raw)
@@ -675,10 +764,73 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
     local weekdays = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"}
     state.day = weekdays[now.wday]
 
-    -- Session
-    state.session = session_elapsed and math.floor(session_elapsed / 60) or 0
-    state.session_time = state.session  -- alias matching the %session_time token name
-    state.session_pages = math.max(0, session_pages_read or 0)
+    -- Session (prefer ReaderStatistics' skip-aware values; fall back to
+    -- our wall-clock measurement and max-page counter when stats is disabled).
+    do
+        local stats_session = Tokens._readStatsBookSession(ui)
+        if stats_session then
+            state.session = math.floor(stats_session.duration / 60)
+            state.session_pages = math.max(0, stats_session.pages)
+        else
+            state.session = session_elapsed and math.floor(session_elapsed / 60) or 0
+            state.session_pages = math.max(0, session_pages_read or 0)
+        end
+        state.session_time = state.session
+    end
+
+    -- Today's reading totals (across all books) from ReaderStatistics.
+    -- pages_today is an integer; time_today is integer minutes (raw seconds
+    -- get formatted at render time).
+    do
+        local stats_today = Tokens._readStatsToday(ui)
+        if stats_today then
+            state.pages_today = math.max(0, stats_today.pages)
+            state.time_today = math.floor(stats_today.duration / 60)
+        else
+            state.pages_today = 0
+            state.time_today = 0
+        end
+    end
+
+    -- Lifetime stats for the current book (instance fields on ui.statistics).
+    if ui.statistics and tonumber(ui.statistics.book_read_pages) and ui.statistics.book_read_pages > 0 then
+        state.book_pages_read = math.floor(ui.statistics.book_read_pages)
+    else
+        state.book_pages_read = 0
+    end
+    if ui.statistics and tonumber(ui.statistics.avg_time) and ui.statistics.avg_time > 0 then
+        state.avg_page_time = math.floor(ui.statistics.avg_time)
+    else
+        state.avg_page_time = 0
+    end
+
+    -- Skip-aware book completion percentage (complement of position-based book_pct).
+    do
+        local read = state.book_pages_read or 0
+        local total = (ui.document and tonumber(ui.document:getPageCount())) or 0
+        if total > 0 and read > 0 then
+            state.book_pct_read = math.min(100, math.floor((read / total) * 100))
+        else
+            state.book_pct_read = 0
+        end
+    end
+
+    -- Days since first open of this book + derived per-day pace.
+    do
+        local first_open = Tokens._readBookFirstOpen(ui)
+        if first_open and first_open > 0 then
+            state.days_reading_book = math.max(0, math.floor((os.time() - first_open) / 86400))
+        else
+            state.days_reading_book = 0
+        end
+        local read = state.book_pages_read or 0
+        local days = math.max(state.days_reading_book, 1)
+        if read > 0 then
+            state.pages_per_day = math.floor(read / days)
+        else
+            state.pages_per_day = 0
+        end
+    end
 
     -- Reading speed (pages/hr)
     if session_elapsed and session_elapsed > 60 and (session_pages_read or 0) > 0 then
@@ -1185,8 +1337,17 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         end
     end
 
-    -- Session pages read
-    local session_pages = math.max(0, session_pages_read or 0)
+    -- Session pages read (skip-aware via ReaderStatistics with fallback to
+    -- bookends' own max-page counter when stats is disabled or absent).
+    local session_pages
+    do
+        local stats_session = Tokens._readStatsBookSession(ui)
+        if stats_session then
+            session_pages = math.max(0, stats_session.pages)
+        else
+            session_pages = math.max(0, session_pages_read or 0)
+        end
+    end
 
     -- Time left in chapter / document (via statistics plugin).
     -- chap_time_left falls back to whole-book pages-left when no chapter info,
@@ -1255,11 +1416,87 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         end
     end
 
-    -- Session reading time
+    -- Session reading time (skip-aware via ReaderStatistics with fallback
+    -- to wall-clock when stats is disabled). Output respects the user's
+    -- duration_format preference (Settings → Device → Time and date).
     local session_time = ""
-    if needs("session_time") and session_elapsed then
+    if needs("session_time") then
+        local stats_session = Tokens._readStatsBookSession(ui)
+        local secs
+        if stats_session then
+            secs = stats_session.duration
+        elseif session_elapsed then
+            secs = session_elapsed
+        end
+        if secs and secs > 0 then
+            local user_duration_format = G_reader_settings:readSetting("duration_format", "classic")
+            session_time = datetime.secondsToClockDuration(user_duration_format, secs, true)
+        end
+    end
+
+    -- Today's totals (across all books) from ReaderStatistics. Single
+    -- call covers both pages_today and time_today; gate is needs(...)
+    -- on either token.
+    local pages_today_str = ""
+    local time_today_str = ""
+    if needs("pages_today", "time_today") then
+        local stats_today = Tokens._readStatsToday(ui)
+        if stats_today then
+            if needs("pages_today") and stats_today.pages > 0 then
+                pages_today_str = tostring(math.floor(stats_today.pages))
+            end
+            if needs("time_today") and stats_today.duration > 0 then
+                local user_duration_format = G_reader_settings:readSetting("duration_format", "classic")
+                time_today_str = datetime.secondsToClockDuration(user_duration_format, stats_today.duration, true)
+            end
+        end
+    end
+
+    -- Lifetime stats for the current book (instance fields, no SQL).
+    local book_pages_read_str = ""
+    local avg_page_time_str = ""
+    if needs("book_pages_read") and ui.statistics
+       and tonumber(ui.statistics.book_read_pages)
+       and ui.statistics.book_read_pages > 0 then
+        book_pages_read_str = tostring(math.floor(ui.statistics.book_read_pages))
+    end
+    if needs("avg_page_time") and ui.statistics
+       and tonumber(ui.statistics.avg_time)
+       and ui.statistics.avg_time > 0 then
         local user_duration_format = G_reader_settings:readSetting("duration_format", "classic")
-        session_time = datetime.secondsToClockDuration(user_duration_format, session_elapsed, true)
+        -- Pass withoutSeconds=false so per-page averages keep their second-level
+        -- resolution (typical values are 30-90s; rounding to whole minutes loses
+        -- meaningful precision unlike the longer session/today durations).
+        avg_page_time_str = datetime.secondsToClockDuration(user_duration_format, ui.statistics.avg_time, false)
+    end
+
+    local book_pct_read_str = ""
+    if needs("book_pct_read") then
+        local read = (ui.statistics and tonumber(ui.statistics.book_read_pages)) or 0
+        local total = (doc and tonumber(doc:getPageCount())) or 0
+        if total > 0 and read > 0 then
+            local pct = math.min(100, math.floor((read / total) * 100))
+            book_pct_read_str = tostring(pct)
+        end
+    end
+
+    local days_reading_str = ""
+    local pages_per_day_str = ""
+    if needs("days_reading_book", "pages_per_day") then
+        local first_open = Tokens._readBookFirstOpen(ui)
+        local days = 0
+        if first_open and first_open > 0 then
+            days = math.max(0, math.floor((os.time() - first_open) / 86400))
+        end
+        if needs("days_reading_book") and days > 0 then
+            days_reading_str = tostring(days)
+        end
+        if needs("pages_per_day") then
+            local read = (ui.statistics and tonumber(ui.statistics.book_read_pages)) or 0
+            if read > 0 then
+                pages_per_day_str = tostring(math.floor(read / math.max(days, 1)))
+            end
+        end
     end
 
     -- Document metadata
@@ -1508,6 +1745,13 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         weekday_short = date_weekday_short,
         session_time  = session_time,
         session_pages = tostring(session_pages),
+        pages_today      = pages_today_str,
+        time_today       = time_today_str,
+        book_pages_read   = book_pages_read_str,
+        avg_page_time     = avg_page_time_str,
+        book_pct_read     = book_pct_read_str,
+        days_reading_book = days_reading_str,
+        pages_per_day     = pages_per_day_str,
         -- Metadata
         title       = tostring(title),
         author      = first_author,

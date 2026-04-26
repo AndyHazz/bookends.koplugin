@@ -137,9 +137,16 @@ Tokens are placeholders that expand to live values. Type `%` followed by a name,
 | `%chap_time_left` | Time left in chapter | *0h 12m* |
 | `%book_time_left` | Time left in book | *3h 45m* |
 | `%book_read_time` | Total reading time for book | *2h 30m* |
-| `%session_time` | Session reading time | *0h 23m* |
-| `%session_pages` | Session pages read | *14* |
+| `%session_time` | Session reading time (skip-aware) | *0h 23m* |
+| `%session_pages` | Session pages read (skip-aware) | *14* |
+| `%pages_today` | Pages read today across all books | *32* |
+| `%time_today` | Reading time today across all books | *1h 15m* |
 | `%speed` | Reading speed (pages/hour) | *42* |
+| `%avg_page_time` | Average time per page | *1m 12s* |
+| `%book_pages_read` | Pages read of this book (lifetime) | *87* |
+| `%book_pct_read` | Book read percentage (skip-aware) | *44* |
+| `%days_reading_book` | Days since first opening this book | *7* |
+| `%pages_per_day` | Pages read per day for this book | *12* |
 
 #### Device
 
@@ -156,7 +163,7 @@ Tokens are placeholders that expand to live values. Type `%` followed by a name,
 | `%disk` | Free disk space | *2.4 GB* |
 | `%invert` | Page-turn direction indicator | Changes when inverted |
 
-Page tokens respect **stable page numbers** and **hidden flows** (non-linear EPUB content). Time-left and reading speed tokens use the **statistics plugin**. Session timer and pages reset each time you wake the device.
+Page tokens respect **stable page numbers** and **hidden flows** (non-linear EPUB content). All reading-time and pages-read tokens (session, today, lifetime) come from the **statistics plugin** and are skip-aware — pages flicked through faster than the dwell threshold (default 5s) don't count. Session counters reset each time you open the book or wake from suspend.
 
 #### Inline progress bar
 
@@ -219,9 +226,16 @@ Comparison operators: `=` (equals), `!=` (not equals), `<` (less than), `>` (gre
 | `notes` | count | Number of notes in this book (matches `%notes`) |
 | `bookmarks` | count | Number of bookmarks in this book (matches `%bookmarks`) |
 | `speed` | pages/hr | Reading speed |
-| `session` | minutes | Session reading time |
+| `session` | minutes | Session reading time (skip-aware) |
 | `session_time` | minutes | Alias for `session`, matching the `%session_time` token name |
-| `session_pages` | count | Session pages read |
+| `session_pages` | count | Session pages read (skip-aware) |
+| `pages_today` | count | Pages read today across all books (skip-aware) |
+| `time_today` | minutes | Reading time today across all books |
+| `avg_page_time` | seconds | Average time per page |
+| `book_pages_read` | count | Lifetime skip-aware pages read of this book |
+| `book_pct_read` | 0–100 | Book read percentage, skip-aware (complements position-based `book_pct`) |
+| `days_reading_book` | count | Days since first opening this book |
+| `pages_per_day` | count | Pages per day for this book |
 | `page` | odd / even | Current page parity |
 | `light` | on / off | Frontlight state |
 | `warmth` | 0–100 | Frontlight warmth (only on devices with natural light) |
