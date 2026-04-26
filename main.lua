@@ -549,7 +549,55 @@ function Bookends:onCycleBookendsPreset()
 
     local ok, err = self:applyPresetFile(next_entry)
     if not ok then
-        Notification:notify(T(_("Preset error: %1"), tostring(err)))
+        -- DEBUG: extended diagnostic dialog for GitHub issue #31. Captures
+        -- cwd, resolved presetDir, file existence and the underlying error
+        -- on devices where the cycle silently breaks after the first hop.
+        -- Revert this branch's diagnostic block once the issue is closed.
+        local lfs = require("libs/libkoreader-lfs")
+        local InfoMessage = require("ui/widget/infomessage")
+        local DataStorage = require("datastorage")
+        local dir = self:presetDir()
+        local full = dir .. "/" .. tostring(next_entry)
+        local cwd = lfs.currentdir() or "?"
+        local file_mode = lfs.attributes(full, "mode") or "missing"
+        local dir_mode = lfs.attributes(dir, "mode") or "missing"
+        local data_dir_raw = DataStorage:getDataDir()
+        local data_dir_full = DataStorage:getFullDataDir() or "(nil)"
+        local listing = {}
+        if dir_mode == "directory" then
+            for f in lfs.dir(dir) do
+                if f:match("%.lua$") then listing[#listing + 1] = f end
+            end
+            table.sort(listing)
+        end
+        local lines = {
+            "Preset cycle failed (issue #31 debug):",
+            "",
+            "next: " .. tostring(next_entry),
+            "err: " .. tostring(err),
+            "",
+            "presetDir: " .. tostring(dir),
+            "dir mode: " .. tostring(dir_mode),
+            "file mode: " .. tostring(file_mode),
+            "",
+            "cwd: " .. tostring(cwd),
+            "DataStorage.getDataDir: " .. tostring(data_dir_raw),
+            "DataStorage.getFullDataDir: " .. tostring(data_dir_full),
+        }
+        if #listing > 0 then
+            lines[#lines + 1] = ""
+            lines[#lines + 1] = "files in dir (" .. #listing .. "):"
+            for _i, f in ipairs(listing) do
+                lines[#lines + 1] = "  " .. f
+                if _i >= 12 then
+                    lines[#lines + 1] = "  ... (truncated)"
+                    break
+                end
+            end
+        end
+        UIManager:show(InfoMessage:new{
+            text = table.concat(lines, "\n"),
+        })
         return true
     end
     self:markDirty()

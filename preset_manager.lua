@@ -182,7 +182,12 @@ function PresetManager.attach(Bookends)
     function Bookends:presetDir()
         if not self._preset_dir then
             local DataStorage = require("datastorage")
-            self._preset_dir = DataStorage:getSettingsDir() .. "/bookends_presets"
+            -- Resolve to absolute via getFullDataDir(), which expands "."
+            -- to lfs.currentdir(). Kobo's launcher runs without KO_HOME, so
+            -- DataStorage falls back to "." — caching the resulting relative
+            -- path means a later cwd shift breaks every preset file lookup.
+            local data_dir = DataStorage:getFullDataDir() or DataStorage:getDataDir()
+            self._preset_dir = data_dir .. "/settings/bookends_presets"
         end
         return self._preset_dir
     end
