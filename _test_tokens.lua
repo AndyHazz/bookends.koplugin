@@ -404,6 +404,66 @@ local function stubUiForExpand()
     }
 end
 
+-- Builds a UI stub with a configurable mock ui.statistics. Pass a `stats`
+-- table whose fields override the defaults below. Setting any field to
+-- `false` removes it (useful for testing nil-guard fallbacks).
+local function stubUiWithStats(stats)
+    stats = stats or {}
+    local function pick(k, default)
+        if stats[k] == false then return nil end
+        if stats[k] == nil then return default end
+        return stats[k]
+    end
+    local id_curr_book = pick("id_curr_book", 1)
+    local cur_pages    = pick("current_pages", 0)
+    local cur_duration = pick("current_duration", 0)
+    local today_pages    = pick("today_pages", 0)
+    local today_duration = pick("today_duration", 0)
+    -- Pre-populate the first-open cache for this book if a value is provided.
+    if stats.first_open_ts and id_curr_book then
+        Tokens._first_open_cache = Tokens._first_open_cache or {}
+        Tokens._first_open_cache[id_curr_book] = stats.first_open_ts
+    end
+    return {
+        view = { state = { page = 5 } },
+        document = {
+            file = "/book.epub",
+            getPageCount = function() return pick("page_count", 100) end,
+            hasHiddenFlows = function() return false end,
+            getProps = function() return {} end,
+        },
+        doc_props = {},
+        toc = nil,
+        annotation = nil,
+        statistics = {
+            id_curr_book    = id_curr_book,
+            book_read_pages = pick("book_read_pages", 0),
+            book_read_time  = pick("book_read_time", 0),
+            avg_time        = pick("avg_time", 0),
+            getCurrentBookStats = function(_)
+                return cur_duration, cur_pages
+            end,
+            getTodayBookStats = function(_)
+                return today_duration, today_pages
+            end,
+        },
+    }
+end
+
+test("stats stub: smoke — getCurrentBookStats returns injected values", function()
+    local ui = stubUiWithStats({ current_pages = 7, current_duration = 600 })
+    local d, p = ui.statistics:getCurrentBookStats()
+    eq(p, 7, "pages")
+    eq(d, 600, "duration")
+end)
+
+test("stats stub: smoke — getTodayBookStats returns injected values", function()
+    local ui = stubUiWithStats({ today_pages = 30, today_duration = 1800 })
+    local d, p = ui.statistics:getTodayBookStats()
+    eq(p, 30, "today pages")
+    eq(d, 1800, "today duration")
+end)
+
 test("v5 tokens: %author expands to author name", function()
     local r = Tokens.expand("%author", stubUiForExpand(), nil, nil, false, 2, nil)
     eq(r, "Isaac Asimov")
