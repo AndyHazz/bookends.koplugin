@@ -856,6 +856,7 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
             bookmarks = "[bookmarks]", annotations = "[annotations]",
             speed = "[pg/hr]", book_read_time = "[total]",
             batt = "[batt]", batt_icon = "[batt]", wifi = "[wifi]",
+            plugin_content = "[plugins]",
             invert = "[invert]",
             light = "[light]", warmth = "[warmth]",
             mem = "[mem]", ram = "[rss]",
@@ -1286,6 +1287,31 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         end
     end
 
+    -- Aggregate output from plugins that register with KOReader's footer
+    -- extension API (ReaderFooter:addAdditionalFooterContent at
+    -- readerfooter.lua:2076). Examples: kobo.koplugin (Bluetooth icon),
+    -- readtimer.koplugin (countdown). Mirrors the stock footer's own
+    -- aggregator (readerfooter.lua:459-479): iterate in registration order,
+    -- drop empty returns, join with the footer's configured separator so
+    -- output matches the stock bar.
+    local plugin_content = ""
+    if needs("plugin_content") then
+        local footer = ui and ui.view and ui.view.footer
+        local funcs = footer and footer.additional_footer_content
+        if funcs and #funcs > 0 then
+            local parts = {}
+            for _, fn in ipairs(funcs) do
+                local val = fn()
+                if val and val ~= "" then
+                    parts[#parts + 1] = val
+                end
+            end
+            if #parts > 0 then
+                plugin_content = table.concat(parts, footer:genSeparator())
+            end
+        end
+    end
+
     -- Frontlight
     local fl_intensity = ""
     local fl_warmth = ""
@@ -1432,6 +1458,7 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         batt      = tostring(batt_lvl),
         batt_icon = tostring(batt_symbol),
         wifi      = wifi_symbol,
+        plugin_content = plugin_content,
         light     = fl_intensity,
         warmth    = fl_warmth,
         mem       = tostring(mem_usage),

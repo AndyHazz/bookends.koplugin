@@ -149,6 +149,7 @@ Tokens are placeholders that expand to live values. Type `%` followed by a name,
 | `%batt` | Battery level | *73%* |
 | `%batt_icon` | Battery icon (dynamic) | Changes with charge level |
 | `%wifi` | Wi-Fi icon (dynamic) | Hidden when off, changes when connected/disconnected |
+| `%plugin_content` | Plugin content (dynamic) | Aggregates output from plugins that register with KOReader's footer hook (e.g. `kobo.koplugin` Bluetooth, `readtimer.koplugin` countdown); hidden when none are reporting |
 | `%light` | Frontlight brightness | *18* or *OFF* |
 | `%warmth` | Frontlight warmth | *12* |
 | `%mem` | RAM usage percentage | *33%* |
@@ -403,6 +404,7 @@ Bookends covers the same information as KOReader's built-in status bar, often wi
 | Battery level | `%batt` (%) / `%batt_icon` (dynamic icon) |
 | Charging indicator | `[if:charging=yes]⚡[/if]` |
 | Wi-Fi status | `%wifi` (dynamic) |
+| Plugin status (Bluetooth, timer, …) | `%plugin_content` (dynamic) |
 | Frontlight brightness | `%light` |
 | Frontlight warmth | `%warmth` |
 | Memory usage | `%mem` (%) / `%ram` (MiB) |
@@ -414,7 +416,7 @@ Bookends covers the same information as KOReader's built-in status bar, often wi
 | **Total annotations** | `%annotations` |
 | **Page-turning inverted** | `%invert` (also `[if:invert=yes]`) |
 
-Bookends' six-zone positioning model replaces stock's `dynamic_filler` layout and `additional_content` plugin hook — those aren't separate tokens because the overlay itself fills that role.
+Bookends' six-zone positioning model replaces stock's `dynamic_filler` layout. Stock's `additional_content` plugin hook is exposed as the `%plugin_content` token (see Device tokens above), so plugins like `kobo.koplugin` and `readtimer.koplugin` keep working when the stock bar is disabled.
 
 </details>
 

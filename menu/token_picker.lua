@@ -70,6 +70,7 @@ Bookends.TOKEN_CATALOG = {
         { "%batt", _("Battery level") },
         { "%batt_icon", _("Battery icon (dynamic)") },
         { "%wifi", _("Wi-Fi icon (dynamic)") },
+        { "%plugin_content", _("Plugin content (dynamic)") },
         { "%invert", _("Page-turn direction \xE2\x87\x84 (shows when inverted)") },
         { "%light", _("Frontlight brightness") },
         { "%warmth", _("Frontlight warmth") },
