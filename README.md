@@ -23,14 +23,14 @@ Customisable text overlays for KOReader — page numbers, reading stats, progres
 ### Quick start
 
 1. Copy `bookends.koplugin/` to your KOReader plugins directory ([paths](#installation))
-2. Open a book → **typeset/document menu** (style icon) → **Bookends** → Enable
+2. Open a book → **typeset/document menu** (style icon) → **Bookends** → **Bookends settings** → tick **Enable bookends**
 3. Tap a position (e.g., Bottom-center) → **Add line**
-4. Type a format string or use the **Tokens** and **Icons** buttons to insert placeholders
+4. Type a format string or use the **Tokens** and **Symbols** buttons to insert placeholders
 5. Tap **Save** — your overlay appears immediately
 
 ### Recipes
 
-A few examples to show how format strings work. Type these in the line editor, or use the **Tokens** and **Icons** buttons to build them visually.
+A few examples to show how format strings work. Type these in the line editor, or use the **Tokens** and **Symbols** buttons to build them visually.
 
 | You type | You get |
 |----------|---------|
@@ -40,11 +40,11 @@ A few examples to show how format strings work. Type these in the line editor, o
 
 You don't need to memorise tokens — the editor has a **Tokens** picker with the full list, and a **live preview** that updates as you type. The built-in presets and the token reference below cover much more.
 
-### Preset Manager
+### Preset library
 
-Open **Bookends → Bookends preset manager…** (or bind the *Open preset manager* gesture) for a single central modal that handles everything: creating, editing, starring for the cycle gesture, and browsing community presets from an online gallery.
+Open **Bookends → Preset → Preset library…** (or bind the *Open preset library* gesture) for a single central modal that handles everything: creating, editing, starring for the cycle gesture, and browsing community presets from an online gallery.
 
-**Local tab** — your presets. Tap any row to preview it live on your overlay. Tap **Apply** to commit; tap **Close** to revert. Tap the ★ on the left of a row to add/remove it from the cycle gesture. Use **+ Save current as new preset** to snapshot your current overlay. Long-press any preset row to rename, edit its description, duplicate, or delete it.
+**My presets tab** — your presets. Tap any row to preview it live on your overlay. Tap **Apply** to commit; tap **Close** to revert. Tap the ★ on the left of a row to add/remove it from the cycle gesture. Use **+ Save current as new preset** (top of the Bookends menu) to snapshot your current overlay. Long-press any preset row to rename, edit its description, duplicate, or delete it.
 
 A virtual **(No overlay)** row lets you star "nothing" for the cycle — useful for quickly hiding all overlays with a gesture.
 
@@ -86,7 +86,9 @@ Tokens are placeholders that expand to live values. Type `%` followed by a name,
 | Token | Description | Example |
 |-------|-------------|---------|
 | `%title` | Document title | *The Great Gatsby* |
-| `%author` | Author(s) | *F. Scott Fitzgerald* |
+| `%author` | First author | *F. Scott Fitzgerald* |
+| `%authors` | All authors, comma-joined | *Neil Gaiman, Terry Pratchett* |
+| `%author_2` | Second author (empty if none) | *Terry Pratchett* |
 | `%series` | Series with index | *Dune #1* |
 | `%series_name` | Series name only | *Dune* |
 | `%series_num` | Series number only | *1* |
@@ -168,7 +170,7 @@ Page tokens respect **stable page numbers** and **hidden flows** (non-linear EPU
 Add a `%bar` token to any line to render an inline progress bar. The bar auto-fills available space and can be mixed with text (e.g. `%book_pct %bar`). Use the bar controls in the line editor to set:
 
 - **Type** — Chapter, Book, Book+ (top-level ticks), Book++ (top 2 level ticks)
-- **Style** — Border, Solid, Rounded, Metro
+- **Style** — Border, Solid, Round, Metro, Wave, Radial, Hollow
 
 </details>
 
@@ -257,7 +259,7 @@ Up to 8 independent progress bars rendered as dedicated layers behind text. Conf
 
 - **Anchor** — Top, Bottom, Left (vertical), Right (vertical)
 - **Fill direction** — Left to right, Right to left, Top to bottom, Bottom to top
-- **Style** — Solid, Bordered, Rounded, Metro
+- **Style** — Solid, Bordered, Rounded, Metro, Wave, Radial, Radial hollow
 - **Chapter ticks** — Off, Top level, Top 2 levels (book type only)
 - **Thickness** and **margins** with real-time nudge adjustment
 
@@ -266,17 +268,18 @@ Progress on EPUB documents updates smoothly per screen turn using pixel-level po
 </details>
 
 <details>
-<summary><strong>Icons</strong> — Nerd Fonts glyph picker</summary>
+<summary><strong>Symbols</strong> — Nerd Fonts glyph picker</summary>
 
-The **Icons** button in the line editor opens a picker with categorised glyphs from the Nerd Fonts set (bundled with KOReader). Categories include:
+The **Symbols** button in the line editor opens a picker with categorised glyphs from the Nerd Fonts set (bundled with KOReader). Categories include:
 
 - **Dynamic** — Battery and Wi-Fi icons that change with device state
 - **Device** — Lightbulb, sun, moon, power, Wi-Fi, cloud, memory chip
 - **Reading** — Book, bookmarks, eye, flag, bar chart, tachometer, sliders
 - **Time** — Clock, stopwatch, watch, hourglass, calendar
 - **Status** — Check, cross, info, warning, cog
-- **Symbols** — Sun, warmth, card suits, stars, check/cross marks
+- **Symbols** — Sun, warmth, card suits, stars, daggers, pilcrow, copyright, numero, check/cross marks
 - **Arrows** — Directional arrows, triangles, angle brackets
+- **Progress blocks** — Block-fill glyphs for hand-built progress strings
 - **Separators** — Vertical bar, bullets, dots, dashes, slashes
 
 </details>
@@ -352,19 +355,34 @@ Bookends uses a three-layer positioning system:
 <details>
 <summary><strong>Settings</strong> — fonts, stock status bar, gestures, updates</summary>
 
+The Bookends menu separates **global** settings (apply everywhere, never saved with presets) from **per-preset** styling (saved into the active preset and switched when you swap presets).
+
+#### Global — *Bookends → Bookends settings*
+
 | Setting | Default | Description |
 |---------|---------|-------------|
-| Default font | Status bar font | Base font for all overlays |
+| Enable bookends | Off | Master on/off |
+| Disable stock status bar | Off | Hides KOReader's built-in status bar (recommended — see below) |
+| Default font | Status bar font | Base font for all overlays; pick a font family slot for portable presets |
+| Bottom-center tap gesture | Toggle bookends | Action when you tap the centre of the status bar area |
+| Include current page in pages-left tokens | Off | Affects `%pages_left` and `%chap_pages_left` |
+| Notify on wake when update available | Off | Show a notification when a new release is published on GitHub |
+| Check for updates | — | Manual one-tap install from GitHub |
+
+#### Per-preset — *Bookends → Preset (active preset name)*
+
+| Setting | Default | Description |
+|---------|---------|-------------|
 | Font scale | 100% | Scale all text sizes (25%–300%) |
 | Adjust margins | 10/25/18/18 | Independent top/bottom/left/right margins |
-| Truncation gap | 50px | Minimum space between adjacent texts |
-| Truncation priority | Center | Which positions get priority when text overlaps |
-| Disable stock status bar | Off | Hides KOReader's built-in status bar (see below) |
-| Check for updates | — | Check GitHub for new versions with one-tap install |
+| Truncation gap between regions | 50px | Minimum space between adjacent texts |
+| Prioritise left/right and truncate long center text | Off | Reverses the default centre-first truncation |
+| Text colour | Black | Default text colour (per-preset) |
+| Symbol colour | Black | Default colour for icon glyphs |
 
 #### Disabling the stock status bar
 
-For the best experience, disable KOReader's built-in status bar via **Settings > Disable stock status bar**. This:
+For the best experience, disable KOReader's built-in status bar via **Bookends → Bookends settings → Disable stock status bar**. This:
 
 - **Reduces e-ink flicker** — Bookends no longer needs to repaint over the stock footer, eliminating extra screen refreshes on page turns
 - **Frees screen space** — The stock footer's reserved area is returned to the reading area
@@ -372,7 +390,7 @@ For the best experience, disable KOReader's built-in status bar via **Settings >
 
 #### Gesture support
 
-Assign **Toggle bookends** to any gesture via **Settings > Gesture manager > Reader**. Quickly show/hide all overlays with a tap, swipe, or multi-finger gesture.
+Assign **Bookends: toggle visibility**, **Bookends: cycle preset**, **Bookends: set visibility**, or **Bookends: open preset library** to any gesture via KOReader's **Gesture manager > Reader** to show/hide overlays or swap presets with a tap, swipe, or multi-finger gesture.
 
 </details>
 
