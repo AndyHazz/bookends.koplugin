@@ -612,6 +612,39 @@ test("avg_page_time: state value is integer seconds", function()
     eq(s.avg_page_time, 45)
 end)
 
+test("book_pct_read: renders integer 0-100", function()
+    local ui = stubUiWithStats({ book_read_pages = 50, page_count = 200 })
+    local r = Tokens.expand("%book_pct_read", ui, 0, 0, false, 2, nil)
+    eq(r, "25")
+end)
+
+test("book_pct_read: state value populated", function()
+    local ui = stubUiWithStats({ book_read_pages = 50, page_count = 200 })
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.book_pct_read, 25)
+end)
+
+test("book_pct_read: 0 when page_count is 0", function()
+    local ui = stubUiWithStats({ book_read_pages = 50, page_count = 0 })
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.book_pct_read, 0)
+end)
+
+test("book_pct_read: 0 when stats absent", function()
+    local ui = { statistics = nil, view = { state = { page = 5 } },
+                 document = { file = "/b.epub", getPageCount = function() return 100 end,
+                              hasHiddenFlows = function() return false end,
+                              getProps = function() return {} end } }
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.book_pct_read, 0)
+end)
+
+test("book_pct_read: clamps to 100 when read pages exceed total", function()
+    local ui = stubUiWithStats({ book_read_pages = 250, page_count = 200 })
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.book_pct_read, 100)
+end)
+
 test("v5 tokens: %author expands to author name", function()
     local r = Tokens.expand("%author", stubUiForExpand(), nil, nil, false, 2, nil)
     eq(r, "Isaac Asimov")

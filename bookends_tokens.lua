@@ -743,6 +743,17 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
         state.avg_page_time = 0
     end
 
+    -- Skip-aware book completion percentage (complement of position-based book_pct).
+    do
+        local read = state.book_pages_read or 0
+        local total = (ui.document and tonumber(ui.document:getPageCount())) or 0
+        if total > 0 and read > 0 then
+            state.book_pct_read = math.min(100, math.floor((read / total) * 100))
+        else
+            state.book_pct_read = 0
+        end
+    end
+
     -- Reading speed (pages/hr)
     if session_elapsed and session_elapsed > 60 and (session_pages_read or 0) > 0 then
         state.speed = math.floor(session_pages_read / session_elapsed * 3600)
@@ -1378,6 +1389,16 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         avg_page_time_str = datetime.secondsToClockDuration(user_duration_format, ui.statistics.avg_time, true)
     end
 
+    local book_pct_read_str = ""
+    if needs("book_pct_read") then
+        local read = (ui.statistics and tonumber(ui.statistics.book_read_pages)) or 0
+        local total = (doc and tonumber(doc:getPageCount())) or 0
+        if total > 0 and read > 0 then
+            local pct = math.min(100, math.floor((read / total) * 100))
+            book_pct_read_str = tostring(pct)
+        end
+    end
+
     -- Document metadata
     local title = ""
     local authors = ""
@@ -1628,6 +1649,7 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         time_today       = time_today_str,
         book_pages_read  = book_pages_read_str,
         avg_page_time    = avg_page_time_str,
+        book_pct_read    = book_pct_read_str,
         -- Metadata
         title       = tostring(title),
         author      = first_author,
