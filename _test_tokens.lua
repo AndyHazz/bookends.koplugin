@@ -440,6 +440,8 @@ local function stubUiWithStats(stats)
             book_read_pages = pick("book_read_pages", 0),
             book_read_time  = pick("book_read_time", 0),
             avg_time        = pick("avg_time", 0),
+            mem_read_pages  = pick("mem_read_pages", 0),
+            mem_read_time   = pick("mem_read_time", 0),
             getCurrentBookStats = function(_)
                 return cur_duration, cur_pages
             end,
@@ -495,6 +497,28 @@ end)
 test("stats helper: readStatsBookSession swallows method errors", function()
     local ui = { statistics = { getCurrentBookStats = function() error("db locked") end } }
     eq(Tokens._readStatsBookSession(ui), nil)
+end)
+
+test("stats helper: readStatsBookSession adds mem_read deltas to DB result", function()
+    -- DB has 5 pages flushed at 300s; in-memory has 2 more pages and 90s
+    -- since the last flush. Total reflects everything read this session.
+    local ui = stubUiWithStats({
+        current_pages = 5, current_duration = 300,
+        mem_read_pages = 2, mem_read_time = 90,
+    })
+    local result = Tokens._readStatsBookSession(ui)
+    eq(result.pages, 7, "5 flushed + 2 in-memory")
+    eq(result.duration, 390, "300 flushed + 90 in-memory")
+end)
+
+test("stats helper: readStatsToday adds mem_read deltas to DB result", function()
+    local ui = stubUiWithStats({
+        today_pages = 20, today_duration = 1800,
+        mem_read_pages = 3, mem_read_time = 120,
+    })
+    local result = Tokens._readStatsToday(ui)
+    eq(result.pages, 23, "20 flushed + 3 in-memory")
+    eq(result.duration, 1920, "1800 flushed + 120 in-memory")
 end)
 
 test("session_pages: stats-backed value preferred over arg", function()

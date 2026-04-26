@@ -119,6 +119,11 @@ local STATE_ALIAS = {
 -- ReaderStatistics plugin. Returns { pages = N, duration = secs } when the
 -- plugin is available and the call succeeds; nil otherwise. The caller
 -- falls back to bookends' own session counters.
+--
+-- The DB query only sees pages that have been flushed via insertDB, so we
+-- add the in-memory mem_read_pages / mem_read_time counters on top —
+-- those track skip-aware reads since the last flush. Together they reflect
+-- what the user has actually read this session, with no extra disk writes.
 function Tokens._readStatsBookSession(ui)
     if not ui or not ui.statistics or type(ui.statistics.getCurrentBookStats) ~= "function" then
         return nil
@@ -127,11 +132,24 @@ function Tokens._readStatsBookSession(ui)
         return ui.statistics:getCurrentBookStats()
     end)
     if not ok then return nil end
-    return { duration = tonumber(dur) or 0, pages = tonumber(pages) or 0 }
+    local mem_pages = tonumber(ui.statistics.mem_read_pages) or 0
+    local mem_time = tonumber(ui.statistics.mem_read_time) or 0
+    return {
+        duration = (tonumber(dur) or 0) + mem_time,
+        pages    = (tonumber(pages) or 0) + mem_pages,
+    }
 end
 
 -- Read pages/duration for everything read today across all books from
 -- ReaderStatistics. Same nil-on-failure contract as _readStatsBookSession.
+--
+-- KOReader only flushes its in-memory page-stats to the DB every 50 page
+-- turns (MAX_PAGETURNS_BEFORE_FLUSH). To avoid showing stale "today"
+-- counts between flushes, we add the current book's in-memory deltas
+-- (mem_read_pages / mem_read_time) on top of the DB query result. For
+-- single-book reading sessions the math is exact; for multi-book sessions
+-- it can slightly over-count if the previous book's deltas haven't flushed
+-- — small and bounded, and still better than reporting frozen counts.
 function Tokens._readStatsToday(ui)
     if not ui or not ui.statistics or type(ui.statistics.getTodayBookStats) ~= "function" then
         return nil
@@ -140,7 +158,12 @@ function Tokens._readStatsToday(ui)
         return ui.statistics:getTodayBookStats()
     end)
     if not ok then return nil end
-    return { duration = tonumber(dur) or 0, pages = tonumber(pages) or 0 }
+    local mem_pages = tonumber(ui.statistics.mem_read_pages) or 0
+    local mem_time = tonumber(ui.statistics.mem_read_time) or 0
+    return {
+        duration = (tonumber(dur) or 0) + mem_time,
+        pages    = (tonumber(pages) or 0) + mem_pages,
+    }
 end
 
 -- Cache of book-first-open timestamps keyed by ReaderStatistics' id_curr_book.
