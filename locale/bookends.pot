@@ -2,21 +2,13 @@
 # Translation template
 msgid ""
 msgstr ""
-"Project-Id-Version: bookends 5.5.4\n"
+"Project-Id-Version: bookends 5.6.0\n"
 "POT-Creation-Date: 2026-04-26 00:00+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: bookends_colour_palette.lua:192
-msgid "Hex:"
-msgstr ""
-
-#: bookends_colour_palette.lua:216
-msgid "Set"
-msgstr ""
-
-#: bookends_colour_palette.lua:230 bookends_dialog_helpers.lua:88
+#: bookends_colour_palette.lua:294 bookends_dialog_helpers.lua:88
 #: bookends_line_editor.lua:324 bookends_line_editor.lua:575 main.lua:1832
 #: main.lua:2489 menu/main_menu.lua:32 menu/main_menu.lua:72
 #: menu/preset_manager_modal.lua:989 menu/preset_manager_modal.lua:1110
@@ -27,22 +19,22 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: bookends_colour_palette.lua:232 bookends_dialog_helpers.lua:96 main.lua:1842
+#: bookends_colour_palette.lua:296 bookends_dialog_helpers.lua:96 main.lua:1842
 #: main.lua:2032 menu/colours_menu.lua:66 menu/colours_menu.lua:362
 #: menu/progress_bar_menu.lua:395
 msgid "Default"
 msgstr ""
 
-#: bookends_colour_palette.lua:234 bookends_dialog_helpers.lua:103
+#: bookends_colour_palette.lua:298 bookends_dialog_helpers.lua:103
 #: main.lua:1852 menu/preset_manager_modal.lua:552
 msgid "Apply"
 msgstr ""
 
-#: bookends_colour_palette.lua:256 bookends_colour_palette.lua:337
+#: bookends_colour_palette.lua:320 bookends_colour_palette.lua:435
 msgid "Pick a color"
 msgstr ""
 
-#: bookends_colour_palette.lua:311
+#: bookends_colour_palette.lua:404
 msgid "Invalid hex colour (use #RGB or #RRGGBB)"
 msgstr ""
 
@@ -58,7 +50,7 @@ msgstr ""
 msgid "Wi-Fi (changes with status)"
 msgstr ""
 
-#: bookends_icon_picker.lua:15 menu/token_picker.lua:71
+#: bookends_icon_picker.lua:15 menu/token_picker.lua:78
 msgid "Device"
 msgstr ""
 
@@ -944,7 +936,9 @@ msgid "Branch name (leave empty for stable)"
 msgstr ""
 
 #: main.lua:2510
-msgid "This will clear the development branch setting and install the latest stable release of Bookends, then restart KOReader. Continue?"
+msgid ""
+"This will clear the development branch setting and install the latest stable "
+"release of Bookends, then restart KOReader. Continue?"
 msgstr ""
 
 #: main.lua:2529
@@ -1091,9 +1085,12 @@ msgstr ""
 
 #: menu/colours_menu.lua:412
 msgid ""
-"Applies to Nerd Font and FontAwesome icon glyphs (the Private Use Area range, e.g. %W, %B, %k). Unicode symbols in the regular text ranges (like the hourglass \"⌛\") follow the text color instead.\n"
+"Applies to Nerd Font and FontAwesome icon glyphs (the Private Use Area "
+"range, e.g. %W, %B, %k). Unicode symbols in the regular text ranges (like "
+"the hourglass \"⌛\") follow the text color instead.\n"
 "\n"
-"An inline [c=#RRGGBB]…[/c] tag in a line overrides the icon colour for any glyphs inside it."
+"An inline [c=#RRGGBB]…[/c] tag in a line overrides the icon colour for any "
+"glyphs inside it."
 msgstr ""
 
 #: menu/main_menu.lua:12 _meta.lua:4
@@ -1154,7 +1151,10 @@ msgid "recommended"
 msgstr ""
 
 #: menu/main_menu.lua:222
-msgid "Hides KOReader's built-in status bar. This simplifies the render pipeline and can reduce e-ink flicker on some devices. All status bar features are available as Bookends tokens."
+msgid ""
+"Hides KOReader's built-in status bar. This simplifies the render pipeline "
+"and can reduce e-ink flicker on some devices. All status bar features are "
+"available as Bookends tokens."
 msgstr ""
 
 #: menu/main_menu.lua:243 menu/main_menu.lua:253
@@ -1179,7 +1179,9 @@ msgid "preset library"
 msgstr ""
 
 #: menu/main_menu.lua:289
-msgid "Configure what happens when you tap the centre of the status bar area, and whether long-pressing a progress bar opens the skim dialog."
+msgid ""
+"Configure what happens when you tap the centre of the status bar area, and "
+"whether long-pressing a progress bar opens the skim dialog."
 msgstr ""
 
 #: menu/main_menu.lua:300
@@ -1203,7 +1205,9 @@ msgid "Long-press progress bars to skim document"
 msgstr ""
 
 #: menu/main_menu.lua:359
-msgid "Opens the skim dialog when you long-press on a full-width progress bar. Replaces the stock status bar's long-press to skim feature."
+msgid ""
+"Opens the skim dialog when you long-press on a full-width progress bar. "
+"Replaces the stock status bar's long-press to skim feature."
 msgstr ""
 
 #: menu/main_menu.lua:366
@@ -1211,7 +1215,9 @@ msgid "Include current page in pages-left tokens"
 msgstr ""
 
 #: menu/main_menu.lua:367
-msgid "Affects %L (pages left in book) and %l (pages left in chapter). Off (default): 'n−1 → 0'. On: 'n → 1'."
+msgid ""
+"Affects %L (pages left in book) and %l (pages left in chapter). Off "
+"(default): 'n−1 → 0'. On: 'n → 1'."
 msgstr ""
 
 #: menu/main_menu.lua:380
@@ -1391,7 +1397,8 @@ msgid "One-line description of this preset"
 msgstr ""
 
 #: menu/preset_manager_modal.lua:1329
-msgid "Submit '%1' by %2 to the gallery? A pull request will be opened for review."
+msgid ""
+"Submit '%1' by %2 to the gallery? A pull request will be opened for review."
 msgstr ""
 
 #: menu/preset_manager_modal.lua:1331
@@ -1399,7 +1406,9 @@ msgid "Submit"
 msgstr ""
 
 #: menu/preset_manager_modal.lua:1341
-msgid "A preset called '%1' is already in the gallery. Rename your preset (Manage… → Rename…) before submitting, so it doesn't collide with the existing entry."
+msgid ""
+"A preset called '%1' is already in the gallery. Rename your preset (Manage… "
+"→ Rename…) before submitting, so it doesn't collide with the existing entry."
 msgstr ""
 
 #: menu/preset_manager_modal.lua:1348
@@ -1414,11 +1423,15 @@ msgid ""
 msgstr ""
 
 #: menu/preset_manager_modal.lua:1369
-msgid "A preset called '%1' is already in the gallery. Rename your preset (Manage… → Rename…) before submitting."
+msgid ""
+"A preset called '%1' is already in the gallery. Rename your preset (Manage… "
+"→ Rename…) before submitting."
 msgstr ""
 
 #: menu/preset_manager_modal.lua:1372
-msgid "A submission for '%1' is already awaiting review. Wait for that one to be reviewed, or rename your preset to submit under a different name."
+msgid ""
+"A submission for '%1' is already awaiting review. Wait for that one to be "
+"reviewed, or rename your preset to submit under a different name."
 msgstr ""
 
 #: menu/preset_manager_modal.lua:1375
@@ -1426,7 +1439,10 @@ msgid "Submission failed: %1"
 msgstr ""
 
 #: menu/preset_manager_modal.lua:1387
-msgid "This preset uses specific fonts that won't exist on other devices. These overrides will be stripped from your submission so other users see their own default font."
+msgid ""
+"This preset uses specific fonts that won't exist on other devices. These "
+"overrides will be stripped from your submission so other users see their own "
+"default font."
 msgstr ""
 
 #: menu/preset_manager_modal.lua:1389
@@ -1434,7 +1450,9 @@ msgid "Custom fonts in this preset:"
 msgstr ""
 
 #: menu/preset_manager_modal.lua:1395
-msgid "Tip: for portable presets, pick a Font-family font (Serif, Sans-serif, etc.) instead of a specific one — those adapt to each user's font settings."
+msgid ""
+"Tip: for portable presets, pick a Font-family font (Serif, Sans-serif, etc.) "
+"instead of a specific one — those adapt to each user's font settings."
 msgstr ""
 
 #: menu/preset_manager_modal.lua:1398
@@ -1478,11 +1496,16 @@ msgid "Discover more presets"
 msgstr ""
 
 #: menu/preset_manager_modal.lua:1588
-msgid "Browse presets others have shared, preview them on your own status bar, and install the ones you like. Once installed, you can edit each preset freely on the My presets tab."
+msgid ""
+"Browse presets others have shared, preview them on your own status bar, and "
+"install the ones you like. Once installed, you can edit each preset freely "
+"on the My presets tab."
 msgstr ""
 
 #: menu/preset_manager_modal.lua:1595
-msgid "Made something worth sharing? Submit it with the Manage button while viewing one of your own presets."
+msgid ""
+"Made something worth sharing? Submit it with the Manage button while viewing "
+"one of your own presets."
 msgstr ""
 
 #: menu/preset_manager_modal.lua:1602
@@ -1505,7 +1528,8 @@ msgstr ""
 msgid ""
 "'%1' already exists in your library.\n"
 "\n"
-"Replacing it will overwrite your local copy with the current gallery version. Any local edits will be lost.\n"
+"Replacing it will overwrite your local copy with the current gallery "
+"version. Any local edits will be lost.\n"
 "\n"
 "Install under a new name to keep both."
 msgstr ""
@@ -1702,7 +1726,7 @@ msgstr ""
 msgid "Chapter title at depth 3"
 msgstr ""
 
-#: menu/token_picker.lua:24 menu/token_picker.lua:101
+#: menu/token_picker.lua:24 menu/token_picker.lua:108
 msgid "Current chapter number"
 msgstr ""
 
@@ -1863,253 +1887,291 @@ msgid "Session pages read"
 msgstr ""
 
 #: menu/token_picker.lua:68
-msgid "Reading speed (pages/hour)"
+msgid "Pages read today (all books)"
 msgstr ""
 
 #: menu/token_picker.lua:69
-msgid "Total reading time for book"
+msgid "Reading time today (all books)"
+msgstr ""
+
+#: menu/token_picker.lua:70
+msgid "Reading speed (pages/hour)"
+msgstr ""
+
+#: menu/token_picker.lua:71
+msgid "Average time per page"
 msgstr ""
 
 #: menu/token_picker.lua:72
-msgid "Battery level"
+msgid "Total reading time for book"
 msgstr ""
 
 #: menu/token_picker.lua:73
-msgid "Battery icon (dynamic)"
+msgid "Pages read of this book (lifetime)"
 msgstr ""
 
 #: menu/token_picker.lua:74
-msgid "Wi-Fi icon (dynamic)"
+msgid "Book read percentage (skip-aware)"
 msgstr ""
 
 #: menu/token_picker.lua:75
-msgid "Plugin content (dynamic)"
+msgid "Days reading this book"
 msgstr ""
 
 #: menu/token_picker.lua:76
-msgid "Page-turn direction ⇄ (shows when inverted)"
-msgstr ""
-
-#: menu/token_picker.lua:77
-msgid "Frontlight brightness"
-msgstr ""
-
-#: menu/token_picker.lua:78
-msgid "Frontlight warmth"
+msgid "Pages per day for this book"
 msgstr ""
 
 #: menu/token_picker.lua:79
-msgid "RAM used %"
+msgid "Battery level"
 msgstr ""
 
 #: menu/token_picker.lua:80
-msgid "RAM used (MiB)"
+msgid "Battery icon (dynamic)"
 msgstr ""
 
 #: menu/token_picker.lua:81
-msgid "Free disk space"
+msgid "Wi-Fi icon (dynamic)"
+msgstr ""
+
+#: menu/token_picker.lua:82
+msgid "Plugin content (dynamic)"
 msgstr ""
 
 #: menu/token_picker.lua:83
+msgid "Page-turn direction ⇄ (shows when inverted)"
+msgstr ""
+
+#: menu/token_picker.lua:84
+msgid "Frontlight brightness"
+msgstr ""
+
+#: menu/token_picker.lua:85
+msgid "Frontlight warmth"
+msgstr ""
+
+#: menu/token_picker.lua:86
+msgid "RAM used %"
+msgstr ""
+
+#: menu/token_picker.lua:87
+msgid "RAM used (MiB)"
+msgstr ""
+
+#: menu/token_picker.lua:88
+msgid "Free disk space"
+msgstr ""
+
+#: menu/token_picker.lua:90
 msgid "Snippets"
 msgstr ""
 
-#: menu/token_picker.lua:93
+#: menu/token_picker.lua:100
 msgid "Reference"
 msgstr ""
 
-#: menu/token_picker.lua:94
+#: menu/token_picker.lua:101
 msgid "If Wi-Fi is on"
 msgstr ""
 
-#: menu/token_picker.lua:95
+#: menu/token_picker.lua:102
 msgid "If connected"
 msgstr ""
 
-#: menu/token_picker.lua:96
+#: menu/token_picker.lua:103
 msgid "Battery 0–100"
 msgstr ""
 
-#: menu/token_picker.lua:97
+#: menu/token_picker.lua:104
 msgid "If charging"
 msgstr ""
 
-#: menu/token_picker.lua:98
+#: menu/token_picker.lua:105
 msgid "If page-turn flipped"
 msgstr ""
 
-#: menu/token_picker.lua:99
+#: menu/token_picker.lua:106
 msgid "Book progress 0–100"
 msgstr ""
 
-#: menu/token_picker.lua:100
+#: menu/token_picker.lua:107
 msgid "Chapter progress 0–100"
 msgstr ""
 
-#: menu/token_picker.lua:102
+#: menu/token_picker.lua:109
 msgid "Total chapters"
 msgstr ""
 
-#: menu/token_picker.lua:103
+#: menu/token_picker.lua:110
 msgid "Pages per hour"
 msgstr ""
 
-#: menu/token_picker.lua:104
+#: menu/token_picker.lua:111
 msgid "Minutes this session"
 msgstr ""
 
-#: menu/token_picker.lua:105
+#: menu/token_picker.lua:112
 msgid "Pages this session"
 msgstr ""
 
-#: menu/token_picker.lua:106
-msgid "odd / even"
-msgstr ""
-
-#: menu/token_picker.lua:107
-msgid "If frontlight on"
-msgstr ""
-
-#: menu/token_picker.lua:108
-msgid "EPUB / PDF / CBZ / …"
-msgstr ""
-
-#: menu/token_picker.lua:109
-msgid "Current HH:MM (24h)"
-msgstr ""
-
-#: menu/token_picker.lua:110
-msgid "Mon–Sun"
-msgstr ""
-
-#: menu/token_picker.lua:111
-msgid "If book has title"
-msgstr ""
-
-#: menu/token_picker.lua:112
-msgid "If book has author"
-msgstr ""
-
 #: menu/token_picker.lua:113
-msgid "If book in series"
+msgid "Pages read today"
 msgstr ""
 
 #: menu/token_picker.lua:114
-msgid "If chapter has title"
+msgid "Book read % (skip-aware)"
 msgstr ""
 
 #: menu/token_picker.lua:115
-msgid "Chapter title at depth 1/2/3"
+msgid "odd / even"
 msgstr ""
 
 #: menu/token_picker.lua:116
-msgid "If book has 2+ authors"
+msgid "If frontlight on"
+msgstr ""
+
+#: menu/token_picker.lua:117
+msgid "EPUB / PDF / CBZ / …"
 msgstr ""
 
 #: menu/token_picker.lua:118
-msgid "Examples"
+msgid "Current HH:MM (24h)"
 msgstr ""
 
 #: menu/token_picker.lua:119
-msgid "Author with et al. for multi-author"
+msgid "Mon–Sun"
 msgstr ""
 
 #: menu/token_picker.lua:120
-msgid "Wi-Fi icon only when Wi-Fi enabled"
+msgid "If book has title"
 msgstr ""
 
 #: menu/token_picker.lua:121
-msgid "Low-battery warning"
+msgid "If book has author"
 msgstr ""
 
 #: menu/token_picker.lua:122
-msgid "Bolt when charging"
+msgid "If book in series"
 msgstr ""
 
 #: menu/token_picker.lua:123
-msgid "Arrow when page-turn flipped"
+msgid "If chapter has title"
 msgstr ""
 
 #: menu/token_picker.lua:124
-msgid "Speed once calculated"
+msgid "Chapter title at depth 1/2/3"
 msgstr ""
 
 #: menu/token_picker.lua:125
-msgid "Session time after start"
-msgstr ""
-
-#: menu/token_picker.lua:126
-msgid "Odd/even variations"
+msgid "If book has 2+ authors"
 msgstr ""
 
 #: menu/token_picker.lua:127
-msgid "Near end of book"
+msgid "Examples"
 msgstr ""
 
 #: menu/token_picker.lua:128
-msgid "Frontlight on/off label"
+msgid "Author with et al. for multi-author"
 msgstr ""
 
 #: menu/token_picker.lua:129
-msgid "Only for PDFs"
+msgid "Wi-Fi icon only when Wi-Fi enabled"
 msgstr ""
 
 #: menu/token_picker.lua:130
-msgid "Late-night reading"
+msgid "Low-battery warning"
 msgstr ""
 
 #: menu/token_picker.lua:131
-msgid "Weekends"
+msgid "Bolt when charging"
 msgstr ""
 
 #: menu/token_picker.lua:132
-msgid "Time window"
+msgid "Arrow when page-turn flipped"
 msgstr ""
 
 #: menu/token_picker.lua:133
-msgid "Non-series books"
+msgid "Speed once calculated"
 msgstr ""
 
 #: menu/token_picker.lua:134
-msgid "Fall back to shallower chapter"
+msgid "Session time after start"
 msgstr ""
 
 #: menu/token_picker.lua:135
-msgid "Long books (20+ chapters)"
+msgid "Odd/even variations"
 msgstr ""
 
 #: menu/token_picker.lua:136
+msgid "Near end of book"
+msgstr ""
+
+#: menu/token_picker.lua:137
+msgid "Frontlight on/off label"
+msgstr ""
+
+#: menu/token_picker.lua:138
+msgid "Only for PDFs"
+msgstr ""
+
+#: menu/token_picker.lua:139
+msgid "Late-night reading"
+msgstr ""
+
+#: menu/token_picker.lua:140
+msgid "Weekends"
+msgstr ""
+
+#: menu/token_picker.lua:141
+msgid "Time window"
+msgstr ""
+
+#: menu/token_picker.lua:142
+msgid "Non-series books"
+msgstr ""
+
+#: menu/token_picker.lua:143
+msgid "Fall back to shallower chapter"
+msgstr ""
+
+#: menu/token_picker.lua:144
+msgid "Long books (20+ chapters)"
+msgstr ""
+
+#: menu/token_picker.lua:145
 msgid "Chapter title only when different from book title"
 msgstr ""
 
-#: menu/token_picker.lua:215
+#: menu/token_picker.lua:224
 msgid "If/Else conditional tokens"
 msgstr ""
 
-#: menu/token_picker.lua:221
+#: menu/token_picker.lua:230
 msgid "[if:key=value]show when true[/if]"
 msgstr ""
 
-#: menu/token_picker.lua:222
+#: menu/token_picker.lua:231
 msgid "[if:key=value]if true[else]if false[/if]"
 msgstr ""
 
-#: menu/token_picker.lua:223
+#: menu/token_picker.lua:232
 msgid "Compare:  =  !=  <  >     Boolean:  and  or  not  ( )"
 msgstr ""
 
-#: menu/token_picker.lua:224
+#: menu/token_picker.lua:233
 msgid "@key = another field's value (chap_title_1!=@title)"
 msgstr ""
 
-#: menu/token_picker.lua:230
+#: menu/token_picker.lua:239
 msgid "Insert conditional"
 msgstr ""
 
-#: menu/token_picker.lua:236
+#: menu/token_picker.lua:245
 msgid "Insert token"
 msgstr ""
 
 #: _meta.lua:5
-msgid "Configurable text overlays at screen corners and edges with token expansion and icon support."
+msgid ""
+"Configurable text overlays at screen corners and edges with token expansion "
+"and icon support."
 msgstr ""
