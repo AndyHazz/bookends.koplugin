@@ -531,6 +531,51 @@ test("session_time: falls back to wall-clock arg when stats unavailable", functi
     eq(s.session_time, 30, "fallback: 1800/60 = 30 min")
 end)
 
+test("pages_today: renders today's page count from stats", function()
+    local ui = stubUiWithStats({ today_pages = 42 })
+    local r = Tokens.expand("%pages_today", ui, 0, 0, false, 2, nil)
+    eq(r, "42")
+end)
+
+test("pages_today: 0 when stats unavailable", function()
+    local ui = { statistics = nil, view = { state = { page = 5 } },
+                 document = { file = "/b.epub", getPageCount = function() return 100 end,
+                              hasHiddenFlows = function() return false end,
+                              getProps = function() return {} end } }
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.pages_today, 0)
+end)
+
+test("time_today: renders formatted clock duration", function()
+    local prev = package.loaded["datetime"].secondsToClockDuration
+    package.loaded["datetime"].secondsToClockDuration = function(_fmt, secs, _hp)
+        return "DUR:" .. tostring(secs)
+    end
+    local ui = stubUiWithStats({ today_duration = 1800 })
+    local r = Tokens.expand("%time_today", ui, 0, 0, false, 2, nil)
+    eq(r, "DUR:1800")
+    package.loaded["datetime"].secondsToClockDuration = prev
+end)
+
+test("time_today: state value is integer minutes", function()
+    local ui = stubUiWithStats({ today_duration = 1800 })
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.time_today, 30)
+end)
+
+test("pages_today: state value is integer", function()
+    local ui = stubUiWithStats({ today_pages = 17 })
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.pages_today, 17)
+end)
+
+test("[if:pages_today>10] evaluates against state", function()
+    local ui = stubUiWithStats({ today_pages = 17 })
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    local r = Tokens._processConditionals("[if:pages_today>10]ok[/if]", s)
+    eq(r, "ok")
+end)
+
 test("v5 tokens: %author expands to author name", function()
     local r = Tokens.expand("%author", stubUiForExpand(), nil, nil, false, 2, nil)
     eq(r, "Isaac Asimov")

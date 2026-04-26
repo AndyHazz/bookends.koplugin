@@ -717,6 +717,20 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
         state.session_time = state.session
     end
 
+    -- Today's reading totals (across all books) from ReaderStatistics.
+    -- pages_today is an integer; time_today is integer minutes (raw seconds
+    -- get formatted at render time).
+    do
+        local stats_today = Tokens._readStatsToday(ui)
+        if stats_today then
+            state.pages_today = math.max(0, stats_today.pages)
+            state.time_today = math.floor(stats_today.duration / 60)
+        else
+            state.pages_today = 0
+            state.time_today = 0
+        end
+    end
+
     -- Reading speed (pages/hr)
     if session_elapsed and session_elapsed > 60 and (session_pages_read or 0) > 0 then
         state.speed = math.floor(session_pages_read / session_elapsed * 3600)
@@ -1319,6 +1333,24 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         end
     end
 
+    -- Today's totals (across all books) from ReaderStatistics. Single
+    -- call covers both pages_today and time_today; gate is needs(...)
+    -- on either token.
+    local pages_today_str = ""
+    local time_today_str = ""
+    if needs("pages_today", "time_today") then
+        local stats_today = Tokens._readStatsToday(ui)
+        if stats_today then
+            if needs("pages_today") and stats_today.pages > 0 then
+                pages_today_str = tostring(math.floor(stats_today.pages))
+            end
+            if needs("time_today") and stats_today.duration > 0 then
+                local user_duration_format = G_reader_settings:readSetting("duration_format", "classic")
+                time_today_str = datetime.secondsToClockDuration(user_duration_format, stats_today.duration, true)
+            end
+        end
+    end
+
     -- Document metadata
     local title = ""
     local authors = ""
@@ -1565,6 +1597,8 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         weekday_short = date_weekday_short,
         session_time  = session_time,
         session_pages = tostring(session_pages),
+        pages_today   = pages_today_str,
+        time_today    = time_today_str,
         -- Metadata
         title       = tostring(title),
         author      = first_author,
