@@ -1035,15 +1035,21 @@ function Bookends:gatedRepaint(token_names, debounce)
     end
 end
 
-local FRONTLIGHT_TOKENS = { "light", "warmth" }
-local BATTERY_TOKENS    = { "batt", "batt_icon" }
-local WIFI_TOKENS       = { "wifi" }
+local FRONTLIGHT_TOKENS     = { "light", "warmth" }
+local BATTERY_TOKENS        = { "batt", "batt_icon" }
+local WIFI_TOKENS           = { "wifi" }
+local PLUGIN_CONTENT_TOKENS = { "plugin_content" }
 
-function Bookends:onFrontlightStateChanged() self:gatedRepaint(FRONTLIGHT_TOKENS, 1.0) end
-function Bookends:onCharging()               self:gatedRepaint(BATTERY_TOKENS) end
-function Bookends:onNotCharging()            self:gatedRepaint(BATTERY_TOKENS) end
-function Bookends:onNetworkConnected()       self:gatedRepaint(WIFI_TOKENS) end
-function Bookends:onNetworkDisconnected()    self:gatedRepaint(WIFI_TOKENS) end
+function Bookends:onFrontlightStateChanged()    self:gatedRepaint(FRONTLIGHT_TOKENS, 1.0) end
+function Bookends:onCharging()                  self:gatedRepaint(BATTERY_TOKENS) end
+function Bookends:onNotCharging()               self:gatedRepaint(BATTERY_TOKENS) end
+function Bookends:onNetworkConnected()          self:gatedRepaint(WIFI_TOKENS) end
+function Bookends:onNetworkDisconnected()       self:gatedRepaint(WIFI_TOKENS) end
+-- Plugins (kobo.koplugin BT, readtimer countdown, ...) broadcast
+-- RefreshAdditionalContent on state change. Stock footer repaints on this
+-- (readerfooter.lua:2716); we do too so %plugin_content updates without
+-- waiting for the next page turn.
+function Bookends:onRefreshAdditionalContent() self:gatedRepaint(PLUGIN_CONTENT_TOKENS) end
 Bookends.onToggleReadingOrder = Bookends.delayedRepaint
 function Bookends:onAnnotationsModified()
     self:markDirty()

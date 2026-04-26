@@ -3,5 +3,5 @@ return {
     name = "bookends",
     fullname = _("Bookends"),
     description = _([[Configurable text overlays at screen corners and edges with token expansion and icon support.]]),
-    version = "5.5.1",
+    version = "5.5.2",
 }
