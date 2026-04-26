@@ -118,6 +118,13 @@ local function makeFooterBtn(text, width, height, on_tap)
 end
 
 local ColourPaletteWidget = FocusManager:extend{
+    -- Mirrors KOReader's stock InputDialog (inputdialog.lua:124) — required
+    -- so we still receive tap events while the on-screen keyboard is shown.
+    -- Without it, UIManager:sendEvent (uimanager.lua:943) only dispatches to
+    -- widgets *under* the keyboard if they're flagged is_always_active. The
+    -- result on a Kobo Libra Colour was a hard lockup: keyboard couldn't be
+    -- dismissed and Apply/Cancel were unreachable, requiring a forced reboot.
+    is_always_active = true,
     title            = nil,
     selected_hex     = nil,
     apply_callback   = nil,
@@ -152,9 +159,44 @@ function ColourPaletteWidget:init()
     self:update()
 end
 
-function ColourPaletteWidget:onTapOutside()
-    -- Silently consume taps outside the dialog frame (non-dismissable).
+-- Returns true if the on-screen keyboard is currently up for our hex_input.
+function ColourPaletteWidget:_keyboardVisible()
+    return self.hex_input
+        and self.hex_input.isKeyboardVisible
+        and self.hex_input:isKeyboardVisible()
+end
+
+-- Tear down the on-screen keyboard (if any) for our hex_input. Safe to call
+-- from any callback path; idempotent.
+function ColourPaletteWidget:_closeKeyboard()
+    if self:_keyboardVisible() then
+        self.hex_input:onCloseKeyboard()
+    end
+end
+
+function ColourPaletteWidget:onTapOutside(arg, ges)
+    -- If the keyboard is up and the user tapped outside it, dismiss the
+    -- keyboard rather than consuming the tap silently. Mirrors stock
+    -- InputDialog's behaviour (inputdialog.lua:562-576). The picker itself
+    -- stays open; non-keyboard taps outside the dialog frame are still
+    -- consumed silently to keep the picker non-dismissable.
+    if self:_keyboardVisible() then
+        local kb_dimen = self.hex_input.keyboard and self.hex_input.keyboard.dimen
+        if not kb_dimen or (ges and ges.pos and ges.pos:notIntersectWith(kb_dimen)) then
+            self:_closeKeyboard()
+        end
+    end
     return true
+end
+
+-- Always tear down the keyboard before leaving the widget — our callbacks
+-- close the picker via UIManager:close, but the InputText's keyboard is a
+-- separate top-level widget that needs explicit cleanup.
+function ColourPaletteWidget:onCloseWidget()
+    self:_closeKeyboard()
+    if FocusManager.onCloseWidget then
+        return FocusManager.onCloseWidget(self)
+    end
 end
 
 function ColourPaletteWidget:update()
@@ -313,6 +355,11 @@ function ColourPaletteWidget:onHexSubmit()
     end
     self.selected_hex = hex
     if self.apply_callback then self.apply_callback(hex) end
+    -- Tear down the keyboard so the user lands back on the palette /
+    -- footer-row buttons rather than being stuck in the keyboard. update()
+    -- below rebuilds the widget tree; without this, the keyboard widget
+    -- leaks across the rebuild and continues to capture taps.
+    self:_closeKeyboard()
     self:update()
 end
 
