@@ -211,6 +211,18 @@ msgstr "Icona batteria (dinamica)"
 msgid "Battery level"
 msgstr "Livello batteria"
 
+msgid "Block (dark)"
+msgstr "Blocco (scuro)"
+
+msgid "Block (full)"
+msgstr "Blocco (pieno)"
+
+msgid "Block (light)"
+msgstr "Blocco (chiaro)"
+
+msgid "Block (medium)"
+msgstr "Blocco (medio)"
+
 msgid "Bold"
 msgstr "Grassetto"
 
@@ -225,6 +237,9 @@ msgstr "Libro"
 
 msgid "Book language"
 msgstr "Lingua del libro"
+
+msgid "Book percentage left"
+msgstr "% libro rimanente"
 
 msgid "Book percentage read"
 msgstr "% libro letto"
@@ -330,6 +345,9 @@ msgstr "Cap."
 
 msgid "Chapter"
 msgstr "Capitolo"
+
+msgid "Chapter percentage left"
+msgstr "% capitolo rimanente"
 
 msgid "Chapter percentage read"
 msgstr "% capitolo letto"
@@ -1085,6 +1103,9 @@ msgstr "Barra di avanzamento, larga 200px e alta 4px"
 msgid "Progress bars"
 msgstr "Barre avanzamento"
 
+msgid "Progress blocks"
+msgstr "Blocchi di avanzamento"
+
 msgid "RAM used %"
 msgstr "RAM usata %"
 
@@ -1220,6 +1241,12 @@ msgstr "Angolo singolo destra"
 msgid "Size"
 msgstr "Dimensione"
 
+msgid "Slant block"
+msgstr "Blocco inclinato"
+
+msgid "Slant block (empty)"
+msgstr "Blocco inclinato (vuoto)"
+
 msgid "Slash"
 msgstr "Barra"
 
@@ -1237,6 +1264,12 @@ msgstr "Picche"
 
 msgid "Speed once calculated"
 msgstr "Velocità una volta calcolata"
+
+msgid "Square (empty)"
+msgstr "Quadrato (vuoto)"
+
+msgid "Square (filled)"
+msgstr "Quadrato (pieno)"
 
 msgid "Star (filled)"
 msgstr "Stella (piena)"
@@ -1464,6 +1497,12 @@ msgstr "Verticale"
 
 msgid "Vertical bar"
 msgstr "Barra verticale"
+
+msgid "Vertical block"
+msgstr "Blocco verticale"
+
+msgid "Vertical block (empty)"
+msgstr "Blocco verticale (vuoto)"
 
 msgid "Vertical ellipsis"
 msgstr "Puntini verticali"

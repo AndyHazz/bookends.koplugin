@@ -215,6 +215,18 @@ msgstr "Икона на батерията (динамична)"
 msgid "Battery level"
 msgstr "Заряд на батерията"
 
+msgid "Block (dark)"
+msgstr "Блок (тъмен)"
+
+msgid "Block (full)"
+msgstr "Блок (плътен)"
+
+msgid "Block (light)"
+msgstr "Блок (светъл)"
+
+msgid "Block (medium)"
+msgstr "Блок (среден)"
+
 msgid "Bold"
 msgstr "Удебелен"
 
@@ -229,6 +241,9 @@ msgstr "Книга"
 
 msgid "Book language"
 msgstr "Език на книгата"
+
+msgid "Book percentage left"
+msgstr "Оставащ процент от книгата"
 
 msgid "Book percentage read"
 msgstr "Прочетен процент от книгата"
@@ -335,6 +350,9 @@ msgstr "Гл."
 
 msgid "Chapter"
 msgstr "Глава"
+
+msgid "Chapter percentage left"
+msgstr "Оставащ процент от главата"
 
 msgid "Chapter percentage read"
 msgstr "Прочетен процент от главата"
@@ -1092,6 +1110,9 @@ msgstr "Лента за напредъка, 200px широка и 4px висок
 msgid "Progress bars"
 msgstr "Ленти за напредъка"
 
+msgid "Progress blocks"
+msgstr "Блокове за напредъка"
+
 msgid "RAM used %"
 msgstr "Използвана RAM %"
 
@@ -1227,6 +1248,12 @@ msgstr "Единична ъглова скоба надясно"
 msgid "Size"
 msgstr "Размер"
 
+msgid "Slant block"
+msgstr "Наклонен блок"
+
+msgid "Slant block (empty)"
+msgstr "Наклонен блок (празен)"
+
 msgid "Slash"
 msgstr "Наклонена черта"
 
@@ -1244,6 +1271,12 @@ msgstr "Пика"
 
 msgid "Speed once calculated"
 msgstr "Скорост, след като е изчислена"
+
+msgid "Square (empty)"
+msgstr "Квадрат (празен)"
+
+msgid "Square (filled)"
+msgstr "Квадрат (запълнен)"
 
 msgid "Star (filled)"
 msgstr "Звезда (запълнена)"
@@ -1470,6 +1503,12 @@ msgstr "Вертикален"
 
 msgid "Vertical bar"
 msgstr "Вертикална черта"
+
+msgid "Vertical block"
+msgstr "Вертикален блок"
+
+msgid "Vertical block (empty)"
+msgstr "Вертикален блок (празен)"
 
 msgid "Vertical ellipsis"
 msgstr "Вертикално многоточие"

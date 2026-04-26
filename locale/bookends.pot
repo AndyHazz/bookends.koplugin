@@ -2,1551 +2,2114 @@
 # Translation template
 msgid ""
 msgstr ""
-"Project-Id-Version: bookends 5.5.0\n"
+"Project-Id-Version: bookends 5.5.4\n"
 "POT-Creation-Date: 2026-04-26 00:00+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "%1 presets in the approval queue"
-msgstr ""
-
-msgid "%1, line %2"
-msgstr ""
-
-msgid ""
-"'%1' already exists in your library.\n"
-"\n"
-"Replacing it will overwrite your local copy with the current gallery "
-"version. Any local edits will be lost.\n"
-"\n"
-"Install under a new name to keep both."
-msgstr ""
-
-msgid "+ New blank preset"
-msgstr ""
-
-msgid "+ Progress bar"
-msgstr ""
-
-msgid "- Progress bar"
-msgstr ""
-
-msgid "1 preset in the approval queue"
-msgstr ""
-
-msgid "12-hour clock"
-msgstr ""
-
-msgid "24-hour clock"
-msgstr ""
-
-msgid "@key = another field's value (chap_title_1!=@title)"
-msgstr ""
-
-msgid ""
-"A preset called '%1' is already in the gallery. Rename your preset (Manage… "
-"→ Rename…) before submitting, so it doesn't collide with the existing entry."
-msgstr ""
-
-msgid ""
-"A preset called '%1' is already in the gallery. Rename your preset (Manage… "
-"→ Rename…) before submitting."
-msgstr ""
-
-msgid ""
-"A submission for '%1' is already awaiting review. Wait for that one to be "
-"reviewed, or rename your preset to submit under a different name."
-msgstr ""
-
-msgid "Add line"
-msgstr ""
-
-msgid "Adjust / contrast"
-msgstr ""
-
-msgid "Adjust margins"
-msgstr ""
-
-msgid ""
-"Affects %L (pages left in book) and %l (pages left in chapter). Off "
-"(default): 'n−1 → 0'. On: 'n → 1'."
-msgstr ""
-
-msgid "All pg"
-msgstr ""
-
-msgid "Anchor"
-msgstr ""
-
-msgid ""
-"Applies to Nerd Font and FontAwesome icon glyphs (the Private Use Area "
-"range, e.g. %W, %B, %k). Unicode symbols in the regular text ranges (like "
-"the hourglass \"⌛\") follow the text color instead.\n"
-"\n"
-"An inline [c=#RRGGBB]…[/c] tag in a line overrides the icon colour for any "
-"glyphs inside it."
-msgstr ""
-
-msgid "Apply"
-msgstr ""
-
-msgid "Arrow down"
-msgstr ""
-
-msgid "Arrow down then left"
-msgstr ""
-
-msgid "Arrow down then right"
-msgstr ""
-
-msgid "Arrow left"
-msgstr ""
-
-msgid "Arrow left hooked"
-msgstr ""
-
-msgid "Arrow left to bar"
-msgstr ""
-
-msgid "Arrow left with tail"
-msgstr ""
-
-msgid "Arrow right"
-msgstr ""
-
-msgid "Arrow right hooked"
-msgstr ""
-
-msgid "Arrow right then down"
-msgstr ""
-
-msgid "Arrow right then up"
-msgstr ""
-
-msgid "Arrow right to bar"
-msgstr ""
-
-msgid "Arrow right with tail"
-msgstr ""
-
-msgid "Arrow up"
-msgstr ""
-
-msgid "Arrow up then left"
-msgstr ""
-
-msgid "Arrow up then right"
-msgstr ""
-
-msgid "Arrow when page-turn flipped"
-msgstr ""
-
-msgid "Arrowhead right"
-msgstr ""
-
-msgid "Arrows"
-msgstr ""
-
-msgid "Arrows left-right"
-msgstr ""
-
-msgid "Author(s)"
-msgstr ""
-
-msgid "Bar"
-msgstr ""
-
-msgid "Bar %1"
-msgstr ""
-
-msgid "Bar chart"
-msgstr ""
-
-msgid "Bar thickness"
-msgstr ""
-
-msgid "Battery (changes with level)"
-msgstr ""
-
-msgid "Battery 0–100"
-msgstr ""
-
-msgid "Battery icon (dynamic)"
-msgstr ""
-
-msgid "Battery level"
-msgstr ""
-
-msgid "Bold"
-msgstr ""
-
-msgid "Bold italic"
-msgstr ""
-
-msgid "Bolt when charging"
-msgstr ""
-
-msgid "Book"
-msgstr ""
-
-msgid "Book language"
-msgstr ""
-
-msgid "Book percentage read"
-msgstr ""
-
-msgid "Book progress 0–100"
-msgstr ""
-
-msgid "Book+"
-msgstr ""
-
-msgid "Book++"
-msgstr ""
-
-msgid "Book+++"
-msgstr ""
-
-msgid "Bookends"
-msgstr ""
-
-msgid "Bookends is up to date."
-msgstr ""
-
-msgid "Bookends settings"
-msgstr ""
-
-msgid "Bookends update available: v"
-msgstr ""
-
-msgid "Bookends updated to v"
-msgstr ""
-
-msgid "Bookends: cycle preset"
-msgstr ""
-
-msgid "Bookends: open preset library"
-msgstr ""
-
-msgid "Bookends: set visibility"
-msgstr ""
-
-msgid "Bookends: toggle visibility"
-msgstr ""
-
-msgid "Bookmark (filled)"
-msgstr ""
-
-msgid "Bookmark (outline)"
-msgstr ""
-
-msgid "Border"
-msgstr ""
-
-msgid "Border color"
-msgstr ""
-
-msgid "Border color (% black)"
-msgstr ""
-
-msgid "Border thickness"
-msgstr ""
-
-msgid "Bordered"
-msgstr ""
-
-msgid "Bottom"
-msgstr ""
-
-msgid "Bottom center tap gesture"
-msgstr ""
-
-msgid "Bottom-center"
-msgstr ""
-
-msgid "Bottom-left"
-msgstr ""
-
-msgid "Bottom-right"
-msgstr ""
-
-msgid ""
-"Browse presets others have shared, preview them on your own status bar, and "
-"install the ones you like. Once installed, you can edit each preset freely "
-"on the My presets tab."
-msgstr ""
-
-msgid "Bullet"
-msgstr ""
-
-msgid "Calendar"
-msgstr ""
-
-msgid "Calendar (checked)"
-msgstr ""
-
-msgid "Cancel"
-msgstr ""
-
-msgid "Ch."
-msgstr ""
-
-msgid "Chapter"
-msgstr ""
-
-msgid "Chapter percentage read"
-msgstr ""
-
-msgid "Chapter progress 0–100"
-msgstr ""
-
-msgid "Chapter ticks: all levels"
-msgstr ""
-
-msgid "Chapter ticks: off"
-msgstr ""
-
-msgid "Chapter ticks: top 2 levels"
-msgstr ""
-
-msgid "Chapter ticks: top level"
-msgstr ""
-
-msgid "Chapter title (deepest)"
-msgstr ""
-
-msgid "Chapter title at depth 1"
-msgstr ""
-
-msgid "Chapter title at depth 1/2/3"
-msgstr ""
-
-msgid "Chapter title at depth 2"
-msgstr ""
-
-msgid "Chapter title at depth 3"
-msgstr ""
-
-msgid "Chapter title only when different from book title"
-msgstr ""
-
-msgid "Check"
-msgstr ""
-
-msgid "Check mark"
-msgstr ""
-
-msgid "Checking for updates..."
-msgstr ""
-
-msgid "Circle arrow left"
-msgstr ""
-
-msgid "Circle arrow right"
-msgstr ""
-
-msgid "Clock"
-msgstr ""
-
-msgid "Close"
-msgstr ""
-
-msgid "Cloud"
-msgstr ""
-
-msgid "Club"
-msgstr ""
-
-msgid "Cog"
-msgstr ""
-
-msgid "Compare:  =  !=  <  >     Boolean:  and  or  not  ( )"
-msgstr ""
-
-msgid ""
-"Configurable text overlays at screen corners and edges with token expansion "
-"and icon support."
-msgstr ""
-
-msgid ""
-"Configure what happens when you tap the centre of the status bar area, and "
-"whether long-pressing a progress bar opens the skim dialog."
-msgstr ""
-
-msgid "Copyright"
-msgstr ""
-
-msgid "Could not check for updates."
-msgstr ""
-
-msgid "Could not preview preset"
-msgstr ""
-
-msgid "Couldn't download '%1'."
-msgstr ""
-
-msgid "Cross"
-msgstr ""
-
-msgid "Cross mark"
-msgstr ""
-
-msgid "Current HH:MM (24h)"
-msgstr ""
-
-msgid "Current chapter number"
-msgstr ""
-
-msgid "Current page number"
-msgstr ""
-
-msgid "Current time (24h, same as %time_24h)"
-msgstr ""
-
-msgid "Cursive"
-msgstr ""
-
-msgid "Curved back arrow"
-msgstr ""
-
-msgid "Custom colors and tick marks"
-msgstr ""
-
-msgid "Custom date/time format (strftime spec)"
-msgstr ""
-
-msgid "Custom fonts in this preset:"
-msgstr ""
-
-msgid "Cycle starred presets"
-msgstr ""
-
-msgid "Dagger"
-msgstr ""
-
-msgid "Date long (28 March 2026)"
-msgstr ""
-
-msgid "Date numeric (28/03/2026)"
-msgstr ""
-
-msgid "Date short (28 Mar)"
-msgstr ""
-
-msgid "Default"
-msgstr ""
-
-msgid "Default font"
-msgstr ""
-
-msgid "Delete"
-msgstr ""
-
-msgid "Delete preset '%1'?"
-msgstr ""
-
-msgid "Device"
-msgstr ""
-
-msgid "Diameter"
-msgstr ""
-
-msgid "Diamond"
-msgstr ""
-
-msgid "Diamond suit"
-msgstr ""
-
-msgid "Disable stock status bar"
-msgstr ""
-
-msgid "Discover more presets"
-msgstr ""
-
-msgid "Dismiss"
-msgstr ""
-
-msgid "Division slash"
-msgstr ""
-
-msgid "Do nothing"
-msgstr ""
-
-msgid "Document format (EPUB, PDF, etc.)"
-msgstr ""
-
-msgid "Document title"
-msgstr ""
-
-msgid "Double angle left"
-msgstr ""
-
-msgid "Double angle right"
-msgstr ""
-
-msgid "Double arrow down"
-msgstr ""
-
-msgid "Double arrow left"
-msgstr ""
-
-msgid "Double arrow right"
-msgstr ""
-
-msgid "Double arrow up"
-msgstr ""
-
-msgid "Double arrows right"
-msgstr ""
-
-msgid "Double dagger"
-msgstr ""
-
-msgid "Double fraction slash"
-msgstr ""
-
-msgid "Download failed."
-msgstr ""
-
-msgid "Downloading update..."
-msgstr ""
-
-msgid "Duplicate"
-msgstr ""
-
-msgid "Duplicate preset"
-msgstr ""
-
-msgid "Dynamic"
-msgstr ""
-
-msgid "EPUB / PDF / CBZ / …"
-msgstr ""
-
-msgid "Edge"
-msgstr ""
-
-msgid "Edit author"
-msgstr ""
-
-msgid "Edit author…"
-msgstr ""
-
-msgid "Edit description"
-msgstr ""
-
-msgid "Edit description…"
-msgstr ""
-
-msgid "Em dash"
-msgstr ""
-
-msgid "En dash"
-msgstr ""
-
-msgid "Enable"
-msgstr ""
-
-msgid "Enable bookends"
-msgstr ""
-
-msgid "Enabled"
-msgstr ""
-
-msgid "Even pg"
-msgstr ""
-
-msgid "Examples"
-msgstr ""
-
-msgid "Extra bottom margin"
-msgstr ""
-
-msgid "Extra left margin"
-msgstr ""
-
-msgid "Extra right margin"
-msgstr ""
-
-msgid "Extra top margin"
-msgstr ""
-
-msgid "Eye"
-msgstr ""
-
-msgid "Eye (hidden)"
-msgstr ""
-
-msgid "Fall back to shallower chapter"
-msgstr ""
-
-msgid "Fantasy"
-msgstr ""
-
-msgid "File name"
-msgstr ""
-
-msgid "Fill: bottom to top"
-msgstr ""
-
-msgid "Fill: clockwise"
-msgstr ""
-
-msgid "Fill: left to right"
-msgstr ""
-
-msgid "Fill: right to left"
-msgstr ""
-
-msgid "Fill: top to bottom"
-msgstr ""
-
-msgid "Fixed-width progress bar (100px)"
-msgstr ""
-
-msgid "Flag"
-msgstr ""
-
-msgid "Font"
-msgstr ""
-
-msgid "Font scale"
-msgstr ""
-
-msgid "Font size"
-msgstr ""
-
-msgid "Font-family fonts"
-msgstr ""
-
-msgid "Font..."
-msgstr ""
-
-msgid "Fonts"
-msgstr ""
-
-msgid "Fraction slash"
-msgstr ""
-
-msgid "Free disk space"
-msgstr ""
-
-msgid "Frontlight brightness"
-msgstr ""
-
-msgid "Frontlight on/off label"
-msgstr ""
-
-msgid "Frontlight warmth"
-msgstr ""
-
-msgid "Full width progress bars"
-msgstr ""
-
-msgid "Gallery"
-msgstr ""
-
-msgid "HDD / disk"
-msgstr ""
-
-msgid "Heart"
-msgstr ""
-
-msgid "Heavy arrow right"
-msgstr ""
-
-msgid "Heavy round arrow right"
-msgstr ""
-
-msgid "Heavy triangle right"
-msgstr ""
-
+#: bookends_colour_palette.lua:192
 msgid "Hex:"
 msgstr ""
 
-msgid ""
-"Hides KOReader's built-in status bar. This simplifies the render pipeline "
-"and can reduce e-ink flicker on some devices. All status bar features are "
-"available as Bookends tokens."
-msgstr ""
-
-msgid "High voltage"
-msgstr ""
-
-msgid "Hollow"
-msgstr ""
-
-msgid "Horizontal ellipsis"
-msgstr ""
-
-msgid "Hot springs / warmth"
-msgstr ""
-
-msgid "Hourglass"
-msgstr ""
-
-msgid "Hourglass (filled)"
-msgstr ""
-
-msgid "Icon color"
-msgstr ""
-
-msgid "If Wi-Fi is on"
-msgstr ""
-
-msgid "If book has author"
-msgstr ""
-
-msgid "If book has title"
-msgstr ""
-
-msgid "If book in series"
-msgstr ""
-
-msgid "If chapter has title"
-msgstr ""
-
-msgid "If charging"
-msgstr ""
-
-msgid "If connected"
-msgstr ""
-
-msgid "If frontlight on"
-msgstr ""
-
-msgid "If page-turn flipped"
-msgstr ""
-
-msgid "If/Else conditional tokens"
-msgstr ""
-
-msgid "Imported from your earlier Bookends settings"
-msgstr ""
-
-msgid "Include current page in pages-left tokens"
-msgstr ""
-
-msgid "Infinity"
-msgstr ""
-
-msgid "Info"
-msgstr ""
-
-msgid "Inline progress bars can be added via the line editor"
-msgstr ""
-
-msgid "Insert conditional"
-msgstr ""
-
-msgid "Insert symbol"
-msgstr ""
-
-msgid "Insert token"
-msgstr ""
-
-msgid "Install"
-msgstr ""
-
-msgid "Install as"
-msgstr ""
-
-msgid "Install as new name…"
-msgstr ""
-
-msgid "Installation failed: "
-msgstr ""
-
-msgid "Installed version"
-msgstr ""
-
-msgid "Installed: "
-msgstr ""
-
-msgid "Invalid hex colour (use #RGB or #RRGGBB)"
-msgstr ""
-
-msgid "Invert tick color on read portion"
-msgstr ""
-
-msgid "Italic"
-msgstr ""
-
-msgid "Late-night reading"
-msgstr ""
-
-msgid "Latest"
-msgstr ""
-
-msgid "Latest: "
-msgstr ""
-
-msgid "Left"
-msgstr ""
-
-msgid "Left harpoon with right arrow"
-msgstr ""
-
-msgid "Lightbulb"
-msgstr ""
-
-msgid "Lightbulb emoji"
-msgstr ""
-
-msgid "Lightning bolt"
-msgstr ""
-
-msgid "Line"
-msgstr ""
-
-msgid "Line %1: %2"
-msgstr ""
-
-msgid "Long arrow left"
-msgstr ""
-
-msgid "Long arrow right"
-msgstr ""
-
-msgid "Long books (20+ chapters)"
-msgstr ""
-
-msgid "Long press to change render order"
-msgstr ""
-
-msgid "Long-press progress bars to skim document"
-msgstr ""
-
-msgid "Low-battery warning"
-msgstr ""
-
-msgid ""
-"Made something worth sharing? Submit it with the Manage button while viewing "
-"one of your own presets."
-msgstr ""
-
-msgid "Manage…"
-msgstr ""
-
-msgid "Memory chip"
-msgstr ""
-
-msgid "Metadata"
-msgstr ""
-
-msgid "Metro"
-msgstr ""
-
-msgid "Metro read color"
-msgstr ""
-
-msgid "Metro read color (% black)"
-msgstr ""
-
-msgid "Metro track color"
-msgstr ""
-
-msgid "Metro track color (% black)"
-msgstr ""
-
-msgid "Middle dot"
-msgstr ""
-
-msgid "Minutes this session"
-msgstr ""
-
-msgid "Mobile"
-msgstr ""
-
-msgid "Monospace"
-msgstr ""
-
-msgid "Mon–Sun"
-msgstr ""
-
-msgid "Moon"
-msgstr ""
-
-msgid "Move down"
-msgstr ""
-
-msgid "Move to"
-msgstr ""
-
-msgid "Move up"
-msgstr ""
-
-msgid "My presets"
-msgstr ""
-
-msgid "My setup"
-msgstr ""
-
-msgid "Near end of book"
-msgstr ""
-
-msgid "No download available for this release."
-msgstr ""
-
-msgid "Non-series books"
-msgstr ""
-
-msgid "Notify on wake when update available"
-msgstr ""
-
-msgid "Number of bookmarks"
-msgstr ""
-
-msgid "Number of highlights"
-msgstr ""
-
-msgid "Number of notes"
-msgstr ""
-
-msgid "Numero"
-msgstr ""
-
-msgid "Odd pg"
-msgstr ""
-
-msgid "Odd/even variations"
-msgstr ""
-
-msgid "Offline — connect and tap a sort to retry"
-msgstr ""
-
-msgid "Offline — connect to preview this preset."
-msgstr ""
-
-msgid "One-line description of this preset"
-msgstr ""
-
-msgid "Only for PDFs"
-msgstr ""
-
-msgid "Open"
-msgstr ""
-
-msgid "Open preset library"
-msgstr ""
-
-msgid "Open the releases page in a browser?"
-msgstr ""
-
-msgid ""
-"Opens the skim dialog when you long-press on a full-width progress bar. "
-"Replaces the stock status bar's long-press to skim feature."
-msgstr ""
-
-msgid "Page %1 of %2"
-msgstr ""
-
-msgid "Page / progress"
-msgstr ""
-
-msgid "Page-turn direction ⇄ (shows when inverted)"
-msgstr ""
-
-msgid "Pages left in book"
-msgstr ""
-
-msgid "Pages left in chapter"
-msgstr ""
-
-msgid "Pages per hour"
-msgstr ""
-
-msgid "Pages read in chapter"
-msgstr ""
-
-msgid "Pages this session"
-msgstr ""
-
-msgid "Paper aeroplane"
-msgstr ""
-
-msgid "Pick a color"
-msgstr ""
-
-msgid "Pilcrow / paragraph"
-msgstr ""
-
-msgid "Plugin content (dynamic)"
-msgstr ""
-
-msgid "Pointing down"
-msgstr ""
-
-msgid "Pointing left"
-msgstr ""
-
-msgid "Pointing right"
-msgstr ""
-
-msgid "Pointing right (black)"
-msgstr ""
-
-msgid "Pointing up"
-msgstr ""
-
-msgid "Popular"
-msgstr ""
-
-msgid "Position"
-msgstr ""
-
-msgid "Power"
-msgstr ""
-
-msgid "Preset"
-msgstr ""
-
-msgid "Preset error: %1"
-msgstr ""
-
-msgid "Preset library"
-msgstr ""
-
-msgid "Preset library…"
-msgstr ""
-
-msgid "Preset name"
-msgstr ""
-
-msgid "Preset: %1"
-msgstr ""
-
-msgid "Prioritise left/right and truncate long center text"
-msgstr ""
-
-msgid "Progress bar (configure type in line editor)"
-msgstr ""
-
-msgid "Progress bar colors and tick marks"
-msgstr ""
-
-msgid "Progress bar, 10px tall"
-msgstr ""
-
-msgid "Progress bar, 200px wide and 4px tall"
-msgstr ""
-
-msgid "Progress bars"
-msgstr ""
-
-msgid "RAM used %"
-msgstr ""
-
-msgid "RAM used (MiB)"
-msgstr ""
-
-msgid "Radial"
-msgstr ""
-
-msgid "Radial hollow"
-msgstr ""
-
-msgid "Read color"
-msgstr ""
-
-msgid "Read color (% black)"
-msgstr ""
-
-msgid "Reading"
-msgstr ""
-
-msgid "Reading speed (pages/hour)"
-msgstr ""
-
-msgid "Reference"
-msgstr ""
-
-msgid "Refresh failed — tap a sort to retry"
-msgstr ""
-
-msgid "Refreshing…"
-msgstr ""
-
-msgid "Regular"
-msgstr ""
-
-msgid "Rename"
-msgstr ""
-
-msgid "Rename preset"
-msgstr ""
-
-msgid "Rename…"
-msgstr ""
-
-msgid "Replace"
-msgstr ""
-
-msgid "Reset"
-msgstr ""
-
-msgid "Reset all to defaults"
-msgstr ""
-
-msgid "Reset custom to defaults"
-msgstr ""
-
-msgid "Restart"
-msgstr ""
-
-msgid "Restart KOReader now?"
-msgstr ""
-
-msgid "Right"
-msgstr ""
-
-msgid "Round"
-msgstr ""
-
-msgid "Rounded"
-msgstr ""
-
-msgid "Sans-serif"
-msgstr ""
-
-msgid "Save"
-msgstr ""
-
-msgid "Save current as new preset…"
-msgstr ""
-
-msgid "Save preset"
-msgstr ""
-
-msgid "Saved preset:"
-msgstr ""
-
-msgid "Section sign"
-msgstr ""
-
-msgid "Select font"
-msgstr ""
-
-msgid "Separators"
-msgstr ""
-
-msgid "Series name only"
-msgstr ""
-
-msgid "Series number only"
-msgstr ""
-
-msgid "Series with index (combined)"
-msgstr ""
-
-msgid "Serif"
-msgstr ""
-
-msgid "Session / reading"
-msgstr ""
-
-msgid "Session pages read"
-msgstr ""
-
-msgid "Session reading time"
-msgstr ""
-
-msgid "Session time after start"
-msgstr ""
-
+#: bookends_colour_palette.lua:216
 msgid "Set"
 msgstr ""
 
-msgid "Set font"
+#: bookends_colour_palette.lua:230 bookends_dialog_helpers.lua:88
+#: bookends_line_editor.lua:324 bookends_line_editor.lua:575 main.lua:1832
+#: main.lua:2489 menu/main_menu.lua:32 menu/main_menu.lua:72
+#: menu/preset_manager_modal.lua:989 menu/preset_manager_modal.lua:1110
+#: menu/preset_manager_modal.lua:1151 menu/preset_manager_modal.lua:1252
+#: menu/preset_manager_modal.lua:1332 menu/preset_manager_modal.lua:1399
+#: menu/preset_manager_modal.lua:1727 menu/preset_manager_modal.lua:1751
+#: menu/preset_manager_modal.lua:1775 menu/progress_bar_menu.lua:62
+msgid "Cancel"
 msgstr ""
 
-msgid "Single angle left"
+#: bookends_colour_palette.lua:232 bookends_dialog_helpers.lua:96 main.lua:1842
+#: main.lua:2032 menu/colours_menu.lua:66 menu/colours_menu.lua:362
+#: menu/progress_bar_menu.lua:395
+msgid "Default"
 msgstr ""
 
-msgid "Single angle right"
+#: bookends_colour_palette.lua:234 bookends_dialog_helpers.lua:103
+#: main.lua:1852 menu/preset_manager_modal.lua:552
+msgid "Apply"
 msgstr ""
 
-msgid "Size"
+#: bookends_colour_palette.lua:256 bookends_colour_palette.lua:337
+msgid "Pick a color"
 msgstr ""
 
-msgid "Slash"
+#: bookends_colour_palette.lua:311
+msgid "Invalid hex colour (use #RGB or #RRGGBB)"
 msgstr ""
 
-msgid "Sliders"
+#: bookends_icon_picker.lua:11
+msgid "Dynamic"
 msgstr ""
 
-msgid "Snippets"
+#: bookends_icon_picker.lua:12
+msgid "Battery (changes with level)"
 msgstr ""
 
-msgid "Solid"
+#: bookends_icon_picker.lua:13
+msgid "Wi-Fi (changes with status)"
 msgstr ""
 
-msgid "Spade"
+#: bookends_icon_picker.lua:15 menu/token_picker.lua:71
+msgid "Device"
 msgstr ""
 
-msgid "Speed once calculated"
+#: bookends_icon_picker.lua:16
+msgid "Lightbulb"
 msgstr ""
 
-msgid "Star (filled)"
+#: bookends_icon_picker.lua:17
+msgid "Lightbulb emoji"
 msgstr ""
 
-msgid "Star (outline)"
-msgstr ""
-
-msgid "Star = include in preset cycle gesture"
-msgstr ""
-
-msgid "Starred"
-msgstr ""
-
-msgid "Status"
-msgstr ""
-
-msgid "Stopwatch"
-msgstr ""
-
-msgid "Style"
-msgstr ""
-
-msgid "Submission failed — details in the KOReader log."
-msgstr ""
-
-msgid "Submission failed: %1"
-msgstr ""
-
-msgid "Submit"
-msgstr ""
-
-msgid ""
-"Submit '%1' by %2 to the gallery? A pull request will be opened for review."
-msgstr ""
-
-msgid "Submit anyway"
-msgstr ""
-
-msgid "Submit to gallery…"
-msgstr ""
-
-msgid "Submitting to gallery…"
-msgstr ""
-
+#: bookends_icon_picker.lua:18
 msgid "Sun (filled)"
 msgstr ""
 
+#: bookends_icon_picker.lua:19 bookends_icon_picker.lua:59
 msgid "Sun (outline)"
 msgstr ""
 
-msgid "Symbols"
+#: bookends_icon_picker.lua:20
+msgid "Moon"
 msgstr ""
 
+#: bookends_icon_picker.lua:21
+msgid "Paper aeroplane"
+msgstr ""
+
+#: bookends_icon_picker.lua:22
+msgid "Adjust / contrast"
+msgstr ""
+
+#: bookends_icon_picker.lua:23
+msgid "Lightning bolt"
+msgstr ""
+
+#: bookends_icon_picker.lua:24
+msgid "Power"
+msgstr ""
+
+#: bookends_icon_picker.lua:25
+msgid "Mobile"
+msgstr ""
+
+#: bookends_icon_picker.lua:26
+msgid "Wi-Fi"
+msgstr ""
+
+#: bookends_icon_picker.lua:27
+msgid "Cloud"
+msgstr ""
+
+#: bookends_icon_picker.lua:28
+msgid "Memory chip"
+msgstr ""
+
+#: bookends_icon_picker.lua:29
+msgid "HDD / disk"
+msgstr ""
+
+#: bookends_icon_picker.lua:31
+msgid "Reading"
+msgstr ""
+
+#: bookends_icon_picker.lua:32 bookends_line_editor.lua:161
+#: menu/progress_bar_menu.lua:109
+msgid "Book"
+msgstr ""
+
+#: bookends_icon_picker.lua:33
+msgid "Bookmark (filled)"
+msgstr ""
+
+#: bookends_icon_picker.lua:34
+msgid "Bookmark (outline)"
+msgstr ""
+
+#: bookends_icon_picker.lua:35
+msgid "Eye"
+msgstr ""
+
+#: bookends_icon_picker.lua:36
+msgid "Eye (hidden)"
+msgstr ""
+
+#: bookends_icon_picker.lua:37
+msgid "Flag"
+msgstr ""
+
+#: bookends_icon_picker.lua:38
+msgid "Bar chart"
+msgstr ""
+
+#: bookends_icon_picker.lua:39
 msgid "Tachometer"
 msgstr ""
 
-msgid "Tap Latest or Popular above to load the gallery."
+#: bookends_icon_picker.lua:40
+msgid "Sliders"
 msgstr ""
 
+#: bookends_icon_picker.lua:42
+msgid "Time"
+msgstr ""
+
+#: bookends_icon_picker.lua:43
+msgid "Clock"
+msgstr ""
+
+#: bookends_icon_picker.lua:44
+msgid "Stopwatch"
+msgstr ""
+
+#: bookends_icon_picker.lua:45
+msgid "Watch"
+msgstr ""
+
+#: bookends_icon_picker.lua:46
+msgid "Hourglass"
+msgstr ""
+
+#: bookends_icon_picker.lua:47
+msgid "Hourglass (filled)"
+msgstr ""
+
+#: bookends_icon_picker.lua:48
+msgid "Calendar"
+msgstr ""
+
+#: bookends_icon_picker.lua:49
+msgid "Calendar (checked)"
+msgstr ""
+
+#: bookends_icon_picker.lua:51
+msgid "Status"
+msgstr ""
+
+#: bookends_icon_picker.lua:52
+msgid "Check"
+msgstr ""
+
+#: bookends_icon_picker.lua:53
+msgid "Cross"
+msgstr ""
+
+#: bookends_icon_picker.lua:54
+msgid "Info"
+msgstr ""
+
+#: bookends_icon_picker.lua:55
+msgid "Warning"
+msgstr ""
+
+#: bookends_icon_picker.lua:56
+msgid "Cog"
+msgstr ""
+
+#: bookends_icon_picker.lua:58 bookends_line_editor.lua:339
+msgid "Symbols"
+msgstr ""
+
+#: bookends_icon_picker.lua:60
+msgid "Hot springs / warmth"
+msgstr ""
+
+#: bookends_icon_picker.lua:61
+msgid "Spade"
+msgstr ""
+
+#: bookends_icon_picker.lua:62
+msgid "Club"
+msgstr ""
+
+#: bookends_icon_picker.lua:63
+msgid "Heart"
+msgstr ""
+
+#: bookends_icon_picker.lua:64
+msgid "Diamond suit"
+msgstr ""
+
+#: bookends_icon_picker.lua:65
+msgid "Star (filled)"
+msgstr ""
+
+#: bookends_icon_picker.lua:66
+msgid "Star (outline)"
+msgstr ""
+
+#: bookends_icon_picker.lua:67
+msgid "Check mark"
+msgstr ""
+
+#: bookends_icon_picker.lua:68
+msgid "Cross mark"
+msgstr ""
+
+#: bookends_icon_picker.lua:69
+msgid "Infinity"
+msgstr ""
+
+#: bookends_icon_picker.lua:70
+msgid "Section sign"
+msgstr ""
+
+#: bookends_icon_picker.lua:71
+msgid "Pilcrow / paragraph"
+msgstr ""
+
+#: bookends_icon_picker.lua:72
+msgid "Dagger"
+msgstr ""
+
+#: bookends_icon_picker.lua:73
+msgid "Double dagger"
+msgstr ""
+
+#: bookends_icon_picker.lua:74
+msgid "Copyright"
+msgstr ""
+
+#: bookends_icon_picker.lua:75
+msgid "Numero"
+msgstr ""
+
+#: bookends_icon_picker.lua:76
+msgid "High voltage"
+msgstr ""
+
+#: bookends_icon_picker.lua:78
+msgid "Arrows"
+msgstr ""
+
+#: bookends_icon_picker.lua:79
+msgid "Arrow left"
+msgstr ""
+
+#: bookends_icon_picker.lua:80
+msgid "Arrow right"
+msgstr ""
+
+#: bookends_icon_picker.lua:81
+msgid "Arrow up"
+msgstr ""
+
+#: bookends_icon_picker.lua:82
+msgid "Arrow down"
+msgstr ""
+
+#: bookends_icon_picker.lua:83
+msgid "Double arrow left"
+msgstr ""
+
+#: bookends_icon_picker.lua:84
+msgid "Double arrow right"
+msgstr ""
+
+#: bookends_icon_picker.lua:85
+msgid "Double arrow up"
+msgstr ""
+
+#: bookends_icon_picker.lua:86
+msgid "Double arrow down"
+msgstr ""
+
+#: bookends_icon_picker.lua:87
+msgid "Arrows left-right"
+msgstr ""
+
+#: bookends_icon_picker.lua:88
+msgid "Double arrows right"
+msgstr ""
+
+#: bookends_icon_picker.lua:89
+msgid "Left harpoon with right arrow"
+msgstr ""
+
+#: bookends_icon_picker.lua:90
+msgid "Curved back arrow"
+msgstr ""
+
+#: bookends_icon_picker.lua:91
+msgid "Arrow left with tail"
+msgstr ""
+
+#: bookends_icon_picker.lua:92
+msgid "Arrow right with tail"
+msgstr ""
+
+#: bookends_icon_picker.lua:93
+msgid "Arrow left to bar"
+msgstr ""
+
+#: bookends_icon_picker.lua:94
+msgid "Arrow right to bar"
+msgstr ""
+
+#: bookends_icon_picker.lua:95
+msgid "Arrow left hooked"
+msgstr ""
+
+#: bookends_icon_picker.lua:96
+msgid "Arrow right hooked"
+msgstr ""
+
+#: bookends_icon_picker.lua:97
+msgid "Arrow right then up"
+msgstr ""
+
+#: bookends_icon_picker.lua:98
+msgid "Arrow right then down"
+msgstr ""
+
+#: bookends_icon_picker.lua:99
+msgid "Arrow up then left"
+msgstr ""
+
+#: bookends_icon_picker.lua:100
+msgid "Arrow up then right"
+msgstr ""
+
+#: bookends_icon_picker.lua:101
+msgid "Arrow down then left"
+msgstr ""
+
+#: bookends_icon_picker.lua:102
+msgid "Arrow down then right"
+msgstr ""
+
+#: bookends_icon_picker.lua:103
+msgid "Circle arrow left"
+msgstr ""
+
+#: bookends_icon_picker.lua:104
+msgid "Circle arrow right"
+msgstr ""
+
+#: bookends_icon_picker.lua:105
+msgid "Heavy arrow right"
+msgstr ""
+
+#: bookends_icon_picker.lua:106
+msgid "Heavy round arrow right"
+msgstr ""
+
+#: bookends_icon_picker.lua:107
+msgid "Triangle-head right"
+msgstr ""
+
+#: bookends_icon_picker.lua:108
+msgid "Heavy triangle right"
+msgstr ""
+
+#: bookends_icon_picker.lua:109
+msgid "Arrowhead right"
+msgstr ""
+
+#: bookends_icon_picker.lua:110
+msgid "Long arrow left"
+msgstr ""
+
+#: bookends_icon_picker.lua:111
+msgid "Long arrow right"
+msgstr ""
+
+#: bookends_icon_picker.lua:112
+msgid "Triangle right"
+msgstr ""
+
+#: bookends_icon_picker.lua:113
+msgid "Triangle left"
+msgstr ""
+
+#: bookends_icon_picker.lua:114
+msgid "Triangle up"
+msgstr ""
+
+#: bookends_icon_picker.lua:115
+msgid "Triangle down"
+msgstr ""
+
+#: bookends_icon_picker.lua:116
+msgid "Single angle left"
+msgstr ""
+
+#: bookends_icon_picker.lua:117
+msgid "Single angle right"
+msgstr ""
+
+#: bookends_icon_picker.lua:118
+msgid "Double angle left"
+msgstr ""
+
+#: bookends_icon_picker.lua:119
+msgid "Double angle right"
+msgstr ""
+
+#: bookends_icon_picker.lua:120
+msgid "Pointing right (black)"
+msgstr ""
+
+#: bookends_icon_picker.lua:121
+msgid "Pointing right"
+msgstr ""
+
+#: bookends_icon_picker.lua:122
+msgid "Pointing left"
+msgstr ""
+
+#: bookends_icon_picker.lua:123
+msgid "Pointing up"
+msgstr ""
+
+#: bookends_icon_picker.lua:124
+msgid "Pointing down"
+msgstr ""
+
+#: bookends_icon_picker.lua:126
+msgid "Progress blocks"
+msgstr ""
+
+#: bookends_icon_picker.lua:127
+msgid "Slant block"
+msgstr ""
+
+#: bookends_icon_picker.lua:128
+msgid "Slant block (empty)"
+msgstr ""
+
+#: bookends_icon_picker.lua:129
+msgid "Vertical block"
+msgstr ""
+
+#: bookends_icon_picker.lua:130
+msgid "Vertical block (empty)"
+msgstr ""
+
+#: bookends_icon_picker.lua:131
+msgid "Square (filled)"
+msgstr ""
+
+#: bookends_icon_picker.lua:132
+msgid "Square (empty)"
+msgstr ""
+
+#: bookends_icon_picker.lua:133
+msgid "Block (full)"
+msgstr ""
+
+#: bookends_icon_picker.lua:134
+msgid "Block (dark)"
+msgstr ""
+
+#: bookends_icon_picker.lua:135
+msgid "Block (medium)"
+msgstr ""
+
+#: bookends_icon_picker.lua:136
+msgid "Block (light)"
+msgstr ""
+
+#: bookends_icon_picker.lua:138
+msgid "Separators"
+msgstr ""
+
+#: bookends_icon_picker.lua:139
+msgid "Vertical bar"
+msgstr ""
+
+#: bookends_icon_picker.lua:140
+msgid "Bullet"
+msgstr ""
+
+#: bookends_icon_picker.lua:141
+msgid "Middle dot"
+msgstr ""
+
+#: bookends_icon_picker.lua:142
+msgid "Vertical ellipsis"
+msgstr ""
+
+#: bookends_icon_picker.lua:143
+msgid "Diamond"
+msgstr ""
+
+#: bookends_icon_picker.lua:144
+msgid "Em dash"
+msgstr ""
+
+#: bookends_icon_picker.lua:145
+msgid "En dash"
+msgstr ""
+
+#: bookends_icon_picker.lua:146
+msgid "Horizontal ellipsis"
+msgstr ""
+
+#: bookends_icon_picker.lua:147
+msgid "Slash"
+msgstr ""
+
+#: bookends_icon_picker.lua:148
+msgid "Division slash"
+msgstr ""
+
+#: bookends_icon_picker.lua:149
+msgid "Fraction slash"
+msgstr ""
+
+#: bookends_icon_picker.lua:150
+msgid "Double fraction slash"
+msgstr ""
+
+#: bookends_icon_picker.lua:151
+msgid "Tilde"
+msgstr ""
+
+#: bookends_icon_picker.lua:152
+msgid "Triangular bullet"
+msgstr ""
+
+#: bookends_icon_picker.lua:274
+msgid "Insert symbol"
+msgstr ""
+
+#: bookends_line_editor.lua:97 main.lua:908
+msgid "Regular"
+msgstr ""
+
+#: bookends_line_editor.lua:103
+msgid "Size"
+msgstr ""
+
+#: bookends_line_editor.lua:110
+msgid "Font"
+msgstr ""
+
+#: bookends_line_editor.lua:112
+msgid "Font..."
+msgstr ""
+
+#: bookends_line_editor.lua:124
+msgid "Odd pg"
+msgstr ""
+
+#: bookends_line_editor.lua:125
+msgid "Even pg"
+msgstr ""
+
+#: bookends_line_editor.lua:126
+msgid "All pg"
+msgstr ""
+
+#: bookends_line_editor.lua:161 menu/progress_bar_menu.lua:109
+msgid "Chapter"
+msgstr ""
+
+#: bookends_line_editor.lua:161
+msgid "Book+"
+msgstr ""
+
+#: bookends_line_editor.lua:161
+msgid "Book++"
+msgstr ""
+
+#: bookends_line_editor.lua:161
+msgid "Book+++"
+msgstr ""
+
+#: bookends_line_editor.lua:165
+msgid "- Progress bar"
+msgstr ""
+
+#: bookends_line_editor.lua:165
+msgid "+ Progress bar"
+msgstr ""
+
+#: bookends_line_editor.lua:172
+msgid "Ch."
+msgstr ""
+
+#: bookends_line_editor.lua:180 bookends_line_editor.lua:181
+msgid "Border"
+msgstr ""
+
+#: bookends_line_editor.lua:180 menu/progress_bar_menu.lua:141
+#: menu/progress_bar_menu.lua:142
+msgid "Solid"
+msgstr ""
+
+#: bookends_line_editor.lua:180
+msgid "Round"
+msgstr ""
+
+#: bookends_line_editor.lua:180 menu/progress_bar_menu.lua:141
+msgid "Metro"
+msgstr ""
+
+#: bookends_line_editor.lua:180 menu/progress_bar_menu.lua:141
+msgid "Wave"
+msgstr ""
+
+#: bookends_line_editor.lua:180 menu/progress_bar_menu.lua:141
+msgid "Radial"
+msgstr ""
+
+#: bookends_line_editor.lua:180
+msgid "Hollow"
+msgstr ""
+
+#: bookends_line_editor.lua:239
+msgid "Font size"
+msgstr ""
+
+#: bookends_line_editor.lua:239
+msgid "line"
+msgstr ""
+
+#: bookends_line_editor.lua:283
+msgid "Position"
+msgstr ""
+
+#: bookends_line_editor.lua:348
+msgid "Tokens"
+msgstr ""
+
+#: bookends_line_editor.lua:357 main.lua:2491 menu/main_menu.lua:34
+#: menu/preset_manager_modal.lua:993 menu/preset_manager_modal.lua:1152
+#: menu/preset_manager_modal.lua:1253
+msgid "Save"
+msgstr ""
+
+#: bookends_line_editor.lua:398 menu/position_menu.lua:44
+msgid "Line"
+msgstr ""
+
+#: bookends_line_editor.lua:503 menu/progress_bar_menu.lua:44
+msgid "Move up"
+msgstr ""
+
+#: bookends_line_editor.lua:513 menu/progress_bar_menu.lua:53
+msgid "Move down"
+msgstr ""
+
+#: bookends_line_editor.lua:559
+msgid "Move to"
+msgstr ""
+
+#: bookends_line_editor.lua:569
+msgid "Line %1: %2"
+msgstr ""
+
+#: bookends_line_editor.lua:571 menu/preset_manager_modal.lua:1095
+#: menu/preset_manager_modal.lua:1418
+msgid "Delete"
+msgstr ""
+
+#: bookends_updater.lua:105
+msgid "Open the releases page in a browser?"
+msgstr ""
+
+#: bookends_updater.lua:106
+msgid "Open"
+msgstr ""
+
+#: bookends_updater.lua:181 bookends_updater.lua:414 bookends_updater.lua:435
+msgid "Wi-Fi is not enabled."
+msgstr ""
+
+#: bookends_updater.lua:188
+msgid "Checking for updates..."
+msgstr ""
+
+#: bookends_updater.lua:200
+msgid "Could not check for updates."
+msgstr ""
+
+#: bookends_updater.lua:237
+msgid "Bookends is up to date."
+msgstr ""
+
+#: bookends_updater.lua:238
+msgid "Version: "
+msgstr ""
+
+#: bookends_updater.lua:266 main.lua:2327 menu/preset_manager_modal.lua:538
+msgid "Close"
+msgstr ""
+
+#: bookends_updater.lua:272
+msgid "Update and restart"
+msgstr ""
+
+#: bookends_updater.lua:277
+msgid "No download available for this release."
+msgstr ""
+
+#: bookends_updater.lua:288
+msgid "Update available!"
+msgstr ""
+
+#: bookends_updater.lua:289
+msgid "Installed: "
+msgstr ""
+
+#: bookends_updater.lua:290
+msgid "Latest: "
+msgstr ""
+
+#: bookends_updater.lua:305
+msgid "Downloading update..."
+msgstr ""
+
+#: bookends_updater.lua:367
+msgid "Download failed."
+msgstr ""
+
+#: bookends_updater.lua:379
+msgid "Installation failed: "
+msgstr ""
+
+#: bookends_updater.lua:396
+msgid "Bookends updated to v"
+msgstr ""
+
+#: bookends_updater.lua:397
+msgid "Restart KOReader now?"
+msgstr ""
+
+#: bookends_updater.lua:398 main.lua:57
+msgid "Restart"
+msgstr ""
+
+#: bookends_updater.lua:422
+msgid "Could not install branch:"
+msgstr ""
+
+#: bookends_updater.lua:442
+msgid "Downloading latest release..."
+msgstr ""
+
+#: bookends_updater.lua:453
+msgid "Could not fetch latest release."
+msgstr ""
+
+#: bookends_updater.lua:466
+msgid "Latest release has no downloadable zip."
+msgstr ""
+
+#: bookends_utils.lua:8 bookends_utils.lua:174
+msgid "UI font"
+msgstr ""
+
+#: bookends_utils.lua:9
+msgid "Serif"
+msgstr ""
+
+#: bookends_utils.lua:10
+msgid "Sans-serif"
+msgstr ""
+
+#: bookends_utils.lua:11
+msgid "Monospace"
+msgstr ""
+
+#: bookends_utils.lua:12
+msgid "Cursive"
+msgstr ""
+
+#: bookends_utils.lua:13
+msgid "Fantasy"
+msgstr ""
+
+#: main.lua:58
+msgid "Dismiss"
+msgstr ""
+
+#: main.lua:143
+msgid "Top-left"
+msgstr ""
+
+#: main.lua:144
+msgid "Top-center"
+msgstr ""
+
+#: main.lua:145
+msgid "Top-right"
+msgstr ""
+
+#: main.lua:146
+msgid "Bottom-left"
+msgstr ""
+
+#: main.lua:147
+msgid "Bottom-center"
+msgstr ""
+
+#: main.lua:148
+msgid "Bottom-right"
+msgstr ""
+
+#: main.lua:270
+msgid "Bookends: toggle visibility"
+msgstr ""
+
+#: main.lua:276
+msgid "Bookends: cycle preset"
+msgstr ""
+
+#: main.lua:282
+msgid "Bookends: set visibility"
+msgstr ""
+
+#: main.lua:285
+msgid "on"
+msgstr ""
+
+#: main.lua:285
+msgid "off"
+msgstr ""
+
+#: main.lua:290
+msgid "Bookends: open preset library"
+msgstr ""
+
+#: main.lua:379 main.lua:417
+msgid "My setup"
+msgstr ""
+
+#: main.lua:380 main.lua:418
+msgid "Imported from your earlier Bookends settings"
+msgstr ""
+
+#: main.lua:552
+msgid "Preset error: %1"
+msgstr ""
+
+#: main.lua:561
+msgid "Preset: %1"
+msgstr ""
+
+#: main.lua:909
+msgid "Bold"
+msgstr ""
+
+#: main.lua:910
+msgid "Italic"
+msgstr ""
+
+#: main.lua:911
+msgid "Bold italic"
+msgstr ""
+
+#: main.lua:2048
+msgid "Select font"
+msgstr ""
+
+#: main.lua:2089
+msgid "Font-family fonts"
+msgstr ""
+
+#: main.lua:2154
+msgid "Fonts"
+msgstr ""
+
+#: main.lua:2248 menu/preset_manager_modal.lua:778
+msgid "Page %1 of %2"
+msgstr ""
+
+#: main.lua:2337 main.lua:2511
+msgid "Reset"
+msgstr ""
+
+#: main.lua:2346
+msgid "Set font"
+msgstr ""
+
+#: main.lua:2485 menu/main_menu.lua:416 menu/main_menu.lua:418
+msgid "Development branch"
+msgstr ""
+
+#: main.lua:2487
+msgid "Branch name (leave empty for stable)"
+msgstr ""
+
+#: main.lua:2510
+msgid "This will clear the development branch setting and install the latest stable release of Bookends, then restart KOReader. Continue?"
+msgstr ""
+
+#: main.lua:2529
+msgid "Bookends update available: v"
+msgstr ""
+
+#: main.lua:2537 menu/main_menu.lua:522 menu/progress_bar_menu.lua:245
+#: menu/progress_bar_menu.lua:379
+msgid "Adjust margins"
+msgstr ""
+
+#: main.lua:2539 menu/progress_bar_menu.lua:156 menu/progress_bar_menu.lua:382
+msgid "Top"
+msgstr ""
+
+#: main.lua:2540 menu/progress_bar_menu.lua:156 menu/progress_bar_menu.lua:383
+msgid "Bottom"
+msgstr ""
+
+#: main.lua:2541 menu/progress_bar_menu.lua:156 menu/progress_bar_menu.lua:382
+msgid "Left"
+msgstr ""
+
+#: main.lua:2542 menu/progress_bar_menu.lua:156 menu/progress_bar_menu.lua:383
+msgid "Right"
+msgstr ""
+
+#: menu/colours_menu.lua:66
+msgid "per style"
+msgstr ""
+
+#: menu/colours_menu.lua:71 menu/colours_menu.lua:82 menu/colours_menu.lua:184
+#: menu/colours_menu.lua:368 menu/colours_menu.lua:376
+#: menu/colours_menu.lua:382 menu/colours_menu.lua:390
+#: menu/progress_bar_menu.lua:328
+msgid "default"
+msgstr ""
+
+#: menu/colours_menu.lua:79 menu/colours_menu.lua:373 menu/colours_menu.lua:387
+msgid "transparent"
+msgstr ""
+
+#: menu/colours_menu.lua:88
+msgid "Read color"
+msgstr ""
+
+#: menu/colours_menu.lua:92
+msgid "Read color (% black)"
+msgstr ""
+
+#: menu/colours_menu.lua:101
+msgid "Unread color"
+msgstr ""
+
+#: menu/colours_menu.lua:105
+msgid "Unread color (% black)"
+msgstr ""
+
+#: menu/colours_menu.lua:114
+msgid "Metro read color"
+msgstr ""
+
+#: menu/colours_menu.lua:118
+msgid "Metro read color (% black)"
+msgstr ""
+
+#: menu/colours_menu.lua:127
+msgid "Metro track color"
+msgstr ""
+
+#: menu/colours_menu.lua:131
+msgid "Metro track color (% black)"
+msgstr ""
+
+#: menu/colours_menu.lua:140
+msgid "Tick color"
+msgstr ""
+
+#: menu/colours_menu.lua:144
+msgid "Tick color (% black)"
+msgstr ""
+
+#: menu/colours_menu.lua:152
+msgid "Invert tick color on read portion"
+msgstr ""
+
+#: menu/colours_menu.lua:165
+msgid "Border color"
+msgstr ""
+
+#: menu/colours_menu.lua:169
+msgid "Border color (% black)"
+msgstr ""
+
+#: menu/colours_menu.lua:179 menu/colours_menu.lua:184
+#: menu/colours_menu.lua:186 menu/colours_menu.lua:196
+msgid "Border thickness"
+msgstr ""
+
+#: menu/colours_menu.lua:210
+msgid "Tick inversion color"
+msgstr ""
+
+#: menu/colours_menu.lua:214
+msgid "Tick inversion color (% black)"
+msgstr ""
+
+#: menu/colours_menu.lua:242 menu/colours_menu.lua:246
+#: menu/progress_bar_menu.lua:326 menu/progress_bar_menu.lua:328
+#: menu/progress_bar_menu.lua:334
+msgid "Tick width"
+msgstr ""
+
+#: menu/colours_menu.lua:266 menu/colours_menu.lua:270
+#: menu/progress_bar_menu.lua:300 menu/progress_bar_menu.lua:305
+msgid "Tick height"
+msgstr ""
+
+#: menu/colours_menu.lua:290
+msgid "Reset all to defaults"
+msgstr ""
+
+#: menu/colours_menu.lua:310 menu/main_menu.lua:572
+msgid "Progress bar colors and tick marks"
+msgstr ""
+
+#: menu/colours_menu.lua:368 menu/colours_menu.lua:376
+#: menu/colours_menu.lua:400 menu/progress_bar_menu.lua:32
+msgid "book"
+msgstr ""
+
+#: menu/colours_menu.lua:382 menu/colours_menu.lua:390
+#: menu/colours_menu.lua:415
+msgid "text"
+msgstr ""
+
+#: menu/colours_menu.lua:396 menu/colours_menu.lua:400
 msgid "Text color"
 msgstr ""
 
+#: menu/colours_menu.lua:410 menu/colours_menu.lua:415
+msgid "Icon color"
+msgstr ""
+
+#: menu/colours_menu.lua:412
+msgid ""
+"Applies to Nerd Font and FontAwesome icon glyphs (the Private Use Area range, e.g. %W, %B, %k). Unicode symbols in the regular text ranges (like the hourglass \"⌛\") follow the text color instead.\n"
+"\n"
+"An inline [c=#RRGGBB]…[/c] tag in a line overrides the icon colour for any glyphs inside it."
+msgstr ""
+
+#: menu/main_menu.lua:12 _meta.lua:4
+msgid "Bookends"
+msgstr ""
+
+#: menu/main_menu.lua:28 menu/preset_manager_modal.lua:985
+msgid "Save preset"
+msgstr ""
+
+#: menu/main_menu.lua:30 menu/preset_manager_modal.lua:987
+msgid "Preset name"
+msgstr ""
+
+#: menu/main_menu.lua:45
+msgid "Saved preset:"
+msgstr ""
+
+#: menu/main_menu.lua:69 menu/preset_manager_modal.lua:1107
+msgid "Rename preset"
+msgstr ""
+
+#: menu/main_menu.lua:74 menu/main_menu.lua:490
+#: menu/preset_manager_modal.lua:1111
+msgid "Rename"
+msgstr ""
+
+#: menu/main_menu.lua:107 menu/main_menu.lua:109
+msgid "Bookends settings"
+msgstr ""
+
+#: menu/main_menu.lua:107
+msgid "plugin update available"
+msgstr ""
+
+#: menu/main_menu.lua:124 menu/main_menu.lua:126
+msgid "Preset"
+msgstr ""
+
+#: menu/main_menu.lua:176
+msgid "Full width progress bars"
+msgstr ""
+
+#: menu/main_menu.lua:188
+msgid "Save current as new preset…"
+msgstr ""
+
+#: menu/main_menu.lua:206
+msgid "Enable bookends"
+msgstr ""
+
+#: menu/main_menu.lua:217 menu/main_menu.lua:219
+msgid "Disable stock status bar"
+msgstr ""
+
+#: menu/main_menu.lua:217
+msgid "recommended"
+msgstr ""
+
+#: menu/main_menu.lua:222
+msgid "Hides KOReader's built-in status bar. This simplifies the render pipeline and can reduce e-ink flicker on some devices. All status bar features are available as Bookends tokens."
+msgstr ""
+
+#: menu/main_menu.lua:243 menu/main_menu.lua:253
+#: menu/preset_manager_modal.lua:1190
+msgid "Default font"
+msgstr ""
+
+#: menu/main_menu.lua:279
+msgid "Bottom center tap gesture"
+msgstr ""
+
+#: menu/main_menu.lua:281
+msgid "toggle bookends"
+msgstr ""
+
+#: menu/main_menu.lua:283
+msgid "cycle presets"
+msgstr ""
+
+#: menu/main_menu.lua:285
+msgid "preset library"
+msgstr ""
+
+#: menu/main_menu.lua:289
+msgid "Configure what happens when you tap the centre of the status bar area, and whether long-pressing a progress bar opens the skim dialog."
+msgstr ""
+
+#: menu/main_menu.lua:300
+msgid "Do nothing"
+msgstr ""
+
+#: menu/main_menu.lua:308
+msgid "Toggle bookends"
+msgstr ""
+
+#: menu/main_menu.lua:322
+msgid "Cycle starred presets"
+msgstr ""
+
+#: menu/main_menu.lua:336
+msgid "Open preset library"
+msgstr ""
+
+#: menu/main_menu.lua:351
+msgid "Long-press progress bars to skim document"
+msgstr ""
+
+#: menu/main_menu.lua:359
+msgid "Opens the skim dialog when you long-press on a full-width progress bar. Replaces the stock status bar's long-press to skim feature."
+msgstr ""
+
+#: menu/main_menu.lua:366
+msgid "Include current page in pages-left tokens"
+msgstr ""
+
+#: menu/main_menu.lua:367
+msgid "Affects %L (pages left in book) and %l (pages left in chapter). Off (default): 'n−1 → 0'. On: 'n → 1'."
+msgstr ""
+
+#: menu/main_menu.lua:380
+msgid "Notify on wake when update available"
+msgstr ""
+
+#: menu/main_menu.lua:400
+msgid "Update available"
+msgstr ""
+
+#: menu/main_menu.lua:402
+msgid "Installed version"
+msgstr ""
+
+#: menu/main_menu.lua:410
+msgid "Advanced"
+msgstr ""
+
+#: menu/main_menu.lua:429
+msgid "Check for updates"
+msgstr ""
+
+#: menu/main_menu.lua:431
+msgid "Install branch"
+msgstr ""
+
+#: menu/main_menu.lua:439
+msgid "Reset to latest stable release"
+msgstr ""
+
+#: menu/main_menu.lua:450 menu/main_menu.lua:453
+msgid "Installed: v"
+msgstr ""
+
+#: menu/main_menu.lua:470
+msgid "Preset library…"
+msgstr ""
+
+#: menu/main_menu.lua:504 menu/main_menu.lua:508
+msgid "Font scale"
+msgstr ""
+
+#: menu/main_menu.lua:532
+msgid "Truncation gap between regions"
+msgstr ""
+
+#: menu/main_menu.lua:536
+msgid "Truncation gap"
+msgstr ""
+
+#: menu/main_menu.lua:547
+msgid "Prioritise left/right and truncate long center text"
+msgstr ""
+
+#: menu/position_menu.lua:16
+msgid "Enabled"
+msgstr ""
+
+#: menu/position_menu.lua:58
+msgid "Add line"
+msgstr ""
+
+#: menu/position_menu.lua:58
+msgid "long press lines to manage"
+msgstr ""
+
+#: menu/position_menu.lua:71
+msgid "Extra top margin"
+msgstr ""
+
+#: menu/position_menu.lua:71
+msgid "Extra bottom margin"
+msgstr ""
+
+#: menu/position_menu.lua:94
+msgid "Extra left margin"
+msgstr ""
+
+#: menu/position_menu.lua:94
+msgid "Extra right margin"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:332 menu/preset_manager_modal.lua:1711
+msgid "Could not preview preset"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:422
+msgid "Preset library"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:461
+msgid "My presets"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:462
+msgid "Gallery"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:540
+msgid "Manage…"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:552 menu/preset_manager_modal.lua:1753
+msgid "Install"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:656 menu/preset_manager_modal.lua:1527
+msgid "Latest"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:658
+msgid "Starred"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:677
+msgid "Star = include in preset cycle gesture"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:724
+msgid "+ New blank preset"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:838
+msgid "by"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1046
+msgid "Untitled"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1075
+msgid "Rename…"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1079
+msgid "Edit description…"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1083
+msgid "Edit author…"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1087
+msgid "Duplicate"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1091
+msgid "Submit to gallery…"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1201
+msgid "%1, line %2"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1238
+msgid "Edit description"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1242
+msgid "Edit author"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1246
+msgid "copy"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1249
+msgid "Duplicate preset"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1302
+msgid "Who should we credit as the author?"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1307
+msgid "One-line description of this preset"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1329
+msgid "Submit '%1' by %2 to the gallery? A pull request will be opened for review."
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1331
+msgid "Submit"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1341
+msgid "A preset called '%1' is already in the gallery. Rename your preset (Manage… → Rename…) before submitting, so it doesn't collide with the existing entry."
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1348
+msgid "Submitting to gallery…"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1360
 msgid ""
 "Thanks! Your submission is PR #%1.\n"
 "\n"
 "The maintainer will review it before it appears in the Gallery."
 msgstr ""
 
-msgid "Thickness"
+#: menu/preset_manager_modal.lua:1369
+msgid "A preset called '%1' is already in the gallery. Rename your preset (Manage… → Rename…) before submitting."
 msgstr ""
 
+#: menu/preset_manager_modal.lua:1372
+msgid "A submission for '%1' is already awaiting review. Wait for that one to be reviewed, or rename your preset to submit under a different name."
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1375
+msgid "Submission failed: %1"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1387
+msgid "This preset uses specific fonts that won't exist on other devices. These overrides will be stripped from your submission so other users see their own default font."
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1389
+msgid "Custom fonts in this preset:"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1395
+msgid "Tip: for portable presets, pick a Font-family font (Serif, Sans-serif, etc.) instead of a specific one — those adapt to each user's font settings."
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1398
+msgid "Submit anyway"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1411
+msgid "Submission failed — details in the KOReader log."
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1417
+msgid "Delete preset '%1'?"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1465
+msgid "Refreshing…"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1467
+msgid "Offline — connect and tap a sort to retry"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1469
+msgid "Refresh failed — tap a sort to retry"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1474
+msgid "1 preset in the approval queue"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1476
+msgid "%1 presets in the approval queue"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1530
+msgid "Popular"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1582
+msgid "Discover more presets"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1588
+msgid "Browse presets others have shared, preview them on your own status bar, and install the ones you like. Once installed, you can edit each preset freely on the My presets tab."
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1595
+msgid "Made something worth sharing? Submit it with the Manage button while viewing one of your own presets."
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1602
+msgid "Tap Latest or Popular above to load the gallery."
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1693
+msgid "Offline — connect to preview this preset."
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1695
+msgid "Couldn't download '%1'."
+msgstr ""
+
+#: menu/preset_manager_modal.lua:1701
 msgid "This preset appears invalid; skipping."
 msgstr ""
 
+#: menu/preset_manager_modal.lua:1724
 msgid ""
-"This preset uses specific fonts that won't exist on other devices. These "
-"overrides will be stripped from your submission so other users see their own "
-"default font."
+"'%1' already exists in your library.\n"
+"\n"
+"Replacing it will overwrite your local copy with the current gallery version. Any local edits will be lost.\n"
+"\n"
+"Install under a new name to keep both."
 msgstr ""
 
-msgid "Tick color"
+#: menu/preset_manager_modal.lua:1730
+msgid "Replace"
 msgstr ""
 
-msgid "Tick color (% black)"
+#: menu/preset_manager_modal.lua:1744
+msgid "Install as new name…"
 msgstr ""
 
-msgid "Tick height"
+#: menu/preset_manager_modal.lua:1748
+msgid "Install as"
 msgstr ""
 
-msgid "Tick inversion color"
+#: menu/progress_bar_menu.lua:30
+msgid "Bar"
 msgstr ""
 
-msgid "Tick inversion color (% black)"
-msgstr ""
-
-msgid "Tick width"
-msgstr ""
-
-msgid "Tilde"
-msgstr ""
-
-msgid "Time"
-msgstr ""
-
-msgid "Time / date"
-msgstr ""
-
-msgid "Time left in book"
-msgstr ""
-
-msgid "Time left in chapter"
-msgstr ""
-
-msgid "Time window"
-msgstr ""
-
-msgid ""
-"Tip: for portable presets, pick a Font-family font (Serif, Sans-serif, etc.) "
-"instead of a specific one — those adapt to each user's font settings."
-msgstr ""
-
-msgid "Toggle bookends"
-msgstr ""
-
-msgid "Tokens"
-msgstr ""
-
-msgid "Top"
-msgstr ""
-
-msgid "Top-center"
-msgstr ""
-
-msgid "Top-left"
-msgstr ""
-
-msgid "Top-right"
-msgstr ""
-
-msgid "Total annotations (bookmarks + highlights + notes)"
-msgstr ""
-
-msgid "Total chapter count"
-msgstr ""
-
-msgid "Total chapters"
-msgstr ""
-
-msgid "Total pages"
-msgstr ""
-
-msgid "Total pages in chapter"
-msgstr ""
-
-msgid "Total reading time for book"
-msgstr ""
-
-msgid "Triangle down"
-msgstr ""
-
-msgid "Triangle left"
-msgstr ""
-
-msgid "Triangle right"
-msgstr ""
-
-msgid "Triangle up"
-msgstr ""
-
-msgid "Triangle-head right"
-msgstr ""
-
-msgid "Triangular bullet"
-msgstr ""
-
-msgid "Truncation gap"
-msgstr ""
-
-msgid "Truncation gap between regions"
-msgstr ""
-
-msgid "Type"
-msgstr ""
-
-msgid "UI font"
-msgstr ""
-
-msgid "Unread color"
-msgstr ""
-
-msgid "Unread color (% black)"
-msgstr ""
-
-msgid "Untitled"
-msgstr ""
-
-msgid "Update and restart"
-msgstr ""
-
-msgid "Update available"
-msgstr ""
-
-msgid "Update available!"
-msgstr ""
-
-msgid "Use custom colors"
-msgstr ""
-
-msgid "Version: "
-msgstr ""
-
-msgid "Vertical"
-msgstr ""
-
-msgid "Vertical bar"
-msgstr ""
-
-msgid "Vertical ellipsis"
-msgstr ""
-
-msgid "Warning"
-msgstr ""
-
-msgid "Watch"
-msgstr ""
-
-msgid "Wave"
-msgstr ""
-
-msgid "Weekday (Friday)"
-msgstr ""
-
-msgid "Weekday short (Fri)"
-msgstr ""
-
-msgid "Weekends"
-msgstr ""
-
-msgid "Who should we credit as the author?"
-msgstr ""
-
-msgid "Wi-Fi"
-msgstr ""
-
-msgid "Wi-Fi (changes with status)"
-msgstr ""
-
-msgid "Wi-Fi icon (dynamic)"
-msgstr ""
-
-msgid "Wi-Fi icon when connected"
-msgstr ""
-
-msgid "Wi-Fi is not enabled."
-msgstr ""
-
-msgid "[if:key=value]if true[else]if false[/if]"
-msgstr ""
-
-msgid "[if:key=value]show when true[/if]"
-msgstr ""
-
-msgid "book"
-msgstr ""
-
-msgid "bottom"
-msgstr ""
-
-msgid "by"
-msgstr ""
-
+#: menu/progress_bar_menu.lua:32
 msgid "chapter"
 msgstr ""
 
-msgid "copy"
-msgstr ""
-
-msgid "cycle presets"
-msgstr ""
-
-msgid "default"
-msgstr ""
-
-msgid "left"
-msgstr ""
-
-msgid "line"
-msgstr ""
-
-msgid "long press lines to manage"
-msgstr ""
-
-msgid "odd / even"
-msgstr ""
-
-msgid "off"
-msgstr ""
-
-msgid "on"
-msgstr ""
-
-msgid "per style"
-msgstr ""
-
-msgid "plugin update available"
-msgstr ""
-
-msgid "preset library"
-msgstr ""
-
-msgid "recommended"
-msgstr ""
-
-msgid "right"
-msgstr ""
-
-msgid "text"
-msgstr ""
-
-msgid "toggle bookends"
-msgstr ""
-
+#: menu/progress_bar_menu.lua:33
 msgid "top"
 msgstr ""
 
-msgid "transparent"
+#: menu/progress_bar_menu.lua:33
+msgid "bottom"
 msgstr ""
 
-msgid "Advanced"
+#: menu/progress_bar_menu.lua:33
+msgid "left"
 msgstr ""
 
-msgid "Branch name (leave empty for stable)"
+#: menu/progress_bar_menu.lua:33
+msgid "right"
 msgstr ""
 
-msgid "Check for updates"
+#: menu/progress_bar_menu.lua:69
+msgid "Bar %1"
 msgstr ""
 
-msgid "Could not fetch latest release."
+#: menu/progress_bar_menu.lua:80
+msgid "Long press to change render order"
 msgstr ""
 
-msgid "Could not install branch:"
+#: menu/progress_bar_menu.lua:84
+msgid "Inline progress bars can be added via the line editor"
 msgstr ""
 
-msgid "Development branch"
+#: menu/progress_bar_menu.lua:100
+msgid "Enable"
 msgstr ""
 
-msgid "Downloading latest release..."
+#: menu/progress_bar_menu.lua:109
+msgid "Type"
 msgstr ""
 
-msgid "Install branch"
+#: menu/progress_bar_menu.lua:122
+msgid "Chapter ticks: off"
 msgstr ""
 
-msgid "Installed: v"
+#: menu/progress_bar_menu.lua:123
+msgid "Chapter ticks: all levels"
 msgstr ""
 
-msgid "Latest release has no downloadable zip."
+#: menu/progress_bar_menu.lua:124
+msgid "Chapter ticks: top level"
 msgstr ""
 
-msgid "Reset to latest stable release"
+#: menu/progress_bar_menu.lua:125
+msgid "Chapter ticks: top 2 levels"
 msgstr ""
 
-msgid "This will clear the development branch setting and install the latest stable release of Bookends, then restart KOReader. Continue?"
+#: menu/progress_bar_menu.lua:141
+msgid "Bordered"
+msgstr ""
+
+#: menu/progress_bar_menu.lua:141
+msgid "Rounded"
+msgstr ""
+
+#: menu/progress_bar_menu.lua:141
+msgid "Radial hollow"
+msgstr ""
+
+#: menu/progress_bar_menu.lua:142
+msgid "Style"
+msgstr ""
+
+#: menu/progress_bar_menu.lua:157
+msgid "Anchor"
+msgstr ""
+
+#: menu/progress_bar_menu.lua:182
+msgid "Fill: clockwise"
+msgstr ""
+
+#: menu/progress_bar_menu.lua:185
+msgid "Fill: left to right"
+msgstr ""
+
+#: menu/progress_bar_menu.lua:186
+msgid "Fill: right to left"
+msgstr ""
+
+#: menu/progress_bar_menu.lua:187
+msgid "Fill: top to bottom"
+msgstr ""
+
+#: menu/progress_bar_menu.lua:188
+msgid "Fill: bottom to top"
+msgstr ""
+
+#: menu/progress_bar_menu.lua:224 menu/progress_bar_menu.lua:232
+msgid "Diameter"
+msgstr ""
+
+#: menu/progress_bar_menu.lua:224
+msgid "Thickness"
+msgstr ""
+
+#: menu/progress_bar_menu.lua:232
+msgid "Bar thickness"
+msgstr ""
+
+#: menu/progress_bar_menu.lua:259 menu/progress_bar_menu.lua:261
+msgid "Custom colors and tick marks"
+msgstr ""
+
+#: menu/progress_bar_menu.lua:269
+msgid "Use custom colors"
+msgstr ""
+
+#: menu/progress_bar_menu.lua:354
+msgid "Reset custom to defaults"
+msgstr ""
+
+#: menu/progress_bar_menu.lua:381
+msgid "Edge"
+msgstr ""
+
+#: menu/progress_bar_menu.lua:381
+msgid "Vertical"
+msgstr ""
+
+#: menu/token_picker.lua:12
+msgid "Metadata"
+msgstr ""
+
+#: menu/token_picker.lua:13
+msgid "Document title"
+msgstr ""
+
+#: menu/token_picker.lua:14
+msgid "First author"
+msgstr ""
+
+#: menu/token_picker.lua:15
+msgid "All authors"
+msgstr ""
+
+#: menu/token_picker.lua:16
+msgid "Second author (empty if none)"
+msgstr ""
+
+#: menu/token_picker.lua:17
+msgid "Series with index (combined)"
+msgstr ""
+
+#: menu/token_picker.lua:18
+msgid "Series name only"
+msgstr ""
+
+#: menu/token_picker.lua:19
+msgid "Series number only"
+msgstr ""
+
+#: menu/token_picker.lua:20
+msgid "Chapter title (deepest)"
+msgstr ""
+
+#: menu/token_picker.lua:21
+msgid "Chapter title at depth 1"
+msgstr ""
+
+#: menu/token_picker.lua:22
+msgid "Chapter title at depth 2"
+msgstr ""
+
+#: menu/token_picker.lua:23
+msgid "Chapter title at depth 3"
+msgstr ""
+
+#: menu/token_picker.lua:24 menu/token_picker.lua:101
+msgid "Current chapter number"
+msgstr ""
+
+#: menu/token_picker.lua:25
+msgid "Total chapter count"
+msgstr ""
+
+#: menu/token_picker.lua:26
+msgid "File name"
+msgstr ""
+
+#: menu/token_picker.lua:27
+msgid "Book language"
+msgstr ""
+
+#: menu/token_picker.lua:28
+msgid "Document format (EPUB, PDF, etc.)"
+msgstr ""
+
+#: menu/token_picker.lua:29
+msgid "Number of highlights"
+msgstr ""
+
+#: menu/token_picker.lua:30
+msgid "Number of notes"
+msgstr ""
+
+#: menu/token_picker.lua:31
+msgid "Number of bookmarks"
+msgstr ""
+
+#: menu/token_picker.lua:32
+msgid "Total annotations (bookmarks + highlights + notes)"
+msgstr ""
+
+#: menu/token_picker.lua:34
+msgid "Page / progress"
+msgstr ""
+
+#: menu/token_picker.lua:35
+msgid "Current page number"
+msgstr ""
+
+#: menu/token_picker.lua:36
+msgid "Total pages"
+msgstr ""
+
+#: menu/token_picker.lua:37
+msgid "Book percentage read"
+msgstr ""
+
+#: menu/token_picker.lua:38
+msgid "Book percentage left"
+msgstr ""
+
+#: menu/token_picker.lua:39
+msgid "Chapter percentage read"
+msgstr ""
+
+#: menu/token_picker.lua:40
+msgid "Chapter percentage left"
+msgstr ""
+
+#: menu/token_picker.lua:41
+msgid "Pages read in chapter"
+msgstr ""
+
+#: menu/token_picker.lua:42
+msgid "Total pages in chapter"
+msgstr ""
+
+#: menu/token_picker.lua:43
+msgid "Pages left in chapter"
+msgstr ""
+
+#: menu/token_picker.lua:44
+msgid "Pages left in book"
+msgstr ""
+
+#: menu/token_picker.lua:46
+msgid "Progress bars"
+msgstr ""
+
+#: menu/token_picker.lua:47
+msgid "Progress bar (configure type in line editor)"
+msgstr ""
+
+#: menu/token_picker.lua:48
+msgid "Fixed-width progress bar (100px)"
+msgstr ""
+
+#: menu/token_picker.lua:49
+msgid "Progress bar, 10px tall"
+msgstr ""
+
+#: menu/token_picker.lua:50
+msgid "Progress bar, 200px wide and 4px tall"
+msgstr ""
+
+#: menu/token_picker.lua:52
+msgid "Time / date"
+msgstr ""
+
+#: menu/token_picker.lua:53
+msgid "Current time (24h, same as %time_24h)"
+msgstr ""
+
+#: menu/token_picker.lua:54
+msgid "12-hour clock"
+msgstr ""
+
+#: menu/token_picker.lua:55
+msgid "24-hour clock"
+msgstr ""
+
+#: menu/token_picker.lua:56
+msgid "Date short (28 Mar)"
+msgstr ""
+
+#: menu/token_picker.lua:57
+msgid "Date long (28 March 2026)"
+msgstr ""
+
+#: menu/token_picker.lua:58
+msgid "Date numeric (28/03/2026)"
+msgstr ""
+
+#: menu/token_picker.lua:59
+msgid "Weekday (Friday)"
+msgstr ""
+
+#: menu/token_picker.lua:60
+msgid "Weekday short (Fri)"
+msgstr ""
+
+#: menu/token_picker.lua:61
+msgid "Custom date/time format (strftime spec)"
+msgstr ""
+
+#: menu/token_picker.lua:62
+msgid "Time left in chapter"
+msgstr ""
+
+#: menu/token_picker.lua:63
+msgid "Time left in book"
+msgstr ""
+
+#: menu/token_picker.lua:65
+msgid "Session / reading"
+msgstr ""
+
+#: menu/token_picker.lua:66
+msgid "Session reading time"
+msgstr ""
+
+#: menu/token_picker.lua:67
+msgid "Session pages read"
+msgstr ""
+
+#: menu/token_picker.lua:68
+msgid "Reading speed (pages/hour)"
+msgstr ""
+
+#: menu/token_picker.lua:69
+msgid "Total reading time for book"
+msgstr ""
+
+#: menu/token_picker.lua:72
+msgid "Battery level"
+msgstr ""
+
+#: menu/token_picker.lua:73
+msgid "Battery icon (dynamic)"
+msgstr ""
+
+#: menu/token_picker.lua:74
+msgid "Wi-Fi icon (dynamic)"
+msgstr ""
+
+#: menu/token_picker.lua:75
+msgid "Plugin content (dynamic)"
+msgstr ""
+
+#: menu/token_picker.lua:76
+msgid "Page-turn direction ⇄ (shows when inverted)"
+msgstr ""
+
+#: menu/token_picker.lua:77
+msgid "Frontlight brightness"
+msgstr ""
+
+#: menu/token_picker.lua:78
+msgid "Frontlight warmth"
+msgstr ""
+
+#: menu/token_picker.lua:79
+msgid "RAM used %"
+msgstr ""
+
+#: menu/token_picker.lua:80
+msgid "RAM used (MiB)"
+msgstr ""
+
+#: menu/token_picker.lua:81
+msgid "Free disk space"
+msgstr ""
+
+#: menu/token_picker.lua:83
+msgid "Snippets"
+msgstr ""
+
+#: menu/token_picker.lua:93
+msgid "Reference"
+msgstr ""
+
+#: menu/token_picker.lua:94
+msgid "If Wi-Fi is on"
+msgstr ""
+
+#: menu/token_picker.lua:95
+msgid "If connected"
+msgstr ""
+
+#: menu/token_picker.lua:96
+msgid "Battery 0–100"
+msgstr ""
+
+#: menu/token_picker.lua:97
+msgid "If charging"
+msgstr ""
+
+#: menu/token_picker.lua:98
+msgid "If page-turn flipped"
+msgstr ""
+
+#: menu/token_picker.lua:99
+msgid "Book progress 0–100"
+msgstr ""
+
+#: menu/token_picker.lua:100
+msgid "Chapter progress 0–100"
+msgstr ""
+
+#: menu/token_picker.lua:102
+msgid "Total chapters"
+msgstr ""
+
+#: menu/token_picker.lua:103
+msgid "Pages per hour"
+msgstr ""
+
+#: menu/token_picker.lua:104
+msgid "Minutes this session"
+msgstr ""
+
+#: menu/token_picker.lua:105
+msgid "Pages this session"
+msgstr ""
+
+#: menu/token_picker.lua:106
+msgid "odd / even"
+msgstr ""
+
+#: menu/token_picker.lua:107
+msgid "If frontlight on"
+msgstr ""
+
+#: menu/token_picker.lua:108
+msgid "EPUB / PDF / CBZ / …"
+msgstr ""
+
+#: menu/token_picker.lua:109
+msgid "Current HH:MM (24h)"
+msgstr ""
+
+#: menu/token_picker.lua:110
+msgid "Mon–Sun"
+msgstr ""
+
+#: menu/token_picker.lua:111
+msgid "If book has title"
+msgstr ""
+
+#: menu/token_picker.lua:112
+msgid "If book has author"
+msgstr ""
+
+#: menu/token_picker.lua:113
+msgid "If book in series"
+msgstr ""
+
+#: menu/token_picker.lua:114
+msgid "If chapter has title"
+msgstr ""
+
+#: menu/token_picker.lua:115
+msgid "Chapter title at depth 1/2/3"
+msgstr ""
+
+#: menu/token_picker.lua:116
+msgid "If book has 2+ authors"
+msgstr ""
+
+#: menu/token_picker.lua:118
+msgid "Examples"
+msgstr ""
+
+#: menu/token_picker.lua:119
+msgid "Author with et al. for multi-author"
+msgstr ""
+
+#: menu/token_picker.lua:120
+msgid "Wi-Fi icon only when Wi-Fi enabled"
+msgstr ""
+
+#: menu/token_picker.lua:121
+msgid "Low-battery warning"
+msgstr ""
+
+#: menu/token_picker.lua:122
+msgid "Bolt when charging"
+msgstr ""
+
+#: menu/token_picker.lua:123
+msgid "Arrow when page-turn flipped"
+msgstr ""
+
+#: menu/token_picker.lua:124
+msgid "Speed once calculated"
+msgstr ""
+
+#: menu/token_picker.lua:125
+msgid "Session time after start"
+msgstr ""
+
+#: menu/token_picker.lua:126
+msgid "Odd/even variations"
+msgstr ""
+
+#: menu/token_picker.lua:127
+msgid "Near end of book"
+msgstr ""
+
+#: menu/token_picker.lua:128
+msgid "Frontlight on/off label"
+msgstr ""
+
+#: menu/token_picker.lua:129
+msgid "Only for PDFs"
+msgstr ""
+
+#: menu/token_picker.lua:130
+msgid "Late-night reading"
+msgstr ""
+
+#: menu/token_picker.lua:131
+msgid "Weekends"
+msgstr ""
+
+#: menu/token_picker.lua:132
+msgid "Time window"
+msgstr ""
+
+#: menu/token_picker.lua:133
+msgid "Non-series books"
+msgstr ""
+
+#: menu/token_picker.lua:134
+msgid "Fall back to shallower chapter"
+msgstr ""
+
+#: menu/token_picker.lua:135
+msgid "Long books (20+ chapters)"
+msgstr ""
+
+#: menu/token_picker.lua:136
+msgid "Chapter title only when different from book title"
+msgstr ""
+
+#: menu/token_picker.lua:215
+msgid "If/Else conditional tokens"
+msgstr ""
+
+#: menu/token_picker.lua:221
+msgid "[if:key=value]show when true[/if]"
+msgstr ""
+
+#: menu/token_picker.lua:222
+msgid "[if:key=value]if true[else]if false[/if]"
+msgstr ""
+
+#: menu/token_picker.lua:223
+msgid "Compare:  =  !=  <  >     Boolean:  and  or  not  ( )"
+msgstr ""
+
+#: menu/token_picker.lua:224
+msgid "@key = another field's value (chap_title_1!=@title)"
+msgstr ""
+
+#: menu/token_picker.lua:230
+msgid "Insert conditional"
+msgstr ""
+
+#: menu/token_picker.lua:236
+msgid "Insert token"
+msgstr ""
+
+#: _meta.lua:5
+msgid "Configurable text overlays at screen corners and edges with token expansion and icon support."
 msgstr ""
