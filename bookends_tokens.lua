@@ -731,6 +731,18 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
         end
     end
 
+    -- Lifetime stats for the current book (instance fields on ui.statistics).
+    if ui.statistics and tonumber(ui.statistics.book_read_pages) and ui.statistics.book_read_pages > 0 then
+        state.book_pages_read = math.floor(ui.statistics.book_read_pages)
+    else
+        state.book_pages_read = 0
+    end
+    if ui.statistics and tonumber(ui.statistics.avg_time) and ui.statistics.avg_time > 0 then
+        state.avg_page_time = math.floor(ui.statistics.avg_time)
+    else
+        state.avg_page_time = 0
+    end
+
     -- Reading speed (pages/hr)
     if session_elapsed and session_elapsed > 60 and (session_pages_read or 0) > 0 then
         state.speed = math.floor(session_pages_read / session_elapsed * 3600)
@@ -1351,6 +1363,21 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         end
     end
 
+    -- Lifetime stats for the current book (instance fields, no SQL).
+    local book_pages_read_str = ""
+    local avg_page_time_str = ""
+    if needs("book_pages_read") and ui.statistics
+       and tonumber(ui.statistics.book_read_pages)
+       and ui.statistics.book_read_pages > 0 then
+        book_pages_read_str = tostring(math.floor(ui.statistics.book_read_pages))
+    end
+    if needs("avg_page_time") and ui.statistics
+       and tonumber(ui.statistics.avg_time)
+       and ui.statistics.avg_time > 0 then
+        local user_duration_format = G_reader_settings:readSetting("duration_format", "classic")
+        avg_page_time_str = datetime.secondsToClockDuration(user_duration_format, ui.statistics.avg_time, true)
+    end
+
     -- Document metadata
     local title = ""
     local authors = ""
@@ -1597,8 +1624,10 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         weekday_short = date_weekday_short,
         session_time  = session_time,
         session_pages = tostring(session_pages),
-        pages_today   = pages_today_str,
-        time_today    = time_today_str,
+        pages_today      = pages_today_str,
+        time_today       = time_today_str,
+        book_pages_read  = book_pages_read_str,
+        avg_page_time    = avg_page_time_str,
         -- Metadata
         title       = tostring(title),
         author      = first_author,

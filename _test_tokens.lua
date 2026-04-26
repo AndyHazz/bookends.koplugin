@@ -576,6 +576,42 @@ test("[if:pages_today>10] evaluates against state", function()
     eq(r, "ok")
 end)
 
+test("book_pages_read: renders cached instance field", function()
+    local ui = stubUiWithStats({ book_read_pages = 87 })
+    local r = Tokens.expand("%book_pages_read", ui, 0, 0, false, 2, nil)
+    eq(r, "87")
+end)
+
+test("book_pages_read: state value populated", function()
+    local ui = stubUiWithStats({ book_read_pages = 87 })
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.book_pages_read, 87)
+end)
+
+test("book_pages_read: 0 when stats absent", function()
+    local ui = { statistics = nil, view = { state = { page = 5 } },
+                 document = { file = "/b.epub", getPageCount = function() return 100 end,
+                              hasHiddenFlows = function() return false end,
+                              getProps = function() return {} end } }
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.book_pages_read, 0)
+end)
+
+test("avg_page_time: renders formatted duration", function()
+    local prev = package.loaded["datetime"].secondsToClockDuration
+    package.loaded["datetime"].secondsToClockDuration = function(_f, s, _h) return "AVG:" .. tostring(s) end
+    local ui = stubUiWithStats({ avg_time = 45.3 })
+    local r = Tokens.expand("%avg_page_time", ui, 0, 0, false, 2, nil)
+    eq(r, "AVG:45.3")
+    package.loaded["datetime"].secondsToClockDuration = prev
+end)
+
+test("avg_page_time: state value is integer seconds", function()
+    local ui = stubUiWithStats({ avg_time = 45.7 })
+    local s = Tokens.buildConditionState(ui, 0, 0)
+    eq(s.avg_page_time, 45)
+end)
+
 test("v5 tokens: %author expands to author name", function()
     local r = Tokens.expand("%author", stubUiForExpand(), nil, nil, false, 2, nil)
     eq(r, "Isaac Asimov")
