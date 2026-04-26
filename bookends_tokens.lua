@@ -158,7 +158,7 @@ local function getDateLocale()
 end
 
 --- Compute chapter tick fractions as {fraction, width, depth} triples.
-function Tokens.computeTickFractions(doc, toc, tick_width_multiplier)
+function Tokens.computeTickFractions(doc, toc, tick_width_multiplier, current_pageno)
     if not doc or not toc then return {} end
     local raw_total = doc:getPageCount()
     if not raw_total or raw_total <= 0 then return {} end
@@ -166,12 +166,34 @@ function Tokens.computeTickFractions(doc, toc, tick_width_multiplier)
     local max_depth = toc:getMaxDepth() or 1
     local tick_m = tick_width_multiplier or 2
     local ticks = {}
+
+    -- When KOReader's "Custom flows" feature is in use, the bar fill
+    -- percentage is computed flow-relative (getPageNumberInFlow over
+    -- getTotalPagesInFlow). Ticks have to follow the same convention,
+    -- otherwise they get spaced as fractions of the whole document while
+    -- the bar represents only the active flow, and chapter boundaries
+    -- stop lining up with the fill.
+    local has_flows = current_pageno and doc.hasHiddenFlows and doc:hasHiddenFlows()
+    local active_flow, active_flow_total
+    if has_flows then
+        active_flow = doc:getPageFlow(current_pageno) or 0
+        active_flow_total = doc:getTotalPagesInFlow(active_flow) or 0
+    end
+
     for depth, pages in ipairs(toc_ticks) do
         local tick_w = math.max(1, (max_depth - depth + 1) * tick_m - 1)
         for _, page in ipairs(pages) do
             if page > 1 then
-                local tick_frac = page / raw_total
-                if tick_frac > 0 and tick_frac < 1 then
+                local tick_frac
+                if has_flows then
+                    if doc:getPageFlow(page) == active_flow and active_flow_total > 0 then
+                        local page_in_flow = doc:getPageNumberInFlow(page) or page
+                        tick_frac = page_in_flow / active_flow_total
+                    end
+                else
+                    tick_frac = page / raw_total
+                end
+                if tick_frac and tick_frac > 0 and tick_frac < 1 then
                     table.insert(ticks, { tick_frac, tick_w, depth })
                 end
             end
@@ -1109,8 +1131,9 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
             end
         end
 
-        -- Chapter tick positions as {fraction, width, depth} — page-based to match KOReader footer
-        local ticks = Tokens.computeTickFractions(bar_doc, ui.toc, tick_width_multiplier)
+        -- Chapter tick positions as {fraction, width, depth} — page-based to match KOReader footer.
+        -- Pass bar_pageno so flow-aware tick fractions line up with the flow-relative book_pct above.
+        local ticks = Tokens.computeTickFractions(bar_doc, ui.toc, tick_width_multiplier, bar_pageno)
 
         bar_info.book = { kind = "book", pct = book_pct or 0, ticks = ticks }
 

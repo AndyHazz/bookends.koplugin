@@ -897,9 +897,9 @@ function Bookends:markOverlayDirty()
 end
 
 --- Compute chapter tick fractions for book progress bars (cached per dirty cycle).
-function Bookends:_computeTickCache()
+function Bookends:_computeTickCache(current_pageno)
     local tick_m = self.settings:readSetting("tick_width_multiplier", self.DEFAULT_TICK_WIDTH_MULTIPLIER)
-    return Tokens.computeTickFractions(self.ui.document, self.ui.toc, tick_m)
+    return Tokens.computeTickFractions(self.ui.document, self.ui.toc, tick_m, current_pageno)
 end
 
 -- Style constants and helpers
@@ -1184,11 +1184,18 @@ function Bookends:_computeBarProgress(bar_cfg, pageno_local)
             end
             pct = math.max(0, math.min(1, pct))
         end
-        -- Chapter tick marks (cached — static for the document)
+        -- Chapter tick marks. Cache is keyed by current flow id when the
+        -- document has hidden flows configured: tick fractions are flow-
+        -- relative (matching the flow-aware bar fill above), so they have
+        -- to be recomputed when the user navigates between flows. For
+        -- documents without flows the cache is computed once and reused.
         local tick_level = bar_cfg.chapter_ticks
         if tick_level and tick_level ~= "off" then
-            if not self._tick_cache then
-                self._tick_cache = self:_computeTickCache()
+            local current_flow = doc.hasHiddenFlows and doc:hasHiddenFlows()
+                and doc:getPageFlow(pageno_local) or nil
+            if not self._tick_cache or self._tick_cache_flow ~= current_flow then
+                self._tick_cache = self:_computeTickCache(pageno_local)
+                self._tick_cache_flow = current_flow
             end
             if tick_level == "all" then
                 ticks = self._tick_cache or {}

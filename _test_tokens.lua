@@ -491,5 +491,122 @@ test("legacy_literal: [if:chapters>10] keeps legacy key literal in preview", fun
     assert(r:find("%[if:chapters>10%]"), "expected legacy predicate preserved: " .. r)
 end)
 
+-- ============================================================================
+-- computeTickFractions: flow-aware chapter ticks
+-- ============================================================================
+
+-- Stub a TOC and Document. toc_pages is { [depth] = {page1, page2, ...} }.
+-- For flow tests, page_to_flow maps a page number to its flow id, and
+-- flow_pages maps flow id to ordered list of page numbers in that flow.
+local function stubDocToc(opts)
+    local total = opts.total
+    local toc_pages = opts.toc_pages
+    local has_flows = opts.has_flows or false
+    local page_to_flow = opts.page_to_flow or {}
+    local flow_pages = opts.flow_pages or {}
+    local doc = {
+        getPageCount = function() return total end,
+        hasHiddenFlows = function() return has_flows end,
+        getPageFlow = function(_self, page) return page_to_flow[page] or 0 end,
+        getTotalPagesInFlow = function(_self, flow)
+            return flow_pages[flow] and #flow_pages[flow] or 0
+        end,
+        getPageNumberInFlow = function(_self, page)
+            local flow = page_to_flow[page] or 0
+            local list = flow_pages[flow] or {}
+            for i, p in ipairs(list) do
+                if p == page then return i end
+            end
+            return 0
+        end,
+    }
+    -- Make hasHiddenFlows callable via colon syntax (the function above is
+    -- already plain — no self).
+    local toc = {
+        getTocTicks = function() return toc_pages end,
+        getMaxDepth = function() return #toc_pages end,
+    }
+    return doc, toc
+end
+
+test("ticks: no-flow doc returns whole-doc fractions", function()
+    local doc, toc = stubDocToc{
+        total = 100,
+        toc_pages = { [1] = { 25, 50, 75 } },
+    }
+    local ticks = Tokens.computeTickFractions(doc, toc, 2)
+    eq(#ticks, 3, "tick count")
+    eq(ticks[1][1], 0.25, "tick 1 fraction")
+    eq(ticks[2][1], 0.5, "tick 2 fraction")
+    eq(ticks[3][1], 0.75, "tick 3 fraction")
+end)
+
+test("ticks: skips first-page tick (page 1)", function()
+    local doc, toc = stubDocToc{
+        total = 100,
+        toc_pages = { [1] = { 1, 50 } },
+    }
+    local ticks = Tokens.computeTickFractions(doc, toc, 2)
+    eq(#ticks, 1, "page-1 tick is dropped")
+    eq(ticks[1][1], 0.5)
+end)
+
+test("ticks: hidden flows + current page in flow 0 keeps only flow-0 ticks", function()
+    -- Trilogy: pages 1-50 = flow 0 (book 1), pages 51-100 = flow 1 (book 2),
+    -- pages 101-150 = flow 2 (book 3). Whole-doc total = 150.
+    local p_to_f, f_pages = {}, { [0] = {}, [1] = {}, [2] = {} }
+    for p = 1, 50 do p_to_f[p] = 0; table.insert(f_pages[0], p) end
+    for p = 51, 100 do p_to_f[p] = 1; table.insert(f_pages[1], p) end
+    for p = 101, 150 do p_to_f[p] = 2; table.insert(f_pages[2], p) end
+
+    local doc, toc = stubDocToc{
+        total = 150,
+        toc_pages = { [1] = { 10, 25, 60, 80, 110, 130 } },
+        has_flows = true,
+        page_to_flow = p_to_f,
+        flow_pages = f_pages,
+    }
+    -- Reading on page 30 (flow 0, book 1). Expect only ticks at pages 10
+    -- and 25, expressed as fractions of flow-0's 50-page total.
+    local ticks = Tokens.computeTickFractions(doc, toc, 2, 30)
+    eq(#ticks, 2, "tick count limited to active flow")
+    eq(ticks[1][1], 10 / 50, "tick at page 10 → 0.2 of flow")
+    eq(ticks[2][1], 25 / 50, "tick at page 25 → 0.5 of flow")
+end)
+
+test("ticks: hidden flows + current page in flow 1 uses flow-1 fractions", function()
+    local p_to_f, f_pages = {}, { [0] = {}, [1] = {} }
+    for p = 1, 50 do p_to_f[p] = 0; table.insert(f_pages[0], p) end
+    for p = 51, 100 do p_to_f[p] = 1; table.insert(f_pages[1], p) end
+
+    local doc, toc = stubDocToc{
+        total = 100,
+        toc_pages = { [1] = { 25, 60, 80 } },
+        has_flows = true,
+        page_to_flow = p_to_f,
+        flow_pages = f_pages,
+    }
+    -- Reading on page 70 (flow 1). Page 60 is index 10 in flow 1 (51 → 1,
+    -- 52 → 2, ... 60 → 10). Page 80 is index 30. Flow 1 has 50 pages.
+    local ticks = Tokens.computeTickFractions(doc, toc, 2, 70)
+    eq(#ticks, 2, "page-25 tick (flow 0) is dropped")
+    eq(ticks[1][1], 10 / 50, "page 60 → flow-1 page 10 / 50")
+    eq(ticks[2][1], 30 / 50, "page 80 → flow-1 page 30 / 50")
+end)
+
+test("ticks: hidden flows but no current_pageno falls back to whole-doc", function()
+    local doc, toc = stubDocToc{
+        total = 100,
+        toc_pages = { [1] = { 50 } },
+        has_flows = true,
+        page_to_flow = setmetatable({}, { __index = function() return 0 end }),
+        flow_pages = { [0] = {} },
+    }
+    -- No current_pageno passed → backwards-compatible path.
+    local ticks = Tokens.computeTickFractions(doc, toc, 2)
+    eq(#ticks, 1)
+    eq(ticks[1][1], 0.5, "whole-doc fraction when caller didn't opt in")
+end)
+
 io.write(string.format("\n%d passed, %d failed\n", pass, fail))
 os.exit(fail == 0 and 0 or 1)
