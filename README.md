@@ -111,7 +111,9 @@ Tokens are placeholders that expand to live values. Type `%` followed by a name,
 | `%page_num` | Current page number | *42* |
 | `%page_count` | Total pages | *218* |
 | `%book_pct` | Book percentage read | *19%* |
+| `%book_pct_left` | Book percentage remaining | *81%* |
 | `%chap_pct` | Chapter percentage read | *65%* |
+| `%chap_pct_left` | Chapter percentage remaining | *35%* |
 | `%chap_read` | Pages read in chapter | *7* |
 | `%chap_pages` | Total pages in chapter | *12* |
 | `%chap_pages_left` | Pages left in chapter | *5* |
@@ -204,7 +206,9 @@ Comparison operators: `=` (equals), `!=` (not equals), `<` (less than), `>` (gre
 | `batt` | 0–100 | Battery percentage |
 | `charging` | yes / no | Charging or charged |
 | `book_pct` | 0–100 | Book progress percentage (matches `%book_pct`) |
+| `book_pct_left` | 0–100 | Book percentage remaining (matches `%book_pct_left`) |
 | `chap_pct` | 0–100 | Chapter progress percentage (matches `%chap_pct`) |
+| `chap_pct_left` | 0–100 | Chapter percentage remaining (matches `%chap_pct_left`) |
 | `chap_num` | 1–N | Current chapter number (matches `%chap_num`) |
 | `chap_count` | count | Total chapter count, 0 for chapterless books (matches `%chap_count`) |
 | `chap_read` | count | Pages read in current chapter (matches `%chap_read`) |

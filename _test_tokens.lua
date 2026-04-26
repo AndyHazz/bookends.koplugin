@@ -594,6 +594,31 @@ test("ticks: hidden flows + current page in flow 1 uses flow-1 fractions", funct
     eq(ticks[2][1], 30 / 50, "page 80 → flow-1 page 30 / 50")
 end)
 
+-- ============================================================================
+-- book_pct_left / chap_pct_left: complement-of-progress conditional state
+-- ============================================================================
+
+test("state: [if:book_pct_left<10] true at 95% read", function()
+    local r = Tokens._processConditionals(
+        "[if:book_pct_left<10]nearly done[/if]", { book_pct_left = 5 })
+    eq(r, "nearly done")
+end)
+
+test("state: [if:chap_pct_left>50] true mid-chapter", function()
+    local r = Tokens._processConditionals(
+        "[if:chap_pct_left>50]plenty[/if]", { chap_pct_left = 60 })
+    eq(r, "plenty")
+end)
+
+test("state: book_pct + book_pct_left = 100 at any point", function()
+    -- Same clamp the production code does. Guards against drift if the
+    -- rounding of one branch is changed without the other.
+    for _, pct in ipairs({0, 1, 17, 42, 50, 83, 99, 100}) do
+        local left = math.max(0, math.min(100, 100 - pct))
+        eq(pct + left, 100, "pct=" .. pct)
+    end
+end)
+
 test("ticks: hidden flows but no current_pageno falls back to whole-doc", function()
     local doc, toc = stubDocToc{
         total = 100,

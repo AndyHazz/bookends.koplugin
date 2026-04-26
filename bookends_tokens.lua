@@ -546,6 +546,9 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
                 page_count_val = raw_total
             end
         end
+        if state.book_pct ~= nil then
+            state.book_pct_left = math.max(0, math.min(100, 100 - state.book_pct))
+        end
         if page_count_val and state.page_num then
             local left = page_count_val - state.page_num
             if Tokens.pages_left_includes_current then left = left + 1 end
@@ -576,6 +579,9 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
             -- fallback and stock's getChapterProgress get_percentage path).
             if state.chap_pct == nil and state.book_pct ~= nil then
                 state.chap_pct = state.book_pct
+            end
+            if state.chap_pct ~= nil then
+                state.chap_pct_left = math.max(0, math.min(100, 100 - state.chap_pct))
             end
             local pages_left_offset = Tokens.pages_left_includes_current and 1 or 0
             local done = ui.toc:getChapterPagesDone(pageno)
@@ -900,7 +906,8 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     if preview_mode then
         local preview = {
             page_num = "[page]", page_count = "[total]",
-            book_pct = "[%]", chap_pct = "[ch%]",
+            book_pct = "[%]", book_pct_left = "[%left]",
+            chap_pct = "[ch%]", chap_pct_left = "[ch%left]",
             chap_read = "[ch.read]", chap_pages = "[ch.total]",
             chap_pages_left = "[ch.left]", pages_left = "[left]",
             chap_num = "[ch.num]", chap_count = "[ch.count]",
@@ -998,12 +1005,13 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     local currentpage = ""
     local totalpages = ""
     local percent = ""
+    local percent_left = ""
     local pages_left_book = ""
     local pages_left_offset = Tokens.pages_left_includes_current and 1 or 0
     -- Numeric page indices for arithmetic (separate from display labels)
     local page_idx = nil   -- numeric current page position
     local page_count = nil -- numeric total pages
-    if needs("page_num", "page_count", "book_pct", "pages_left") then
+    if needs("page_num", "page_count", "book_pct", "book_pct_left", "pages_left") then
         if ui.pagemap and ui.pagemap:wantsPageLabels() then
             local label, idx, count = ui.pagemap:getCurrentPageLabel(true)
             currentpage = label or ""
@@ -1024,19 +1032,26 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
             page_count = tonumber(totalpages)
         end
 
-        -- Book percent: flow-aware when hidden flows active, raw pages otherwise
+        -- Book percent: flow-aware when hidden flows active, raw pages otherwise.
+        -- percent_left is derived from the same integer to keep "X% read" + "Y% left"
+        -- summing to exactly 100 at the displayed precision.
+        local percent_int
         if pageno and doc:hasHiddenFlows() then
             local flow = doc:getPageFlow(pageno)
             local flow_page = doc:getPageNumberInFlow(pageno)
             local flow_total = doc:getTotalPagesInFlow(flow)
             if flow_total and flow_total > 0 then
-                percent = math.floor(flow_page / flow_total * 100 + 0.5) .. "%"
+                percent_int = math.floor(flow_page / flow_total * 100 + 0.5)
             end
         else
             local raw_total = doc:getPageCount()
             if pageno and raw_total and raw_total > 0 then
-                percent = math.floor(pageno / raw_total * 100 + 0.5) .. "%"
+                percent_int = math.floor(pageno / raw_total * 100 + 0.5)
             end
+        end
+        if percent_int then
+            percent = percent_int .. "%"
+            percent_left = math.max(0, math.min(100, 100 - percent_int)) .. "%"
         end
         -- Pages left in book: stable page count. Offset controlled by the
         -- Bookends `pages_left_includes_current` setting so users don't need
@@ -1050,6 +1065,7 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     -- Chapter progress: raw pages for %P (per-flip accuracy),
     -- stable pages for %g, %G, %l (display values matching page numbers)
     local chapter_pct = ""
+    local chapter_pct_left = ""
     local chapter_pages_done = ""
     local chapter_pages_left = ""
     local chapter_total_pages = ""
@@ -1057,7 +1073,7 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     local chapter_num = ""      -- 1-indexed position of current chapter in TOC
     local chapter_count = ""    -- total number of entries in TOC
     local chapter_titles_by_depth = {}  -- { [1] = "Part II", [2] = "Chapter 1", ... }
-    if needs("chap_pct", "chap_read", "chap_pages", "chap_pages_left", "chap_title", "chap_num", "chap_count") and pageno and ui.toc then
+    if needs("chap_pct", "chap_pct_left", "chap_read", "chap_pages", "chap_pages_left", "chap_title", "chap_num", "chap_count") and pageno and ui.toc then
         -- Raw page calculation for %P (percentage)
         local chapter_start = ui.toc:getPreviousChapter(pageno)
         if ui.toc:isChapterStart(pageno) then
@@ -1069,11 +1085,14 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
             local raw_total = chapter_end - chapter_start
             if raw_total > 0 then
                 local raw_done = pageno - chapter_start
+                local pct_int
                 if raw_total > 1 then
-                    chapter_pct = math.floor(raw_done / (raw_total - 1) * 100) .. "%"
+                    pct_int = math.floor(raw_done / (raw_total - 1) * 100)
                 else
-                    chapter_pct = "100%"
+                    pct_int = 100
                 end
+                chapter_pct = pct_int .. "%"
+                chapter_pct_left = math.max(0, math.min(100, 100 - pct_int)) .. "%"
             end
         end
         -- Stable page counts for %chap_read / %chap_pages / %chap_pages_left.
@@ -1101,6 +1120,7 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         -- use book percent (matches stock's getChapterProgress get_percentage path).
         if chapter_pct == "" and percent ~= "" then
             chapter_pct = percent
+            chapter_pct_left = percent_left
         end
         local titles = Tokens.getChapterTitlesByDepth(ui, pageno)
         if titles.chapter_title ~= "" then chapter_title = titles.chapter_title end
@@ -1466,7 +1486,9 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         page_num   = tostring(currentpage),
         page_count = tostring(totalpages),
         book_pct   = tostring(percent),
+        book_pct_left = tostring(percent_left),
         chap_pct   = tostring(chapter_pct),
+        chap_pct_left = tostring(chapter_pct_left),
         chap_read  = tostring(chapter_pages_done),
         chap_pages = tostring(chapter_total_pages),
         chap_pages_left = tostring(chapter_pages_left),
@@ -1533,8 +1555,8 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     local all_empty = true
     -- Tokens that always count as content (page/chapter/time info is meaningful at zero)
     local always_content = {
-        page_num = true, page_count = true, book_pct = true, pages_left = true,
-        chap_pct = true, chap_read = true, chap_pages = true, chap_pages_left = true,
+        page_num = true, page_count = true, book_pct = true, book_pct_left = true, pages_left = true,
+        chap_pct = true, chap_pct_left = true, chap_read = true, chap_pages = true, chap_pages_left = true,
         chap_num = true, chap_count = true,
         chap_time_left = true, book_time_left = true, time_12h = true, time_24h = true,
         time = true,
