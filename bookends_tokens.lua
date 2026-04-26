@@ -706,7 +706,14 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
     -- Session
     state.session = session_elapsed and math.floor(session_elapsed / 60) or 0
     state.session_time = state.session  -- alias matching the %session_time token name
-    state.session_pages = math.max(0, session_pages_read or 0)
+    do
+        local stats_session = Tokens._readStatsBookSession(ui)
+        if stats_session then
+            state.session_pages = math.max(0, stats_session.pages)
+        else
+            state.session_pages = math.max(0, session_pages_read or 0)
+        end
+    end
 
     -- Reading speed (pages/hr)
     if session_elapsed and session_elapsed > 60 and (session_pages_read or 0) > 0 then
@@ -1213,8 +1220,17 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         end
     end
 
-    -- Session pages read
-    local session_pages = math.max(0, session_pages_read or 0)
+    -- Session pages read (skip-aware via ReaderStatistics with fallback to
+    -- bookends' own max-page counter when stats is disabled or absent).
+    local session_pages
+    do
+        local stats_session = Tokens._readStatsBookSession(ui)
+        if stats_session then
+            session_pages = math.max(0, stats_session.pages)
+        else
+            session_pages = math.max(0, session_pages_read or 0)
+        end
+    end
 
     -- Time left in chapter / document (via statistics plugin).
     -- chap_time_left falls back to whole-book pages-left when no chapter info,

@@ -497,6 +497,25 @@ test("stats helper: readStatsBookSession swallows method errors", function()
     eq(Tokens._readStatsBookSession(ui), nil)
 end)
 
+test("session_pages: stats-backed value preferred over arg", function()
+    -- Arg says 24 (jumped from page 1 to 25), stats says 5 (actually dwelled).
+    local ui = stubUiWithStats({ current_pages = 5 })
+    local s = Tokens.buildConditionState(ui, 0, 24)
+    eq(s.session_pages, 5, "should reflect skip-aware stats value")
+end)
+
+test("session_pages: falls back to arg when stats unavailable", function()
+    local ui = { statistics = nil, view = { state = { page = 5 } } }
+    local s = Tokens.buildConditionState(ui, 0, 24)
+    eq(s.session_pages, 24, "fallback to legacy max-page counter")
+end)
+
+test("session_pages: render path also uses stats value", function()
+    local ui = stubUiWithStats({ current_pages = 5 })
+    local r = Tokens.expand("%session_pages", ui, 0, 24, false, 2, nil)
+    eq(r, "5")
+end)
+
 test("v5 tokens: %author expands to author name", function()
     local r = Tokens.expand("%author", stubUiForExpand(), nil, nil, false, 2, nil)
     eq(r, "Isaac Asimov")
