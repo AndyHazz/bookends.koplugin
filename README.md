@@ -149,7 +149,7 @@ Tokens are placeholders that expand to live values. Type `%` followed by a name,
 | `%batt` | Battery level | *73%* |
 | `%batt_icon` | Battery icon (dynamic) | Changes with charge level |
 | `%wifi` | Wi-Fi icon (dynamic) | Hidden when off, changes when connected/disconnected |
-| `%plugin_content` | Plugin content (dynamic) | Aggregates output from plugins that register with KOReader's footer hook (e.g. `kobo.koplugin` Bluetooth, `readtimer.koplugin` countdown); hidden when none are reporting |
+| `%plugin_content` | Plugin content (dynamic) | Aggregates output from plugins that register with KOReader's footer hook (e.g. `kobo.koplugin` Bluetooth, `readtimer.koplugin` countdown); hidden when none are reporting. Add a brace filter to restrict to one plugin: `%plugin_content{readtimer}` shows only the read-timer countdown, `%plugin_content{kobo}` only kobo.koplugin's contribution. |
 | `%light` | Frontlight brightness | *18* or *OFF* |
 | `%warmth` | Frontlight warmth | *12* |
 | `%mem` | RAM usage percentage | *33%* |

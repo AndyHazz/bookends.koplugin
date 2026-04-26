@@ -741,6 +741,36 @@ function Tokens.canonicaliseLegacy(format_str)
     return s
 end
 
+--- Walk the footer's additional_footer_content list and join non-empty
+-- callback returns with the footer's own separator. If `filter` is set,
+-- only callbacks whose source file lives under `<filter>.koplugin/`
+-- contribute. Owner is identified via debug.getinfo on the closure's
+-- source path — KOReader plugins all live in `<name>.koplugin/`, so the
+-- directory basename is a stable public identifier.
+local function gatherPluginContent(ui, filter)
+    local footer = ui and ui.view and ui.view.footer
+    local funcs = footer and footer.additional_footer_content
+    if not funcs or #funcs == 0 then return "" end
+    local parts = {}
+    for _, fn in ipairs(funcs) do
+        local include = true
+        if filter and filter ~= "" then
+            local info = debug.getinfo(fn, "S")
+            local source = info and info.source or ""
+            local owner = source:match("/([^/]+)%.koplugin/")
+            include = (owner == filter)
+        end
+        if include then
+            local val = fn()
+            if val and val ~= "" then
+                parts[#parts + 1] = val
+            end
+        end
+    end
+    if #parts == 0 then return "" end
+    return table.concat(parts, footer:genSeparator())
+end
+
 function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, preview_mode, tick_width_multiplier, symbol_color, paint_ctx, opts)
     opts = opts or {}
     -- Fast path: no tokens or conditionals
@@ -789,6 +819,11 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     local token_limits = {}  -- { ["%author"] = { [1] = 200 }, ... }
     local bar_limit_w = nil
     local bar_limit_h = nil
+    -- Per-occurrence filter list for %plugin_content{<plugin>}. Each braced
+    -- occurrence rewrites to a synthetic ident (%__pcfilterN) so multiple
+    -- filters in one format string each get their own resolved value, and
+    -- the existing bareword auto-hide path applies unchanged.
+    local plugin_content_filters = {}
 
     format_str = format_str:gsub("%%([%a_][%w_]*)(%b{})", function(name, brace)
         local content = brace:sub(2, -2)  -- strip { and }
@@ -804,6 +839,12 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
                 if px and px > 0 then bar_limit_h = px end
             end
             return "%bar"
+        end
+        if name == "plugin_content" then
+            -- Stash filter, rewrite to synthetic ident so the bareword
+            -- expander handles it (auto-hide via the standard path).
+            plugin_content_filters[#plugin_content_filters + 1] = content
+            return "%__pcfilter" .. #plugin_content_filters
         end
         if name == "datetime" then
             -- Strftime escape hatch. Respect device locale (see getDateLocale).
@@ -881,6 +922,11 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
             local formatted = os.date(content) or ""
             if saved_locale then os.setlocale(saved_locale, "time") end
             return formatted
+        end)
+        -- %plugin_content{<plugin>} preview label, before generic {N}
+        r = r:gsub("%%plugin_content(%b{})", function(brace)
+            local filter = brace:sub(2, -2)
+            return "[plugins:" .. filter .. "]"
         end)
         -- Depth-specific chapter-title before bareword tokens
         r = r:gsub("%%chap_title_(%d){(%d+)}", function(depth, n)
@@ -1290,26 +1336,12 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     -- Aggregate output from plugins that register with KOReader's footer
     -- extension API (ReaderFooter:addAdditionalFooterContent at
     -- readerfooter.lua:2076). Examples: kobo.koplugin (Bluetooth icon),
-    -- readtimer.koplugin (countdown). Mirrors the stock footer's own
-    -- aggregator (readerfooter.lua:459-479): iterate in registration order,
-    -- drop empty returns, join with the footer's configured separator so
-    -- output matches the stock bar.
+    -- readtimer.koplugin (countdown). Bare %plugin_content joins all
+    -- registered callbacks; %plugin_content{<plugin>} restricts to one
+    -- plugin's contribution (filter pre-stashed by the brace handler).
     local plugin_content = ""
     if needs("plugin_content") then
-        local footer = ui and ui.view and ui.view.footer
-        local funcs = footer and footer.additional_footer_content
-        if funcs and #funcs > 0 then
-            local parts = {}
-            for _, fn in ipairs(funcs) do
-                local val = fn()
-                if val and val ~= "" then
-                    parts[#parts + 1] = val
-                end
-            end
-            if #parts > 0 then
-                plugin_content = table.concat(parts, footer:genSeparator())
-            end
-        end
+        plugin_content = gatherPluginContent(ui, nil)
     end
 
     -- Frontlight
@@ -1466,6 +1498,12 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         disk      = disk_avail,
         invert    = page_turn_symbol,
     }
+    -- Populate synthetic %__pcfilterN idents stashed by the brace handler.
+    -- Each one resolves to gatherPluginContent for that filter; empty
+    -- results auto-hide via the standard bareword path.
+    for i = 1, #plugin_content_filters do
+        replace["__pcfilter" .. i] = gatherPluginContent(ui, plugin_content_filters[i])
+    end
     -- (symbol_color wrapping happens after token expansion — see below)
     -- Track whether all tokens in the string resolved to empty or "0"
     local has_token = false
