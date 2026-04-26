@@ -517,6 +517,9 @@ msgstr "Schließen"
 msgid "Division slash"
 msgstr "Divisionsschrägstrich"
 
+msgid "Do nothing"
+msgstr "Nichts tun"
+
 msgid "Document format (EPUB, PDF, etc.)"
 msgstr "Dokumentformat (EPUB, PDF, usw.)"
 
@@ -547,8 +550,8 @@ msgstr "Doppelpfeil rechts"
 msgid "Double dagger"
 msgstr "Doppeldolch"
 
-msgid "Double slash"
-msgstr "Doppelschrägstrich"
+msgid "Double fraction slash"
+msgstr "Doppelter Bruchschrägstrich"
 
 msgid "Download failed."
 msgstr "Download fehlgeschlagen."

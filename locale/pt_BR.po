@@ -509,6 +509,9 @@ msgstr "Dispensar"
 msgid "Division slash"
 msgstr "Barra de divisão"
 
+msgid "Do nothing"
+msgstr "Não fazer nada"
+
 msgid "Document format (EPUB, PDF, etc.)"
 msgstr "Formato do documento (EPUB, PDF, etc.)"
 
@@ -539,8 +542,8 @@ msgstr "Dupla seta direita"
 msgid "Double dagger"
 msgstr "Dupla adaga"
 
-msgid "Double slash"
-msgstr "Dupla barra"
+msgid "Double fraction slash"
+msgstr "Dupla barra de fração"
 
 msgid "Download failed."
 msgstr "Falha no download."

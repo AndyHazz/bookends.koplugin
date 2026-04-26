@@ -516,6 +516,9 @@ msgstr "Затваряне"
 msgid "Division slash"
 msgstr "Наклонена черта за деление"
 
+msgid "Do nothing"
+msgstr "Без действие"
+
 msgid "Document format (EPUB, PDF, etc.)"
 msgstr "Формат на документа (EPUB, PDF и др.)"
 
@@ -546,8 +549,8 @@ msgstr "Двойни стрелки надясно"
 msgid "Double dagger"
 msgstr "Двоен кинжал"
 
-msgid "Double slash"
-msgstr "Двойна наклонена черта"
+msgid "Double fraction slash"
+msgstr "Двойна дробна наклонена черта"
 
 msgid "Download failed."
 msgstr "Изтеглянето е неуспешно."

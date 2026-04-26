@@ -511,6 +511,9 @@ msgstr "Chiudi"
 msgid "Division slash"
 msgstr "Barra divisione"
 
+msgid "Do nothing"
+msgstr "Nessuna azione"
+
 msgid "Document format (EPUB, PDF, etc.)"
 msgstr "Formato documento (EPUB, PDF, ecc.)"
 
@@ -541,8 +544,8 @@ msgstr "Doppie frecce destra"
 msgid "Double dagger"
 msgstr "Doppia croce"
 
-msgid "Double slash"
-msgstr "Doppia barra"
+msgid "Double fraction slash"
+msgstr "Doppia barra frazionaria"
 
 msgid "Download failed."
 msgstr "Download fallito."

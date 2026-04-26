@@ -470,6 +470,9 @@ msgstr ""
 msgid "Division slash"
 msgstr ""
 
+msgid "Do nothing"
+msgstr ""
+
 msgid "Document format (EPUB, PDF, etc.)"
 msgstr ""
 
@@ -500,7 +503,7 @@ msgstr ""
 msgid "Double dagger"
 msgstr ""
 
-msgid "Double slash"
+msgid "Double fraction slash"
 msgstr ""
 
 msgid "Download failed."
