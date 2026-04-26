@@ -207,14 +207,22 @@ Comparison operators: `=` (equals), `!=` (not equals), `<` (less than), `>` (gre
 | `chap_read` | count | Pages read in current chapter (matches `%chap_read`) |
 | `chap_pages` | count | Total pages in current chapter (matches `%chap_pages`) |
 | `chap_pages_left` | count | Pages left in current chapter (matches `%chap_pages_left`) |
+| `chap_time_left` | minutes | Estimated time left in chapter (matches `%chap_time_left`) — needs statistics plugin |
+| `book_time_left` | minutes | Estimated time left in book (matches `%book_time_left`) — needs statistics plugin |
+| `book_read_time` | minutes | Total time spent reading this book (matches `%book_read_time`) — needs statistics plugin |
 | `page_num` | 1–N | Current page number (matches `%page_num`) |
 | `page_count` | count | Total page count (matches `%page_count`) |
 | `pages_left` | count | Pages left in book (matches `%pages_left`) |
+| `highlights` | count | Number of highlights in this book (matches `%highlights`) |
+| `notes` | count | Number of notes in this book (matches `%notes`) |
+| `bookmarks` | count | Number of bookmarks in this book (matches `%bookmarks`) |
 | `speed` | pages/hr | Reading speed |
 | `session` | minutes | Session reading time |
+| `session_time` | minutes | Alias for `session`, matching the `%session_time` token name |
 | `session_pages` | count | Session pages read |
 | `page` | odd / even | Current page parity |
 | `light` | on / off | Frontlight state |
+| `warmth` | 0–100 | Frontlight warmth (only on devices with natural light) |
 | `format` | EPUB / PDF / CBZ… | Document format |
 | `time` | HH:MM (24h) | Time of day |
 | `day` | Mon–Sun | Day of week |
@@ -222,6 +230,10 @@ Comparison operators: `=` (equals), `!=` (not equals), `<` (less than), `>` (gre
 | `title` | string | Book title (matches `%title`) — test with `[if:not title]` or `[if:title="A Book"]` |
 | `author` | string | Author (matches `%author`) |
 | `series` | string | Series, e.g. `"Foo #2"` (matches `%series`) — empty when not in a series |
+| `series_name` | string | Series name without index (matches `%series_name`) |
+| `series_num` | string | Series index, e.g. `"2"` (matches `%series_num`) |
+| `lang` | string | Document language code, e.g. `"en"` (matches `%lang`) |
+| `filename` | string | File name without extension (matches `%filename`) |
 | `chap_title` | string | Current chapter title (matches `%chap_title`) |
 | `chap_title_1` | string | Chapter title at depth 1 (matches `%chap_title_1`) |
 | `chap_title_2` | string | Chapter title at depth 2 (matches `%chap_title_2`) |

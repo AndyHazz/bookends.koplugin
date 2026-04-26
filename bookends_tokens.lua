@@ -481,6 +481,9 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
         state.batt = powerd:getCapacity() or 0
         state.charging = (powerd:isCharging() or powerd:isCharged()) and "yes" or "no"
         state.light = powerd:frontlightIntensity() > 0 and "on" or "off"
+        if Device:hasNaturalLight() and powerd.frontlightWarmth then
+            state.warmth = powerd:toNativeWarmth(powerd:frontlightWarmth())
+        end
     end
 
     -- Page-turn direction (any of: global key inversion flags, per-book reading order)
@@ -525,6 +528,10 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
             local left = page_count_val - state.page_num
             if Tokens.pages_left_includes_current then left = left + 1 end
             state.pages_left = math.max(0, left)
+            -- Time-left in book, in minutes (numeric so [if:book_time_left>30] works).
+            if ui.statistics and ui.statistics.avg_time and ui.statistics.avg_time > 0 then
+                state.book_time_left = math.floor(state.pages_left * ui.statistics.avg_time / 60)
+            end
         end
 
         -- Chapter percent + chapter page counts (read / total / left)
@@ -554,6 +561,14 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
             if left then
                 state.chap_pages_left = math.max(0, left + pages_left_offset)
             end
+            -- Time-left in chapter, in minutes (for [if:chap_time_left>15]
+            -- and bareword "is data available?" tests). Uses statistics
+            -- avg_time directly to keep this a pure numeric, vs the token
+            -- form which renders a formatted duration string.
+            if state.chap_pages_left and ui.statistics and ui.statistics.avg_time
+                and ui.statistics.avg_time > 0 then
+                state.chap_time_left = math.floor(state.chap_pages_left * ui.statistics.avg_time / 60)
+            end
         end
 
         -- Chapter number / total count — match %chap_num / %chap_count tokens.
@@ -568,10 +583,12 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
         state.page = (pageno % 2 == 1) and "odd" or "even"
     end
 
-    -- Document format
+    -- Document format and filename (extension stripped, matches %filename token)
     local doc = ui.document
     if doc and doc.file then
         state.format = (doc.file:match("%.([^.]+)$") or ""):upper()
+        local name = doc.file:match("([^/]+)$") or ""
+        state.filename = (name:gsub("%.[^.]+$", ""))
     end
 
     -- Book metadata (mirrors %T / %A / %S derivation in Tokens.expand)
@@ -589,12 +606,16 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
         state.author_4 = authors_list[4] or ""
         state.author_5 = authors_list[5] or ""
         state.authors  = #authors_list
-        local series = doc_props.series        or props.series  or ""
+        local series_name = doc_props.series        or props.series  or ""
         local series_index = doc_props.series_index or props.series_index
+        state.series_name = series_name
+        state.series_num  = series_index and tostring(series_index) or ""
+        local series = series_name
         if series ~= "" and series_index then
             series = series .. " #" .. series_index
         end
         state.series = series
+        state.lang = doc_props.language or props.language or ""
     end
 
     -- Chapter titles (reuses the helper already called for state.chap_num/chap_count)
@@ -616,6 +637,7 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
 
     -- Session
     state.session = session_elapsed and math.floor(session_elapsed / 60) or 0
+    state.session_time = state.session  -- alias matching the %session_time token name
     state.session_pages = math.max(0, session_pages_read or 0)
 
     -- Reading speed (pages/hr)
@@ -628,6 +650,23 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
         end
     end
     state.speed = state.speed or 0
+
+    -- Total book reading time (minutes), from statistics plugin
+    if ui.statistics and ui.statistics.book_read_time and ui.statistics.book_read_time > 0 then
+        state.book_read_time = math.floor(ui.statistics.book_read_time / 60)
+    end
+
+    -- Annotation counts
+    if ui.annotation then
+        local h, n = ui.annotation:getNumberOfHighlightsAndNotes()
+        state.highlights = h or 0
+        state.notes = n or 0
+        local bm = 0
+        for _, item in ipairs(ui.annotation.annotations or {}) do
+            if not item.drawer then bm = bm + 1 end
+        end
+        state.bookmarks = bm
+    end
 
     if paint_ctx then
         paint_ctx._condition_state = state
