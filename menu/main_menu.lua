@@ -297,6 +297,14 @@ function Bookends:buildBookendsSettingsMenu()
                 end
                 return {
                     {
+                        text = _("Do nothing"),
+                        checked_func = function()
+                            return not self.settings:readSetting("bottom_center_tap_action")
+                        end,
+                        callback = function() setTapAction(nil) end,
+                        radio = true,
+                    },
+                    {
                         text = _("Toggle bookends"),
                         checked_func = function()
                             return self.settings:readSetting("bottom_center_tap_action") == "toggle"
