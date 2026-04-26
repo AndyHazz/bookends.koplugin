@@ -11,17 +11,9 @@ Customisable text overlays for KOReader — page numbers, reading stats, progres
 
 ### Screenshots
 
-| Title page | Main menu | Token picker |
+| Main menu | Line editor | Preset gallery |
 |:---:|:---:|:---:|
-| ![Title page](screenshots/title-page.png) | ![Main menu](screenshots/main-menu.png) | ![Token picker](screenshots/token-picker.png) |
-
-| Symbol picker | Adjust margins |
-|:---:|:---:|
-| ![Symbol picker](screenshots/icon-picker.png) | ![Adjust margins](screenshots/adjust-margins.png) |
-
-| Line editor | Progress bar styles |
-|:---:|:---:|
-| ![Line editor](screenshots/line-editor.png) | ![Progress bar styles](screenshots/progress-bars-styles.png) |
+| ![Main menu](screenshots/main-menu.png) | ![Line editor](screenshots/line-editor.png) | ![Preset gallery](screenshots/preset-gallery.png) |
 
 ### Quick start
 
