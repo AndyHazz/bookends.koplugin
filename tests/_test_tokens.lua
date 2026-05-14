@@ -679,10 +679,18 @@ end)
 test("avg_page_time: renders formatted duration", function()
     local prev = package.loaded["datetime"].secondsToClockDuration
     package.loaded["datetime"].secondsToClockDuration = function(_f, s, _h) return "AVG:" .. tostring(s) end
-    local ui = stubUiWithStats({ avg_time = 45.3 })
+    -- Use a value ≥ 60 so the code path calls secondsToClockDuration
+    -- (sub-minute averages take a fast path: math.floor(n) .. "s").
+    local ui = stubUiWithStats({ avg_time = 90.3 })
     local r = Tokens.expand("%avg_page_time", ui, 0, 0, false, 2, nil)
-    eq(r, "AVG:45.3")
+    eq(r, "AVG:90.3")
     package.loaded["datetime"].secondsToClockDuration = prev
+end)
+
+test("avg_page_time: sub-minute rounds to integer with s suffix", function()
+    local ui = stubUiWithStats({ avg_time = 45.7 })
+    local r = Tokens.expand("%avg_page_time", ui, 0, 0, false, 2, nil)
+    eq(r, "45s")
 end)
 
 test("avg_page_time: state value is integer seconds", function()
@@ -722,6 +730,67 @@ test("book_pct_read: clamps to 100 when read pages exceed total", function()
     local ui = stubUiWithStats({ book_read_pages = 250, page_count = 200 })
     local s = Tokens.buildConditionState(ui, 0, 0)
     eq(s.book_pct_read, 100)
+end)
+
+-- ============================================================================
+-- book_pct decimal places: %book_pct{N} and %book_pct_left{N}
+-- ============================================================================
+
+test("book_pct: default (no brace) renders integer with % suffix", function()
+    local ui = stubUi(5, 100)
+    local r = Tokens.expand("%book_pct", ui, 0, 0, false, 2, nil)
+    eq(r, "5%")
+end)
+
+test("book_pct: {0} rounds to integer (same as default)", function()
+    local ui = stubUi(5, 100)
+    local r = Tokens.expand("%book_pct{0}", ui, 0, 0, false, 2, nil)
+    eq(r, "5%")
+end)
+
+test("book_pct: {1} shows 1 decimal place (trailing zeros stripped)", function()
+    local ui = stubUi(5, 100)
+    local r = Tokens.expand("%book_pct{1}", ui, 0, 0, false, 2, nil)
+    eq(r, "5%")
+end)
+
+test("book_pct: {2} shows 2 decimal places (trailing zeros stripped)", function()
+    local ui = stubUi(5, 100)
+    local r = Tokens.expand("%book_pct{2}", ui, 0, 0, false, 2, nil)
+    eq(r, "5%")
+end)
+
+test("book_pct: {4} shows 4 decimal places (trailing zeros stripped)", function()
+    local ui = stubUi(5, 100)
+    local r = Tokens.expand("%book_pct{4}", ui, 0, 0, false, 2, nil)
+    eq(r, "5%")
+end)
+
+test("book_pct: {1} renders non-round value correctly", function()
+    -- 33 of 200 → 33/200*100 = 16.5
+    local ui = stubUi(33, 200)
+    local r = Tokens.expand("%book_pct{1}", ui, 0, 0, false, 2, nil)
+    eq(r, "16.5%")
+end)
+
+test("book_pct_left: {2} derived from the same raw fraction as book_pct", function()
+    -- 33 of 200 → 16.5% read → 83.5% left
+    local ui = stubUi(33, 200)
+    local r = Tokens.expand("%book_pct_left{2}", ui, 0, 0, false, 2, nil)
+    eq(r, "83.5%")
+end)
+
+test("book_pct: invalid brace value falls back to 0 decimals", function()
+    -- {x}, {3} (not in {0,1,2,4}) should be ignored → integer default
+    local ui = stubUi(5, 100)
+    local r = Tokens.expand("%book_pct{x}", ui, 0, 0, false, 2, nil)
+    eq(r, "5%")
+end)
+
+test("book_pct: {3} not in allowed set, falls back to 0 decimals", function()
+    local ui = stubUi(5, 100)
+    local r = Tokens.expand("%book_pct{3}", ui, 0, 0, false, 2, nil)
+    eq(r, "5%")
 end)
 
 test("days_reading_book: 14 days from cached first-open ts", function()
