@@ -1529,6 +1529,45 @@ test("getChapterTitlesByDepth: chapter_title_num empty / _name = raw when not st
        "name falls back to raw title so layouts using only _name still work")
 end)
 
+test("getChapterTitlesByDepth: deeper middle section doesn't pin deepest forever", function()
+    -- Issue #50: a few chapters in the middle are nested one level deeper than
+    -- those before/after. Once the reader passes the last deep entry, the
+    -- deepest-title resolver must drop back to the shallower current ancestor
+    -- rather than keep showing the last deep title for the rest of the book.
+    local toc = {
+        { title = "Teil I",                   depth = 1, page = 1   },
+        { title = "Teil II",                  depth = 1, page = 50  },
+        { title = "- 103 - Nachspiel",        depth = 2, page = 80  },
+        { title = "Teil III",                 depth = 1, page = 120 },
+        { title = "Die Verlorenen",           depth = 2, page = 125 },
+    }
+    local stub_ui = {
+        toc = {
+            toc = toc,
+            getTocTitleByPage = function(_, _) return "" end,
+        },
+    }
+
+    -- Mid-Nachspiel: deepest is the depth-2 entry.
+    local mid = Tokens.getChapterTitlesByDepth(stub_ui, 100)
+    eq(mid.chapter_title, "- 103 - Nachspiel", "deepest while inside Nachspiel")
+    eq(mid.chapter_titles_by_depth[2], "- 103 - Nachspiel")
+
+    -- After Teil III opens but before Die Verlorenen: depth-2 must clear.
+    local after_part = Tokens.getChapterTitlesByDepth(stub_ui, 122)
+    eq(after_part.chapter_title, "Teil III",
+       "deepest should drop back to Teil III, not stay pinned on Nachspiel")
+    eq(after_part.chapter_titles_by_depth[1], "Teil III")
+    eq(after_part.chapter_titles_by_depth[2], nil,
+       "stale depth-2 title from previous section must be cleared")
+
+    -- Once Die Verlorenen opens at depth 2: depth-2 is the current sub-chapter.
+    local in_verlorenen = Tokens.getChapterTitlesByDepth(stub_ui, 200)
+    eq(in_verlorenen.chapter_title, "Die Verlorenen")
+    eq(in_verlorenen.chapter_titles_by_depth[1], "Teil III")
+    eq(in_verlorenen.chapter_titles_by_depth[2], "Die Verlorenen")
+end)
+
 test("getChapterTitlesByDepth: chapter_title_num/_name empty when no chapter title", function()
     local stub_ui = {
         toc = {

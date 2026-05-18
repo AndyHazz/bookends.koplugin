@@ -601,24 +601,36 @@ function Tokens.getChapterTitlesByDepth(ui, pageno)
 
     out.chapter_count = #full_toc
     local idx = 0
-    local deepest_depth = 0
-    local deepest_title = ""
+    local max_depth_seen = 0
     for i, entry in ipairs(full_toc) do
         if entry.page and entry.page <= pageno then
             idx = i
             if entry.depth then
-                local raw = entry.title or ""
-                out.chapter_titles_by_depth[entry.depth] = raw
-                if entry.depth >= deepest_depth then
-                    deepest_depth = entry.depth
-                    deepest_title = raw
+                local d = entry.depth
+                -- A depth-d entry implicitly closes any siblings/descendants
+                -- at depth >= d, so clear them before pushing this one.
+                for dd = d, max_depth_seen do
+                    out.chapter_titles_by_depth[dd] = nil
                 end
+                out.chapter_titles_by_depth[d] = entry.title or ""
+                if d > max_depth_seen then max_depth_seen = d end
             end
         else
             break
         end
     end
     if idx > 0 then out.chapter_num = idx end
+
+    local deepest_depth = 0
+    local deepest_title = ""
+    for d = max_depth_seen, 1, -1 do
+        local t = out.chapter_titles_by_depth[d]
+        if t and t ~= "" then
+            deepest_depth = d
+            deepest_title = t
+            break
+        end
+    end
 
     if deepest_title and deepest_title ~= "" then
         out.chapter_title = deepest_title
