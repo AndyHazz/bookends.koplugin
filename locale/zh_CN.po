@@ -1,0 +1,2366 @@
+# Bookends — KOReader Plugin
+# Simplified Chinese translation
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-13 00:14+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.9\n"
+
+#: bookends_updater.lua:105
+msgid "Open the releases page in a browser?"
+msgstr "是否在浏览器中打开发布页面？"
+
+#: bookends_updater.lua:106
+msgid "Open"
+msgstr "打开"
+
+#: bookends_updater.lua:189
+msgid "Checking for updates..."
+msgstr "正在检查更新…"
+
+#: bookends_updater.lua:201
+msgid "Could not check for updates."
+msgstr "无法检查更新。"
+
+#: bookends_updater.lua:238
+msgid "Bookends is up to date."
+msgstr "插件已是最新版本。"
+
+#: bookends_updater.lua:239
+msgid "Version: "
+msgstr "版本："
+
+#: bookends_updater.lua:267 bookends_line_editor.lua:451 main.lua:2654
+#: menu/tokens_library.lua:458 menu/icons_library.lua:355
+#: menu/preset_manager_modal.lua:561
+msgid "Close"
+msgstr "关闭"
+
+#: bookends_updater.lua:273
+msgid "Update and restart"
+msgstr "更新并重启"
+
+#: bookends_updater.lua:278
+msgid "No download available for this release."
+msgstr "此版本暂无下载。"
+
+#: bookends_updater.lua:289
+msgid "Update available!"
+msgstr "有可用更新！"
+
+#: bookends_updater.lua:290
+msgid "Installed: "
+msgstr "已安装："
+
+#: bookends_updater.lua:291
+msgid "Latest: "
+msgstr "最新："
+
+#: bookends_updater.lua:316
+msgid "Downloading update..."
+msgstr "正在下载更新…"
+
+#: bookends_updater.lua:378
+msgid "Download failed."
+msgstr "下载失败。"
+
+#: bookends_updater.lua:390
+msgid "Installation failed: "
+msgstr "安装失败："
+
+#: bookends_updater.lua:407
+msgid "Bookends updated to v"
+msgstr "插件已更新至 v"
+
+#: bookends_updater.lua:408
+msgid "Restart KOReader now?"
+msgstr "是否立即重启 KOReader？"
+
+#: bookends_updater.lua:409 main.lua:59
+msgid "Restart"
+msgstr "重启"
+
+#: bookends_updater.lua:425
+msgid "Could not install branch:"
+msgstr "无法安装分支："
+
+#: bookends_updater.lua:444
+msgid "Downloading latest release..."
+msgstr "正在下载最新版本…"
+
+#: bookends_updater.lua:455
+msgid "Could not fetch latest release."
+msgstr "无法获取最新版本。"
+
+#: bookends_updater.lua:468
+msgid "Latest release has no downloadable zip."
+msgstr "最新版本无可下载的压缩包。"
+
+#: bookends_line_editor.lua:112 main.lua:1000
+msgid "Regular"
+msgstr "常规"
+
+#: bookends_line_editor.lua:118
+msgid "Size"
+msgstr "大小"
+
+#: bookends_line_editor.lua:125
+msgid "Font"
+msgstr "字体"
+
+#: bookends_line_editor.lua:127
+msgid "Font..."
+msgstr "字体…"
+
+#: bookends_line_editor.lua:139
+msgid "Odd pg"
+msgstr "奇数页"
+
+#: bookends_line_editor.lua:140
+msgid "Even pg"
+msgstr "偶数页"
+
+#: bookends_line_editor.lua:141
+msgid "All pg"
+msgstr "所有页"
+
+#: bookends_line_editor.lua:177
+msgid "- Progress bar"
+msgstr "- 进度条"
+
+#: bookends_line_editor.lua:177
+msgid "+ Progress bar"
+msgstr "+ 进度条"
+
+#: bookends_line_editor.lua:182
+msgid "Bar style…"
+msgstr "进度条样式…"
+
+#: bookends_line_editor.lua:213 bookends_line_editor.lua:367
+#: menu/progress_bar_menu.lua:141
+msgid "Bordered"
+msgstr "边框"
+
+#: bookends_line_editor.lua:213 menu/progress_bar_menu.lua:141
+#: menu/progress_bar_menu.lua:142
+msgid "Solid"
+msgstr "实心"
+
+#: bookends_line_editor.lua:213 menu/progress_bar_menu.lua:141
+msgid "Rounded"
+msgstr "圆角"
+
+#: bookends_line_editor.lua:214 menu/progress_bar_menu.lua:141
+msgid "Metro"
+msgstr "现代"
+
+#: bookends_line_editor.lua:214 menu/progress_bar_menu.lua:141
+msgid "Wave"
+msgstr "波浪"
+
+#: bookends_line_editor.lua:214 menu/progress_bar_menu.lua:141
+msgid "Radial"
+msgstr "环形"
+
+#: bookends_line_editor.lua:215 menu/progress_bar_menu.lua:141
+msgid "Radial hollow"
+msgstr "空心环形"
+
+#: bookends_line_editor.lua:215 menu/progress_bar_menu.lua:141
+msgid "Pacman"
+msgstr "极简"
+
+#: bookends_line_editor.lua:219 menu/progress_bar_menu.lua:122
+msgid "Chapter ticks: off"
+msgstr "章节刻度：关闭"
+
+#: bookends_line_editor.lua:220 menu/progress_bar_menu.lua:124
+msgid "Chapter ticks: top level"
+msgstr "章节刻度：顶层"
+
+#: bookends_line_editor.lua:221 menu/progress_bar_menu.lua:125
+msgid "Chapter ticks: top 2 levels"
+msgstr "章节刻度：前两级"
+
+#: bookends_line_editor.lua:222 menu/progress_bar_menu.lua:123
+msgid "Chapter ticks: all levels"
+msgstr "章节刻度：所有层级"
+
+#: bookends_line_editor.lua:252
+msgid "Disable custom colours"
+msgstr "禁用自定义颜色"
+
+#: bookends_line_editor.lua:252
+msgid "Enable custom colours"
+msgstr "启用自定义颜色"
+
+#: bookends_line_editor.lua:306
+msgid "Back"
+msgstr "返回"
+
+#: bookends_line_editor.lua:313
+msgid "Bar colours"
+msgstr "进度条颜色"
+
+#: bookends_line_editor.lua:343 menu/progress_bar_menu.lua:109
+msgid "Type"
+msgstr "类型"
+
+#: bookends_line_editor.lua:343 menu/tokens_catalogue.lua:21
+#: menu/progress_bar_menu.lua:109
+msgid "Book"
+msgstr "书籍"
+
+#: bookends_line_editor.lua:343 menu/progress_bar_menu.lua:109
+msgid "Chapter"
+msgstr "章节"
+
+#: bookends_line_editor.lua:367 menu/progress_bar_menu.lua:142
+msgid "Style"
+msgstr "样式"
+
+#: bookends_line_editor.lua:379 menu/progress_bar_menu.lua:186
+msgid "Fill: right to left"
+msgstr "填充方向：从右到左"
+
+#: bookends_line_editor.lua:379 menu/progress_bar_menu.lua:185
+msgid "Fill: left to right"
+msgstr "填充方向：从左到右"
+
+#: bookends_line_editor.lua:395 bookends_line_editor.lua:397
+#: bookends_line_editor.lua:399 menu/progress_bar_menu.lua:224
+msgid "Thickness"
+msgstr "粗细"
+
+#: bookends_line_editor.lua:395 bookends_line_editor.lua:432
+msgid "auto"
+msgstr "自动"
+
+#: bookends_line_editor.lua:407 menu/progress_bar_menu.lua:236
+msgid "Bar thickness"
+msgstr "进度条粗细"
+
+#: bookends_line_editor.lua:409 menu/progress_bar_menu.lua:241
+msgid "Read"
+msgstr "已读"
+
+#: bookends_line_editor.lua:410 menu/progress_bar_menu.lua:242
+msgid "Unread"
+msgstr "未读"
+
+#: bookends_line_editor.lua:432 bookends_colour_palette.lua:402 main.lua:2127
+#: main.lua:2359 bookends_dialog_helpers.lua:109 menu/colours_menu.lua:73
+#: menu/colours_menu.lua:269 menu/progress_bar_menu.lua:268
+#: menu/progress_bar_menu.lua:425
+msgid "Default"
+msgstr "默认"
+
+#: bookends_line_editor.lua:440
+msgid "Custom colours"
+msgstr "自定义颜色"
+
+#: bookends_line_editor.lua:456
+msgid "Bar style"
+msgstr "进度条样式"
+
+#: bookends_line_editor.lua:477
+msgid "Font size"
+msgstr "字号"
+
+#: bookends_line_editor.lua:477
+msgid "line"
+msgstr "行"
+
+#: bookends_line_editor.lua:540
+msgid "Position"
+msgstr "位置"
+
+#: bookends_line_editor.lua:582 bookends_line_editor.lua:848
+#: bookends_colour_palette.lua:400 main.lua:2117 main.lua:2816
+#: bookends_dialog_helpers.lua:101 menu/main_menu.lua:32 menu/main_menu.lua:72
+#: menu/progress_bar_menu.lua:62 menu/preset_manager_modal.lua:1131
+#: menu/preset_manager_modal.lua:1252 menu/preset_manager_modal.lua:1293
+#: menu/preset_manager_modal.lua:1394 menu/preset_manager_modal.lua:1438
+#: menu/preset_manager_modal.lua:1540 menu/preset_manager_modal.lua:1612
+#: menu/preset_manager_modal.lua:1707 menu/preset_manager_modal.lua:1731
+#: menu/preset_manager_modal.lua:1755
+msgid "Cancel"
+msgstr "取消"
+
+#: bookends_line_editor.lua:597
+msgid "Icons"
+msgstr "图标"
+
+#: bookends_line_editor.lua:606
+msgid "Tokens"
+msgstr "标记"
+
+#: bookends_line_editor.lua:616 main.lua:2818 menu/main_menu.lua:34
+#: menu/preset_manager_modal.lua:1135 menu/preset_manager_modal.lua:1294
+#: menu/preset_manager_modal.lua:1395
+msgid "Save"
+msgstr "保存"
+
+#: bookends_line_editor.lua:657 menu/position_menu.lua:44
+msgid "Line"
+msgstr "行"
+
+#: bookends_line_editor.lua:768 menu/progress_bar_menu.lua:44
+msgid "Move up"
+msgstr "上移"
+
+#: bookends_line_editor.lua:778 menu/progress_bar_menu.lua:53
+msgid "Move down"
+msgstr "下移"
+
+#: bookends_line_editor.lua:832
+msgid "Move to"
+msgstr "移动到"
+
+#: bookends_line_editor.lua:842
+msgid "Line %1: %2"
+msgstr "行 %1：%2"
+
+#: bookends_line_editor.lua:844 menu/preset_manager_modal.lua:1237
+#: menu/preset_manager_modal.lua:1631
+msgid "Delete"
+msgstr "删除"
+
+#: bookends_utils.lua:8 bookends_utils.lua:197
+msgid "UI font"
+msgstr "界面字体"
+
+#: bookends_utils.lua:9
+msgid "Serif"
+msgstr "衬线体"
+
+#: bookends_utils.lua:10
+msgid "Sans-serif"
+msgstr "无衬线体"
+
+#: bookends_utils.lua:11
+msgid "Monospace"
+msgstr "等宽字体"
+
+#: bookends_utils.lua:12
+msgid "Cursive"
+msgstr "手写体"
+
+#: bookends_utils.lua:13
+msgid "Fantasy"
+msgstr "艺术体"
+
+#: _meta.lua:7 menu/main_menu.lua:12
+msgid "Bookends"
+msgstr "阅读信息栏"
+
+#: _meta.lua:8
+msgid ""
+"Configurable text overlays at screen corners and edges with token expansion "
+"and icon support."
+msgstr ""
+"可以在屏幕四周显示自定义文字，并自动读取系统信息，除了文字，还支持图标。"
+
+#: bookends_colour_palette.lua:404 main.lua:2156
+#: bookends_dialog_helpers.lua:116 menu/preset_manager_modal.lua:587
+msgid "Apply"
+msgstr "应用"
+
+#: bookends_colour_palette.lua:406 menu/colours_menu.lua:257
+msgid "White"
+msgstr "白色"
+
+#: bookends_colour_palette.lua:441 bookends_colour_palette.lua:561
+msgid "Pick a color"
+msgstr "选择颜色"
+
+#: bookends_colour_palette.lua:529
+msgid "Invalid hex colour (use #RGB or #RRGGBB)"
+msgstr "无效的十六进制颜色（请使用 #RGB 或 #RRGGBB）"
+
+#: main.lua:60
+msgid "Dismiss"
+msgstr "忽略"
+
+#: main.lua:145
+msgid "Top-left"
+msgstr "左上"
+
+#: main.lua:146
+msgid "Top-center"
+msgstr "顶部居中"
+
+#: main.lua:147
+msgid "Top-right"
+msgstr "右上"
+
+#: main.lua:148
+msgid "Bottom-left"
+msgstr "左下"
+
+#: main.lua:149
+msgid "Bottom-center"
+msgstr "底部居中"
+
+#: main.lua:150
+msgid "Bottom-right"
+msgstr "右下"
+
+#: main.lua:252
+msgid "Bookends: toggle visibility"
+msgstr "阅读信息栏：切换显示状态"
+
+#: main.lua:258
+msgid "Bookends: cycle preset"
+msgstr "阅读信息栏：切换预设"
+
+#: main.lua:264
+msgid "Bookends: set visibility"
+msgstr "阅读信息栏：设置显示状态"
+
+#: main.lua:267
+msgid "on"
+msgstr "开启"
+
+#: main.lua:267 menu/colours_menu.lua:302 menu/colours_menu.lua:309
+#: menu/colours_menu.lua:349
+msgid "off"
+msgstr "关闭"
+
+#: main.lua:272
+msgid "Bookends: open preset library"
+msgstr "阅读信息栏：打开预设库"
+
+#: main.lua:361 main.lua:399 menu/preset_manager_modal.lua:1501
+msgid "My setup"
+msgstr "我的设置"
+
+#: main.lua:362 main.lua:400 menu/preset_manager_modal.lua:1505
+msgid "Imported from your earlier Bookends settings"
+msgstr "从之前的插件设置导入"
+
+#: main.lua:542
+msgid "Preset error: %1"
+msgstr "预设错误：%1"
+
+#: main.lua:551
+msgid "Preset: %1"
+msgstr "预设：%1"
+
+#: main.lua:1001
+msgid "Bold"
+msgstr "粗体"
+
+#: main.lua:1002
+msgid "Italic"
+msgstr "斜体"
+
+#: main.lua:1003
+msgid "Bold italic"
+msgstr "粗斜体"
+
+#: main.lua:2375
+msgid "Select font"
+msgstr "选择字体"
+
+#: main.lua:2416
+msgid "Font-family fonts"
+msgstr "字体族"
+
+#: main.lua:2481
+msgid "Fonts"
+msgstr "字体"
+
+#: main.lua:2575 menu/library_modal.lua:932
+msgid "Page %1 of %2"
+msgstr "第 %1 / %2 页"
+
+#: main.lua:2664 main.lua:2838
+msgid "Reset"
+msgstr "重置"
+
+#: main.lua:2673
+msgid "Set font"
+msgstr "设置字体"
+
+#: main.lua:2812 menu/main_menu.lua:416 menu/main_menu.lua:418
+msgid "Development branch"
+msgstr "开发分支"
+
+#: main.lua:2814
+msgid "Branch name (leave empty for stable)"
+msgstr "分支名称（留空则使用稳定版）"
+
+#: main.lua:2837
+msgid ""
+"This will clear the development branch setting and install the latest stable "
+"release of Bookends, then restart KOReader. Continue?"
+msgstr ""
+"此操作将清除开发分支设置，并安装最新的稳定版，然后将重启阅读器，是否继续？"
+
+#: main.lua:2856
+msgid "Bookends update available: v"
+msgstr "插件有可用更新：v"
+
+#: main.lua:2864 menu/main_menu.lua:522 menu/progress_bar_menu.lua:275
+#: menu/progress_bar_menu.lua:409
+msgid "Adjust margins"
+msgstr "调整边距"
+
+#: main.lua:2866 menu/progress_bar_menu.lua:156 menu/progress_bar_menu.lua:412
+msgid "Top"
+msgstr "上"
+
+#: main.lua:2867 menu/progress_bar_menu.lua:156 menu/progress_bar_menu.lua:413
+msgid "Bottom"
+msgstr "下"
+
+#: main.lua:2868 menu/progress_bar_menu.lua:156 menu/progress_bar_menu.lua:412
+msgid "Left"
+msgstr "左"
+
+#: main.lua:2869 menu/progress_bar_menu.lua:156 menu/progress_bar_menu.lua:413
+msgid "Right"
+msgstr "右"
+
+#: menu/position_menu.lua:16
+msgid "Enabled"
+msgstr "已启用"
+
+#: menu/position_menu.lua:58
+msgid "Add line"
+msgstr "添加行"
+
+#: menu/position_menu.lua:58
+msgid "long press lines to manage"
+msgstr "长按行可进行管理"
+
+#: menu/position_menu.lua:71
+msgid "Extra top margin"
+msgstr "额外上边距"
+
+#: menu/position_menu.lua:71
+msgid "Extra bottom margin"
+msgstr "额外下边距"
+
+#: menu/position_menu.lua:94
+msgid "Extra left margin"
+msgstr "额外左边距"
+
+#: menu/position_menu.lua:94
+msgid "Extra right margin"
+msgstr "额外右边距"
+
+#: menu/tokens_catalogue.lua:20 menu/icons_catalogue.lua:24
+msgid "All"
+msgstr "全部"
+
+#: menu/tokens_catalogue.lua:22
+msgid "Progress"
+msgstr "进度"
+
+#: menu/tokens_catalogue.lua:23 menu/icons_catalogue.lua:28
+msgid "Time"
+msgstr "时间"
+
+#: menu/tokens_catalogue.lua:24
+msgid "Session"
+msgstr "会话"
+
+#: menu/tokens_catalogue.lua:25 menu/icons_catalogue.lua:26
+msgid "Device"
+msgstr "设备"
+
+#: menu/tokens_catalogue.lua:26
+msgid "If/else"
+msgstr "如果/否则"
+
+#: menu/tokens_catalogue.lua:27
+msgid "Templates"
+msgstr "模板"
+
+#: menu/tokens_catalogue.lua:31
+msgid "Document title"
+msgstr "文档标题"
+
+#: menu/tokens_catalogue.lua:32
+msgid "First author"
+msgstr "第一作者"
+
+#: menu/tokens_catalogue.lua:33
+msgid "All authors"
+msgstr "所有作者"
+
+#: menu/tokens_catalogue.lua:34
+msgid "Second author (empty if none)"
+msgstr "第二作者（无则为空）"
+
+#: menu/tokens_catalogue.lua:35
+msgid "Series with index (combined)"
+msgstr "系列及序号（合并）"
+
+#: menu/tokens_catalogue.lua:36
+msgid "Series name only"
+msgstr "仅系列名"
+
+#: menu/tokens_catalogue.lua:37
+msgid "Series number only"
+msgstr "仅系列序号"
+
+#: menu/tokens_catalogue.lua:38
+msgid "Chapter title (deepest)"
+msgstr "章节标题（最深级）"
+
+#: menu/tokens_catalogue.lua:39
+msgid "Chapter title at depth 1"
+msgstr "章节标题（第 1 级）"
+
+#: menu/tokens_catalogue.lua:40
+msgid "Chapter title at depth 2"
+msgstr "章节标题（第 2 级）"
+
+#: menu/tokens_catalogue.lua:41
+msgid "Chapter title at depth 3"
+msgstr "章节标题（第 3 级）"
+
+#: menu/tokens_catalogue.lua:42
+msgid "Chapter title without leading number (when detected)"
+msgstr "章节标题（去除前导数字）"
+
+#: menu/tokens_catalogue.lua:43
+msgid "Number from chapter title (when detected)"
+msgstr "章节标题中的数字"
+
+#: menu/tokens_catalogue.lua:44 menu/tokens_catalogue.lua:137
+msgid "Current chapter number"
+msgstr "当前章节编号"
+
+#: menu/tokens_catalogue.lua:45
+msgid "Chapter count"
+msgstr "章节总数"
+
+#: menu/tokens_catalogue.lua:46
+msgid "File name"
+msgstr "文件名"
+
+#: menu/tokens_catalogue.lua:47
+msgid "Book language"
+msgstr "书籍语言"
+
+#: menu/tokens_catalogue.lua:48
+msgid "Document format (EPUB, PDF, etc.)"
+msgstr "文档格式（EPUB、PDF等）"
+
+#: menu/tokens_catalogue.lua:49
+msgid "Highlights count"
+msgstr "高亮数量"
+
+#: menu/tokens_catalogue.lua:50
+msgid "Notes count"
+msgstr "笔记数量"
+
+#: menu/tokens_catalogue.lua:51
+msgid "Bookmarks count"
+msgstr "书签数量"
+
+#: menu/tokens_catalogue.lua:52
+msgid "Annotations count (bookmarks + highlights + notes)"
+msgstr "标注数量（书签、高亮及笔记）"
+
+#: menu/tokens_catalogue.lua:53
+msgid "Current page number"
+msgstr "当前页码"
+
+#: menu/tokens_catalogue.lua:54
+msgid "Total pages"
+msgstr "总页数"
+
+#: menu/tokens_catalogue.lua:55
+msgid "Book percentage read"
+msgstr "已读百分比"
+
+#: menu/tokens_catalogue.lua:56
+msgid "Book % with 1 decimal (e.g. 45.3%)"
+msgstr "已读百分比（1位小数）"
+
+#: menu/tokens_catalogue.lua:57
+msgid "Book % with 2 decimal places"
+msgstr "已读百分比（2位小数）"
+
+#: menu/tokens_catalogue.lua:58
+msgid "Book % with 3 decimal places"
+msgstr "已读百分比（3位小数）"
+
+#: menu/tokens_catalogue.lua:59
+msgid "Book % with 4 decimal places"
+msgstr "已读百分比（4位小数）"
+
+#: menu/tokens_catalogue.lua:60
+msgid "Book percentage left"
+msgstr "剩余百分比"
+
+#: menu/tokens_catalogue.lua:61
+msgid "Book % left with 1 decimal"
+msgstr "剩余百分比（1位小数）"
+
+#: menu/tokens_catalogue.lua:62
+msgid "Book % left with 2 decimals"
+msgstr "剩余百分比（2位小数）"
+
+#: menu/tokens_catalogue.lua:63
+msgid "Book % left with 3 decimals"
+msgstr "剩余百分比（3位小数）"
+
+#: menu/tokens_catalogue.lua:64
+msgid "Book % left with 4 decimals"
+msgstr "剩余百分比（4位小数）"
+
+#: menu/tokens_catalogue.lua:65
+msgid "Chapter percentage read"
+msgstr "章节已读百分比"
+
+#: menu/tokens_catalogue.lua:66
+msgid "Chapter percentage left"
+msgstr "章节未读百分比"
+
+#: menu/tokens_catalogue.lua:67
+msgid "Pages read in chapter"
+msgstr "章节已读页数"
+
+#: menu/tokens_catalogue.lua:68
+msgid "Total pages in chapter"
+msgstr "章节总页数"
+
+#: menu/tokens_catalogue.lua:69
+msgid "Pages left in chapter"
+msgstr "章节未读页数"
+
+#: menu/tokens_catalogue.lua:70
+msgid "Pages left in book"
+msgstr "书籍未读页数"
+
+#: menu/tokens_catalogue.lua:71
+msgid "Progress bar (configure type in line editor)"
+msgstr "进度条（在行编辑器中配置类型）"
+
+#: menu/tokens_catalogue.lua:72
+msgid "Fixed-width progress bar (100px)"
+msgstr "固定宽度进度条（100px）"
+
+#: menu/tokens_catalogue.lua:73
+msgid "Progress bar, 10px tall"
+msgstr "进度条（高10px）"
+
+#: menu/tokens_catalogue.lua:74
+msgid "Progress bar, 200px wide and 4px tall"
+msgstr "进度条（宽200px且高4px）"
+
+#: menu/tokens_catalogue.lua:75
+msgid "Current time (24h, same as %time_24h)"
+msgstr "当前时间（24小时制，同 %time_24h）"
+
+#: menu/tokens_catalogue.lua:76
+msgid "12-hour clock"
+msgstr "12小时制"
+
+#: menu/tokens_catalogue.lua:77
+msgid "24-hour clock"
+msgstr "24小时制"
+
+#: menu/tokens_catalogue.lua:78
+msgid "Date short (28 Mar)"
+msgstr "短日期（3月28日）"
+
+#: menu/tokens_catalogue.lua:79
+msgid "Date long (28 March 2026)"
+msgstr "长日期（2026年3月28日）"
+
+#: menu/tokens_catalogue.lua:80
+msgid "Date numeric (28/03/2026)"
+msgstr "数字日期（28/03/2026）"
+
+#: menu/tokens_catalogue.lua:81
+msgid "Weekday (Friday)"
+msgstr "长星期（星期五）"
+
+#: menu/tokens_catalogue.lua:82
+msgid "Weekday short (Fri)"
+msgstr "短星期（周五）"
+
+#: menu/tokens_catalogue.lua:83
+msgid "Custom date/time format (strftime spec)"
+msgstr "自定义日期/时间格式（Strftime规范）"
+
+#: menu/tokens_catalogue.lua:84
+msgid "Time left in chapter"
+msgstr "章节剩余阅读时间"
+
+#: menu/tokens_catalogue.lua:85
+msgid "Time left in book"
+msgstr "书籍剩余阅读时间"
+
+#: menu/tokens_catalogue.lua:86
+msgid "Chapter finish time (clock)"
+msgstr "章节预计完成时间"
+
+#: menu/tokens_catalogue.lua:87
+msgid "Book finish time (clock)"
+msgstr "书籍预计完成时间"
+
+#: menu/tokens_catalogue.lua:88
+msgid "Chapter finish time (custom format)"
+msgstr "章节预计完成时间（自定义格式）"
+
+#: menu/tokens_catalogue.lua:89
+msgid "Book finish date (projected)"
+msgstr "书籍预计读完日期"
+
+#: menu/tokens_catalogue.lua:90
+msgid "Book finish date (custom format)"
+msgstr "书籍预计读完日期（自定义格式）"
+
+#: menu/tokens_catalogue.lua:91
+msgid "Session reading time"
+msgstr "本次会话阅读时长"
+
+#: menu/tokens_catalogue.lua:92
+msgid "Session pages read"
+msgstr "本次会话已读页数"
+
+#: menu/tokens_catalogue.lua:93
+msgid "Pages read today (all books)"
+msgstr "今日已读页数（所有书籍）"
+
+#: menu/tokens_catalogue.lua:94
+msgid "Reading time today (all books)"
+msgstr "今日阅读时长（所有书籍）"
+
+#: menu/tokens_catalogue.lua:95
+msgid "Pages read today (current book)"
+msgstr "今日已读页数（当前书籍）"
+
+#: menu/tokens_catalogue.lua:96
+msgid "Reading time today (current book)"
+msgstr "今日阅读时长（当前书籍）"
+
+#: menu/tokens_catalogue.lua:97
+msgid "Pages read in last 7 days (current book)"
+msgstr "近一周已读页数（当前书籍）"
+
+#: menu/tokens_catalogue.lua:98
+msgid "Reading time in last 7 days (current book)"
+msgstr "近一周阅读时长（当前书籍）"
+
+#: menu/tokens_catalogue.lua:99 menu/tokens_catalogue.lua:144
+msgid "Day streak (any book)"
+msgstr "连续阅读天数（任意书籍）"
+
+#: menu/tokens_catalogue.lua:100 menu/tokens_catalogue.lua:145
+msgid "Day streak (current book)"
+msgstr "连续阅读天数（当前书籍）"
+
+#: menu/tokens_catalogue.lua:101
+msgid "Lifetime reading time (all books)"
+msgstr "累计阅读时长（所有书籍）"
+
+#: menu/tokens_catalogue.lua:102
+msgid "Books finished (lifetime)"
+msgstr "已读完书籍（累计）"
+
+#: menu/tokens_catalogue.lua:103
+msgid "Reading speed (pages/hour)"
+msgstr "阅读速度（页/小时）"
+
+#: menu/tokens_catalogue.lua:104
+msgid "Average time per page"
+msgstr "平均每页用时"
+
+#: menu/tokens_catalogue.lua:105
+msgid "Total reading time for book"
+msgstr "本书总阅读时长"
+
+#: menu/tokens_catalogue.lua:106
+msgid "Pages read of this book (lifetime)"
+msgstr "本书累计已读页数"
+
+#: menu/tokens_catalogue.lua:107
+msgid "Book read percentage (skip-aware)"
+msgstr "书籍已读百分比（排除跳过）"
+
+#: menu/tokens_catalogue.lua:108
+msgid "Days reading this book"
+msgstr "本书阅读天数"
+
+#: menu/tokens_catalogue.lua:109
+msgid "Pages per day for this book"
+msgstr "本书日均页数"
+
+#: menu/tokens_catalogue.lua:110
+msgid "Battery level"
+msgstr "电池电量"
+
+#: menu/tokens_catalogue.lua:111
+msgid "Plugin content"
+msgstr "插件内容"
+
+#: menu/tokens_catalogue.lua:112
+msgid "Frontlight brightness"
+msgstr "前光亮度"
+
+#: menu/tokens_catalogue.lua:113 menu/tokens_catalogue.lua:150
+msgid "Frontlight brightness %"
+msgstr "前光亮度百分比"
+
+#: menu/tokens_catalogue.lua:114
+msgid "Frontlight warmth"
+msgstr "前光色温"
+
+#: menu/tokens_catalogue.lua:115 menu/tokens_catalogue.lua:151
+msgid "Frontlight warmth %"
+msgstr "前光色温百分比"
+
+#: menu/tokens_catalogue.lua:116
+msgid "RAM used %"
+msgstr "内存使用百分比"
+
+#: menu/tokens_catalogue.lua:117
+msgid "RAM used (MiB)"
+msgstr "内存使用量（MiB）"
+
+#: menu/tokens_catalogue.lua:118
+msgid "Free disk space"
+msgstr "可用磁盘空间"
+
+#: menu/tokens_catalogue.lua:119
+msgid "Page X of Y, em-dash framed"
+msgstr "第 X / Y 页（破折号样式）"
+
+#: menu/tokens_catalogue.lua:120
+msgid "Title ⋮ author (italic)"
+msgstr "标题 ⋮ 作者（斜体）"
+
+#: menu/tokens_catalogue.lua:121
+msgid "Title in a chosen font"
+msgstr "指定字体的标题"
+
+#: menu/tokens_catalogue.lua:122
+msgid "Bookmark(s) count + label"
+msgstr "书签数量 + 标签"
+
+#: menu/tokens_catalogue.lua:123
+msgid "Highlight(s) count + label"
+msgstr "高亮数量 + 标签"
+
+#: menu/tokens_catalogue.lua:124
+msgid "Hourglass session timer + pages"
+msgstr "沙漏会话计时 + 页数"
+
+#: menu/tokens_catalogue.lua:125
+msgid "Sparkles 1"
+msgstr "装饰样式 1"
+
+#: menu/tokens_catalogue.lua:126
+msgid "Sparkles 2"
+msgstr "装饰样式 2"
+
+#: menu/tokens_catalogue.lua:130
+msgid "If Wi-Fi is on"
+msgstr "Wi-Fi 已开启"
+
+#: menu/tokens_catalogue.lua:131
+msgid "If connected"
+msgstr "已连接"
+
+#: menu/tokens_catalogue.lua:132
+msgid "Battery 0–100"
+msgstr "电量 0–100"
+
+#: menu/tokens_catalogue.lua:133
+msgid "If charging"
+msgstr "充电中"
+
+#: menu/tokens_catalogue.lua:134
+msgid "If page-turn flipped"
+msgstr "翻页方向已翻转"
+
+#: menu/tokens_catalogue.lua:135
+msgid "Book progress 0–100"
+msgstr "书籍进度 0–100"
+
+#: menu/tokens_catalogue.lua:136
+msgid "Chapter progress 0–100"
+msgstr "章节进度 0–100"
+
+#: menu/tokens_catalogue.lua:138
+msgid "Total chapters"
+msgstr "章节总数"
+
+#: menu/tokens_catalogue.lua:139
+msgid "Pages per hour"
+msgstr "每小时页数"
+
+#: menu/tokens_catalogue.lua:140
+msgid "Minutes this session"
+msgstr "本次会话分钟数"
+
+#: menu/tokens_catalogue.lua:141
+msgid "Pages this session"
+msgstr "本次会话页数"
+
+#: menu/tokens_catalogue.lua:142
+msgid "Pages read today"
+msgstr "今日已读页数"
+
+#: menu/tokens_catalogue.lua:143
+msgid "Pages today (current book)"
+msgstr "今日页数（当前书籍）"
+
+#: menu/tokens_catalogue.lua:146
+msgid "Books finished"
+msgstr "已读完书籍"
+
+#: menu/tokens_catalogue.lua:147
+msgid "Book read % (skip-aware)"
+msgstr "已读百分比（排除跳过）"
+
+#: menu/tokens_catalogue.lua:148
+msgid "odd / even"
+msgstr "奇数 / 偶数"
+
+#: menu/tokens_catalogue.lua:149
+msgid "If frontlight on"
+msgstr "前光已开启"
+
+#: menu/tokens_catalogue.lua:152
+msgid "If night mode on"
+msgstr "夜间模式已开启"
+
+#: menu/tokens_catalogue.lua:153
+msgid "EPUB / PDF / CBZ / …"
+msgstr "EPUB / PDF / CBZ / …"
+
+#: menu/tokens_catalogue.lua:154
+msgid "Current HH:MM (24h)"
+msgstr "当前 HH:MM（24 小时制）"
+
+#: menu/tokens_catalogue.lua:155
+msgid "Mon–Sun"
+msgstr "周一~周日"
+
+#: menu/tokens_catalogue.lua:156
+msgid "If book has title"
+msgstr "有书名"
+
+#: menu/tokens_catalogue.lua:157
+msgid "If book has author"
+msgstr "有作者"
+
+#: menu/tokens_catalogue.lua:158
+msgid "If book in series"
+msgstr "书籍属于系列"
+
+#: menu/tokens_catalogue.lua:159
+msgid "If chapter has title"
+msgstr "有章节标题"
+
+#: menu/tokens_catalogue.lua:160
+msgid "Chapter title at depth 1/2/3"
+msgstr "章节标题（1/2/3 级）"
+
+#: menu/tokens_catalogue.lua:161
+msgid "If book has 2+ authors"
+msgstr "有多位作者"
+
+#: menu/tokens_catalogue.lua:162
+msgid "Author with et al. for multi-author"
+msgstr "多位作者时带 et al."
+
+#: menu/tokens_catalogue.lua:163
+msgid "Wi-Fi icon only when Wi-Fi enabled"
+msgstr "Wi-Fi 图标（仅在 Wi-Fi 开启时）"
+
+#: menu/tokens_catalogue.lua:164
+msgid "Low-battery warning"
+msgstr "低电量警告"
+
+#: menu/tokens_catalogue.lua:165
+msgid "Bolt when charging"
+msgstr "充电闪电图标"
+
+#: menu/tokens_catalogue.lua:166
+msgid "Arrow when page-turn flipped"
+msgstr "翻页翻转箭头"
+
+#: menu/tokens_catalogue.lua:167
+msgid "Odd/even variations"
+msgstr "奇数/偶数页变体"
+
+#: menu/tokens_catalogue.lua:168
+msgid "Near end of book"
+msgstr "接近书尾"
+
+#: menu/tokens_catalogue.lua:169
+msgid "Frontlight on/off label"
+msgstr "前光开关标签"
+
+#: menu/tokens_catalogue.lua:170
+msgid "If format"
+msgstr "如果格式为"
+
+#: menu/tokens_catalogue.lua:171
+msgid "Weekends"
+msgstr "周末"
+
+#: menu/tokens_catalogue.lua:172
+msgid "Time window"
+msgstr "时间窗口"
+
+#: menu/tokens_catalogue.lua:173
+msgid "Non-series books"
+msgstr "非系列书籍"
+
+#: menu/tokens_catalogue.lua:174
+msgid "Fall back to shallower chapter"
+msgstr "回退到更浅章节"
+
+#: menu/tokens_catalogue.lua:175
+msgid "Chapter number then title"
+msgstr "章节编号后跟标题"
+
+#: menu/tokens_catalogue.lua:176
+msgid "Long books (20+ chapters)"
+msgstr "长书（20章以上）"
+
+#: menu/tokens_catalogue.lua:177
+msgid "Chapter title only when different from book title"
+msgstr "章节标题（仅在不同于书名时）"
+
+#: menu/tokens_catalogue.lua:178
+msgid "Battery bars"
+msgstr "电池条"
+
+#: menu/main_menu.lua:28 menu/preset_manager_modal.lua:1127
+msgid "Save preset"
+msgstr "保存预设"
+
+#: menu/main_menu.lua:30 menu/preset_manager_modal.lua:1129
+msgid "Preset name"
+msgstr "预设名称"
+
+#: menu/main_menu.lua:45
+msgid "Saved preset:"
+msgstr "已保存预设："
+
+#: menu/main_menu.lua:69 menu/preset_manager_modal.lua:1249
+msgid "Rename preset"
+msgstr "重命名预设"
+
+#: menu/main_menu.lua:74 menu/main_menu.lua:490
+#: menu/preset_manager_modal.lua:1253 menu/preset_manager_modal.lua:1440
+msgid "Rename"
+msgstr "重命名"
+
+#: menu/main_menu.lua:107 menu/main_menu.lua:109
+msgid "Bookends settings"
+msgstr "插件设置"
+
+#: menu/main_menu.lua:107
+msgid "plugin update available"
+msgstr "有插件更新"
+
+#: menu/main_menu.lua:124 menu/main_menu.lua:126
+msgid "Preset"
+msgstr "预设"
+
+#: menu/main_menu.lua:176
+msgid "Full width progress bars"
+msgstr "全宽进度条"
+
+#: menu/main_menu.lua:188
+msgid "Save current as new preset…"
+msgstr "将当前保存为新预设…"
+
+#: menu/main_menu.lua:206
+msgid "Enable bookends"
+msgstr "启用插件"
+
+#: menu/main_menu.lua:217 menu/main_menu.lua:219
+msgid "Disable stock status bar"
+msgstr "禁用系统状态栏"
+
+#: menu/main_menu.lua:217
+msgid "recommended"
+msgstr "推荐"
+
+#: menu/main_menu.lua:222
+msgid ""
+"Hides KOReader's built-in status bar. This simplifies the render pipeline "
+"and can reduce e-ink flicker on some devices. All status bar features are "
+"available as Bookends tokens."
+msgstr ""
+"隐藏阅读器内置的状态栏，此举可简化渲染流程，并可在部分设备上减少电子墨水屏闪烁，所有状态栏功能均可用作插件的占位符使用。"
+
+#: menu/main_menu.lua:243 menu/main_menu.lua:253
+#: menu/preset_manager_modal.lua:1332
+msgid "Default font"
+msgstr "默认字体"
+
+#: menu/main_menu.lua:279
+msgid "Bottom center tap gesture"
+msgstr "底部居中点击手势"
+
+#: menu/main_menu.lua:281
+#: menu/main_menu.lua:308
+msgid "toggle bookends"
+msgstr "切换 Bookends"
+
+#: menu/main_menu.lua:283
+msgid "cycle presets"
+msgstr "循环切换预设"
+
+#: menu/main_menu.lua:285
+msgid "preset library"
+msgstr "预设库"
+
+#: menu/main_menu.lua:289
+msgid ""
+"Configure what happens when you tap the centre of the status bar area, and "
+"whether long-pressing a progress bar opens the skim dialog."
+msgstr ""
+"配置点击状态栏区域中央时所触发的操作，并设定长按进度条是否打开跳转对话框。"
+
+#: menu/main_menu.lua:300
+msgid "Pass through"
+msgstr "穿透"
+
+#: menu/main_menu.lua:322
+msgid "Cycle starred presets"
+msgstr "循环切换星标预设"
+
+#: menu/main_menu.lua:336
+msgid "Open preset library"
+msgstr "打开预设库"
+
+#: menu/main_menu.lua:351
+msgid "Long-press progress bars to skim document"
+msgstr "长按进度条跳转文档"
+
+#: menu/main_menu.lua:359
+msgid ""
+"Opens the skim dialog when you long-press on a full-width progress bar. "
+"Replaces the stock status bar's long-press to skim feature."
+msgstr "长按全宽进度条时，将打开跳转对话框，取代原生状态栏的长按跳转功能。"
+
+#: menu/main_menu.lua:366
+msgid "Include current page in pages-left tokens"
+msgstr "剩余页数标记中计入当前页"
+
+#: menu/main_menu.lua:367
+msgid ""
+"Affects %L (pages left in book) and %l (pages left in chapter). Off "
+"(default): 'n−1 → 0'. On: 'n → 1'."
+msgstr ""
+"影响 %L（书籍剩余页数）和 %l（章节剩余页数）。关闭（默认）：\"n−1 → 0\"。开启：\"n → 1\"。"
+
+#: menu/main_menu.lua:380
+msgid "Notify on wake when update available"
+msgstr "唤醒时通知可用更新"
+
+#: menu/main_menu.lua:400
+msgid "Update available"
+msgstr "有可用更新"
+
+#: menu/main_menu.lua:402
+msgid "Installed version"
+msgstr "已安装版本"
+
+#: menu/main_menu.lua:410
+msgid "Advanced"
+msgstr "高级"
+
+#: menu/main_menu.lua:429
+msgid "Check for updates"
+msgstr "检查更新"
+
+#: menu/main_menu.lua:431
+msgid "Install branch"
+msgstr "安装分支"
+
+#: menu/main_menu.lua:439
+msgid "Reset to latest stable release"
+msgstr "重置到最新稳定版"
+
+#: menu/main_menu.lua:450 menu/main_menu.lua:453
+msgid "Installed: v"
+msgstr "已安装：v"
+
+#: menu/main_menu.lua:470
+msgid "Preset library…"
+msgstr "预设库…"
+
+#: menu/main_menu.lua:504 menu/main_menu.lua:508
+msgid "Font scale"
+msgstr "字体缩放"
+
+#: menu/main_menu.lua:532
+msgid "Truncation gap between regions"
+msgstr "区域间截断间隙"
+
+#: menu/main_menu.lua:536
+msgid "Truncation gap"
+msgstr "截断间隙"
+
+#: menu/main_menu.lua:547
+msgid "Prioritise left/right and truncate long center text"
+msgstr "优先左右区域，截断过长的中间文本"
+
+#: menu/tokens_library.lua:335
+msgid "Tokens library"
+msgstr "标记库"
+
+#: menu/tokens_library.lua:336
+msgid "Tokens & conditionals"
+msgstr "标记与条件"
+
+#: menu/tokens_library.lua:337
+msgid ""
+"TOKENS\n"
+"\n"
+"Tokens are placeholders that get replaced with live data each time the "
+"preset renders. Each entry in the Book / Progress / Time / Session / Device "
+"chips is a token, written as %name. They expand inline:\n"
+"  %title — %page_num/%page_count\n"
+"  → 1984 — 12/268\n"
+"\n"
+"INLINE STYLING\n"
+"\n"
+"Wrap a span of text to restyle just that part:\n"
+"  [b]…[/b] bold   [i]…[/i] italic   [u]…[/u] UPPERCASE\n"
+"  [c=50]…[/c] grey 0–100   [c=#RRGGBB]…[/c] colour\n"
+"  [font=Name]…[/font] switch font for the span\n"
+"\n"
+"The font Name is the display name shown in KOReader's font menu, e.g. "
+"[font=Noto Sans]%title[/font]. Spaces are fine. If that font isn't installed "
+"on the device, the span falls back to the line's font, so presets stay "
+"readable when shared.\n"
+"\n"
+"CONDITIONALS\n"
+"\n"
+"Wrap content in [if:condition]…[/if] to show it only when the condition is "
+"true. Add an [else]…[/if] branch for an alternative.\n"
+"\n"
+"OPERATORS\n"
+"  =    equals               !=  not equals\n"
+"  <    less than            >   greater than\n"
+"  <=   at most              >=  at least\n"
+"  and / or / not  · ( ) for grouping\n"
+"\n"
+"  Example:  [if:batt<20 and not charging]LOW[/if]\n"
+"\n"
+"Truthy check: a bare [if:key] tests whether the key is set, non-zero, and "
+"not \"off\"/\"no\". Useful for [if:title]…[/if], [if:author]…[/if], "
+"[if:series]…[/if].\n"
+"\n"
+"Token-reference comparison: =@token compares against another token's current "
+"value, e.g. [if:chap_title_1!=@title]…[/if] hides the chapter title when it "
+"equals the book title.\n"
+"\n"
+"For the full list of conditional state keys (wifi, batt, light_pct, night, "
+"time, format, …) browse the If/else chip — every reference entry there shows "
+"the exact key and operator syntax for one condition.\n"
+"\n"
+"EXAMPLES\n"
+"\n"
+"  [if:authors>1]%author, et al.[else]%author[/if]\n"
+"  [if:batt<20]LOW %batt[/if]\n"
+"  [if:time>=18:00 and time<18:30]6–6:30[/if]\n"
+"  [if:not series]Standalone[/if]\n"
+msgstr ""
+"令牌\n"
+"\n"
+"令牌是占位符，每次渲染预设时会被替换为实时数据。书籍/进度/时间/会话/设备芯片中的每个条目都是一个令牌，写作 %名称。它们会内联展开：\n"
+"  %书名 — %当前页码/%总页数\n"
+"  → 1984 — 12/268\n"
+"\n"
+"内联样式\n"
+"\n"
+"用标签包裹一段文本来单独改变其样式：\n"
+"  [b]…[/b] 粗体   [i]…[/i] 斜体   [u]…[/u] 大写\n"
+"  [c=50]…[/c] 灰色 0–100   [c=#RRGGBB]…[/c] 颜色\n"
+"  [font=字体名]…[/font] 为该段切换字体\n"
+"\n"
+"字体名即 KOReader 字体菜单中显示的名称，例如 [font=Noto Sans]%书名[/font]。空格没问题。如果设备上未安装该字体，该段会回退到所在行的字体，因此预设即使在分享时也能保持可读。\n"
+"\n"
+"条件判断\n"
+"\n"
+"用 [if:条件]…[/if] 包裹内容，仅当条件为真时才显示。可添加 [else]…[/if] 分支作为备选。\n"
+"\n"
+"运算符\n"
+"  =    等于               !=  不等于\n"
+"  <    小于               >   大于\n"
+"  <=   不超过             >=  至少\n"
+"  and / or / not  · ( ) 用于分组\n"
+"\n"
+"  示例：[if:电量<20 and not 充电中]电量低[/if]\n"
+"\n"
+"真值检测：裸写 [if:键] 会检测该键是否已设置、非零且不是 \"off\"/\"no\"。适用于 [if:书名]…[/if]、[if:作者]…[/if]、[if:丛书]…[/if]。\n"
+"\n"
+"令牌引用比较：=@令牌 会将值与另一个令牌的当前值比较，例如 [if:章节标题_1!=@书名]…[/if] 可在章节标题与书名相同时隐藏章节标题。\n"
+"\n"
+"完整的条件状态键列表（wifi、电量、亮度百分比、夜间模式、时间、格式……）请浏览 If/else 芯片——其中的每个参考条目都展示了一种条件的准确键名和运算符语法。\n"
+"\n"
+"示例\n"
+"\n"
+"  [if:作者数>1]%作者 等[else]%作者[/if]\n"
+"  [if:电量<20]电量低 %电量[/if]\n"
+"  [if:时间>=18:00 and 时间<18:30]6–6:30[/if]\n"
+"  [if:not 丛书]独立作品[/if]\n"
+
+#: menu/tokens_library.lua:383
+msgid "★ Favourites"
+msgstr "★ 收藏"
+
+#: menu/tokens_library.lua:409
+msgid "Search tokens by name, value, or expression…"
+msgstr "按名称、值或表达式搜索标记…"
+
+#: menu/tokens_library.lua:414
+msgid "No favourites yet. Tap the ☆ on any token to add it."
+msgstr "暂无收藏，点击任意标记旁的 ☆ 即可添加。"
+
+#: menu/tokens_library.lua:461
+msgid "Help"
+msgstr "帮助"
+
+#: menu/icons_library.lua:287
+msgid "Icons library"
+msgstr "图标库"
+
+#: menu/icons_library.lua:319
+msgid "Search %1 icons by name…"
+msgstr "按名称搜索 %1 个图标…"
+
+#: menu/icons_catalogue.lua:25
+msgid "Dynamic"
+msgstr "动态"
+
+#: menu/icons_catalogue.lua:27
+msgid "Reading"
+msgstr "阅读"
+
+#: menu/icons_catalogue.lua:29
+msgid "Symbols"
+msgstr "符号"
+
+#: menu/icons_catalogue.lua:30
+msgid "Arrows"
+msgstr "箭头"
+
+#: menu/icons_catalogue.lua:31
+msgid "Blocks"
+msgstr "方块"
+
+#: menu/icons_catalogue.lua:32
+msgid "Separators"
+msgstr "分隔符"
+
+#: menu/icons_catalogue.lua:37
+msgid "Battery"
+msgstr "电池"
+
+#: menu/icons_catalogue.lua:38
+msgid "Wi-Fi"
+msgstr "Wi-Fi"
+
+#: menu/icons_catalogue.lua:39
+msgid "Frontlight"
+msgstr "前光"
+
+#: menu/icons_catalogue.lua:40
+msgid "Warmth"
+msgstr "色温"
+
+#: menu/icons_catalogue.lua:41
+msgid "Night mode"
+msgstr "夜间模式"
+
+#: menu/icons_catalogue.lua:172
+msgid "Sun (outline)"
+msgstr "太阳（轮廓）"
+
+#: menu/icons_catalogue.lua:173
+msgid "Hot springs / warmth"
+msgstr "温泉/色温"
+
+#: menu/icons_catalogue.lua:174
+msgid "Spade"
+msgstr "黑桃"
+
+#: menu/icons_catalogue.lua:175
+msgid "Club"
+msgstr "梅花"
+
+#: menu/icons_catalogue.lua:176
+msgid "Heart"
+msgstr "红心"
+
+#: menu/icons_catalogue.lua:177
+msgid "Diamond suit"
+msgstr "方块"
+
+#: menu/icons_catalogue.lua:178
+msgid "Star (filled)"
+msgstr "星号（实心）"
+
+#: menu/icons_catalogue.lua:179
+msgid "Star (outline)"
+msgstr "星号（轮廓）"
+
+#: menu/icons_catalogue.lua:180
+msgid "Infinity"
+msgstr "无穷"
+
+#: menu/icons_catalogue.lua:181
+msgid "Section sign"
+msgstr "分节号"
+
+#: menu/icons_catalogue.lua:182
+msgid "Pilcrow / paragraph"
+msgstr "段落符号"
+
+#: menu/icons_catalogue.lua:183
+msgid "Dagger"
+msgstr "剑号"
+
+#: menu/icons_catalogue.lua:184
+msgid "Double dagger"
+msgstr "双剑号"
+
+#: menu/icons_catalogue.lua:185
+msgid "Numero"
+msgstr "编号符"
+
+#: menu/icons_catalogue.lua:186
+msgid "High voltage"
+msgstr "高压"
+
+#: menu/icons_catalogue.lua:212
+msgid "Arrow left"
+msgstr "左箭头"
+
+#: menu/icons_catalogue.lua:213
+msgid "Arrow right"
+msgstr "右箭头"
+
+#: menu/icons_catalogue.lua:214
+msgid "Arrow up"
+msgstr "上箭头"
+
+#: menu/icons_catalogue.lua:215
+msgid "Arrow down"
+msgstr "下箭头"
+
+#: menu/icons_catalogue.lua:216
+msgid "Double arrow left"
+msgstr "双左箭头"
+
+#: menu/icons_catalogue.lua:217
+msgid "Double arrow right"
+msgstr "双右箭头"
+
+#: menu/icons_catalogue.lua:218
+msgid "Double arrow up"
+msgstr "双上箭头"
+
+#: menu/icons_catalogue.lua:219
+msgid "Double arrow down"
+msgstr "双下箭头"
+
+#: menu/icons_catalogue.lua:220
+msgid "Arrows left-right"
+msgstr "左右箭头"
+
+#: menu/icons_catalogue.lua:221
+msgid "Double arrows right"
+msgstr "双右箭头簇"
+
+#: menu/icons_catalogue.lua:222
+msgid "Left harpoon with right arrow"
+msgstr "左鱼叉右箭头"
+
+#: menu/icons_catalogue.lua:223
+msgid "Curved back arrow"
+msgstr "弯曲返回箭头"
+
+#: menu/icons_catalogue.lua:224
+msgid "Arrow left with tail"
+msgstr "带尾左箭头"
+
+#: menu/icons_catalogue.lua:225
+msgid "Arrow right with tail"
+msgstr "带尾右箭头"
+
+#: menu/icons_catalogue.lua:226
+msgid "Arrow left to bar"
+msgstr "左箭头到竖线"
+
+#: menu/icons_catalogue.lua:227
+msgid "Arrow right to bar"
+msgstr "右箭头到竖线"
+
+#: menu/icons_catalogue.lua:228
+msgid "Arrow left hooked"
+msgstr "弯钩左箭头"
+
+#: menu/icons_catalogue.lua:229
+msgid "Arrow right hooked"
+msgstr "弯钩右箭头"
+
+#: menu/icons_catalogue.lua:230
+msgid "Arrow right then up"
+msgstr "右转上箭头"
+
+#: menu/icons_catalogue.lua:231
+msgid "Arrow right then down"
+msgstr "右转下箭头"
+
+#: menu/icons_catalogue.lua:232
+msgid "Arrow up then left"
+msgstr "上转左箭头"
+
+#: menu/icons_catalogue.lua:233
+msgid "Arrow up then right"
+msgstr "上转右箭头"
+
+#: menu/icons_catalogue.lua:234
+msgid "Arrow down then left"
+msgstr "下转左箭头"
+
+#: menu/icons_catalogue.lua:235
+msgid "Arrow down then right"
+msgstr "下转右箭头"
+
+#: menu/icons_catalogue.lua:236
+msgid "Circle arrow left"
+msgstr "圆形左箭头"
+
+#: menu/icons_catalogue.lua:237
+msgid "Circle arrow right"
+msgstr "圆形右箭头"
+
+#: menu/icons_catalogue.lua:238
+msgid "Heavy arrow right"
+msgstr "粗右箭头"
+
+#: menu/icons_catalogue.lua:239
+msgid "Heavy round arrow right"
+msgstr "粗圆右箭头"
+
+#: menu/icons_catalogue.lua:240
+msgid "Triangle-head right"
+msgstr "三角头右箭头"
+
+#: menu/icons_catalogue.lua:241
+msgid "Heavy triangle right"
+msgstr "粗三角右箭头"
+
+#: menu/icons_catalogue.lua:242
+msgid "Arrowhead right"
+msgstr "箭头尖"
+
+#: menu/icons_catalogue.lua:243
+msgid "Long arrow left"
+msgstr "长左箭头"
+
+#: menu/icons_catalogue.lua:244
+msgid "Long arrow right"
+msgstr "长右箭头"
+
+#: menu/icons_catalogue.lua:245
+msgid "Single angle left"
+msgstr "单角左引号"
+
+#: menu/icons_catalogue.lua:246
+msgid "Single angle right"
+msgstr "单角右引号"
+
+#: menu/icons_catalogue.lua:247
+msgid "Double angle left"
+msgstr "双角左引号"
+
+#: menu/icons_catalogue.lua:248
+msgid "Double angle right"
+msgstr "双角右引号"
+
+#: menu/icons_catalogue.lua:349
+msgid "Block (full)"
+msgstr "方块（全满）"
+
+#: menu/icons_catalogue.lua:350
+msgid "Block (dark)"
+msgstr "方块（深色）"
+
+#: menu/icons_catalogue.lua:351
+msgid "Block (medium)"
+msgstr "方块（中色）"
+
+#: menu/icons_catalogue.lua:352
+msgid "Block (light)"
+msgstr "方块（浅色）"
+
+#: menu/icons_catalogue.lua:353
+msgid "Upper half block"
+msgstr "上半方块"
+
+#: menu/icons_catalogue.lua:354
+msgid "Right half block"
+msgstr "右半方块"
+
+#: menu/icons_catalogue.lua:355
+msgid "Lower 1/8 block"
+msgstr "下 1/8 方块"
+
+#: menu/icons_catalogue.lua:356
+msgid "Lower 2/8 block"
+msgstr "下 2/8 方块"
+
+#: menu/icons_catalogue.lua:357
+msgid "Lower 3/8 block"
+msgstr "下 3/8 方块"
+
+#: menu/icons_catalogue.lua:358
+msgid "Lower 4/8 block"
+msgstr "下 4/8 方块"
+
+#: menu/icons_catalogue.lua:359
+msgid "Lower 5/8 block"
+msgstr "下 5/8 方块"
+
+#: menu/icons_catalogue.lua:360
+msgid "Lower 6/8 block"
+msgstr "下 6/8 方块"
+
+#: menu/icons_catalogue.lua:361
+msgid "Lower 7/8 block"
+msgstr "下 7/8 方块"
+
+#: menu/icons_catalogue.lua:362
+msgid "Left 1/8 block"
+msgstr "左 1/8 方块"
+
+#: menu/icons_catalogue.lua:363
+msgid "Left 2/8 block"
+msgstr "左 2/8 方块"
+
+#: menu/icons_catalogue.lua:364
+msgid "Left 3/8 block"
+msgstr "左 3/8 方块"
+
+#: menu/icons_catalogue.lua:365
+msgid "Left 4/8 block"
+msgstr "左 4/8 方块"
+
+#: menu/icons_catalogue.lua:366
+msgid "Left 5/8 block"
+msgstr "左 5/8 方块"
+
+#: menu/icons_catalogue.lua:367
+msgid "Left 6/8 block"
+msgstr "左 6/8 方块"
+
+#: menu/icons_catalogue.lua:368
+msgid "Left 7/8 block"
+msgstr "左 7/8 方块"
+
+#: menu/icons_catalogue.lua:369
+msgid "Square (filled)"
+msgstr "正方形（实心）"
+
+#: menu/icons_catalogue.lua:370
+msgid "Square (empty)"
+msgstr "正方形（空心）"
+
+#: menu/icons_catalogue.lua:371
+msgid "Rectangle (filled)"
+msgstr "矩形（实心）"
+
+#: menu/icons_catalogue.lua:372
+msgid "Rectangle (empty)"
+msgstr "矩形（空心）"
+
+#: menu/icons_catalogue.lua:373
+msgid "Vertical block"
+msgstr "竖条方块"
+
+#: menu/icons_catalogue.lua:374
+msgid "Vertical block (empty)"
+msgstr "竖条方块（空心）"
+
+#: menu/icons_catalogue.lua:375
+msgid "Slant block"
+msgstr "斜条方块"
+
+#: menu/icons_catalogue.lua:376
+msgid "Slant block (empty)"
+msgstr "斜条方块（空心）"
+
+#: menu/icons_catalogue.lua:377
+msgid "Circle (filled)"
+msgstr "圆形（实心）"
+
+#: menu/icons_catalogue.lua:378
+msgid "Circle (empty)"
+msgstr "圆形（空心）"
+
+#: menu/icons_catalogue.lua:379
+msgid "Circle (left half)"
+msgstr "圆形（左半）"
+
+#: menu/icons_catalogue.lua:380
+msgid "Circle (right half)"
+msgstr "圆形（右半）"
+
+#: menu/icons_catalogue.lua:381
+msgid "Circle (lower half)"
+msgstr "圆形（下半）"
+
+#: menu/icons_catalogue.lua:382
+msgid "Circle (upper half)"
+msgstr "圆形（上半）"
+
+#: menu/icons_catalogue.lua:383
+msgid "Diamond (filled)"
+msgstr "菱形（实心）"
+
+#: menu/icons_catalogue.lua:384
+msgid "Diamond (empty)"
+msgstr "菱形（空心）"
+
+#: menu/icons_catalogue.lua:387
+msgid "Vertical bar"
+msgstr "竖线"
+
+#: menu/icons_catalogue.lua:388
+msgid "Bullet"
+msgstr "项目符号"
+
+#: menu/icons_catalogue.lua:389
+msgid "Middle dot"
+msgstr "中间点"
+
+#: menu/icons_catalogue.lua:390
+msgid "Vertical ellipsis"
+msgstr "竖省略号"
+
+#: menu/icons_catalogue.lua:391
+msgid "Em dash"
+msgstr "长破折号"
+
+#: menu/icons_catalogue.lua:392
+msgid "En dash"
+msgstr "短破折号"
+
+#: menu/icons_catalogue.lua:393
+msgid "Horizontal ellipsis"
+msgstr "横省略号"
+
+#: menu/icons_catalogue.lua:394
+msgid "Slash"
+msgstr "斜线"
+
+#: menu/icons_catalogue.lua:395
+msgid "Division slash"
+msgstr "除号斜线"
+
+#: menu/icons_catalogue.lua:396
+msgid "Fraction slash"
+msgstr "分数斜线"
+
+#: menu/icons_catalogue.lua:397
+msgid "Double fraction slash"
+msgstr "双分数斜线"
+
+#: menu/icons_catalogue.lua:398
+msgid "Tilde"
+msgstr "波浪线"
+
+#: menu/icons_catalogue.lua:399
+msgid "Triangular bullet"
+msgstr "三角项目符号"
+
+#: menu/colours_menu.lua:73
+msgid "per style"
+msgstr "按样式"
+
+#: menu/colours_menu.lua:75
+msgid "Transparent"
+msgstr "透明"
+
+#: menu/colours_menu.lua:90 menu/colours_menu.lua:104 menu/colours_menu.lua:276
+#: menu/colours_menu.lua:283 menu/colours_menu.lua:289
+#: menu/colours_menu.lua:296 menu/progress_bar_menu.lua:358
+msgid "default"
+msgstr "默认"
+
+#: menu/colours_menu.lua:91
+msgid "transparent"
+msgstr "透明"
+
+#: menu/colours_menu.lua:110
+msgid "Progress bar colour"
+msgstr "进度条颜色"
+
+#: menu/colours_menu.lua:114
+msgid "Progress bar colour (% black)"
+msgstr "进度条颜色（% 黑色）"
+
+#: menu/colours_menu.lua:123
+msgid "Progress bar track colour"
+msgstr "进度条轨道颜色"
+
+#: menu/colours_menu.lua:127
+msgid "Progress bar track colour (% black)"
+msgstr "进度条轨道颜色（% 黑色）"
+
+#: menu/colours_menu.lua:136
+msgid "Tick color"
+msgstr "刻度颜色"
+
+#: menu/colours_menu.lua:140
+msgid "Tick color (% black)"
+msgstr "刻度颜色（% 黑色）"
+
+#: menu/colours_menu.lua:148
+msgid "Invert tick color on read portion"
+msgstr "已读部分反转刻度颜色"
+
+#: menu/colours_menu.lua:161
+msgid "Border color"
+msgstr "边框颜色"
+
+#: menu/colours_menu.lua:165
+msgid "Border color (% black)"
+msgstr "边框颜色（% 黑色）"
+
+#: menu/colours_menu.lua:175 menu/colours_menu.lua:177
+#: menu/colours_menu.lua:183
+msgid "Border thickness"
+msgstr "边框粗细"
+
+#: menu/colours_menu.lua:197
+msgid "Tick inversion color"
+msgstr "刻度反转颜色"
+
+#: menu/colours_menu.lua:201
+msgid "Tick inversion color (% black)"
+msgstr "刻度反转颜色（% 黑色）"
+
+#: menu/colours_menu.lua:225
+msgid "No background"
+msgstr "无背景"
+
+#: menu/colours_menu.lua:276 menu/colours_menu.lua:283
+#: menu/colours_menu.lua:319 menu/progress_bar_menu.lua:32
+msgid "book"
+msgstr "书籍"
+
+#: menu/colours_menu.lua:289 menu/colours_menu.lua:296
+#: menu/colours_menu.lua:334
+msgid "text"
+msgstr "文字"
+
+#: menu/colours_menu.lua:315 menu/colours_menu.lua:319
+msgid "Text color"
+msgstr "文字颜色"
+
+#: menu/colours_menu.lua:329 menu/colours_menu.lua:334
+msgid "Icon color"
+msgstr "图标颜色"
+
+#: menu/colours_menu.lua:331
+msgid ""
+"Applies to Nerd Font and FontAwesome icon glyphs (the Private Use Area "
+"range, e.g. %W, %B, %k). Unicode symbols in the regular text ranges (like "
+"the hourglass \"⌛\") follow the text color instead.\n"
+"\n"
+"An inline [c=#RRGGBB]…[/c] tag in a line overrides the icon colour for any "
+"glyphs inside it."
+msgstr ""
+"适用于 Nerd Font 和 FontAwesome 图标字形（私用区范围，例如 %W、%B、%k）。\n"
+"常规文本范围内的 Unicode 符号（如沙漏 "⌛"）则跟随文本颜色。\n"
+"行内的 [c=#RRGGBB]…[/c] 标签会覆盖其中所有字形的图标颜色。"
+
+#: menu/colours_menu.lua:344 menu/colours_menu.lua:349
+msgid "Background colour"
+msgstr "背景颜色"
+
+#: menu/colours_menu.lua:346
+msgid ""
+"Solid fill drawn behind the top and bottom overlay regions, edge to edge "
+"across the screen. Choose a colour to enable, hold this row or tap Default "
+"in the picker to turn off."
+msgstr "在顶部和底部覆盖区域后方绘制全宽实心填充色，并延伸至屏幕边缘，该颜色将贯穿整个屏幕。选择一种颜色以启用此模式；长按该行或点击取色器中的‘默认’即可关闭。"
+
+#: menu/library_modal.lua:442
+msgid "Search…"
+msgstr "搜索…"
+
+#: menu/library_modal.lua:478
+msgid "Search"
+msgstr "搜索"
+
+#: menu/progress_bar_menu.lua:30
+msgid "Bar"
+msgstr "进度条"
+
+#: menu/progress_bar_menu.lua:32
+msgid "chapter"
+msgstr "章节"
+
+#: menu/progress_bar_menu.lua:33
+msgid "top"
+msgstr "顶部"
+
+#: menu/progress_bar_menu.lua:33
+msgid "bottom"
+msgstr "底部"
+
+#: menu/progress_bar_menu.lua:33
+msgid "left"
+msgstr "左侧"
+
+#: menu/progress_bar_menu.lua:33
+msgid "right"
+msgstr "右侧"
+
+#: menu/progress_bar_menu.lua:69
+msgid "Bar %1"
+msgstr "进度条 %1"
+
+#: menu/progress_bar_menu.lua:80
+msgid "Long press to change render order"
+msgstr "长按可调整渲染顺序"
+
+#: menu/progress_bar_menu.lua:84
+msgid "Inline progress bars can be added via the line editor"
+msgstr "可通过行编辑器添加内联进度条"
+
+#: menu/progress_bar_menu.lua:100
+msgid "Enable"
+msgstr "启用"
+
+#: menu/progress_bar_menu.lua:157
+msgid "Anchor"
+msgstr "锚点"
+
+#: menu/progress_bar_menu.lua:182
+msgid "Fill: clockwise"
+msgstr "填充方向：顺时针"
+
+#: menu/progress_bar_menu.lua:187
+msgid "Fill: top to bottom"
+msgstr "填充方向：从上到下"
+
+#: menu/progress_bar_menu.lua:188
+msgid "Fill: bottom to top"
+msgstr "填充方向：从下到上"
+
+#: menu/progress_bar_menu.lua:224 menu/progress_bar_menu.lua:236
+msgid "Diameter"
+msgstr "直径"
+
+#: menu/progress_bar_menu.lua:289 menu/progress_bar_menu.lua:291
+msgid "Custom colors and tick marks"
+msgstr "自定义颜色和刻度"
+
+#: menu/progress_bar_menu.lua:299
+msgid "Use custom colors"
+msgstr "使用自定义颜色"
+
+#: menu/progress_bar_menu.lua:330 menu/progress_bar_menu.lua:335
+msgid "Tick height"
+msgstr "刻度高度"
+
+#: menu/progress_bar_menu.lua:356 menu/progress_bar_menu.lua:358
+#: menu/progress_bar_menu.lua:364
+msgid "Tick width"
+msgstr "刻度宽度"
+
+#: menu/progress_bar_menu.lua:384
+msgid "Reset custom to defaults"
+msgstr "重置自定义为默认值"
+
+#: menu/progress_bar_menu.lua:411
+msgid "Edge"
+msgstr "边缘"
+
+#: menu/progress_bar_menu.lua:411
+msgid "Vertical"
+msgstr "垂直"
+
+#: menu/preset_manager_modal.lua:295
+msgid "+ New blank preset"
+msgstr "+ 新建空白预设"
+
+#: menu/preset_manager_modal.lua:311
+msgid "Discover more presets"
+msgstr "发现更多预设"
+
+#: menu/preset_manager_modal.lua:317
+msgid ""
+"Browse presets others have shared, preview them on your own status bar, and "
+"install the ones you like. Once installed, you can edit each preset freely "
+"on the My presets tab."
+msgstr ""
+"浏览他人分享的预设方案，在自己的状态栏上实时预览，你可以安装你喜欢的样式，安装完成后，你可以在「我的预设」标签页中自由编辑每一项参数。"
+
+#: menu/preset_manager_modal.lua:324
+msgid ""
+"Made something worth sharing? Submit it with the Manage button while viewing "
+"one of your own presets."
+msgstr "做出了满意的佳作？查看自己的预设时，点击「管理」按钮即可提交分享。"
+
+#: menu/preset_manager_modal.lua:331
+msgid "Tap Latest or Popular above to load the gallery."
+msgstr "点击上方的「最新」或「热门」载入画廊。"
+
+#: menu/preset_manager_modal.lua:470
+msgid "Preset library"
+msgstr "预设库"
+
+#: menu/preset_manager_modal.lua:472
+msgid "My presets"
+msgstr "我的预设"
+
+#: menu/preset_manager_modal.lua:473
+msgid "Gallery"
+msgstr "画廊"
+
+#: menu/preset_manager_modal.lua:483 menu/preset_manager_modal.lua:495
+msgid "Latest"
+msgstr "最新"
+
+#: menu/preset_manager_modal.lua:484
+msgid "Starred"
+msgstr "星标"
+
+#: menu/preset_manager_modal.lua:497
+msgid "Popular"
+msgstr "热门"
+
+#: menu/preset_manager_modal.lua:509
+msgid "Loading gallery…"
+msgstr "正在加载画廊…"
+
+#: menu/preset_manager_modal.lua:522
+msgid "Search my presets by name or author…"
+msgstr "按名称或作者搜索我的预设…"
+
+#: menu/preset_manager_modal.lua:524
+msgid "Search gallery presets by name or author…"
+msgstr "按名称或作者搜索画廊预设…"
+
+#: menu/preset_manager_modal.lua:566
+msgid "Manage…"
+msgstr "管理…"
+
+#: menu/preset_manager_modal.lua:584 menu/preset_manager_modal.lua:587
+#: menu/preset_manager_modal.lua:1733
+msgid "Install"
+msgstr "安装"
+
+#: menu/preset_manager_modal.lua:824 menu/preset_manager_modal.lua:1691
+msgid "Could not preview preset"
+msgstr "无法预览预设"
+
+#: menu/preset_manager_modal.lua:939
+msgid "by"
+msgstr "by"
+
+#: menu/preset_manager_modal.lua:1188 menu/preset_manager_modal.lua:1502
+msgid "Untitled"
+msgstr "无标题"
+
+#: menu/preset_manager_modal.lua:1217
+msgid "Rename…"
+msgstr "重命名…"
+
+#: menu/preset_manager_modal.lua:1221
+msgid "Edit description…"
+msgstr "编辑描述…"
+
+#: menu/preset_manager_modal.lua:1225
+msgid "Edit author…"
+msgstr "编辑作者…"
+
+#: menu/preset_manager_modal.lua:1229
+msgid "Duplicate"
+msgstr "副本"
+
+#: menu/preset_manager_modal.lua:1233
+msgid "Submit to gallery…"
+msgstr "提交到画廊…"
+
+#: menu/preset_manager_modal.lua:1343
+msgid "%1, line %2"
+msgstr "%1，行 %2"
+
+#: menu/preset_manager_modal.lua:1380
+msgid "Edit description"
+msgstr "编辑描述"
+
+#: menu/preset_manager_modal.lua:1384
+msgid "Edit author"
+msgstr "编辑作者"
+
+#: menu/preset_manager_modal.lua:1388
+msgid "copy"
+msgstr "复制"
+
+#: menu/preset_manager_modal.lua:1391
+msgid "Duplicate preset"
+msgstr "复制预设"
+
+#: menu/preset_manager_modal.lua:1434
+msgid "Rename before sharing"
+msgstr "分享前请重命名"
+
+#: menu/preset_manager_modal.lua:1485
+msgid "Who should we credit as the author?"
+msgstr "应署名谁为作者？"
+
+#: menu/preset_manager_modal.lua:1490
+msgid "One-line description of this preset"
+msgstr "用一行文字描述此预设"
+
+#: menu/preset_manager_modal.lua:1509
+msgid ""
+"'%1' is one of Bookends' default placeholder names. Give your preset "
+"something distinctive — that's how it'll appear in the gallery."
+msgstr "'%1'是阅读信息栏默认的占位符名称，请给你的预设起个独特的名字，它将显示在作品库中。"
+
+#: menu/preset_manager_modal.lua:1515
+msgid ""
+"Write a short description that tells gallery users what your preset shows"
+msgstr "写一段简短描述，告诉画廊用户您的预设展示什么"
+
+#: menu/preset_manager_modal.lua:1537
+msgid ""
+"Submit '%1' by %2 to the gallery? A pull request will be opened for review."
+msgstr "将%2的'%1'提交到画廊？系统将发起拉取请求等待审核。"
+
+#: menu/preset_manager_modal.lua:1539
+msgid "Submit"
+msgstr "提交"
+
+#: menu/preset_manager_modal.lua:1549
+msgid ""
+"A preset called '%1' is already in the gallery. Rename your preset (Manage… "
+"→ Rename…) before submitting, so it doesn't collide with the existing entry."
+msgstr "画廊中已存在名为'%1'的预设。请在提交前通过'管理… > 重命名…'重命名你的预设，以避免与现有条目冲突。"
+
+#: menu/preset_manager_modal.lua:1560
+msgid "Submitting to gallery…"
+msgstr "正在提交到画廊…"
+
+#: menu/preset_manager_modal.lua:1572
+msgid ""
+"Thanks! Your submission is PR #%1.\n"
+"\n"
+"The maintainer will review it before it appears in the Gallery."
+msgstr "感谢！您的提交是请求 #%1，维护者审核后将在画廊中展示。"
+
+#: menu/preset_manager_modal.lua:1581
+msgid ""
+"A preset called '%1' is already in the gallery. Rename your preset (Manage… "
+"→ Rename…) before submitting."
+msgstr "名为'%1'的预设已存在于画廊中，提交前请通过'管理… > 重命名…'重命名您的预设。"
+
+#: menu/preset_manager_modal.lua:1584
+msgid ""
+"A submission for '%1' is already awaiting review. Wait for that one to be "
+"reviewed, or rename your preset to submit under a different name."
+msgstr "'%1'的提交已在等待审核，请等待该审核完成，或重命名预设以其他名称提交。"
+
+#: menu/preset_manager_modal.lua:1587
+msgid "Submission failed: %1"
+msgstr "提交失败：%1"
+
+#: menu/preset_manager_modal.lua:1600
+msgid ""
+"This preset uses specific fonts that won't exist on other devices. These "
+"overrides will be stripped from your submission so other users see their own "
+"default font."
+msgstr "此预设使用了特定字体，这些字体在其他设备上不存在，这些覆盖设置将从你的提交中移除，以便其他用户看到自己的默认字体。"
+
+#: menu/preset_manager_modal.lua:1602
+msgid "Custom fonts in this preset:"
+msgstr "此预设中的自定义字体："
+
+#: menu/preset_manager_modal.lua:1608
+msgid ""
+"Tip: for portable presets, pick a Font-family font (Serif, Sans-serif, etc.) "
+"instead of a specific one — those adapt to each user's font settings."
+msgstr "提示：要创建可移植的预设，请选择字体系列字体（衬线体、无衬线体等）而非特定字体，这些字体会适配每位用户的字体设置。"
+
+#: menu/preset_manager_modal.lua:1611
+msgid "Submit anyway"
+msgstr "仍然提交"
+
+#: menu/preset_manager_modal.lua:1624
+msgid "Submission failed — details in the KOReader log."
+msgstr "提交失败 — 详情请查看 KOReader 日志。"
+
+#: menu/preset_manager_modal.lua:1630
+msgid "Delete preset '%1'?"
+msgstr "删除预设'%1'？"
+
+#: menu/preset_manager_modal.lua:1673
+msgid "Offline — connect to preview this preset."
+msgstr "离线 — 请连接网络以预览此预设。"
+
+#: menu/preset_manager_modal.lua:1675
+msgid "Couldn't download '%1'."
+msgstr "无法下载'%1'。"
+
+#: menu/preset_manager_modal.lua:1681
+msgid "This preset appears invalid; skipping."
+msgstr "此预设似乎无效，已跳过。"
+
+#: menu/preset_manager_modal.lua:1704
+msgid ""
+"'%1' already exists in your library.\n"
+"\n"
+"Replacing it will overwrite your local copy with the current gallery "
+"version. Any local edits will be lost.\n"
+"\n"
+"Install under a new name to keep both."
+msgstr "'%1'已存在于你的库中，替换将用当前画廊版本覆盖你的本地副本。所有本地编辑将丢失，以新名称安装可同时保留两者。"
+
+#: menu/preset_manager_modal.lua:1710
+msgid "Replace"
+msgstr "替换"
+
+#: menu/preset_manager_modal.lua:1724
+msgid "Install as new name…"
+msgstr "以新名称安装…"
+
+#: menu/preset_manager_modal.lua:1728
+msgid "Install as"
+msgstr "安装为"
+
+#: menu/icons_catalogue.lua:33
+msgid "SVG icon folder"
+msgstr "SVG 图标文件夹"
+
+#: menu/icons_library.lua:435
+msgid "Drop .svg or .png files in koreader/icons/"
+msgstr "将 .svg 或 .png 文件放入 koreader/icons/ 目录。"
