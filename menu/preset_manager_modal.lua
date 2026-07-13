@@ -837,7 +837,7 @@ function PresetManagerModal._applyCurrent(self)
         return
     end
     if self.previewing.kind == "local" then
-        self.bookends:setActivePresetFilename(self.previewing.filename)
+        self.bookends:setManualActivePreset(self.previewing.filename)
     elseif self.previewing.kind == "gallery" then
         -- Install: save to bookends_presets/ and make active.
         local entry = self.previewing.entry
@@ -863,7 +863,7 @@ function PresetManagerModal._applyCurrent(self)
             return  -- flow continues after user choice
         end
         local filename = self.bookends:writePresetFile(entry.name, data)
-        self.bookends:setActivePresetFilename(filename)
+        self.bookends:setManualActivePreset(filename)
         pcall(require("preset_gallery").recordInstall, entry.slug, "KOReader-Bookends")
     end
     self.bookends._previewing = false
@@ -1138,7 +1138,7 @@ function PresetManagerModal._saveCurrentAsPreset(self)
                     local preset = self.bookends:buildPreset()
                     preset.name = name
                     local filename = self.bookends:writePresetFile(name, preset)
-                    self.bookends:setActivePresetFilename(filename)
+                    self.bookends:setManualActivePreset(filename)
                     local cycle = self.bookends.settings:readSetting("preset_cycle") or {}
                     table.insert(cycle, filename)
                     self.bookends.settings:saveSetting("preset_cycle", cycle)
@@ -1188,10 +1188,11 @@ function PresetManagerModal._createBlankPreset(self)
     local name = PresetNaming.nextUntitledName(presets, _("Untitled"))
     local preset = buildBlankPreset(name)
     local filename = self.bookends:writePresetFile(name, preset)
-    -- applyPresetFile loads the blank into memory before setting it active,
-    -- so the debounced autosave can't clobber the on-disk file with the
-    -- previously-active preset's data.
-    self.bookends:applyPresetFile(filename)
+    -- applyManualPresetFile loads the blank into memory before setting it
+    -- active (so the debounced autosave can't clobber the on-disk file with
+    -- the previously-active preset's data) and remembers it as the manual
+    -- default (#87), same as any other explicit preset choice.
+    self.bookends:applyManualPresetFile(filename)
     -- Close the modal and drop the user straight into the Bookends menu, so
     -- they see "Preset (Untitled)" + the empty position items ready to edit.
     -- nextTick lets the modal's close flush before the TouchMenu shows.
@@ -1711,7 +1712,7 @@ function PresetManagerModal._promptInstallCollision(self, existing, data, entry)
                 UIManager:close(dlg)
                 self.bookends:deletePresetFile(existing.filename)
                 local filename = self.bookends:writePresetFile(entry.name, data)
-                self.bookends:setActivePresetFilename(filename)
+                self.bookends:setManualActivePreset(filename)
                 pcall(require("preset_gallery").recordInstall, entry.slug, "KOReader-Bookends")
                 self.bookends._previewing = false
                 self.previewing = nil
@@ -1735,7 +1736,7 @@ function PresetManagerModal._promptInstallCollision(self, existing, data, entry)
                             if new_name and new_name ~= "" then
                                 data.name = new_name
                                 local filename = self.bookends:writePresetFile(new_name, data)
-                                self.bookends:setActivePresetFilename(filename)
+                                self.bookends:setManualActivePreset(filename)
                                 pcall(require("preset_gallery").recordInstall, entry.slug, "KOReader-Bookends")
                             end
                             self.bookends._previewing = false

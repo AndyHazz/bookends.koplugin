@@ -547,7 +547,7 @@ function Bookends:onCycleBookendsPreset()
     local next_entry = cycle[idx]
     local Notification = require("ui/widget/notification")
 
-    local ok, err = self:applyPresetFile(next_entry)
+    local ok, err = self:applyManualPresetFile(next_entry)
     if not ok then
         Notification:notify(T(_("Preset error: %1"), tostring(err)))
         return true
