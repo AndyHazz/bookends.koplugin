@@ -983,6 +983,18 @@ function PresetManagerModal.showFormatRulePicker(bookends, ext, on_done)
     local LibraryModal = require("menu.library_modal")
     local lm = LibraryModal:new{ config = buildFormatRulePickerConfig(self) }
     self.modal_widget = lm
+    -- Route the hardware Back key through the picker's own close(true) so a
+    -- Back dismissal restores the previewed overlay and fires on_done, same as
+    -- the Done footer. LibraryModal's stock onClose just closes the widget
+    -- (skipping the config footer), which would leave a previewed preset/hidden
+    -- state applied until the next document open. Instance-level override only:
+    -- this is a fresh LibraryModal per picker, so the everyday manager (which
+    -- shares LibraryModal's class onClose) is unaffected. Tap-outside dismissal
+    -- still takes the stock path; that state self-corrects on next document open.
+    lm.onClose = function()
+        self.close(true)
+        return true
+    end
     UIManager:show(lm)
     UIManager:setDirty("all", "flashui")
 end
