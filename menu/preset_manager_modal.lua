@@ -1065,7 +1065,38 @@ function PresetManagerModal._addRow(self, vg, width, row_height, font_size, base
     -- installed locally (not tappable). Anything else gets an empty slot so
     -- cards stay left-aligned consistently.
     local accent_ic
-    if opts.star_key then
+    if opts.radio_key then
+        -- Radio control for the format-rule picker: filled when this row is the
+        -- chosen rule target, empty otherwise. Tap chooses this target. Mirrors
+        -- the star branch's focus-bordered, d-pad-focusable accent cell.
+        local radio_widget = TextWidget:new{
+            text = opts.radio_selected and "\xE2\x97\x89" or "\xE2\x97\xAF",  -- ◉ / ◯
+            face = Font:getFace("infofont", 22),
+            bold = true,
+            fgcolor = Blitbuffer.COLOR_BLACK,
+        }
+        local fb = LibraryModal.FOCUS_BORDER
+        local radio_frame = FrameContainer:new{
+            bordersize = fb,
+            color = Blitbuffer.COLOR_WHITE,
+            background = Blitbuffer.COLOR_WHITE,
+            padding = 0,
+            margin = 0,
+            radius = Size.radius.default,
+            CenterContainer:new{
+                dimen = Geom:new{ w = star_width - 2 * fb, h = card_height - 2 * fb },
+                radio_widget,
+            },
+        }
+        accent_ic = InputContainer:new{
+            dimen = Geom:new{ w = star_width, h = card_height },
+            radio_frame,
+        }
+        accent_ic.ges_events = { TapSelect = { GestureRange:new{ ges = "tap", range = accent_ic.dimen } } }
+        local key = opts.radio_key
+        accent_ic.onTapSelect = function() self.chooseRuleTarget(key); return true end
+        LibraryModal._attachFocus(accent_ic, radio_frame)
+    elseif opts.star_key then
         local star_widget = TextWidget:new{
             text = starred and "\xE2\x98\x85" or "\xE2\x98\x86",
             face = Font:getFace("infofont", 22),
@@ -1122,7 +1153,7 @@ function PresetManagerModal._addRow(self, vg, width, row_height, font_size, base
     -- — the card body (preview) and the star toggle (favourite) — so d-pad
     -- Left/Right reaches the star. Gallery/installed/virtual rows have only the
     -- card body. Drop this and the row vanishes from d-pad navigation.
-    if opts.star_key then
+    if opts.star_key or opts.radio_key then
         row_hgroup._focus_row = { card, accent_ic }
     else
         row_hgroup._focus_target = card
