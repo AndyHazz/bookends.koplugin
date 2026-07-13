@@ -120,33 +120,6 @@ local function renameActivePresetDialog(self, touchmenu_instance)
     dlg:onShowKeyboard()
 end
 
---- Show a button-list picker of "Hidden" + every saved preset. `on_pick`
---- receives "HIDDEN" or a preset filename.
-local function pickFormatRuleTarget(self, on_pick)
-    local ButtonDialogTitle = require("ui/widget/buttondialogtitle")
-    local UIManager = require("ui/uimanager")
-    local dlg
-    local function close() UIManager:close(dlg) end
-    local buttons = {
-        {{ text = _("Hidden"), callback = function()
-            close()
-            on_pick("HIDDEN")
-        end }},
-    }
-    for _i, p in ipairs(self:readPresetFiles()) do
-        table.insert(buttons, {{ text = p.name, callback = function()
-            close()
-            on_pick(p.filename)
-        end }})
-    end
-    table.insert(buttons, {{ text = _("Cancel"), callback = close }})
-    dlg = ButtonDialogTitle:new{
-        title = _("Preset for this file type"),
-        buttons = buttons,
-    }
-    UIManager:show(dlg)
-end
-
 --- Prompt for a file extension, then a target, and save the new rule.
 local function addFormatRuleDialog(self, touchmenu_instance)
     local InputDialog = require("ui/widget/inputdialog")
@@ -164,10 +137,8 @@ local function addFormatRuleDialog(self, touchmenu_instance)
                 UIManager:close(dlg)
                 local ext = raw and raw:gsub("^%.", ""):gsub("^%s+", ""):gsub("%s+$", ""):upper()
                 if not ext or ext == "" then return end
-                pickFormatRuleTarget(self, function(target)
-                    local rules = self.settings:readSetting("format_preset_rules") or {}
-                    rules[ext] = target
-                    self.settings:saveSetting("format_preset_rules", rules)
+                local PresetManagerModal = require("menu/preset_manager_modal")
+                PresetManagerModal.showFormatRulePicker(self, ext, function()
                     if touchmenu_instance then
                         touchmenu_instance.item_table = self:buildFormatPresetRulesMenu()
                         touchmenu_instance:updateItems()
@@ -598,10 +569,8 @@ function Bookends:buildFormatPresetRulesMenu()
                     buttons = {
                         {{ text = _("Change"), callback = function()
                             UIManager:close(dlg)
-                            pickFormatRuleTarget(self, function(new_target)
-                                local r = self.settings:readSetting("format_preset_rules") or {}
-                                r[ext] = new_target
-                                self.settings:saveSetting("format_preset_rules", r)
+                            local PresetManagerModal = require("menu/preset_manager_modal")
+                            PresetManagerModal.showFormatRulePicker(self, ext, function()
                                 if touchmenu_instance then
                                     touchmenu_instance.item_table = self:buildFormatPresetRulesMenu()
                                     touchmenu_instance:updateItems()
