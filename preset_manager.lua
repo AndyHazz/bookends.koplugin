@@ -178,6 +178,14 @@ end
 -- anyone's default. Kept module-level (rather than alongside its sibling
 -- inside attach()) so it's testable via dofile() without needing a
 -- Bookends instance to attach() onto first.
+--
+-- Deliberately clears to nil rather than falling back to another remaining
+-- preset, unlike the active_preset_filename delete-fallback in
+-- preset_manager_modal.lua's _delete handler. That asymmetry is intentional:
+-- active_preset_filename must always point at something applied, but "no
+-- manual default set yet" is a normal, valid state for
+-- manual_active_preset_filename -- the auto-rule path (decideFormatPresetAction)
+-- already treats a nil manual default as "nothing to restore to" and copes fine.
 local function pruneManualDefault(self_bookends, filename)
     if not filename then return end
     if self_bookends.settings:readSetting("manual_active_preset_filename") == filename then

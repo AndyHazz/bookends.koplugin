@@ -60,7 +60,7 @@ local function saveAsNewPresetDialog(self)
                     local preset = self:buildPreset()
                     preset.name = name
                     local filename = self:writePresetFile(name, preset)
-                    self:setActivePresetFilename(filename)
+                    self:setManualActivePreset(filename)
                     local cycle = self.settings:readSetting("preset_cycle") or {}
                     table.insert(cycle, filename)
                     self.settings:saveSetting("preset_cycle", cycle)
