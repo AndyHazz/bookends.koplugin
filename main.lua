@@ -205,6 +205,12 @@ function Bookends:init()
         end
     end
 
+    -- Apply any format-based auto-rule for this document (#87). Must run
+    -- after the invariant re-apply above so getActivePresetFilename()
+    -- already reflects the persisted value before deciding whether a
+    -- (potentially different) auto-pick needs to be applied on top.
+    self:applyFormatPresetRule()
+
     -- Register gesture/dispatcher actions
     self:onDispatcherRegisterActions()
 
@@ -429,6 +435,35 @@ function Bookends:runPresetManagerMigration()
     end
 
     self.settings:flush()
+end
+
+--- Evaluate format_preset_rules for the currently-open document and apply
+--- the result (#87). Runs once per document open - see init(). Prunes a
+--- rule pointing at a since-deleted preset file as it goes (same treatment
+--- deletePresetFile/renamePresetFile give the other filename-referencing
+--- settings - see preset_manager.lua's pruneFormatRules/renameFormatRules).
+function Bookends:applyFormatPresetRule()
+    local ext = Tokens.getFileExtension(self.ui.document)
+    local rules = self.settings:readSetting("format_preset_rules") or {}
+
+    local outcome = rules[ext]
+    if outcome and outcome ~= "HIDDEN" then
+        local lfs = require("libs/libkoreader-lfs")
+        local path = self:presetDir() .. "/" .. outcome
+        if lfs.attributes(path, "mode") ~= "file" then
+            rules[ext] = nil
+            self.settings:saveSetting("format_preset_rules", rules)
+        end
+    end
+
+    local manual_default = self.settings:readSetting("manual_active_preset_filename")
+    local decision = Tokens.decideFormatPresetAction(
+        ext, rules, self:getActivePresetFilename(), manual_default)
+
+    self._format_hidden = decision.hidden
+    if decision.apply then
+        pcall(self.applyPresetFile, self, decision.apply)
+    end
 end
 
 function Bookends:setupTouchZones()
@@ -900,7 +935,8 @@ function Bookends:getMargin(key)
 end
 
 function Bookends:isPositionActive(key)
-    return self.enabled and #self.positions[key].lines > 0 and not self.positions[key].disabled
+    return self.enabled and not self._format_hidden
+        and #self.positions[key].lines > 0 and not self.positions[key].disabled
 end
 
 --- Returns true if any active line's format string references one of the
@@ -1377,7 +1413,7 @@ end
 Bookends._is_subprocess = false
 
 function Bookends:paintTo(bb, x, y)
-    if not self.enabled then return end
+    if not self.enabled or self._format_hidden then return end
     -- Skip overlay painting in thumbnail subprocesses. Mirrors the stock
     -- footer's footer_visible=false in readerthumbnail.lua: a 200px-tall
     -- thumbnail can't legibly carry overlay text, and on Kindle several token
