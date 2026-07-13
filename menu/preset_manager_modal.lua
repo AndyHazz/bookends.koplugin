@@ -178,6 +178,17 @@ local function sortedLocalPresets(bookends, mode)
     return presets
 end
 
+--- Build the format-rule picker's item list: a synthetic "Hidden" option
+--- followed by the given local preset entries (order preserved). Pure - the
+--- input array is not mutated. See the format-rule preset picker spec (#87).
+function PresetManagerModal.formatRulePickerItems(entries)
+    local out = { { is_hidden_option = true } }
+    for _i = 1, #entries do
+        out[#out + 1] = entries[_i]
+    end
+    return out
+end
+
 --- Local tab page number containing the active preset in the given sort
 --- order, or 1 if no active preset or the active preset is filtered out
 --- (e.g. unstarred while Starred filter is on). Used on modal open and
