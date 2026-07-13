@@ -120,6 +120,74 @@ local function renameActivePresetDialog(self, touchmenu_instance)
     dlg:onShowKeyboard()
 end
 
+--- Show a button-list picker of "Hidden" + every saved preset. `on_pick`
+--- receives "HIDDEN" or a preset filename.
+local function pickFormatRuleTarget(self, on_pick)
+    local ButtonDialogTitle = require("ui/widget/buttondialogtitle")
+    local UIManager = require("ui/uimanager")
+    local dlg
+    local function close() UIManager:close(dlg) end
+    local buttons = {
+        {{ text = _("Hidden"), callback = function()
+            close()
+            on_pick("HIDDEN")
+        end }},
+    }
+    for _, p in ipairs(self:readPresetFiles()) do
+        table.insert(buttons, {{ text = p.name, callback = function()
+            close()
+            on_pick(p.filename)
+        end }})
+    end
+    table.insert(buttons, {{ text = _("Cancel"), callback = close }})
+    dlg = ButtonDialogTitle:new{
+        title = _("Preset for this file type"),
+        buttons = buttons,
+    }
+    UIManager:show(dlg)
+end
+
+--- Prompt for a file extension, then a target, and save the new rule.
+local function addFormatRuleDialog(self, touchmenu_instance)
+    local InputDialog = require("ui/widget/inputdialog")
+    local UIManager = require("ui/uimanager")
+    local dlg
+    dlg = InputDialog:new{
+        title = _("File extension"),
+        input = "",
+        input_hint = _("e.g. CBZ"),
+        buttons = {{
+            { text = _("Cancel"), id = "close",
+              callback = function() UIManager:close(dlg) end },
+            { text = _("Next"), is_enter_default = true, callback = function()
+                local raw = dlg:getInputText()
+                UIManager:close(dlg)
+                local ext = raw and raw:gsub("^%.", ""):gsub("^%s+", ""):gsub("%s+$", ""):upper()
+                if not ext or ext == "" then return end
+                pickFormatRuleTarget(self, function(target)
+                    local rules = self.settings:readSetting("format_preset_rules") or {}
+                    rules[ext] = target
+                    self.settings:saveSetting("format_preset_rules", rules)
+                    if touchmenu_instance then touchmenu_instance:updateItems() end
+                end)
+            end },
+        }},
+    }
+    UIManager:show(dlg)
+    dlg:onShowKeyboard()
+end
+
+--- Human-readable label for a format_preset_rules value: "Hidden" or the
+--- matching preset's display name (falls back to the raw filename if the
+--- preset can no longer be found; the next document-open will prune it).
+local function formatRuleTargetLabel(self, target)
+    if target == "HIDDEN" then return _("Hidden") end
+    for _, p in ipairs(self:readPresetFiles()) do
+        if p.filename == target then return p.name end
+    end
+    return target
+end
+
 function Bookends:buildMainMenu()
     local menu = {}
 
@@ -444,6 +512,13 @@ function Bookends:buildBookendsSettingsMenu()
             end,
         },
         {
+            text = _("Auto preset by file type"),
+            help_text = _("Automatically hide Bookends, or switch to a specific preset, based on the document's file extension (e.g. hide for comic archives, use a plainer preset for PDFs)."),
+            sub_item_table_func = function()
+                return self:buildFormatPresetRulesMenu()
+            end,
+        },
+        {
             text = _("Advanced"),
             sub_item_table = {
                 {
@@ -495,6 +570,63 @@ function Bookends:buildBookendsSettingsMenu()
             },
         },
     }
+end
+
+--- "Auto preset by file type" settings submenu (#87): one row per existing
+--- rule (tap to change target or remove), plus an "Add rule" entry.
+function Bookends:buildFormatPresetRulesMenu()
+    local rules = self.settings:readSetting("format_preset_rules") or {}
+    local exts = {}
+    for ext in pairs(rules) do table.insert(exts, ext) end
+    table.sort(exts)
+
+    local menu = {}
+    for _, ext in ipairs(exts) do
+        local target = rules[ext]
+        table.insert(menu, {
+            text = ext .. " \xE2\x86\x92 " .. formatRuleTargetLabel(self, target), -- "->"
+            keep_menu_open = true,
+            callback = function(touchmenu_instance)
+                local ButtonDialogTitle = require("ui/widget/buttondialogtitle")
+                local UIManager = require("ui/uimanager")
+                local dlg
+                dlg = ButtonDialogTitle:new{
+                    title = ext,
+                    buttons = {
+                        {{ text = _("Change"), callback = function()
+                            UIManager:close(dlg)
+                            pickFormatRuleTarget(self, function(new_target)
+                                local r = self.settings:readSetting("format_preset_rules") or {}
+                                r[ext] = new_target
+                                self.settings:saveSetting("format_preset_rules", r)
+                                if touchmenu_instance then touchmenu_instance:updateItems() end
+                            end)
+                        end }},
+                        {{ text = _("Remove rule"), callback = function()
+                            UIManager:close(dlg)
+                            local r = self.settings:readSetting("format_preset_rules") or {}
+                            r[ext] = nil
+                            self.settings:saveSetting("format_preset_rules", r)
+                            if touchmenu_instance then touchmenu_instance:updateItems() end
+                        end }},
+                        {{ text = _("Cancel"), callback = function() UIManager:close(dlg) end }},
+                    },
+                }
+                UIManager:show(dlg)
+            end,
+        })
+    end
+
+    table.insert(menu, {
+        text = _("Add rule…"),
+        keep_menu_open = true,
+        separator = #exts > 0,
+        callback = function(touchmenu_instance)
+            addFormatRuleDialog(self, touchmenu_instance)
+        end,
+    })
+
+    return menu
 end
 
 --- Preset submenu: styling tweaks that ARE saved into the active preset.
