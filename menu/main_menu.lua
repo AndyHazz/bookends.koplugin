@@ -133,7 +133,7 @@ local function pickFormatRuleTarget(self, on_pick)
             on_pick("HIDDEN")
         end }},
     }
-    for _, p in ipairs(self:readPresetFiles()) do
+    for _i, p in ipairs(self:readPresetFiles()) do
         table.insert(buttons, {{ text = p.name, callback = function()
             close()
             on_pick(p.filename)
@@ -168,7 +168,10 @@ local function addFormatRuleDialog(self, touchmenu_instance)
                     local rules = self.settings:readSetting("format_preset_rules") or {}
                     rules[ext] = target
                     self.settings:saveSetting("format_preset_rules", rules)
-                    if touchmenu_instance then touchmenu_instance:updateItems() end
+                    if touchmenu_instance then
+                        touchmenu_instance.item_table = self:buildFormatPresetRulesMenu()
+                        touchmenu_instance:updateItems()
+                    end
                 end)
             end },
         }},
@@ -182,7 +185,7 @@ end
 --- preset can no longer be found; the next document-open will prune it).
 local function formatRuleTargetLabel(self, target)
     if target == "HIDDEN" then return _("Hidden") end
-    for _, p in ipairs(self:readPresetFiles()) do
+    for _i, p in ipairs(self:readPresetFiles()) do
         if p.filename == target then return p.name end
     end
     return target
@@ -581,7 +584,7 @@ function Bookends:buildFormatPresetRulesMenu()
     table.sort(exts)
 
     local menu = {}
-    for _, ext in ipairs(exts) do
+    for _i, ext in ipairs(exts) do
         local target = rules[ext]
         table.insert(menu, {
             text = ext .. " \xE2\x86\x92 " .. formatRuleTargetLabel(self, target), -- "->"
@@ -599,7 +602,10 @@ function Bookends:buildFormatPresetRulesMenu()
                                 local r = self.settings:readSetting("format_preset_rules") or {}
                                 r[ext] = new_target
                                 self.settings:saveSetting("format_preset_rules", r)
-                                if touchmenu_instance then touchmenu_instance:updateItems() end
+                                if touchmenu_instance then
+                                    touchmenu_instance.item_table = self:buildFormatPresetRulesMenu()
+                                    touchmenu_instance:updateItems()
+                                end
                             end)
                         end }},
                         {{ text = _("Remove rule"), callback = function()
@@ -607,7 +613,10 @@ function Bookends:buildFormatPresetRulesMenu()
                             local r = self.settings:readSetting("format_preset_rules") or {}
                             r[ext] = nil
                             self.settings:saveSetting("format_preset_rules", r)
-                            if touchmenu_instance then touchmenu_instance:updateItems() end
+                            if touchmenu_instance then
+                                touchmenu_instance.item_table = self:buildFormatPresetRulesMenu()
+                                touchmenu_instance:updateItems()
+                            end
                         end }},
                         {{ text = _("Cancel"), callback = function() UIManager:close(dlg) end }},
                     },
