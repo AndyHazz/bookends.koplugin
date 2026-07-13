@@ -779,6 +779,12 @@ function Bookends:migrateSchemaIfNeeded()
         end
     end
 
+    if not self.settings:isTrue("manual_active_preset_seeded") then
+        Migrations.seedManualActivePreset(self.settings.data)
+        self.settings:saveSetting("manual_active_preset_seeded", true)
+        self.settings:flush()
+    end
+
     -- Orphan-key cleanup: strip any stale top-level bar_colors /
     -- tick_height_pct / tick_width_multiplier that survive on disk past
     -- the flag-gated migration above. Runs every init (idempotent) until

@@ -83,4 +83,20 @@ function Migrations.barColorsToPerBar(tbl)
     return true
 end
 
+--- Seed manual_active_preset_filename from active_preset_filename (#87).
+--- Introduces the "manual default" pointer, distinct from
+--- active_preset_filename (which format-based auto-rules are free to
+--- override per document). Existing users' current active preset becomes
+--- their manual default; brand-new users with no active preset yet get
+--- nothing seeded (same as always).
+-- @param tbl settings table (mutated in place)
+-- @return true if manual_active_preset_filename was set, false if there was
+--   nothing to seed or it was already set
+function Migrations.seedManualActivePreset(tbl)
+    if tbl.manual_active_preset_filename then return false end
+    if not tbl.active_preset_filename then return false end
+    tbl.manual_active_preset_filename = tbl.active_preset_filename
+    return true
+end
+
 return Migrations

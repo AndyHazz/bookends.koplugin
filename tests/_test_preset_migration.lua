@@ -152,5 +152,29 @@ test("returns false when nothing to migrate", function()
     eq(changed, false)
 end)
 
+test("seedManualActivePreset: seeds from active_preset_filename", function()
+    local tbl = { active_preset_filename = "kobo_like.lua" }
+    local changed = Migrations.seedManualActivePreset(tbl)
+    eq(changed, true)
+    eq(tbl.manual_active_preset_filename, "kobo_like.lua")
+end)
+
+test("seedManualActivePreset: no-op when already set", function()
+    local tbl = {
+        active_preset_filename = "kobo_like.lua",
+        manual_active_preset_filename = "existing.lua",
+    }
+    local changed = Migrations.seedManualActivePreset(tbl)
+    eq(changed, false)
+    eq(tbl.manual_active_preset_filename, "existing.lua")
+end)
+
+test("seedManualActivePreset: no-op when there's nothing active yet", function()
+    local tbl = {}
+    local changed = Migrations.seedManualActivePreset(tbl)
+    eq(changed, false)
+    eq(tbl.manual_active_preset_filename, nil)
+end)
+
 io.write(string.format("\n%d passed, %d failed\n", pass, fail))
 os.exit(fail == 0 and 0 or 1)
