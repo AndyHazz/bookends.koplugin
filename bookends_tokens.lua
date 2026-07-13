@@ -100,6 +100,26 @@ function Tokens.getFileExtension(doc)
     return (file:match("%.([^.]+)$") or ""):upper()
 end
 
+--- Decide what the format-based preset auto-rule should do (#87). Pure - no
+--- I/O; the caller is responsible for pruning rules that point at a
+--- since-deleted preset file before calling this.
+-- @param ext uppercase file extension (Tokens.getFileExtension), "" if none
+-- @param rules table: extension -> "HIDDEN" | preset filename
+-- @param current_active string or nil: the currently-active preset filename
+-- @param manual_default string or nil: the user's manual default preset filename
+-- @return { hidden = bool, apply = string_or_nil }
+function Tokens.decideFormatPresetAction(ext, rules, current_active, manual_default)
+    local outcome = (ext and ext ~= "") and rules[ext] or nil
+    if outcome == "HIDDEN" then
+        return { hidden = true, apply = nil }
+    end
+    local target = outcome or manual_default
+    if target and target ~= current_active then
+        return { hidden = false, apply = target }
+    end
+    return { hidden = false, apply = nil }
+end
+
 --- Strip the community-convention page-count suffix Calibre users append
 -- via custom save templates ("Book Title - P(123)") so the Kindle/Kobo
 -- home-screen badge populates without opening every book first.
