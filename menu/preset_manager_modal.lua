@@ -474,6 +474,99 @@ local function renderPresetCard(self, item, slot_dimen)
     return card_widget
 end
 
+--- Render one card for the format-rule picker. Local presets get a radio that
+--- selects them as the rule target; the synthetic Hidden row gets its own radio
+--- and virtual-tile styling. Tapping a card body previews (preset or hidden);
+--- tapping the radio chooses. See the format-rule preset picker spec (#87).
+local function renderFormatRulePickerCard(self, item, slot_dimen)
+    local card_height = Screen:scaleBySize(64)
+    local row_height = card_height
+    local font_size = 18
+    local baseline = math.floor(row_height * 0.65)
+    local left_pad = Size.padding.large
+    local rules = self.bookends.settings:readSetting("format_preset_rules") or {}
+    local vg_tmp = VerticalGroup:new{ align = "left" }
+
+    if item.is_hidden_option then
+        PresetManagerModal._addRow(self, vg_tmp, slot_dimen.w, row_height, font_size, baseline, left_pad, {
+            display       = _("Hidden (no overlay)"),
+            is_virtual    = true,
+            radio_key     = "HIDDEN",
+            radio_selected = (rules[self.ext] == "HIDDEN"),
+            on_preview    = function() self.previewHidden() end,
+        })
+    else
+        local has_colour = item.has_colour
+        if has_colour == nil then
+            has_colour = PresetManager.hasColour(item.preset) or false
+        end
+        PresetManagerModal._addRow(self, vg_tmp, slot_dimen.w, row_height, font_size, baseline, left_pad, {
+            display        = item.name,
+            description    = item.preset and item.preset.description,
+            author         = item.preset and item.preset.author,
+            has_colour     = has_colour,
+            radio_key      = item.filename,
+            radio_selected = (rules[self.ext] == item.filename),
+            on_preview     = function() self.previewLocal(item) end,
+        })
+    end
+
+    return vg_tmp[1]
+end
+
+-- Format-rule picker item list: local presets (optionally search-filtered),
+-- with the synthetic Hidden row prepended. Cached per render cycle; the picker
+-- busts the cache in its rebuild() closure (self._items_cache = nil).
+local function pickerItems(self)
+    if self._items_cache then return self._items_cache end
+    local entries = sortedLocalPresets(self.bookends, "latest")
+    if self.current_search and #self.current_search >= 2 then
+        local LibraryModal = require("menu.library_modal")
+        local filtered = {}
+        for _i = 1, #entries do
+            local item = entries[_i]
+            local author = (item.preset and item.preset.author) or ""
+            local haystack = (item.name or "") .. " " .. author
+            if LibraryModal._matchesQuery(haystack, self.current_search) then
+                filtered[#filtered + 1] = item
+            end
+        end
+        entries = filtered
+    end
+    self._items_cache = PresetManagerModal.formatRulePickerItems(entries)
+    return self._items_cache
+end
+
+--- LibraryModal config for the format-rule picker. Local presets only, Hidden
+--- row prepended, radio-select, live preview, Done footer.
+local function buildFormatRulePickerConfig(self)
+    return {
+        title = _("Preset for this file type"),
+        search_placeholder = function() return _("Search my presets by name or author…") end,
+        on_search_submit = function(query)
+            self.current_search = query
+            self.page = 1
+            self.rebuild()
+        end,
+        rows_per_page = function()
+            return Screen:getWidth() > Screen:getHeight() and 4 or 5
+        end,
+        item_count = function() return #pickerItems(self) end,
+        item_at = function(idx) return pickerItems(self)[idx] end,
+        row_renderer = function(item, dimen)
+            return renderFormatRulePickerCard(self, item, dimen)
+        end,
+        footer_actions = {
+            {
+                key = "done",
+                label = _("Done"),
+                primary = true,
+                on_tap = function() self.close(true) end,
+            },
+        },
+    }
+end
+
 --- Build the LibraryModal config table for the preset manager.
 --- Called once from show(); self must already have all state fields set.
 local function buildPresetLibraryConfig(self)
@@ -794,6 +887,101 @@ function PresetManagerModal.show(bookends)
     local lm = LibraryModal:new{ config = config }
     -- Jump to the page containing the active preset on first open.
     lm.page = activePresetPage(bookends, "latest")
+    self.modal_widget = lm
+    UIManager:show(lm)
+    UIManager:setDirty("all", "flashui")
+end
+
+--- Open the format-rule preset picker for file extension `ext` (uppercase).
+--- Local presets only; a radio chooses the rule target (written immediately to
+--- format_preset_rules[ext]); tapping a card previews live; Done restores the
+--- pre-open overlay. on_done() fires once the modal closes. See spec (#87).
+function PresetManagerModal.showFormatRulePicker(bookends, ext, on_done)
+    local self = {
+        bookends = bookends,
+        ext = ext,
+        on_done = on_done,
+        tab = "local",
+        page = 1,
+        previewing = nil,
+        modal_widget = nil,
+        current_search = nil,
+    }
+
+    -- Snapshot the live overlay so Done can restore it exactly. The rule only
+    -- takes effect on the NEXT document open, so previewing here must never
+    -- leave a changed overlay behind. _format_hidden is captured too because
+    -- the picker may toggle it while previewing the Hidden option.
+    self.original_preset = bookends:buildPreset()
+    self.original_active_filename = bookends:getActivePresetFilename()
+    self.original_format_hidden = bookends._format_hidden
+
+    self.rebuild = function()
+        self._items_cache = nil
+        UIManager:nextTick(function()
+            if self.modal_widget and self.modal_widget.refresh then
+                self.modal_widget:refresh()
+            end
+        end)
+    end
+
+    local function dismissModalKeyboard()
+        if self.modal_widget and self.modal_widget._dismissKeyboard then
+            self.modal_widget:_dismissKeyboard()
+        end
+    end
+
+    -- Preview a local preset. Clears the hidden gate first so previewing a
+    -- visible preset after previewing Hidden actually shows it.
+    self.previewLocal = function(entry)
+        dismissModalKeyboard()
+        self.bookends._format_hidden = false
+        PresetManagerModal._previewLocal(self, entry)
+    end
+
+    -- Preview the hidden state: overlay vanishes. Mirrors _previewLocal's
+    -- _previewing bookkeeping (so the debounced autosave can't leak state) but
+    -- toggles the render gate instead of loading a preset.
+    self.previewHidden = function()
+        dismissModalKeyboard()
+        pcall(self.bookends.autosaveActivePreset, self.bookends)
+        self.bookends._previewing = true
+        self.bookends._format_hidden = true
+        self.previewing = { kind = "hidden" }
+        self.bookends:markDirty()
+        self.rebuild()
+    end
+
+    -- Choose `key` (a preset filename or "HIDDEN") as the rule target. Persists
+    -- immediately, then previews the choice. The picker stays open.
+    self.chooseRuleTarget = function(key)
+        local rules = self.bookends.settings:readSetting("format_preset_rules") or {}
+        rules[ext] = key
+        self.bookends.settings:saveSetting("format_preset_rules", rules)
+        if key == "HIDDEN" then
+            self.previewHidden()
+        else
+            local entry
+            for _i, p in ipairs(sortedLocalPresets(self.bookends, "latest")) do
+                if p.filename == key then entry = p; break end
+            end
+            if entry then self.previewLocal(entry) end
+        end
+    end
+
+    -- Close + restore. Reuses _close for preset/active-filename restore, then
+    -- puts the hidden gate back to its pre-open value. Fires on_done last.
+    self.close = function(restore)
+        PresetManagerModal._close(self, restore)
+        if restore then
+            self.bookends._format_hidden = self.original_format_hidden
+            self.bookends:markDirty()
+        end
+        if self.on_done then self.on_done() end
+    end
+
+    local LibraryModal = require("menu.library_modal")
+    local lm = LibraryModal:new{ config = buildFormatRulePickerConfig(self) }
     self.modal_widget = lm
     UIManager:show(lm)
     UIManager:setDirty("all", "flashui")
