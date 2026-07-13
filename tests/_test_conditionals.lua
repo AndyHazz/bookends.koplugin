@@ -483,5 +483,25 @@ test("@ref: v5 state keys resolve via alias on ref lookup", function()
     eq(P("[if:chap_num=@chapters]last[/if]", {chap_num=10, chap_count=10}), "last")
 end)
 
+test("getFileExtension: uppercases a normal extension", function()
+    eq(Tokens.getFileExtension({ file = "/books/comic.cbz" }), "CBZ")
+end)
+
+test("getFileExtension: handles multi-dot filenames (last dot wins)", function()
+    eq(Tokens.getFileExtension({ file = "/books/My.Book.v2.epub" }), "EPUB")
+end)
+
+test("getFileExtension: no extension returns empty string", function()
+    eq(Tokens.getFileExtension({ file = "/books/README" }), "")
+end)
+
+test("getFileExtension: nil doc returns empty string", function()
+    eq(Tokens.getFileExtension(nil), "")
+end)
+
+test("getFileExtension: doc with nil file returns empty string", function()
+    eq(Tokens.getFileExtension({ file = nil }), "")
+end)
+
 io.stdout:write(string.format("%d passed, %d failed\n", pass, fail))
 os.exit(fail == 0 and 0 or 1)

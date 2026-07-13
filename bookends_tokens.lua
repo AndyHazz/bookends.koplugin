@@ -91,6 +91,15 @@ function Tokens.lastDigit(value)
     return tostring(value or ""):match("(%d)$") or ""
 end
 
+--- Uppercase file extension of `doc`'s file (e.g. "CBZ" for foo.cbz), or ""
+--- if there's no file / no extension. Shared by conditional-token state
+--- (state.format) and format-based preset auto-rules (#87).
+function Tokens.getFileExtension(doc)
+    local file = doc and doc.file
+    if not file then return "" end
+    return (file:match("%.([^.]+)$") or ""):upper()
+end
+
 --- Strip the community-convention page-count suffix Calibre users append
 -- via custom save templates ("Book Title - P(123)") so the Kindle/Kobo
 -- home-screen badge populates without opening every book first.
@@ -1280,7 +1289,7 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
     -- Document format and filename (extension stripped, matches %filename token)
     local doc = ui.document
     if doc and doc.file then
-        state.format = (doc.file:match("%.([^.]+)$") or ""):upper()
+        state.format = Tokens.getFileExtension(doc)
         local name = doc.file:match("([^/]+)$") or ""
         state.filename = (name:gsub("%.[^.]+$", ""))
     end
