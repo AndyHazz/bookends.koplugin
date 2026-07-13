@@ -172,6 +172,65 @@ local function writePresetContents(path, name, preset_data)
     return false
 end
 
+-- Remove `filename` from manual_active_preset_filename if it's the
+-- current value. Mirrors pruneFromCycle (below, inside attach()) for the
+-- #87 manual-default pointer: this preset is gone, so it can no longer be
+-- anyone's default. Kept module-level (rather than alongside its sibling
+-- inside attach()) so it's testable via dofile() without needing a
+-- Bookends instance to attach() onto first.
+local function pruneManualDefault(self_bookends, filename)
+    if not filename then return end
+    if self_bookends.settings:readSetting("manual_active_preset_filename") == filename then
+        self_bookends.settings:delSetting("manual_active_preset_filename")
+    end
+end
+PresetManager.pruneManualDefault = pruneManualDefault
+
+-- Update manual_active_preset_filename in place on rename. Mirrors
+-- renameInCycle for the #87 manual-default pointer.
+local function renameManualDefault(self_bookends, old_filename, new_filename)
+    if not old_filename or not new_filename or old_filename == new_filename then return end
+    if self_bookends.settings:readSetting("manual_active_preset_filename") == old_filename then
+        self_bookends.settings:saveSetting("manual_active_preset_filename", new_filename)
+    end
+end
+PresetManager.renameManualDefault = renameManualDefault
+
+-- Remove any format_preset_rules entry pointing at `filename` (#87).
+-- HIDDEN entries are untouched since they don't reference a file.
+local function pruneFormatRules(self_bookends, filename)
+    if not filename then return end
+    local rules = self_bookends.settings:readSetting("format_preset_rules") or {}
+    local changed = false
+    for ext, target in pairs(rules) do
+        if target == filename then
+            rules[ext] = nil
+            changed = true
+        end
+    end
+    if changed then
+        self_bookends.settings:saveSetting("format_preset_rules", rules)
+    end
+end
+PresetManager.pruneFormatRules = pruneFormatRules
+
+-- Update every format_preset_rules entry pointing at old_filename (#87).
+local function renameFormatRules(self_bookends, old_filename, new_filename)
+    if not old_filename or not new_filename or old_filename == new_filename then return end
+    local rules = self_bookends.settings:readSetting("format_preset_rules") or {}
+    local changed = false
+    for ext, target in pairs(rules) do
+        if target == old_filename then
+            rules[ext] = new_filename
+            changed = true
+        end
+    end
+    if changed then
+        self_bookends.settings:saveSetting("format_preset_rules", rules)
+    end
+end
+PresetManager.renameFormatRules = renameFormatRules
+
 --- Attach Bookends:methodName variants that use the helpers above.
 function PresetManager.attach(Bookends)
     -- Keep class-method references for backwards compatibility with any external code
@@ -340,6 +399,8 @@ function PresetManager.attach(Bookends)
         local path = self:presetDir() .. "/" .. filename
         os.remove(path)
         pruneFromCycle(self, filename)
+        pruneManualDefault(self, filename)
+        pruneFormatRules(self, filename)
         self:invalidatePresetCache()
     end
 
@@ -355,6 +416,8 @@ function PresetManager.attach(Bookends)
         if new_filename ~= old_filename then
             os.remove(old_path)
             renameInCycle(self, old_filename, new_filename)
+            renameManualDefault(self, old_filename, new_filename)
+            renameFormatRules(self, old_filename, new_filename)
         end
 
         -- writePresetFile already invalidated; renaming the file on disk
@@ -415,6 +478,19 @@ function PresetManager.attach(Bookends)
         end
     end
 
+    --- The user has explicitly chosen `filename` as their default preset,
+    --- distinct from a transient format-rule auto-override (#87). Use when
+    --- the preset's data is already loaded elsewhere in the current flow
+    --- (e.g. a preview) and only the active pointer needs updating.
+    function Bookends:setManualActivePreset(filename)
+        self:setActivePresetFilename(filename)
+        if filename then
+            self.settings:saveSetting("manual_active_preset_filename", filename)
+        else
+            self.settings:delSetting("manual_active_preset_filename")
+        end
+    end
+
     --- Given a preset filename, load it + set it active. Returns true on success.
     function Bookends:applyPresetFile(filename)
         local path = self:presetDir() .. "/" .. filename
@@ -426,6 +502,18 @@ function PresetManager.attach(Bookends)
         if not ok then return false, lerr end
         self:setActivePresetFilename(filename)
         return true
+    end
+
+    --- Like applyPresetFile, but also remembers `filename` as the user's
+    --- manual default (#87). Use for explicit choices that need the
+    --- preset's data loaded (not already loaded elsewhere), e.g. the
+    --- cycle gesture, creating a new blank preset.
+    function Bookends:applyManualPresetFile(filename)
+        local ok, err = self:applyPresetFile(filename)
+        if ok then
+            self.settings:saveSetting("manual_active_preset_filename", filename)
+        end
+        return ok, err
     end
 
     --- Serialize current overlay state to the active preset file.
