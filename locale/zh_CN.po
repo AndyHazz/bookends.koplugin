@@ -2276,7 +2276,7 @@ msgstr "夜间模式已开启"
 
 #: menu/tokens_catalogue.lua:157
 msgid "EPUB / PDF / CBZ / …"
-msgstr "EPUB/PDF/CBZ/ …"
+msgstr "EPUB/PDF/CBZ/…"
 
 #: menu/tokens_catalogue.lua:158
 msgid "Current HH:MM (24h)"
