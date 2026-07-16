@@ -106,6 +106,13 @@ end
 
 function FlippingHaloOverlay:paintTo(bb, x, y)
     local b = self._bookends
+    -- Gated on `enabled` only, NOT on `_format_hidden`, and that's deliberate.
+    -- The halo is a legibility backing for KOReader's own flipping/render
+    -- icon (it re-stamps that icon over a page-coloured circle), independent
+    -- of the Bookends text overlay. A format rule that hides Bookends for
+    -- CBZ/PDF suppresses the text, but the icon-vs-content clash the halo
+    -- solves is if anything worse over comic/PDF artwork - so the halo should
+    -- keep drawing there. Do not add `or b._format_hidden` here.
     if not b or not b.enabled then return end
     if not b:_flippingWillPaintIcon() then return end
     -- Suppress if the topmost widget above ReaderUI has a dimen that covers
