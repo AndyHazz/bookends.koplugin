@@ -916,6 +916,20 @@ function PresetManagerModal.showFormatRulePicker(bookends, ext, on_done)
     self.original_active_filename = bookends:getActivePresetFilename()
     self.original_format_hidden = bookends._format_hidden
 
+    -- Hide the reader menu (TouchMenu) that opened this picker while it's up.
+    -- The picker previews each preset on the page BEHIND it; with the menu
+    -- still shown it covers the page, so the user can't see what they're
+    -- choosing. UIManager:close only removes the container from the window
+    -- stack — the TouchMenu widget and its drilldown position survive — so we
+    -- can re-show the very same widget on close and land the user back exactly
+    -- where they were (the format-rules submenu). Mirrors the rest of the app,
+    -- where applying/choosing a preset happens over the page, not the menu.
+    local reader_menu = bookends.ui and bookends.ui.menu
+    self._hidden_menu_container = reader_menu and reader_menu.menu_container or nil
+    if self._hidden_menu_container then
+        UIManager:close(self._hidden_menu_container)
+    end
+
     self.rebuild = function()
         self._items_cache = nil
         UIManager:nextTick(function()
@@ -994,6 +1008,21 @@ function PresetManagerModal.showFormatRulePicker(bookends, ext, on_done)
     lm.onClose = function()
         self.close(true)
         return true
+    end
+    -- Re-show the reader menu we hid on open, at the same position. Hook
+    -- onCloseWidget (not just self.close) so EVERY dismissal path restores it:
+    -- the Done footer and hardware Back both route through self.close →
+    -- UIManager:close(lm), and a tap-outside dismissal takes LibraryModal's
+    -- stock path — all of them fire onCloseWidget exactly once. Guarded on the
+    -- saved reference so it can't double-show.
+    local lm_onCloseWidget = lm.onCloseWidget
+    lm.onCloseWidget = function(widget, ...)
+        if self._hidden_menu_container then
+            UIManager:show(self._hidden_menu_container)
+            UIManager:setDirty(self._hidden_menu_container, "flashui")
+            self._hidden_menu_container = nil
+        end
+        if lm_onCloseWidget then return lm_onCloseWidget(widget, ...) end
     end
     UIManager:show(lm)
     UIManager:setDirty("all", "flashui")
