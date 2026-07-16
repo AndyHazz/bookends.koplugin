@@ -341,6 +341,7 @@ Tags override the line's per-line style. If a line is set to Bold, `[i]text[/i]`
 
 - **Auto-hide** — Lines where all tokens resolve to empty or zero are automatically hidden
 - **Token width limits** — Append `{N}` to any token to cap its width at N pixels: `%chap_title{200} - %chap_read/%chap_pages` truncates the chapter title with ellipsis if it exceeds 200 pixels. Works with `%bar{400}` to set a fixed bar width instead of auto-fill.
+- **Delimited tokens** — A token name runs until the next non-letter, so text placed straight after it is read as part of the name. Wrap the name in angle brackets to butt text directly against it: `%<book_time_left_h>h%<book_time_left_m>m` → `4h40m`. Width limits still work inside: `%<author{200}>`.
 - **Pluralisation** — Write `%highlights highlight(s)` and it becomes `1 highlight` or `3 highlights`
 - **Odd/even pages** — Set any line to appear on all pages, odd pages only, or even pages only
 - **Auto-refresh** — Clock and other dynamic tokens update every 60 seconds

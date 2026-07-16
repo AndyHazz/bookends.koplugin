@@ -1569,6 +1569,22 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         return format_str
     end
 
+    -- #92: %<token> / %<token{arg}> delimited form. The greedy identifier
+    -- match (%%[%a_][%w_]*) would otherwise absorb any letters/digits written
+    -- immediately after a token, so `%book_time_left_hh` reads as one unknown
+    -- name. The angle brackets mark where the name ends. We rewrite the
+    -- delimited form to the plain %token followed by a \4 boundary sentinel:
+    -- \4 is not a word char, so every downstream pass (legacy alias, brace
+    -- pre-parse, bareword, depth-suffix, preview mirror) stops the identifier
+    -- there exactly as a space would, and no per-token handling is needed. The
+    -- sentinel is stripped just before the value is returned. An unclosed
+    -- `%<name` (no `>`) or non-identifier start is left untouched (literal).
+    -- This MUST run before rewriteLegacyTokens so a delimited token with a
+    -- strftime brace (e.g. %<datetime{%H:%M}>) is already in canonical
+    -- %datetime{…} form, which the legacy pass recognises and leaves its brace
+    -- body verbatim — otherwise the %H/%M inside would be alias-rewritten.
+    format_str = format_str:gsub("%%<([%a_][^>]*)>", "%%%1\4")
+
     -- v5 alias pass: rewrite legacy %X tokens to v5 names so all downstream
     -- processing uses a single vocabulary. Gallery presets and user-authored
     -- legacy strings render identically. opts.legacy_literal skips this pass
@@ -1811,6 +1827,7 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
             if label then return label end
             return "%" .. token
         end)
+        r = r:gsub("\4", "")  -- #92: drop %<token> boundary sentinels
         return r
     end
 
@@ -2972,6 +2989,10 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         end
         return emitDepth("chap_time_left", depth_str, val)
     end)
+
+    -- #92: all token expansion is done; drop the %<token> boundary sentinels
+    -- before the remaining text transforms (pluralisation, PUA colour) run.
+    result = result:gsub("\4", "")
 
     -- Handle (s) pluralisation: "1 highlight(s)" -> "1 highlight", "3 highlight(s)" -> "3 highlights"
     result = result:gsub("(%d+)(%D-)%(s%)", function(num, between)

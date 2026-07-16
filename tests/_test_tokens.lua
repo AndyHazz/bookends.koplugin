@@ -1037,6 +1037,66 @@ test("mixed legacy + new: '%A — %title' → 'Isaac Asimov — Foundation'", fu
 end)
 
 -- ============================================================================
+-- #92: %<token> delimited form lets a token abut following text
+-- ============================================================================
+-- Baseline: without the delimiter, trailing word chars are swallowed into the
+-- greedy identifier, so the whole run is an unknown token left literal.
+test("delimiter baseline: %page_nump swallows the 'p' (left literal)", function()
+    local r = Tokens.expand("%page_nump", stubUiForExpand(), nil, nil, false, 2, nil)
+    eq(r, "%page_nump")
+end)
+
+test("delimiter: %<title> expands the same as %title", function()
+    local r = Tokens.expand("%<title>", stubUiForExpand(), nil, nil, false, 2, nil)
+    eq(r, "Foundation")
+end)
+
+test("delimiter: %<page_num>p abuts a following letter → '5p'", function()
+    local r = Tokens.expand("%<page_num>p", stubUiForExpand(), nil, nil, false, 2, nil)
+    eq(r, "5p")
+end)
+
+test("delimiter: adjacent delimited tokens abut → '5of100'", function()
+    local r = Tokens.expand("%<page_num>of%<page_count>", stubUiForExpand(), nil, nil, false, 2, nil)
+    eq(r, "5of100")
+end)
+
+test("delimiter: leading text + delimited token → 'p5 Foundation'", function()
+    local r = Tokens.expand("p%<page_num> %title", stubUiForExpand(), nil, nil, false, 2, nil)
+    eq(r, "p5 Foundation")
+end)
+
+test("delimiter: unknown delimited token left literal, following text abuts", function()
+    local r = Tokens.expand("%<nope>x", stubUiForExpand(), nil, nil, false, 2, nil)
+    eq(r, "%nopex")
+end)
+
+test("delimiter: unclosed %<page_num (no '>') is left literal", function()
+    local r = Tokens.expand("%<page_num", stubUiForExpand(), nil, nil, false, 2, nil)
+    eq(r, "%<page_num")
+end)
+
+test("delimiter: brace argument inside delimiter renders + abuts (preview)", function()
+    local yr = os.date("%Y")
+    local r = Tokens.expandPreview("%<datetime{%Y}>AD", { view = {} }, nil, nil, 2, nil)
+    eq(r, yr .. "AD")
+end)
+
+test("delimiter: %<page_num> abuts in preview mode → '[page]p'", function()
+    local r = Tokens.expandPreview("%<page_num>p", { view = {} }, nil, nil, 2, nil)
+    eq(r, "[page]p")
+end)
+
+-- Regression: the %<...> rewrite must run before the legacy-alias pass, so a
+-- strftime brace containing legacy-alias chars (%H, %M) is preserved verbatim
+-- rather than having %H rewritten to %book_time_left inside the format spec.
+test("delimiter: strftime brace with %H/%M survives in real expand", function()
+    local r = Tokens.expand("%<datetime{%H:%M}>Z", stubUiForExpand(), nil, nil, false, 2, nil)
+    assert(r:match("^%d%d:%d%dZ$"), "expected HH:MMZ, got " .. string.format("%q", r))
+    assert(not r:find("book_time_left"), "legacy alias leaked into strftime spec: " .. r)
+end)
+
+-- ============================================================================
 -- series split: %series, %series_name, %series_num
 -- ============================================================================
 test("series: %series unchanged (combined 'Foundation #1')", function()
