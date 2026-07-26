@@ -3101,3 +3101,120 @@ msgstr ""
 
 #~ msgid "wifi — on / off"
 #~ msgstr "wifi — be / ki"
+
+# Weekday names used by bookends_tokens.lua
+msgid "Sunday"
+msgstr "vasárnap"
+
+msgid "Monday"
+msgstr "hétfő"
+
+msgid "Tuesday"
+msgstr "kedd"
+
+msgid "Wednesday"
+msgstr "szerda"
+
+msgid "Thursday"
+msgstr "csütörtök"
+
+msgid "Friday"
+msgstr "péntek"
+
+msgid "Saturday"
+msgstr "szombat"
+
+msgid "Sun"
+msgstr "V"
+
+msgid "Mon"
+msgstr "H"
+
+msgid "Tue"
+msgstr "K"
+
+msgid "Wed"
+msgstr "Sze"
+
+msgid "Thu"
+msgstr "Cs"
+
+msgid "Fri"
+msgstr "P"
+
+msgid "Sat"
+msgstr "Szo"
+
+
+# Month names used by bookends_tokens.lua
+msgid "month.full.January"
+msgstr "január"
+
+msgid "month.full.February"
+msgstr "február"
+
+msgid "month.full.March"
+msgstr "március"
+
+msgid "month.full.April"
+msgstr "április"
+
+msgid "month.full.May"
+msgstr "május"
+
+msgid "month.full.June"
+msgstr "június"
+
+msgid "month.full.July"
+msgstr "július"
+
+msgid "month.full.August"
+msgstr "augusztus"
+
+msgid "month.full.September"
+msgstr "szeptember"
+
+msgid "month.full.October"
+msgstr "október"
+
+msgid "month.full.November"
+msgstr "november"
+
+msgid "month.full.December"
+msgstr "december"
+
+msgid "month.short.Jan"
+msgstr "jan."
+
+msgid "month.short.Feb"
+msgstr "febr."
+
+msgid "month.short.Mar"
+msgstr "márc."
+
+msgid "month.short.Apr"
+msgstr "ápr."
+
+msgid "month.short.May"
+msgstr "máj."
+
+msgid "month.short.Jun"
+msgstr "jún."
+
+msgid "month.short.Jul"
+msgstr "júl."
+
+msgid "month.short.Aug"
+msgstr "aug."
+
+msgid "month.short.Sep"
+msgstr "szept."
+
+msgid "month.short.Oct"
+msgstr "okt."
+
+msgid "month.short.Nov"
+msgstr "nov."
+
+msgid "month.short.Dec"
+msgstr "dec."

@@ -2509,3 +2509,120 @@ msgid ""
 "and icon support."
 msgstr ""
 "可以在屏幕四周显示自定义文字，并自动读取系统信息，除了文字，还支持图标。"
+
+# Weekday names used by bookends_tokens.lua
+msgid "Sunday"
+msgstr "星期日"
+
+msgid "Monday"
+msgstr "星期一"
+
+msgid "Tuesday"
+msgstr "星期二"
+
+msgid "Wednesday"
+msgstr "星期三"
+
+msgid "Thursday"
+msgstr "星期四"
+
+msgid "Friday"
+msgstr "星期五"
+
+msgid "Saturday"
+msgstr "星期六"
+
+msgid "Sun"
+msgstr "周日"
+
+msgid "Mon"
+msgstr "周一"
+
+msgid "Tue"
+msgstr "周二"
+
+msgid "Wed"
+msgstr "周三"
+
+msgid "Thu"
+msgstr "周四"
+
+msgid "Fri"
+msgstr "周五"
+
+msgid "Sat"
+msgstr "周六"
+
+
+# Month names used by bookends_tokens.lua
+msgid "month.full.January"
+msgstr "一月"
+
+msgid "month.full.February"
+msgstr "二月"
+
+msgid "month.full.March"
+msgstr "三月"
+
+msgid "month.full.April"
+msgstr "四月"
+
+msgid "month.full.May"
+msgstr "五月"
+
+msgid "month.full.June"
+msgstr "六月"
+
+msgid "month.full.July"
+msgstr "七月"
+
+msgid "month.full.August"
+msgstr "八月"
+
+msgid "month.full.September"
+msgstr "九月"
+
+msgid "month.full.October"
+msgstr "十月"
+
+msgid "month.full.November"
+msgstr "十一月"
+
+msgid "month.full.December"
+msgstr "十二月"
+
+msgid "month.short.Jan"
+msgstr "1月"
+
+msgid "month.short.Feb"
+msgstr "2月"
+
+msgid "month.short.Mar"
+msgstr "3月"
+
+msgid "month.short.Apr"
+msgstr "4月"
+
+msgid "month.short.May"
+msgstr "5月"
+
+msgid "month.short.Jun"
+msgstr "6月"
+
+msgid "month.short.Jul"
+msgstr "7月"
+
+msgid "month.short.Aug"
+msgstr "8月"
+
+msgid "month.short.Sep"
+msgstr "9月"
+
+msgid "month.short.Oct"
+msgstr "10月"
+
+msgid "month.short.Nov"
+msgstr "11月"
+
+msgid "month.short.Dec"
+msgstr "12月"

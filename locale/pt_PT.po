@@ -2548,3 +2548,120 @@ msgid ""
 msgstr ""
 "Camadas de texto configuráveis nos cantos e extremidades do ecrã com suporte "
 "a expansão de variáveis e ícones."
+
+# Weekday names used by bookends_tokens.lua
+msgid "Sunday"
+msgstr "domingo"
+
+msgid "Monday"
+msgstr "segunda-feira"
+
+msgid "Tuesday"
+msgstr "terça-feira"
+
+msgid "Wednesday"
+msgstr "quarta-feira"
+
+msgid "Thursday"
+msgstr "quinta-feira"
+
+msgid "Friday"
+msgstr "sexta-feira"
+
+msgid "Saturday"
+msgstr "sábado"
+
+msgid "Sun"
+msgstr "dom."
+
+msgid "Mon"
+msgstr "seg."
+
+msgid "Tue"
+msgstr "ter."
+
+msgid "Wed"
+msgstr "qua."
+
+msgid "Thu"
+msgstr "qui."
+
+msgid "Fri"
+msgstr "sex."
+
+msgid "Sat"
+msgstr "sáb."
+
+
+# Month names used by bookends_tokens.lua
+msgid "month.full.January"
+msgstr "janeiro"
+
+msgid "month.full.February"
+msgstr "fevereiro"
+
+msgid "month.full.March"
+msgstr "março"
+
+msgid "month.full.April"
+msgstr "abril"
+
+msgid "month.full.May"
+msgstr "maio"
+
+msgid "month.full.June"
+msgstr "junho"
+
+msgid "month.full.July"
+msgstr "julho"
+
+msgid "month.full.August"
+msgstr "agosto"
+
+msgid "month.full.September"
+msgstr "setembro"
+
+msgid "month.full.October"
+msgstr "outubro"
+
+msgid "month.full.November"
+msgstr "novembro"
+
+msgid "month.full.December"
+msgstr "dezembro"
+
+msgid "month.short.Jan"
+msgstr "jan."
+
+msgid "month.short.Feb"
+msgstr "fev."
+
+msgid "month.short.Mar"
+msgstr "mar."
+
+msgid "month.short.Apr"
+msgstr "abr."
+
+msgid "month.short.May"
+msgstr "mai."
+
+msgid "month.short.Jun"
+msgstr "jun."
+
+msgid "month.short.Jul"
+msgstr "jul."
+
+msgid "month.short.Aug"
+msgstr "ago."
+
+msgid "month.short.Sep"
+msgstr "set."
+
+msgid "month.short.Oct"
+msgstr "out."
+
+msgid "month.short.Nov"
+msgstr "nov."
+
+msgid "month.short.Dec"
+msgstr "dez."

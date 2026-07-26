@@ -3101,3 +3101,120 @@ msgstr ""
 
 #~ msgid "wifi — on / off"
 #~ msgstr "wifi — activé / désactivé"
+
+# Weekday names used by bookends_tokens.lua
+msgid "Sunday"
+msgstr "dimanche"
+
+msgid "Monday"
+msgstr "lundi"
+
+msgid "Tuesday"
+msgstr "mardi"
+
+msgid "Wednesday"
+msgstr "mercredi"
+
+msgid "Thursday"
+msgstr "jeudi"
+
+msgid "Friday"
+msgstr "vendredi"
+
+msgid "Saturday"
+msgstr "samedi"
+
+msgid "Sun"
+msgstr "dim."
+
+msgid "Mon"
+msgstr "lun."
+
+msgid "Tue"
+msgstr "mar."
+
+msgid "Wed"
+msgstr "mer."
+
+msgid "Thu"
+msgstr "jeu."
+
+msgid "Fri"
+msgstr "ven."
+
+msgid "Sat"
+msgstr "sam."
+
+
+# Month names used by bookends_tokens.lua
+msgid "month.full.January"
+msgstr "janvier"
+
+msgid "month.full.February"
+msgstr "février"
+
+msgid "month.full.March"
+msgstr "mars"
+
+msgid "month.full.April"
+msgstr "avril"
+
+msgid "month.full.May"
+msgstr "mai"
+
+msgid "month.full.June"
+msgstr "juin"
+
+msgid "month.full.July"
+msgstr "juillet"
+
+msgid "month.full.August"
+msgstr "août"
+
+msgid "month.full.September"
+msgstr "septembre"
+
+msgid "month.full.October"
+msgstr "octobre"
+
+msgid "month.full.November"
+msgstr "novembre"
+
+msgid "month.full.December"
+msgstr "décembre"
+
+msgid "month.short.Jan"
+msgstr "janv."
+
+msgid "month.short.Feb"
+msgstr "févr."
+
+msgid "month.short.Mar"
+msgstr "mars"
+
+msgid "month.short.Apr"
+msgstr "avr."
+
+msgid "month.short.May"
+msgstr "mai"
+
+msgid "month.short.Jun"
+msgstr "juin"
+
+msgid "month.short.Jul"
+msgstr "juil."
+
+msgid "month.short.Aug"
+msgstr "août"
+
+msgid "month.short.Sep"
+msgstr "sept."
+
+msgid "month.short.Oct"
+msgstr "oct."
+
+msgid "month.short.Nov"
+msgstr "nov."
+
+msgid "month.short.Dec"
+msgstr "déc."

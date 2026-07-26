@@ -2478,3 +2478,120 @@ msgstr ""
 #~ "\n"
 #~ "An inline [c=#RRGGBB]…[/c] tag in a line overrides the icon colour for "
 #~ "any glyphs inside it."
+
+# Weekday names used by bookends_tokens.lua
+msgid "Sunday"
+msgstr "Sunday"
+
+msgid "Monday"
+msgstr "Monday"
+
+msgid "Tuesday"
+msgstr "Tuesday"
+
+msgid "Wednesday"
+msgstr "Wednesday"
+
+msgid "Thursday"
+msgstr "Thursday"
+
+msgid "Friday"
+msgstr "Friday"
+
+msgid "Saturday"
+msgstr "Saturday"
+
+msgid "Sun"
+msgstr "Sun"
+
+msgid "Mon"
+msgstr "Mon"
+
+msgid "Tue"
+msgstr "Tue"
+
+msgid "Wed"
+msgstr "Wed"
+
+msgid "Thu"
+msgstr "Thu"
+
+msgid "Fri"
+msgstr "Fri"
+
+msgid "Sat"
+msgstr "Sat"
+
+
+# Month names used by bookends_tokens.lua
+msgid "month.full.January"
+msgstr "January"
+
+msgid "month.full.February"
+msgstr "February"
+
+msgid "month.full.March"
+msgstr "March"
+
+msgid "month.full.April"
+msgstr "April"
+
+msgid "month.full.May"
+msgstr "May"
+
+msgid "month.full.June"
+msgstr "June"
+
+msgid "month.full.July"
+msgstr "July"
+
+msgid "month.full.August"
+msgstr "August"
+
+msgid "month.full.September"
+msgstr "September"
+
+msgid "month.full.October"
+msgstr "October"
+
+msgid "month.full.November"
+msgstr "November"
+
+msgid "month.full.December"
+msgstr "December"
+
+msgid "month.short.Jan"
+msgstr "Jan"
+
+msgid "month.short.Feb"
+msgstr "Feb"
+
+msgid "month.short.Mar"
+msgstr "Mar"
+
+msgid "month.short.Apr"
+msgstr "Apr"
+
+msgid "month.short.May"
+msgstr "May"
+
+msgid "month.short.Jun"
+msgstr "Jun"
+
+msgid "month.short.Jul"
+msgstr "Jul"
+
+msgid "month.short.Aug"
+msgstr "Aug"
+
+msgid "month.short.Sep"
+msgstr "Sept"
+
+msgid "month.short.Oct"
+msgstr "Oct"
+
+msgid "month.short.Nov"
+msgstr "Nov"
+
+msgid "month.short.Dec"
+msgstr "Dec"

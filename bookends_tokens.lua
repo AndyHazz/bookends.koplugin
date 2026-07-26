@@ -1,5 +1,6 @@
 local Device = require("device")
 local datetime = require("datetime")
+local _ = require("bookends_i18n").gettext
 local BAR_PLACEHOLDER = require("bookends_overlay_widget").BAR_PLACEHOLDER
 
 local Tokens = {}
@@ -513,35 +514,168 @@ local function splitAuthors(authors_raw)
     return list
 end
 
+local function getLocalizedWeekday(short, epoch)
+    local timestamp = epoch or os.time()
+    local now = os.date("*t", timestamp)
+    local source_names = short and {
+        "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat",
+    } or {
+        "Sunday", "Monday", "Tuesday", "Wednesday",
+        "Thursday", "Friday", "Saturday",
+    }
+
+    local source = source_names[now.wday] or ""
+    local translated = _(source)
+    if translated ~= source then
+        return translated
+    end
+
+    return os.date(short and "%a" or "%A", timestamp)
+end
+
+local MONTH_NAMES = {
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December",
+}
+
+local MONTH_NAMES_SHORT = {
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+}
+
+local function getLocalizedMonth(short, epoch)
+    local timestamp = epoch or os.time()
+    local now = os.date("*t", timestamp)
+    local source_names = short and MONTH_NAMES_SHORT or MONTH_NAMES
+    local source = source_names[now.month] or ""
+    local key = (short and "month.short." or "month.full.") .. source
+    local translated = _(key)
+
+    if translated ~= key then
+        return translated
+    end
+
+    return os.date(short and "%b" or "%B", timestamp)
+end
+
 -- Map KOReader UI language to a system locale for localized date strings.
--- Caches per language to avoid repeated locale probing.
-local _date_locale_cache = {} -- lang -> locale string or false
+-- Preserve the regional code first (for example pt_BR), then try generic fallbacks.
+local _date_locale_cache = {} -- language code -> locale string or false
 local function getDateLocale()
     local ok, GetText = pcall(require, "gettext")
     if not ok or not GetText or not GetText.current_lang or GetText.current_lang == "C" then
         return false
     end
-    local lang = GetText.current_lang:match("^([a-z]+)") -- e.g. "es" from "es_ES"
+
+    local current_lang = GetText.current_lang:gsub("-", "_")
+    local lang = current_lang:match("^([a-z]+)")
     if not lang or lang == "en" then
         return false
     end
-    if _date_locale_cache[lang] ~= nil then return _date_locale_cache[lang] end
-    -- Try common locale patterns
-    local candidates = {
-        lang .. "_" .. lang:upper() .. ".UTF-8",  -- es_ES.UTF-8
-        lang .. ".UTF-8",                           -- es.UTF-8
-    }
-    local saved = os.setlocale(nil, "time") -- save current locale
+    if _date_locale_cache[current_lang] ~= nil then
+        return _date_locale_cache[current_lang]
+    end
+
+    local candidates = {}
+    local seen = {}
+    local function add(locale)
+        if locale and locale ~= "" and not seen[locale] then
+            candidates[#candidates + 1] = locale
+            seen[locale] = true
+        end
+    end
+
+    if current_lang:find("_", 1, true) then
+        add(current_lang .. ".UTF-8")
+        add(current_lang .. ".utf8")
+        add(current_lang)
+    end
+    add(lang .. "_" .. lang:upper() .. ".UTF-8")
+    add(lang .. ".UTF-8")
+    add(lang)
+
+    local saved = os.setlocale(nil, "time")
     for _, loc in ipairs(candidates) do
         if os.setlocale(loc, "time") then
-            os.setlocale(saved or "C", "time") -- restore previous locale
-            _date_locale_cache[lang] = loc
+            os.setlocale(saved or "C", "time")
+            _date_locale_cache[current_lang] = loc
             return loc
         end
     end
-    if saved then os.setlocale(saved, "time") end -- restore after failed probes
-    _date_locale_cache[lang] = false
+    if saved then os.setlocale(saved, "time") end
+    _date_locale_cache[current_lang] = false
     return false
+end
+
+-- Format strftime text while resolving weekday and month names through Bookends
+-- translations first. Missing translations retain the system-locale fallback.
+local function formatLocalizedDate(fmt, epoch)
+    if not fmt or fmt == "" then return "" end
+
+    local timestamp = epoch or os.time()
+    local loc = getDateLocale()
+    local saved_locale
+    if loc then
+        saved_locale = os.setlocale(nil, "time")
+        os.setlocale(loc, "time")
+    end
+
+    local output = {}
+    local native = {}
+
+    local function flushNative()
+        if #native == 0 then return end
+        output[#output + 1] = os.date(table.concat(native), timestamp) or ""
+        native = {}
+    end
+
+    local i = 1
+    while i <= #fmt do
+        local char = fmt:sub(i, i)
+        if char ~= "%" or i == #fmt then
+            native[#native + 1] = char
+            i = i + 1
+        else
+            local j = i + 1
+            local next_char = fmt:sub(j, j)
+            if next_char == "%" then
+                native[#native + 1] = "%%"
+                i = i + 2
+            else
+                while j <= #fmt and fmt:sub(j, j):match("[-_0%^#EO%d]") do
+                    j = j + 1
+                end
+                if j > #fmt then
+                    native[#native + 1] = fmt:sub(i)
+                    break
+                end
+
+                local directive = fmt:sub(i, j)
+                local spec = fmt:sub(j, j)
+                if directive == "%A" or directive == "%a"
+                        or directive == "%B" or directive == "%b"
+                        or directive == "%h" then
+                    flushNative()
+                    if spec == "A" then
+                        output[#output + 1] = getLocalizedWeekday(false, timestamp)
+                    elseif spec == "a" then
+                        output[#output + 1] = getLocalizedWeekday(true, timestamp)
+                    elseif spec == "B" then
+                        output[#output + 1] = getLocalizedMonth(false, timestamp)
+                    else
+                        output[#output + 1] = getLocalizedMonth(true, timestamp)
+                    end
+                else
+                    native[#native + 1] = directive
+                end
+                i = j + 1
+            end
+        end
+    end
+
+    flushNative()
+    if saved_locale then os.setlocale(saved_locale, "time") end
+    return table.concat(output)
 end
 
 -- Format an ETA epoch for the %*_time_left_eta tokens. When brace_fmt is nil,
@@ -552,15 +686,7 @@ end
 local function formatEtaEpoch(epoch, brace_fmt)
     if not epoch then return "" end
     if brace_fmt and brace_fmt ~= "" then
-        local loc = getDateLocale()
-        local saved
-        if loc then
-            saved = os.setlocale(nil, "time")
-            os.setlocale(loc, "time")
-        end
-        local out = os.date(brace_fmt, epoch) or ""
-        if saved then os.setlocale(saved, "time") end
-        return tostring(out)
+        return formatLocalizedDate(brace_fmt, epoch)
     end
     local twelve = G_reader_settings and G_reader_settings:isTrue("twelve_hour_clock") or false
     return datetime.secondsToHour(epoch, twelve)
@@ -573,15 +699,7 @@ end
 local function formatFinishDate(epoch, brace_fmt)
     if not epoch then return "" end
     local fmt = (brace_fmt and brace_fmt ~= "") and brace_fmt or "%d %b"
-    local loc = getDateLocale()
-    local saved
-    if loc then
-        saved = os.setlocale(nil, "time")
-        os.setlocale(loc, "time")
-    end
-    local out = os.date(fmt, epoch) or ""
-    if saved then os.setlocale(saved, "time") end
-    return tostring(out)
+    return formatLocalizedDate(fmt, epoch)
 end
 
 --- Compute chapter tick fractions as {fraction, width, depth} triples.
@@ -1662,16 +1780,7 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
             return "%__pcfilter" .. #plugin_content_filters
         end
         if name == "datetime" then
-            -- Strftime escape hatch. Respect device locale (see getDateLocale).
-            local loc = getDateLocale()
-            local saved_locale
-            if loc then
-                saved_locale = os.setlocale(nil, "time")
-                os.setlocale(loc, "time")
-            end
-            local formatted = os.date(content) or ""
-            if saved_locale then os.setlocale(saved_locale, "time") end
-            return formatted
+            return formatLocalizedDate(content)
         end
         -- %chap_time_left_eta{<strftime>} / %book_time_left_eta{<strftime>} /
         -- %book_finish_date{<strftime>}. Stash format and rewrite to bareword
@@ -1756,16 +1865,7 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         r = r:gsub("%%bar", preview.bar)
         -- Handle %datetime{...} — in preview mode, actually expand it (not a placeholder)
         r = r:gsub("%%datetime(%b{})", function(brace)
-            local content = brace:sub(2, -2)
-            local loc = getDateLocale()
-            local saved_locale
-            if loc then
-                saved_locale = os.setlocale(nil, "time")
-                os.setlocale(loc, "time")
-            end
-            local formatted = os.date(content) or ""
-            if saved_locale then os.setlocale(saved_locale, "time") end
-            return formatted
+            return formatLocalizedDate(brace:sub(2, -2))
         end)
         -- Live-preview braced ETA tokens with dummy offsets so the user can
         -- see their strftime format render in the line editor. Chapter uses
@@ -2259,21 +2359,11 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     local date_weekday = ""
     local date_weekday_short = ""
     if needs("date", "date_long", "date_numeric", "weekday", "weekday_short") then
-        -- Use device language for day/month names if available
-        local loc = getDateLocale()
-        local saved_locale
-        if loc then
-            saved_locale = os.setlocale(nil, "time")
-            os.setlocale(loc, "time")
-        end
-        if needs("date") then date_short = os.date("%d %b") end
-        if needs("date_long") then date_long = os.date("%d %B %Y") end
+        if needs("date") then date_short = formatLocalizedDate("%d %b") end
+        if needs("date_long") then date_long = formatLocalizedDate("%d %B %Y") end
         if needs("date_numeric") then date_num = os.date("%d/%m/%Y") end
-        if needs("weekday") then date_weekday = os.date("%A") end
-        if needs("weekday_short") then date_weekday_short = os.date("%a") end
-        if saved_locale then
-            os.setlocale(saved_locale, "time")
-        end
+        if needs("weekday") then date_weekday = formatLocalizedDate("%A") end
+        if needs("weekday_short") then date_weekday_short = formatLocalizedDate("%a") end
     end
 
     -- Session reading time (skip-aware via ReaderStatistics with fallback

@@ -3032,3 +3032,120 @@ msgstr ""
 
 #~ msgid "wifi — on / off"
 #~ msgstr "wifi — вкл. / изкл."
+
+# Weekday names used by bookends_tokens.lua
+msgid "Sunday"
+msgstr "неделя"
+
+msgid "Monday"
+msgstr "понеделник"
+
+msgid "Tuesday"
+msgstr "вторник"
+
+msgid "Wednesday"
+msgstr "сряда"
+
+msgid "Thursday"
+msgstr "четвъртък"
+
+msgid "Friday"
+msgstr "петък"
+
+msgid "Saturday"
+msgstr "събота"
+
+msgid "Sun"
+msgstr "нд"
+
+msgid "Mon"
+msgstr "пн"
+
+msgid "Tue"
+msgstr "вт"
+
+msgid "Wed"
+msgstr "ср"
+
+msgid "Thu"
+msgstr "чт"
+
+msgid "Fri"
+msgstr "пт"
+
+msgid "Sat"
+msgstr "сб"
+
+
+# Month names used by bookends_tokens.lua
+msgid "month.full.January"
+msgstr "януари"
+
+msgid "month.full.February"
+msgstr "февруари"
+
+msgid "month.full.March"
+msgstr "март"
+
+msgid "month.full.April"
+msgstr "април"
+
+msgid "month.full.May"
+msgstr "май"
+
+msgid "month.full.June"
+msgstr "юни"
+
+msgid "month.full.July"
+msgstr "юли"
+
+msgid "month.full.August"
+msgstr "август"
+
+msgid "month.full.September"
+msgstr "септември"
+
+msgid "month.full.October"
+msgstr "октомври"
+
+msgid "month.full.November"
+msgstr "ноември"
+
+msgid "month.full.December"
+msgstr "декември"
+
+msgid "month.short.Jan"
+msgstr "яну"
+
+msgid "month.short.Feb"
+msgstr "фев"
+
+msgid "month.short.Mar"
+msgstr "март"
+
+msgid "month.short.Apr"
+msgstr "апр"
+
+msgid "month.short.May"
+msgstr "май"
+
+msgid "month.short.Jun"
+msgstr "юни"
+
+msgid "month.short.Jul"
+msgstr "юли"
+
+msgid "month.short.Aug"
+msgstr "авг"
+
+msgid "month.short.Sep"
+msgstr "сеп"
+
+msgid "month.short.Oct"
+msgstr "окт"
+
+msgid "month.short.Nov"
+msgstr "ное"
+
+msgid "month.short.Dec"
+msgstr "дек"
