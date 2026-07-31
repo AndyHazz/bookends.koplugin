@@ -1207,10 +1207,10 @@ function PresetManagerModal._openOverflow(self, preset_entry)
     -- preset_entry is a row from readPresetFiles: { name, filename, preset }.
     -- Invoked by long-press on a Personal preset row.
     if not preset_entry then return end
-    local ButtonDialogTitle = require("ui/widget/buttondialogtitle")
+    local ButtonDialog = require("ui/widget/buttondialog")
     local entry = { name = preset_entry.name, filename = preset_entry.filename, preset = preset_entry.preset }
     local dlg
-    dlg = ButtonDialogTitle:new{
+    dlg = ButtonDialog:new{
         title = entry.name,
         title_align = "center",
         buttons = {
@@ -1698,9 +1698,9 @@ function PresetManagerModal._previewGallery(self, entry)
 end
 
 function PresetManagerModal._promptInstallCollision(self, existing, data, entry)
-    local ButtonDialogTitle = require("ui/widget/buttondialogtitle")
+    local ButtonDialog = require("ui/widget/buttondialog")
     local dlg
-    dlg = ButtonDialogTitle:new{
+    dlg = ButtonDialog:new{
         title = T(_("'%1' already exists in your library.\n\nReplacing it will overwrite your local copy with the current gallery version. Any local edits will be lost.\n\nInstall under a new name to keep both."), entry.name),
         title_align = "left",
         buttons = {
