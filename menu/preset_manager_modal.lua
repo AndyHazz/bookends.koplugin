@@ -664,11 +664,14 @@ function PresetManagerModal.show(bookends)
     self.refreshGallery = function()
         if self.gallery_loading then return end
         -- Bring Wi-Fi up if it's off (prompt per the user's KOReader prefs) and
-        -- load once online; cancel = no-op. Loading state is set inside the
+        -- load once connected; cancel = no-op. Loading state is set inside the
         -- callback so a cancelled prompt leaves the gallery untouched
-        -- (parity with bookshelf's runWhenOnline, issue #77).
+        -- (parity with bookshelf, issue #77). runWhenConnected, not
+        -- runWhenOnline: the latter gates on a DNS lookup of Microsoft's
+        -- dns.msftncsi.com and asks to turn on Wi-Fi that is already on when
+        -- that host can't be resolved (#101, see Updater.gateOnConnection).
         local NetworkMgr = require("ui/network/manager")
-        NetworkMgr:runWhenOnline(function()
+        NetworkMgr:runWhenConnected(function()
         local Gallery = require("preset_gallery")
         self.gallery_loading = true
         self.gallery_error = nil
@@ -1554,9 +1557,11 @@ local function submitToGalleryImpl(self, entry)
                     end
                 end
                 -- Bring Wi-Fi up if it's off (prompt per the user's prefs) and
-                -- submit once online; cancel = no-op (parity with bookshelf #77).
+                -- submit once connected; cancel = no-op (bookshelf #77).
+                -- runWhenConnected rather than runWhenOnline - see the refresh
+                -- path above and Updater.gateOnConnection (#101).
                 local NetworkMgr = require("ui/network/manager")
-                NetworkMgr:runWhenOnline(function()
+                NetworkMgr:runWhenConnected(function()
                 Notification:notify(_("Submitting to gallery…"))
                 local Gallery = require("preset_gallery")
                 local submission = {
