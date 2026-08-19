@@ -50,6 +50,8 @@ When a preset is "active", your subsequent overlay edits **autosave back to the 
 
 Want to share a preset? See the [gallery repo's README](https://github.com/AndyHazz/bookends-presets#for-contributors--how-to-submit-a-preset) for the submission flow.
 
+**Presets folder shortcut** — the presets folder registers itself with KOReader's *Folder shortcuts*, so you can jump straight to it from the file manager (long-press the folder icon in the title bar → **Folder shortcuts** → **Add** → *Bookends presets folder*). Handy for copying preset files on or off the device by hand. Needs a KOReader release with folder shortcuts; on older builds the entry simply doesn't appear.
+
 ### Screen positions
 
 ```

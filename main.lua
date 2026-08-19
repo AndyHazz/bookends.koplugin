@@ -169,6 +169,7 @@ function Bookends:init()
     self:loadSettings()
     self.ui.menu:registerToMainMenu(self)
     self.ui.view:registerViewModule("bookends", self)
+    self:registerFolderShortcut()
     self.session_elapsed = 0
     self.session_resume_time = os.time()
     self.session_start_page = nil -- set on first onPageUpdate (stable or raw per setting)
@@ -254,6 +255,41 @@ function Bookends:onCloseDocument()
     self._marker_book_open_anchor = nil
     self._marker_session_page = nil
     self._marker_book_open_page = nil
+end
+
+--- Offer the bookends presets folder as a KOReader folder shortcut (#40), so it
+--- shows up in the file manager's shortcuts list alongside Home, Downloads etc.
+---
+--- ui.folder_shortcuts is the FileManagerShortcuts module instance that both
+--- ReaderUI (readerui.lua:431) and FileManager register, so its absence is the
+--- entire feature gate for KOReader releases predating the feature — no
+--- pcall(require, "apps/filemanager/filemanageshortcuts"), which would seed an
+--- empty folder_shortcuts table into G_reader_settings as a side effect of
+--- merely loading the class, and no package.searchpath probing. This is what
+--- KOReader's own cloudstorage / exporter / movetoarchive plugins do.
+---
+--- registerShortcut is a static that mutates class-level tables and ignores a
+--- provider that's already known, so registering from the reader also surfaces
+--- the shortcut in the file manager, and re-running per document open is free.
+---
+--- No `set`: the presets folder is a fixed path under the settings dir. KOReader
+--- gates its "Set folder" button on `set ~= nil`
+--- (filemanagershortcuts.lua:307), so omitting it is how a read-only provider is
+--- expressed — better than a no-op set that offers relocation and does nothing.
+function Bookends:registerFolderShortcut()
+    local shortcuts = self.ui and self.ui.folder_shortcuts
+    if not (shortcuts and shortcuts.registerShortcut) then return end
+    shortcuts.registerShortcut({
+        provider = "bookends",
+        name = _("Bookends presets folder"),
+        get = function()
+            local lfs = require("libs/libkoreader-lfs")
+            local dir = self:presetDir()
+            -- nil rather than a path that isn't there yet: KOReader's
+            -- add-shortcut dialog does `enabled = folder ~= nil`.
+            if dir and lfs.attributes(dir, "mode") == "directory" then return dir end
+        end,
+    })
 end
 
 function Bookends:onDispatcherRegisterActions()
