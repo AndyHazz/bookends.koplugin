@@ -32,6 +32,7 @@ A few examples to show how format strings work. Type these in the line editor, o
 | `Page %page_num of %page_count` | Page 42 of 218 |
 | `%book_pct %bar` | 19% ━━━━━━━░░░░░░░░░░░ |
 | `%time_12h  %batt_icon` | 2:35 PM 🔋 |
+| `[if:chap_time_left_h>0]%chap_time_left_h hr(s) [/if]%chap_time_left_m min(s) left in chapter` | 2 hrs 5 mins left in chapter — and *42 mins left in chapter* once under an hour |
 
 You don't need to memorise tokens — the editor has a **Tokens** picker with the full list, and a **live preview** that updates as you type. The built-in presets and the token reference below cover much more.
 
@@ -225,6 +226,10 @@ Comparison operators: `=` (equals), `!=` (not equals), `<` (less than), `>` (gre
 | `chap_pages_left` | count | Pages left in current chapter (matches `%chap_pages_left`) |
 | `chap_time_left` | minutes | Estimated time left in chapter (matches `%chap_time_left`) — needs statistics plugin |
 | `book_time_left` | minutes | Estimated time left in book (matches `%book_time_left`) — needs statistics plugin |
+| `chap_time_left_h` | hours | Whole hours left in chapter (matches `%chap_time_left_h`) — needs statistics plugin |
+| `chap_time_left_m` | 0–59 | Minutes part of the time left in chapter (matches `%chap_time_left_m`) |
+| `book_time_left_h` | hours | Whole hours left in book (matches `%book_time_left_h`) — needs statistics plugin |
+| `book_time_left_m` | 0–59 | Minutes part of the time left in book (matches `%book_time_left_m`) |
 | `book_read_time` | minutes | Total time spent reading this book (matches `%book_read_time`) — needs statistics plugin |
 | `page_num` | 1–N | Current page number (matches `%page_num`) |
 | `page_count` | count | Total page count (matches `%page_count`) |
@@ -263,6 +268,8 @@ Comparison operators: `=` (equals), `!=` (not equals), `<` (less than), `>` (gre
 | `chap_title_3` | string | Chapter title at depth 3 (matches `%chap_title_3`) |
 
 String predicates evaluate as falsy when the string is empty, so `[if:not series]` means "book isn't in a series" and `[if:chap_title_2]` means "we're in a sub-chapter at depth 2". For exact-match comparisons, wrap multi-word values in double quotes — e.g. `[if:author="J.R.R. Tolkien"]` or `[if:title!="Untitled"]`.
+
+> **Keep the separating space inside the block.** A hidden `[if:…][/if]` is replaced by nothing at all, so any space you leave *outside* it survives into the output and shows up as a stray indent — visible as uneven margins on a centred or right-aligned position. Write `[if:chap_time_left_h>0]%chap_time_left_h hr(s) [/if]%chap_time_left_m min(s)` (space before `[/if]`), not `[if:…]%chap_time_left_h hr(s)[/if] %chap_time_left_m min(s)`.
 
 > Legacy predicate names (`chapters`, `chapter_pct`, `chapter_title`, `percent`, `pages`) still evaluate — they're aliased to their v5 equivalents automatically.
 

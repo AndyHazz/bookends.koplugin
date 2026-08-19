@@ -1365,6 +1365,15 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
             -- Time-left in book, in minutes (numeric so [if:book_time_left>30] works).
             if ui.statistics and ui.statistics.avg_time and ui.statistics.avg_time > 0 then
                 state.book_time_left = math.floor(state.pages_left * ui.statistics.avg_time / 60)
+                -- Split hours/minutes, matching the %book_time_left_h / _m
+                -- tokens (#104). Without these, the natural way to hide an
+                -- empty hour segment - [if:book_time_left_h>0] - is an unknown
+                -- key and quietly evaluates false, so the hours never render
+                -- and nothing says why. Derived from the minutes field rather
+                -- than recomputed, so the conditional and [if:book_time_left>=60]
+                -- can never disagree.
+                state.book_time_left_h = math.floor(state.book_time_left / 60)
+                state.book_time_left_m = state.book_time_left % 60
             end
         end
 
@@ -1417,6 +1426,10 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
             if state.chap_pages_left and ui.statistics and ui.statistics.avg_time
                 and ui.statistics.avg_time > 0 then
                 state.chap_time_left = math.floor(state.chap_pages_left * ui.statistics.avg_time / 60)
+                -- Split hours/minutes to match the %chap_time_left_h / _m
+                -- tokens — see the book_time_left_h note above (#104).
+                state.chap_time_left_h = math.floor(state.chap_time_left / 60)
+                state.chap_time_left_m = state.chap_time_left % 60
             end
         end
 
