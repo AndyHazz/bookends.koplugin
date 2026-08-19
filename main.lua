@@ -170,6 +170,11 @@ function Bookends:init()
     self.ui.menu:registerToMainMenu(self)
     self.ui.view:registerViewModule("bookends", self)
     self:registerFolderShortcut()
+    -- The folder listing behind %file_num / %file_count (#89) is memoised for
+    -- the folder it was built from. Drop it on every document open so a folder
+    -- that has gained or lost files since last time is re-counted; nothing else
+    -- would notice, and the rebuild only happens if a preset uses the tokens.
+    Tokens.flushFolderCache()
     self.session_elapsed = 0
     self.session_resume_time = os.time()
     self.session_start_page = nil -- set on first onPageUpdate (stable or raw per setting)
@@ -255,6 +260,10 @@ function Bookends:onCloseDocument()
     self._marker_book_open_anchor = nil
     self._marker_session_page = nil
     self._marker_book_open_page = nil
+    -- Folder listing for %file_num / %file_count (#89): dropped here as well as
+    -- on init, so a file deleted from the file manager between books doesn't
+    -- leave a stale count behind (the plugin instance may survive).
+    Tokens.flushFolderCache()
 end
 
 --- Offer the bookends presets folder as a KOReader folder shortcut (#40), so it

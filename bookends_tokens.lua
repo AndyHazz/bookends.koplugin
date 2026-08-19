@@ -80,6 +80,108 @@ function Tokens.resolveMarkerAnchor(ui, anchor)
     return anchor.page
 end
 
+-- Position within the containing folder (#89) ---------------------------------
+--
+-- Reading manga as one CBZ per chapter, the page/chapter tokens can only ever
+-- describe the chapter you're in - "File 5/10" is the only thing that answers
+-- "how far through this folder am I".
+--
+-- The ordering has to be the file manager's, or the number is meaningless. So
+-- rather than reimplement sorting, reuse KOReader's own collate descriptors
+-- (BookList.collates, reached through FileChooser): getCollate resolves the
+-- user's choice, init_sort_func builds the comparator, and item_func - present
+-- only on the collates whose comparison needs more than name/attr, e.g. `type`
+-- comparing item.suffix - fills in the extra fields. getSortingFunction is
+-- explicitly safe to call on the class rather than a widget instance: it checks
+-- `self ~= FileChooser` before touching the instance sort cache.
+--
+-- Deliberately NOT reused: FileChooser:getListItem, which also resolves
+-- opened/bold state and the mandatory column through BookList for every entry.
+-- That's hundreds of sidecar lookups in a big manga folder for display data no
+-- token needs. Same reason show_file is not used - it applies whatever transient
+-- status filter the file manager view happens to have set, which has no business
+-- changing a count in the overlay.
+--
+-- One scan per folder, memoised below; expansion only asks when %file_num or
+-- %file_count is actually in the format string, so a preset without them never
+-- touches the disk.
+
+local _folder_cache = nil  -- { dir = <path>, files = { <path>, ... } }
+
+--- Drop the memoised folder listing so the next read rescans. Called on
+--- document open/close: a folder gains and loses files between books, and
+--- nothing else would notice.
+function Tokens.flushFolderCache()
+    _folder_cache = nil
+end
+
+local function buildFolderListing(ui, dir)
+    local ok_fc, FileChooser = pcall(require, "ui/widget/filechooser")
+    local ok_lfs, lfs = pcall(require, "libs/libkoreader-lfs")
+    local ok_dr, DocumentRegistry = pcall(require, "document/documentregistry")
+    if not (ok_fc and ok_lfs and ok_dr) then return nil end
+
+    -- lfs.dir raises on an unreadable directory, exactly as it does for
+    -- FileChooser:getPathList - same pcall treatment.
+    local ok_iter, iter, dir_obj = pcall(lfs.dir, dir)
+    if not ok_iter then return nil end
+
+    local collate = FileChooser:getCollate()
+    if not (collate and collate.init_sort_func) then return nil end
+
+    local items = {}
+    for f in iter, dir_obj do
+        -- Mirror getPathList's exclusions: dotfiles unless the user shows them,
+        -- and macOS resource forks always.
+        if (FileChooser.show_hidden or f:sub(1, 1) ~= ".") and f:sub(1, 2) ~= "._" then
+            local fullpath = dir .. "/" .. f
+            local attr = lfs.attributes(fullpath)
+            if attr and attr.mode == "file" and DocumentRegistry:hasProvider(fullpath) then
+                local item = { text = f, path = fullpath, attr = attr }
+                if collate.item_func then collate.item_func(item, ui) end
+                items[#items + 1] = item
+            end
+        end
+    end
+
+    local ok_sort = pcall(function()
+        table.sort(items, FileChooser:getSortingFunction(
+            collate, G_reader_settings:isTrue("reverse_collate")))
+    end)
+    -- A comparator that errors (bad metadata on one entry, say) would otherwise
+    -- take the whole paint down. An unsorted count is still a truthful count.
+    local _ = ok_sort
+
+    local files = {}
+    for i = 1, #items do files[i] = items[i].path end
+    return files
+end
+
+--- Position of the open document among the document files in its folder (#89).
+-- @param ui reader ui
+-- @return number or nil: 1-based position, nil if it isn't in the listing
+-- @return number or nil: total document files in the folder
+function Tokens.folderPosition(ui)
+    local file = ui and ui.document and ui.document.file
+    if not file then return nil, nil end
+    local dir = file:match("^(.*)/[^/]*$")
+    if not dir or dir == "" then return nil, nil end
+
+    if not (_folder_cache and _folder_cache.dir == dir) then
+        local files = buildFolderListing(ui, dir)
+        if not files then return nil, nil end
+        _folder_cache = { dir = dir, files = files }
+    end
+
+    local files = _folder_cache.files
+    for i = 1, #files do
+        if files[i] == file then return i, #files end
+    end
+    -- Not in the listing (filtered out, or deleted from under us): the folder
+    -- total is still meaningful even though the position isn't.
+    return nil, #files
+end
+
 --- Map a marker page onto a bar's fraction scale (#77), matching how the bar's
 --- own fill fraction is computed. Used by full-width bars; inline bars compute
 --- the equivalent inline where book_pct/ch_pct are derived.
@@ -2619,6 +2721,18 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         end
     end
 
+    -- Position of this file among the document files in its folder (#89), for
+    -- per-chapter CBZ manga and the like. Gated on the tokens actually being
+    -- used: a preset without them never triggers the directory scan. Both stay
+    -- "" when the folder can't be read or the file isn't in the listing, so the
+    -- line auto-hides rather than showing a broken "0/0".
+    local file_num, file_count = "", ""
+    if needs("file_num", "file_count") then
+        local fnum, fcount = Tokens.folderPosition(ui)
+        file_num = fnum and tostring(fnum) or ""
+        file_count = fcount and tostring(fcount) or ""
+    end
+
     -- Highlights and notes count
     local highlights_count = ""
     local notes_count = ""
@@ -2934,6 +3048,8 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         chap_title_num  = tostring(chapter_title_num or ""),
         chap_title_name = tostring(chapter_title_name or ""),
         filename    = file_name,
+        file_num    = file_num,
+        file_count  = file_count,
         lang        = book_language,
         format      = doc_format,
         highlights  = highlights_count,

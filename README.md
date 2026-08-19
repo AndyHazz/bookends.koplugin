@@ -95,12 +95,16 @@ Tokens are placeholders that expand to live values. Type `%` followed by a name,
 | `%chap_num` | Current chapter number | *3* |
 | `%chap_count` | Total chapter count | *24* |
 | `%filename` | File name (no path/extension) | *The_Great_Gatsby* |
+| `%file_num` | This file's position among the documents in its folder | *5* |
+| `%file_count` | Documents in this file's folder | *10* |
 | `%lang` | Book language | *en* |
 | `%format` | Document format | *EPUB* |
 | `%highlights` | Number of highlights | *3* |
 | `%notes` | Number of notes | *1* |
 | `%bookmarks` | Number of bookmarks | *5* |
 | `%annotations` | Total annotations (highlights + notes + bookmarks) | *9* |
+
+> **`%file_num` / `%file_count`** count the document files in the folder the open book sits in, ordered the same way the file manager shows them (your **sort by** and **reverse sorting** settings both apply). Mainly useful for comics and manga kept as one file per chapter, where the page and chapter tokens can only describe the chapter you're in: `File %file_num/%file_count` → *File 5/10*. The folder is read once per book opened, and only if one of these two tokens is in your preset.
 
 #### Page / Progress
 

@@ -44,6 +44,8 @@ M.TOKENS = {
     { description = _("Current chapter number"), token = "%chap_num", chip = "book" },
     { description = _("Chapter count"), token = "%chap_count", chip = "book" },
     { description = _("File name"), token = "%filename", chip = "book" },
+    { description = _("File position in folder"), token = "%file_num", chip = "book" },
+    { description = _("Document files in folder"), token = "%file_count", chip = "book" },
     { description = _("Book language"), token = "%lang", chip = "book" },
     { description = _("Document format (EPUB, PDF, etc.)"), token = "%format", chip = "book" },
     { description = _("Highlights count"), token = "%highlights", chip = "book" },
