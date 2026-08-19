@@ -26,6 +26,60 @@ local function getCurrentPageNumber(ui)
 end
 Tokens.getCurrentPageNumber = getCurrentPageNumber
 
+-- Bar-marker anchors (#99/#100) ------------------------------------------------
+--
+-- A page index only means something for as long as the current pagination
+-- holds. In a reflowable (CRE) document the pagination is a product of the
+-- render settings, so bumping the font size - or the margins, line spacing,
+-- embedded-styles toggle, anything that fires DocumentRerendered - silently
+-- repoints a stored page number at different text. Markers anchored that way
+-- drift away from where the reader actually was, which is #100, and can end up
+-- pointing further into the book than the reader has reached, which is #99.
+--
+-- KOReader has the same problem with annotations and solves it by treating the
+-- xpointer as the anchor and the page as a derived value it recomputes on
+-- re-render (readerannotation.lua:updatePageNumbers). Do the same: capture an
+-- xpointer next to the page, and resolve back through it every time.
+--
+-- Paged documents (PDF, CBZ, images) have no xpointer and don't need one -
+-- their page indices are intrinsic to the file - so there the anchor is just
+-- the page, and any stray xp on such a document is ignored rather than trusted.
+
+--- Capture a re-render-proof anchor for `pageno`.
+-- @param ui reader ui (ui.rolling marks a reflowable document)
+-- @param pageno number: raw page number to anchor at
+-- @return table { page = pageno, xp = xpointer or nil }, or nil without a page
+function Tokens.captureMarkerAnchor(ui, pageno)
+    if not pageno then return nil end
+    local doc = ui and ui.document
+    if ui and ui.rolling and doc and doc.getXPointer then
+        local ok, xp = pcall(doc.getXPointer, doc)
+        if ok and xp and xp ~= "" then
+            return { page = pageno, xp = xp }
+        end
+    end
+    return { page = pageno }
+end
+
+--- Resolve an anchor back to a raw page number in the CURRENT pagination.
+-- Accepts a bare number so pre-#100 call sites and hand-edited settings keep
+-- working, and falls back to the stored page whenever the xpointer can't be
+-- used (paged document, xpointer no longer in the document, older entry with
+-- no xp recorded at all).
+-- @param ui reader ui
+-- @param anchor table { page, xp } / number / nil
+-- @return number or nil
+function Tokens.resolveMarkerAnchor(ui, anchor)
+    if not anchor then return nil end
+    if type(anchor) == "number" then return anchor end
+    local doc = ui and ui.document
+    if anchor.xp and ui and ui.rolling and doc and doc.getPageFromXPointer then
+        local ok, page = pcall(doc.getPageFromXPointer, doc, anchor.xp)
+        if ok and type(page) == "number" and page > 0 then return page end
+    end
+    return anchor.page
+end
+
 --- Map a marker page onto a bar's fraction scale (#77), matching how the bar's
 --- own fill fraction is computed. Used by full-width bars; inline bars compute
 --- the equivalent inline where book_pct/ch_pct are derived.
