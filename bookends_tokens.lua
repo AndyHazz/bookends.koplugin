@@ -1,5 +1,6 @@
 local Device = require("device")
 local datetime = require("datetime")
+local LocalDate = require("bookends_localdate")
 local BAR_PLACEHOLDER = require("bookends_overlay_widget").BAR_PLACEHOLDER
 
 local Tokens = {}
@@ -24,6 +25,162 @@ local function getCurrentPageNumber(ui)
     return ui and ui.view and ui.view.state and ui.view.state.page
 end
 Tokens.getCurrentPageNumber = getCurrentPageNumber
+
+-- Bar-marker anchors (#99/#100) ------------------------------------------------
+--
+-- A page index only means something for as long as the current pagination
+-- holds. In a reflowable (CRE) document the pagination is a product of the
+-- render settings, so bumping the font size - or the margins, line spacing,
+-- embedded-styles toggle, anything that fires DocumentRerendered - silently
+-- repoints a stored page number at different text. Markers anchored that way
+-- drift away from where the reader actually was, which is #100, and can end up
+-- pointing further into the book than the reader has reached, which is #99.
+--
+-- KOReader has the same problem with annotations and solves it by treating the
+-- xpointer as the anchor and the page as a derived value it recomputes on
+-- re-render (readerannotation.lua:updatePageNumbers). Do the same: capture an
+-- xpointer next to the page, and resolve back through it every time.
+--
+-- Paged documents (PDF, CBZ, images) have no xpointer and don't need one -
+-- their page indices are intrinsic to the file - so there the anchor is just
+-- the page, and any stray xp on such a document is ignored rather than trusted.
+
+--- Capture a re-render-proof anchor for `pageno`.
+-- @param ui reader ui (ui.rolling marks a reflowable document)
+-- @param pageno number: raw page number to anchor at
+-- @return table { page = pageno, xp = xpointer or nil }, or nil without a page
+function Tokens.captureMarkerAnchor(ui, pageno)
+    if not pageno then return nil end
+    local doc = ui and ui.document
+    if ui and ui.rolling and doc and doc.getXPointer then
+        local ok, xp = pcall(doc.getXPointer, doc)
+        if ok and xp and xp ~= "" then
+            return { page = pageno, xp = xp }
+        end
+    end
+    return { page = pageno }
+end
+
+--- Resolve an anchor back to a raw page number in the CURRENT pagination.
+-- Accepts a bare number so pre-#100 call sites and hand-edited settings keep
+-- working, and falls back to the stored page whenever the xpointer can't be
+-- used (paged document, xpointer no longer in the document, older entry with
+-- no xp recorded at all).
+-- @param ui reader ui
+-- @param anchor table { page, xp } / number / nil
+-- @return number or nil
+function Tokens.resolveMarkerAnchor(ui, anchor)
+    if not anchor then return nil end
+    if type(anchor) == "number" then return anchor end
+    local doc = ui and ui.document
+    if anchor.xp and ui and ui.rolling and doc and doc.getPageFromXPointer then
+        local ok, page = pcall(doc.getPageFromXPointer, doc, anchor.xp)
+        if ok and type(page) == "number" and page > 0 then return page end
+    end
+    return anchor.page
+end
+
+-- Position within the containing folder (#89) ---------------------------------
+--
+-- Reading manga as one CBZ per chapter, the page/chapter tokens can only ever
+-- describe the chapter you're in - "File 5/10" is the only thing that answers
+-- "how far through this folder am I".
+--
+-- The ordering has to be the file manager's, or the number is meaningless. So
+-- rather than reimplement sorting, reuse KOReader's own collate descriptors
+-- (BookList.collates, reached through FileChooser): getCollate resolves the
+-- user's choice, init_sort_func builds the comparator, and item_func - present
+-- only on the collates whose comparison needs more than name/attr, e.g. `type`
+-- comparing item.suffix - fills in the extra fields. getSortingFunction is
+-- explicitly safe to call on the class rather than a widget instance: it checks
+-- `self ~= FileChooser` before touching the instance sort cache.
+--
+-- Deliberately NOT reused: FileChooser:getListItem, which also resolves
+-- opened/bold state and the mandatory column through BookList for every entry.
+-- That's hundreds of sidecar lookups in a big manga folder for display data no
+-- token needs. Same reason show_file is not used - it applies whatever transient
+-- status filter the file manager view happens to have set, which has no business
+-- changing a count in the overlay.
+--
+-- One scan per folder, memoised below; expansion only asks when %file_num or
+-- %file_count is actually in the format string, so a preset without them never
+-- touches the disk.
+
+local _folder_cache = nil  -- { dir = <path>, files = { <path>, ... } }
+
+--- Drop the memoised folder listing so the next read rescans. Called on
+--- document open/close: a folder gains and loses files between books, and
+--- nothing else would notice.
+function Tokens.flushFolderCache()
+    _folder_cache = nil
+end
+
+local function buildFolderListing(ui, dir)
+    local ok_fc, FileChooser = pcall(require, "ui/widget/filechooser")
+    local ok_lfs, lfs = pcall(require, "libs/libkoreader-lfs")
+    local ok_dr, DocumentRegistry = pcall(require, "document/documentregistry")
+    if not (ok_fc and ok_lfs and ok_dr) then return nil end
+
+    -- lfs.dir raises on an unreadable directory, exactly as it does for
+    -- FileChooser:getPathList - same pcall treatment.
+    local ok_iter, iter, dir_obj = pcall(lfs.dir, dir)
+    if not ok_iter then return nil end
+
+    local collate = FileChooser:getCollate()
+    if not (collate and collate.init_sort_func) then return nil end
+
+    local items = {}
+    for f in iter, dir_obj do
+        -- Mirror getPathList's exclusions: dotfiles unless the user shows them,
+        -- and macOS resource forks always.
+        if (FileChooser.show_hidden or f:sub(1, 1) ~= ".") and f:sub(1, 2) ~= "._" then
+            local fullpath = dir .. "/" .. f
+            local attr = lfs.attributes(fullpath)
+            if attr and attr.mode == "file" and DocumentRegistry:hasProvider(fullpath) then
+                local item = { text = f, path = fullpath, attr = attr }
+                if collate.item_func then collate.item_func(item, ui) end
+                items[#items + 1] = item
+            end
+        end
+    end
+
+    local ok_sort = pcall(function()
+        table.sort(items, FileChooser:getSortingFunction(
+            collate, G_reader_settings:isTrue("reverse_collate")))
+    end)
+    -- A comparator that errors (bad metadata on one entry, say) would otherwise
+    -- take the whole paint down. An unsorted count is still a truthful count.
+    local _ = ok_sort
+
+    local files = {}
+    for i = 1, #items do files[i] = items[i].path end
+    return files
+end
+
+--- Position of the open document among the document files in its folder (#89).
+-- @param ui reader ui
+-- @return number or nil: 1-based position, nil if it isn't in the listing
+-- @return number or nil: total document files in the folder
+function Tokens.folderPosition(ui)
+    local file = ui and ui.document and ui.document.file
+    if not file then return nil, nil end
+    local dir = file:match("^(.*)/[^/]*$")
+    if not dir or dir == "" then return nil, nil end
+
+    if not (_folder_cache and _folder_cache.dir == dir) then
+        local files = buildFolderListing(ui, dir)
+        if not files then return nil, nil end
+        _folder_cache = { dir = dir, files = files }
+    end
+
+    local files = _folder_cache.files
+    for i = 1, #files do
+        if files[i] == file then return i, #files end
+    end
+    -- Not in the listing (filtered out, or deleted from under us): the folder
+    -- total is still meaningful even though the position isn't.
+    return nil, #files
+end
 
 --- Map a marker page onto a bar's fraction scale (#77), matching how the bar's
 --- own fill fraction is computed. Used by full-width bars; inline bars compute
@@ -543,53 +700,162 @@ local function splitAuthors(authors_raw)
 end
 
 -- Map KOReader UI language to a system locale for localized date strings.
--- Caches per language to avoid repeated locale probing.
-local _date_locale_cache = {} -- lang -> locale string or false
+-- Preserves the regional code first (e.g. pt_BR), then tries generic
+-- fallbacks. Only affects directives formatLocalizedDate leaves to native
+-- os.date (weekday/month names go through LocalDate instead, see below).
+local _date_locale_cache = {} -- language code -> locale string or false
 local function getDateLocale()
     local ok, GetText = pcall(require, "gettext")
     if not ok or not GetText or not GetText.current_lang or GetText.current_lang == "C" then
         return false
     end
-    local lang = GetText.current_lang:match("^([a-z]+)") -- e.g. "es" from "es_ES"
+
+    local current_lang = GetText.current_lang:gsub("-", "_")
+    local lang = current_lang:match("^([a-z]+)")
     if not lang or lang == "en" then
         return false
     end
-    if _date_locale_cache[lang] ~= nil then return _date_locale_cache[lang] end
-    -- Try common locale patterns
-    local candidates = {
-        lang .. "_" .. lang:upper() .. ".UTF-8",  -- es_ES.UTF-8
-        lang .. ".UTF-8",                           -- es.UTF-8
-    }
-    local saved = os.setlocale(nil, "time") -- save current locale
+    if _date_locale_cache[current_lang] ~= nil then
+        return _date_locale_cache[current_lang]
+    end
+
+    local candidates = {}
+    local seen = {}
+    local function add(locale)
+        if locale and locale ~= "" and not seen[locale] then
+            candidates[#candidates + 1] = locale
+            seen[locale] = true
+        end
+    end
+
+    if current_lang:find("_", 1, true) then
+        add(current_lang .. ".UTF-8")
+        add(current_lang .. ".utf8")
+        add(current_lang)
+    end
+    add(lang .. "_" .. lang:upper() .. ".UTF-8")
+    add(lang .. ".UTF-8")
+    add(lang)
+
+    local saved = os.setlocale(nil, "time")
     for _, loc in ipairs(candidates) do
         if os.setlocale(loc, "time") then
-            os.setlocale(saved or "C", "time") -- restore previous locale
-            _date_locale_cache[lang] = loc
+            os.setlocale(saved or "C", "time")
+            _date_locale_cache[current_lang] = loc
             return loc
         end
     end
-    if saved then os.setlocale(saved, "time") end -- restore after failed probes
-    _date_locale_cache[lang] = false
+    if saved then os.setlocale(saved, "time") end
+    _date_locale_cache[current_lang] = false
     return false
+end
+
+local WEEKDAY_NAMES = {
+    "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
+}
+local WEEKDAY_NAMES_SHORT = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }
+
+local function getLocalizedWeekday(short, epoch)
+    local now = os.date("*t", epoch or os.time())
+    local source = (short and WEEKDAY_NAMES_SHORT or WEEKDAY_NAMES)[now.wday] or ""
+    return LocalDate.weekday(source)
+end
+
+local MONTH_NAMES = {
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December",
+}
+local MONTH_NAMES_SHORT = {
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+}
+
+local function getLocalizedMonth(short, epoch)
+    local now = os.date("*t", epoch or os.time())
+    local source = (short and MONTH_NAMES_SHORT or MONTH_NAMES)[now.month] or ""
+    return LocalDate.month(source)
+end
+
+-- Format a strftime string, resolving %A/%a/%B/%b/%h through LocalDate
+-- (KOReader's own translation tables) and leaving every other directive to
+-- native os.date under the device locale (see getDateLocale).
+local function formatLocalizedDate(fmt, epoch)
+    if not fmt or fmt == "" then return "" end
+
+    local timestamp = epoch or os.time()
+    local loc = getDateLocale()
+    local saved_locale
+    if loc then
+        saved_locale = os.setlocale(nil, "time")
+        os.setlocale(loc, "time")
+    end
+
+    local output = {}
+    local native = {}
+
+    local function flushNative()
+        if #native == 0 then return end
+        output[#output + 1] = os.date(table.concat(native), timestamp) or ""
+        native = {}
+    end
+
+    local i = 1
+    while i <= #fmt do
+        local char = fmt:sub(i, i)
+        if char ~= "%" or i == #fmt then
+            native[#native + 1] = char
+            i = i + 1
+        else
+            local j = i + 1
+            local next_char = fmt:sub(j, j)
+            if next_char == "%" then
+                native[#native + 1] = "%%"
+                i = i + 2
+            else
+                while j <= #fmt and fmt:sub(j, j):match("[-_0%^#EO%d]") do
+                    j = j + 1
+                end
+                if j > #fmt then
+                    native[#native + 1] = fmt:sub(i)
+                    break
+                end
+
+                local directive = fmt:sub(i, j)
+                local spec = fmt:sub(j, j)
+                if directive == "%A" or directive == "%a"
+                        or directive == "%B" or directive == "%b"
+                        or directive == "%h" then
+                    flushNative()
+                    if spec == "A" then
+                        output[#output + 1] = getLocalizedWeekday(false, timestamp)
+                    elseif spec == "a" then
+                        output[#output + 1] = getLocalizedWeekday(true, timestamp)
+                    elseif spec == "B" then
+                        output[#output + 1] = getLocalizedMonth(false, timestamp)
+                    else
+                        output[#output + 1] = getLocalizedMonth(true, timestamp)
+                    end
+                else
+                    native[#native + 1] = directive
+                end
+                i = j + 1
+            end
+        end
+    end
+
+    flushNative()
+    if saved_locale then os.setlocale(saved_locale, "time") end
+    return table.concat(output)
 end
 
 -- Format an ETA epoch for the %*_time_left_eta tokens. When brace_fmt is nil,
 -- defaults to KOReader's clock format (datetime.secondsToHour honours the
 -- twelve_hour_clock setting and any %_I-style strftime variants the platform
--- needs). When brace_fmt is set, it is passed through os.date with the device
--- locale applied — same locale handling as %datetime.
+-- needs). When brace_fmt is set, it is passed through formatLocalizedDate.
 local function formatEtaEpoch(epoch, brace_fmt)
     if not epoch then return "" end
     if brace_fmt and brace_fmt ~= "" then
-        local loc = getDateLocale()
-        local saved
-        if loc then
-            saved = os.setlocale(nil, "time")
-            os.setlocale(loc, "time")
-        end
-        local out = os.date(brace_fmt, epoch) or ""
-        if saved then os.setlocale(saved, "time") end
-        return tostring(out)
+        return formatLocalizedDate(brace_fmt, epoch)
     end
     local twelve = G_reader_settings and G_reader_settings:isTrue("twelve_hour_clock") or false
     return datetime.secondsToHour(epoch, twelve)
@@ -597,20 +863,11 @@ end
 
 -- Format a finish-date epoch for %book_finish_date. Default format is short
 -- localised date ("9 Jun" / "9 Juin" / etc); brace_fmt overrides with a full
--- strftime spec. Locale wrap mirrors formatEtaEpoch and %datetime so the
--- month / weekday names match the rest of the device.
+-- strftime spec.
 local function formatFinishDate(epoch, brace_fmt)
     if not epoch then return "" end
     local fmt = (brace_fmt and brace_fmt ~= "") and brace_fmt or "%d %b"
-    local loc = getDateLocale()
-    local saved
-    if loc then
-        saved = os.setlocale(nil, "time")
-        os.setlocale(loc, "time")
-    end
-    local out = os.date(fmt, epoch) or ""
-    if saved then os.setlocale(saved, "time") end
-    return tostring(out)
+    return formatLocalizedDate(fmt, epoch)
 end
 
 --- Compute chapter tick fractions as {fraction, width, depth} triples.
@@ -1239,6 +1496,15 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
             -- Time-left in book, in minutes (numeric so [if:book_time_left>30] works).
             if ui.statistics and ui.statistics.avg_time and ui.statistics.avg_time > 0 then
                 state.book_time_left = math.floor(state.pages_left * ui.statistics.avg_time / 60)
+                -- Split hours/minutes, matching the %book_time_left_h / _m
+                -- tokens (#104). Without these, the natural way to hide an
+                -- empty hour segment - [if:book_time_left_h>0] - is an unknown
+                -- key and quietly evaluates false, so the hours never render
+                -- and nothing says why. Derived from the minutes field rather
+                -- than recomputed, so the conditional and [if:book_time_left>=60]
+                -- can never disagree.
+                state.book_time_left_h = math.floor(state.book_time_left / 60)
+                state.book_time_left_m = state.book_time_left % 60
             end
         end
 
@@ -1291,6 +1557,10 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
             if state.chap_pages_left and ui.statistics and ui.statistics.avg_time
                 and ui.statistics.avg_time > 0 then
                 state.chap_time_left = math.floor(state.chap_pages_left * ui.statistics.avg_time / 60)
+                -- Split hours/minutes to match the %chap_time_left_h / _m
+                -- tokens — see the book_time_left_h note above (#104).
+                state.chap_time_left_h = math.floor(state.chap_time_left / 60)
+                state.chap_time_left_m = state.chap_time_left % 60
             end
         end
 
@@ -1598,6 +1868,22 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         return format_str
     end
 
+    -- #92: %<token> / %<token{arg}> delimited form. The greedy identifier
+    -- match (%%[%a_][%w_]*) would otherwise absorb any letters/digits written
+    -- immediately after a token, so `%book_time_left_hh` reads as one unknown
+    -- name. The angle brackets mark where the name ends. We rewrite the
+    -- delimited form to the plain %token followed by a \4 boundary sentinel:
+    -- \4 is not a word char, so every downstream pass (legacy alias, brace
+    -- pre-parse, bareword, depth-suffix, preview mirror) stops the identifier
+    -- there exactly as a space would, and no per-token handling is needed. The
+    -- sentinel is stripped just before the value is returned. An unclosed
+    -- `%<name` (no `>`) or non-identifier start is left untouched (literal).
+    -- This MUST run before rewriteLegacyTokens so a delimited token with a
+    -- strftime brace (e.g. %<datetime{%H:%M}>) is already in canonical
+    -- %datetime{…} form, which the legacy pass recognises and leaves its brace
+    -- body verbatim — otherwise the %H/%M inside would be alias-rewritten.
+    format_str = format_str:gsub("%%<([%a_][^>]*)>", "%%%1\4")
+
     -- v5 alias pass: rewrite legacy %X tokens to v5 names so all downstream
     -- processing uses a single vocabulary. Gallery presets and user-authored
     -- legacy strings render identically. opts.legacy_literal skips this pass
@@ -1675,16 +1961,8 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
             return "%__pcfilter" .. #plugin_content_filters
         end
         if name == "datetime" then
-            -- Strftime escape hatch. Respect device locale (see getDateLocale).
-            local loc = getDateLocale()
-            local saved_locale
-            if loc then
-                saved_locale = os.setlocale(nil, "time")
-                os.setlocale(loc, "time")
-            end
-            local formatted = os.date(content) or ""
-            if saved_locale then os.setlocale(saved_locale, "time") end
-            return formatted
+            -- Strftime escape hatch.
+            return formatLocalizedDate(content)
         end
         -- %chap_time_left_eta{<strftime>} / %book_time_left_eta{<strftime>} /
         -- %book_finish_date{<strftime>}. Stash format and rewrite to bareword
@@ -1769,16 +2047,7 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         r = r:gsub("%%bar", preview.bar)
         -- Handle %datetime{...} — in preview mode, actually expand it (not a placeholder)
         r = r:gsub("%%datetime(%b{})", function(brace)
-            local content = brace:sub(2, -2)
-            local loc = getDateLocale()
-            local saved_locale
-            if loc then
-                saved_locale = os.setlocale(nil, "time")
-                os.setlocale(loc, "time")
-            end
-            local formatted = os.date(content) or ""
-            if saved_locale then os.setlocale(saved_locale, "time") end
-            return formatted
+            return formatLocalizedDate(brace:sub(2, -2))
         end)
         -- Live-preview braced ETA tokens with dummy offsets so the user can
         -- see their strftime format render in the line editor. Chapter uses
@@ -1840,6 +2109,7 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
             if label then return label end
             return "%" .. token
         end)
+        r = r:gsub("\4", "")  -- #92: drop %<token> boundary sentinels
         return r
     end
 
@@ -2271,21 +2541,11 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     local date_weekday = ""
     local date_weekday_short = ""
     if needs("date", "date_long", "date_numeric", "weekday", "weekday_short") then
-        -- Use device language for day/month names if available
-        local loc = getDateLocale()
-        local saved_locale
-        if loc then
-            saved_locale = os.setlocale(nil, "time")
-            os.setlocale(loc, "time")
-        end
-        if needs("date") then date_short = os.date("%d %b") end
-        if needs("date_long") then date_long = os.date("%d %B %Y") end
+        if needs("date") then date_short = formatLocalizedDate("%d %b") end
+        if needs("date_long") then date_long = formatLocalizedDate("%d %B %Y") end
         if needs("date_numeric") then date_num = os.date("%d/%m/%Y") end
-        if needs("weekday") then date_weekday = os.date("%A") end
-        if needs("weekday_short") then date_weekday_short = os.date("%a") end
-        if saved_locale then
-            os.setlocale(saved_locale, "time")
-        end
+        if needs("weekday") then date_weekday = formatLocalizedDate("%A") end
+        if needs("weekday_short") then date_weekday_short = formatLocalizedDate("%a") end
     end
 
     -- Session reading time (skip-aware via ReaderStatistics with fallback
@@ -2488,6 +2748,18 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         if needs("format") then
             doc_format = (filepath:match("%.([^.]+)$") or ""):upper()
         end
+    end
+
+    -- Position of this file among the document files in its folder (#89), for
+    -- per-chapter CBZ manga and the like. Gated on the tokens actually being
+    -- used: a preset without them never triggers the directory scan. Both stay
+    -- "" when the folder can't be read or the file isn't in the listing, so the
+    -- line auto-hides rather than showing a broken "0/0".
+    local file_num, file_count = "", ""
+    if needs("file_num", "file_count") then
+        local fnum, fcount = Tokens.folderPosition(ui)
+        file_num = fnum and tostring(fnum) or ""
+        file_count = fcount and tostring(fcount) or ""
     end
 
     -- Highlights and notes count
@@ -2805,6 +3077,8 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         chap_title_num  = tostring(chapter_title_num or ""),
         chap_title_name = tostring(chapter_title_name or ""),
         filename    = file_name,
+        file_num    = file_num,
+        file_count  = file_count,
         lang        = book_language,
         format      = doc_format,
         highlights  = highlights_count,
@@ -3001,6 +3275,10 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         end
         return emitDepth("chap_time_left", depth_str, val)
     end)
+
+    -- #92: all token expansion is done; drop the %<token> boundary sentinels
+    -- before the remaining text transforms (pluralisation, PUA colour) run.
+    result = result:gsub("\4", "")
 
     -- Handle (s) pluralisation: "1 highlight(s)" -> "1 highlight", "3 highlight(s)" -> "3 highlights"
     result = result:gsub("(%d+)(%D-)%(s%)", function(num, between)

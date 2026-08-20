@@ -340,6 +340,11 @@ Tokens are placeholders that get replaced with live data each time the preset re
   %title — %page_num/%page_count
   → 1984 — 12/268
 
+A token name runs until the next non-letter, so you need a space (or punctuation) before any following text. To butt text right up against a token, wrap the name in angle brackets:
+  %<book_time_left_h>h%<book_time_left_m>m
+  → 4h40m
+Width limits still work inside them: %<author{200}>.
+
 INLINE STYLING
 
 Wrap a span of text to restyle just that part:

@@ -44,6 +44,8 @@ M.TOKENS = {
     { description = _("Current chapter number"), token = "%chap_num", chip = "book" },
     { description = _("Chapter count"), token = "%chap_count", chip = "book" },
     { description = _("File name"), token = "%filename", chip = "book" },
+    { description = _("File position in folder"), token = "%file_num", chip = "book" },
+    { description = _("Document files in folder"), token = "%file_count", chip = "book" },
     { description = _("Book language"), token = "%lang", chip = "book" },
     { description = _("Document format (EPUB, PDF, etc.)"), token = "%format", chip = "book" },
     { description = _("Highlights count"), token = "%highlights", chip = "book" },
@@ -140,6 +142,9 @@ M.CONDITIONALS = {
     { description = _("Chapter progress 0\xE2\x80\x93100"), expression = "[if:chap_pct>50]...[/if]", chip = "ifelse" },
     { description = _("Current chapter number"), expression = "[if:chap_num=1]...[/if]", chip = "ifelse" },
     { description = _("Total chapters"), expression = "[if:chap_count>20]...[/if]", chip = "ifelse" },
+    { description = _("Minutes left in chapter"), expression = "[if:chap_time_left<10]...[/if]", chip = "ifelse" },
+    { description = _("Whole hours left in chapter"), expression = "[if:chap_time_left_h>0]...[/if]", chip = "ifelse" },
+    { description = _("Whole hours left in book"), expression = "[if:book_time_left_h>0]...[/if]", chip = "ifelse" },
     { description = _("Pages per hour"), expression = "[if:speed>0]...[/if]", chip = "ifelse" },
     { description = _("Minutes this session"), expression = "[if:session>30]...[/if]", chip = "ifelse" },
     { description = _("Pages this session"), expression = "[if:session_pages>0]...[/if]", chip = "ifelse" },
@@ -178,6 +183,11 @@ M.CONDITIONALS = {
     { description = _("Fall back to shallower chapter"), expression = "[if:chap_title_2]%chap_title_2[else]%chap_title_1[/if]", chip = "templates" },
     { description = _("Chapter number then title"), expression = "[if:chap_title_num][b]%chap_title_num[/b] / %chap_title_name[else]%chap_title[/if]", chip = "templates" },
     { description = _("Long books (20+ chapters)"), expression = "[if:chap_count>20]Long read[/if]", chip = "templates" },
+    -- Kindle's own wording for the same estimate: the hour segment disappears
+    -- under an hour, and hr/min pluralise via the (s) pass. The space sits
+    -- INSIDE the block so nothing is left behind when it collapses.
+    { description = _("Time left in chapter, Kindle style"), expression = "[if:chap_time_left_h>0]%chap_time_left_h hr(s) [/if]%chap_time_left_m min(s) left in chapter", chip = "templates" },
+    { description = _("Time left in book, Kindle style"), expression = "[if:book_time_left_h>0]%book_time_left_h hr(s) [/if]%book_time_left_m min(s) left in book", chip = "templates" },
     { description = _("Chapter title only when different from book title"), expression = "%title[if:chap_title_1!=@title] \xE2\x80\xA2 %chap_title_1[/if]", chip = "templates" },
     { description = _("Battery bars"), expression = "[if:batt>=0]\xE2\x96\xB0[else]\xE2\x96\xB1[/if][if:batt>=25]\xE2\x96\xB0[else]\xE2\x96\xB1[/if][if:batt>=50]\xE2\x96\xB0[else]\xE2\x96\xB1[/if][if:batt>=75]\xE2\x96\xB0[else]\xE2\x96\xB1[/if]", chip = "templates" },
 }

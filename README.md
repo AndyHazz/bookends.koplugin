@@ -32,6 +32,7 @@ A few examples to show how format strings work. Type these in the line editor, o
 | `Page %page_num of %page_count` | Page 42 of 218 |
 | `%book_pct %bar` | 19% ━━━━━━━░░░░░░░░░░░ |
 | `%time_12h  %batt_icon` | 2:35 PM 🔋 |
+| `[if:chap_time_left_h>0]%chap_time_left_h hr(s) [/if]%chap_time_left_m min(s) left in chapter` | 2 hrs 5 mins left in chapter — and *42 mins left in chapter* once under an hour |
 
 You don't need to memorise tokens — the editor has a **Tokens** picker with the full list, and a **live preview** that updates as you type. The built-in presets and the token reference below cover much more.
 
@@ -48,6 +49,8 @@ When a preset is "active", your subsequent overlay edits **autosave back to the 
 **Gallery tab** — community presets from [**AndyHazz/bookends-presets**](https://github.com/AndyHazz/bookends-presets). Tap a preset to preview it live; tap **Install** to save it locally. Presets already installed on your device show a ✓ indicator. Fresh installs ship with **Basic bookends** as a starter; the classic *Rich Detail*, *Speed Reader*, *Classic Alternating* and *SimpleUI status bar* presets are available from the Gallery.
 
 Want to share a preset? See the [gallery repo's README](https://github.com/AndyHazz/bookends-presets#for-contributors--how-to-submit-a-preset) for the submission flow.
+
+**Presets folder shortcut** — the presets folder registers itself with KOReader's *Folder shortcuts*, so you can jump straight to it from the file manager (long-press the folder icon in the title bar → **Folder shortcuts** → **Add** → *Bookends presets folder*). Handy for copying preset files on or off the device by hand. Needs a KOReader release with folder shortcuts; on older builds the entry simply doesn't appear.
 
 ### Screen positions
 
@@ -92,12 +95,16 @@ Tokens are placeholders that expand to live values. Type `%` followed by a name,
 | `%chap_num` | Current chapter number | *3* |
 | `%chap_count` | Total chapter count | *24* |
 | `%filename` | File name (no path/extension) | *The_Great_Gatsby* |
+| `%file_num` | This file's position among the documents in its folder | *5* |
+| `%file_count` | Documents in this file's folder | *10* |
 | `%lang` | Book language | *en* |
 | `%format` | Document format | *EPUB* |
 | `%highlights` | Number of highlights | *3* |
 | `%notes` | Number of notes | *1* |
 | `%bookmarks` | Number of bookmarks | *5* |
 | `%annotations` | Total annotations (highlights + notes + bookmarks) | *9* |
+
+> **`%file_num` / `%file_count`** count the document files in the folder the open book sits in, ordered the same way the file manager shows them (your **sort by** and **reverse sorting** settings both apply). Mainly useful for comics and manga kept as one file per chapter, where the page and chapter tokens can only describe the chapter you're in: `File %file_num/%file_count` → *File 5/10*. The folder is read once per book opened, and only if one of these two tokens is in your preset.
 
 #### Page / Progress
 
@@ -225,6 +232,10 @@ Comparison operators: `=` (equals), `!=` (not equals), `<` (less than), `>` (gre
 | `chap_pages_left` | count | Pages left in current chapter (matches `%chap_pages_left`) |
 | `chap_time_left` | minutes | Estimated time left in chapter (matches `%chap_time_left`) — needs statistics plugin |
 | `book_time_left` | minutes | Estimated time left in book (matches `%book_time_left`) — needs statistics plugin |
+| `chap_time_left_h` | hours | Whole hours left in chapter (matches `%chap_time_left_h`) — needs statistics plugin |
+| `chap_time_left_m` | 0–59 | Minutes part of the time left in chapter (matches `%chap_time_left_m`) |
+| `book_time_left_h` | hours | Whole hours left in book (matches `%book_time_left_h`) — needs statistics plugin |
+| `book_time_left_m` | 0–59 | Minutes part of the time left in book (matches `%book_time_left_m`) |
 | `book_read_time` | minutes | Total time spent reading this book (matches `%book_read_time`) — needs statistics plugin |
 | `page_num` | 1–N | Current page number (matches `%page_num`) |
 | `page_count` | count | Total page count (matches `%page_count`) |
@@ -263,6 +274,8 @@ Comparison operators: `=` (equals), `!=` (not equals), `<` (less than), `>` (gre
 | `chap_title_3` | string | Chapter title at depth 3 (matches `%chap_title_3`) |
 
 String predicates evaluate as falsy when the string is empty, so `[if:not series]` means "book isn't in a series" and `[if:chap_title_2]` means "we're in a sub-chapter at depth 2". For exact-match comparisons, wrap multi-word values in double quotes — e.g. `[if:author="J.R.R. Tolkien"]` or `[if:title!="Untitled"]`.
+
+> **Keep the separating space inside the block.** A hidden `[if:…][/if]` is replaced by nothing at all, so any space you leave *outside* it survives into the output and shows up as a stray indent — visible as uneven margins on a centred or right-aligned position. Write `[if:chap_time_left_h>0]%chap_time_left_h hr(s) [/if]%chap_time_left_m min(s)` (space before `[/if]`), not `[if:…]%chap_time_left_h hr(s)[/if] %chap_time_left_m min(s)`.
 
 > Legacy predicate names (`chapters`, `chapter_pct`, `chapter_title`, `percent`, `pages`) still evaluate — they're aliased to their v5 equivalents automatically.
 
@@ -341,6 +354,7 @@ Tags override the line's per-line style. If a line is set to Bold, `[i]text[/i]`
 
 - **Auto-hide** — Lines where all tokens resolve to empty or zero are automatically hidden
 - **Token width limits** — Append `{N}` to any token to cap its width at N pixels: `%chap_title{200} - %chap_read/%chap_pages` truncates the chapter title with ellipsis if it exceeds 200 pixels. Works with `%bar{400}` to set a fixed bar width instead of auto-fill.
+- **Delimited tokens** — A token name runs until the next non-letter, so text placed straight after it is read as part of the name. Wrap the name in angle brackets to butt text directly against it: `%<book_time_left_h>h%<book_time_left_m>m` → `4h40m`. Width limits still work inside: `%<author{200}>`.
 - **Pluralisation** — Write `%highlights highlight(s)` and it becomes `1 highlight` or `3 highlights`
 - **Odd/even pages** — Set any line to appear on all pages, odd pages only, or even pages only
 - **Auto-refresh** — Clock and other dynamic tokens update every 60 seconds

@@ -23,6 +23,10 @@ package.loaded["ui/widget/container/widgetcontainer"] = {
     new    = function(self, t) return setmetatable(t or {}, { __index = self }) end,
 }
 package.loaded["bookends_i18n"] = { gettext = function(s) return s end }
+-- Stand-ins for the Tokens helpers main.lua reaches for. The real
+-- capture/resolve pair (xpointer anchoring for #99/#100) has its own suite in
+-- _test_marker_anchors.lua; here they only need to behave well enough for the
+-- persistence semantics below (write once per day, one entry per book).
 package.loaded["bookends_tokens"] = {
     getCurrentPageNumber = function(ui)
         if ui and ui.document and ui.document.getCurrentPage then
@@ -30,7 +34,16 @@ package.loaded["bookends_tokens"] = {
             if ok and p then return p end
         end
         return ui and ui.view and ui.view.state and ui.view.state.page
-    end
+    end,
+    captureMarkerAnchor = function(_, pageno)
+        if not pageno then return nil end
+        return { page = pageno }
+    end,
+    resolveMarkerAnchor = function(_, anchor)
+        if not anchor then return nil end
+        if type(anchor) == "number" then return anchor end
+        return anchor.page
+    end,
 }
 _G.require = function(name)
     if package.loaded[name] then return package.loaded[name] end

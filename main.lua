@@ -176,14 +176,25 @@ function Bookends:init()
     self:loadSettings()
     self.ui.menu:registerToMainMenu(self)
     self.ui.view:registerViewModule("bookends", self)
+    self:registerFolderShortcut()
+    -- The folder listing behind %file_num / %file_count (#89) is memoised for
+    -- the folder it was built from. Drop it on every document open so a folder
+    -- that has gained or lost files since last time is re-counted; nothing else
+    -- would notice, and the rebuild only happens if a preset uses the tokens.
+    Tokens.flushFolderCache()
     self.session_elapsed = 0
     self.session_resume_time = os.time()
     self.session_start_page = nil -- set on first onPageUpdate (stable or raw per setting)
     self.session_max_page = nil   -- highest page reached (stable or raw per setting)
-    -- RAW page numbers for bar markers (#77), tracked separately from the
-    -- stable session pages above because the bar fill is computed on the raw,
-    -- flow-aware page scale. session marker resets to here on each wake;
-    -- book_open marker is captured once per book open and survives wakes.
+    -- Anchors for bar markers (#77), tracked separately from the stable session
+    -- pages above because the bar fill is computed on the raw, flow-aware page
+    -- scale. Each is a { page, xp } anchor rather than a bare page number so it
+    -- stays pinned to the text across re-renders (#99/#100); the resolved page
+    -- for the current pagination lands in _marker_*_page at paint time. Session
+    -- marker resets on each wake; book_open is captured once per book open and
+    -- survives wakes.
+    self._marker_session_anchor = nil
+    self._marker_book_open_anchor = nil
     self._marker_session_page = nil
     self._marker_book_open_page = nil
     self.dirty = true
@@ -258,8 +269,49 @@ function Bookends:onCloseDocument()
     end
     -- Clear bar-marker anchors (#77) so reopening the book recaptures book_open
     -- at the reopen position (harmless if the plugin instance is recreated).
+    self._marker_session_anchor = nil
+    self._marker_book_open_anchor = nil
     self._marker_session_page = nil
     self._marker_book_open_page = nil
+    -- Folder listing for %file_num / %file_count (#89): dropped here as well as
+    -- on init, so a file deleted from the file manager between books doesn't
+    -- leave a stale count behind (the plugin instance may survive).
+    Tokens.flushFolderCache()
+end
+
+--- Offer the bookends presets folder as a KOReader folder shortcut (#40), so it
+--- shows up in the file manager's shortcuts list alongside Home, Downloads etc.
+---
+--- ui.folder_shortcuts is the FileManagerShortcuts module instance that both
+--- ReaderUI (readerui.lua:431) and FileManager register, so its absence is the
+--- entire feature gate for KOReader releases predating the feature — no
+--- pcall(require, "apps/filemanager/filemanageshortcuts"), which would seed an
+--- empty folder_shortcuts table into G_reader_settings as a side effect of
+--- merely loading the class, and no package.searchpath probing. This is what
+--- KOReader's own cloudstorage / exporter / movetoarchive plugins do.
+---
+--- registerShortcut is a static that mutates class-level tables and ignores a
+--- provider that's already known, so registering from the reader also surfaces
+--- the shortcut in the file manager, and re-running per document open is free.
+---
+--- No `set`: the presets folder is a fixed path under the settings dir. KOReader
+--- gates its "Set folder" button on `set ~= nil`
+--- (filemanagershortcuts.lua:307), so omitting it is how a read-only provider is
+--- expressed — better than a no-op set that offers relocation and does nothing.
+function Bookends:registerFolderShortcut()
+    local shortcuts = self.ui and self.ui.folder_shortcuts
+    if not (shortcuts and shortcuts.registerShortcut) then return end
+    shortcuts.registerShortcut({
+        provider = "bookends",
+        name = _("Bookends presets folder"),
+        get = function()
+            local lfs = require("libs/libkoreader-lfs")
+            local dir = self:presetDir()
+            -- nil rather than a path that isn't there yet: KOReader's
+            -- add-shortcut dialog does `enabled = folder ~= nil`.
+            if dir and lfs.attributes(dir, "mode") == "directory" then return dir end
+        end,
+    })
 end
 
 function Bookends:onDispatcherRegisterActions()
@@ -1119,12 +1171,16 @@ function Bookends:onPageUpdate()
             self.session_max_page = current
         end
     end
-    -- Capture RAW page anchors for bar markers (#77). Both default to the first
-    -- page seen after open; the session anchor is re-set on wake (see onResume).
+    -- Capture anchors for bar markers (#77). Both default to the first page seen
+    -- after open; the session anchor is re-set on wake (see onResume).
     local raw = Tokens.getCurrentPageNumber(self.ui)
     if raw then
-        if not self._marker_session_page then self._marker_session_page = raw end
-        if not self._marker_book_open_page then self._marker_book_open_page = raw end
+        if not self._marker_session_anchor then
+            self._marker_session_anchor = Tokens.captureMarkerAnchor(self.ui, raw)
+        end
+        if not self._marker_book_open_anchor then
+            self._marker_book_open_anchor = Tokens.captureMarkerAnchor(self.ui, raw)
+        end
     end
     -- Re-enable after paint error disable
     if self._error_disabled then
@@ -1294,12 +1350,17 @@ function Bookends:getTodayMarkerPage()
     local books = self.today_marker_settings:readSetting("books") or {}
     local entry = books[file]
     if not entry or entry.date ~= today then
-        books[file] = { page = pageno, date = today }
+        local anchor = Tokens.captureMarkerAnchor(self.ui, pageno)
+        books[file] = { page = anchor.page, xp = anchor.xp, date = today }
         self.today_marker_settings:saveSetting("books", books)
         self.today_marker_settings:flush()
         return pageno
     end
-    return entry.page
+    -- The stored entry is anchor-shaped ({ page, xp }), so re-derive the page
+    -- from the xpointer: a font-size change part-way through the day would
+    -- otherwise leave the marker pointing at whatever text now happens to sit
+    -- on the page index captured this morning (#99/#100).
+    return Tokens.resolveMarkerAnchor(self.ui, entry)
 end
 
 -- Build the renderer-facing markers table (#77) for one bar line.
@@ -1357,7 +1418,8 @@ function Bookends:onResume()
     self.session_start_page = self.session_max_page
     -- Re-anchor the session bar marker (#77) to where we woke up; the book_open
     -- anchor is intentionally left untouched so it survives sleep/wake.
-    self._marker_session_page = Tokens.getCurrentPageNumber(self.ui) or self._marker_session_page
+    self._marker_session_anchor = Tokens.captureMarkerAnchor(self.ui, Tokens.getCurrentPageNumber(self.ui))
+        or self._marker_session_anchor
     self:backgroundUpdateCheck()
 
     -- A repaint here would blit our overlay onto a screensaver that's still
@@ -1728,6 +1790,10 @@ function Bookends:_paintToInner(bb, x, y)
     self._hold_rects = {}
     self._bookmark_pages = self:getBookmarkPages()
     self._marker_today_page = self:getTodayMarkerPage()
+    -- Resolve the in-memory anchors once per paint rather than per bar: each
+    -- resolve is an xpointer lookup, and every bar asks for all three fracs.
+    self._marker_session_page = Tokens.resolveMarkerAnchor(self.ui, self._marker_session_anchor)
+    self._marker_book_open_page = Tokens.resolveMarkerAnchor(self.ui, self._marker_book_open_anchor)
 
     local screen_size = Screen:getSize()
     local screen_w = screen_size.w

@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: bookends\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-02 18:47+0100\n"
-"PO-Revision-Date: 2026-06-16 02:12+0100\n"
+"PO-Revision-Date: 2026-07-15 09:59+0800\n"
 "Last-Translator: \n"
 "Language-Team: Chinese (Simplified)\n"
 "Language: zh_CN\n"
@@ -715,7 +715,7 @@ msgid ""
 "in the picker to turn off."
 msgstr ""
 "在顶部和底部覆盖区域后方绘制全宽实心填充色，并延伸至屏幕边缘，该颜色将贯穿整"
-"个屏幕。选择一种颜色以启用此模式，长按该行或点击取色器中的‘默认’即可关闭。"
+"个屏幕。选择一种颜色以启用此模式，长按该行或点击取色器中的「默认」即可关闭。"
 
 #: menu/icons_catalogue.lua:24 menu/tokens_catalogue.lua:20
 msgid "All"
@@ -1278,7 +1278,7 @@ msgstr "底部居中点击手势"
 
 #: menu/main_menu.lua:302
 msgid "toggle bookends"
-msgstr "切换 Bookends"
+msgstr "切换信息栏状态"
 
 #: menu/main_menu.lua:304
 msgid "cycle presets"
@@ -1301,7 +1301,7 @@ msgstr "穿透"
 
 #: menu/main_menu.lua:329
 msgid "Toggle bookends"
-msgstr "切换 Bookends"
+msgstr "切换信息栏状态"
 
 #: menu/main_menu.lua:343
 msgid "Cycle starred presets"
@@ -1567,7 +1567,7 @@ msgid ""
 "'%1' is one of Bookends' default placeholder names. Give your preset "
 "something distinctive — that's how it'll appear in the gallery."
 msgstr ""
-"'%1'是阅读信息栏默认的占位符名称，给你的预设起个独特的名字，它将显示在作品库"
+"“%1”是阅读信息栏默认的占位符名称，给你的预设起个独特的名字，它将显示在作品库"
 "中。"
 
 #: menu/preset_manager_modal.lua:1515
@@ -1578,7 +1578,7 @@ msgstr "写一段简短描述，告诉画廊用户您的预设展示什么"
 #: menu/preset_manager_modal.lua:1537
 msgid ""
 "Submit '%1' by %2 to the gallery? A pull request will be opened for review."
-msgstr "将%2的'%1'提交到画廊？系统将发起拉取请求等待审核。"
+msgstr "将%2的“%1”提交到画廊？系统将发起拉取请求等待审核。"
 
 #: menu/preset_manager_modal.lua:1539
 msgid "Submit"
@@ -1589,8 +1589,8 @@ msgid ""
 "A preset called '%1' is already in the gallery. Rename your preset (Manage… "
 "→ Rename…) before submitting, so it doesn't collide with the existing entry."
 msgstr ""
-"画廊中已存在名为'%1'的预设。请在提交前通过'管理… > 重命名…'重命名你的预设，以"
-"避免与现有条目冲突。"
+"画廊中已存在名为“%1”的预设。请在提交前通过「管理…」>「重命名…」重命名你的预"
+"设，以避免与现有条目冲突。"
 
 #: menu/preset_manager_modal.lua:1560
 msgid "Submitting to gallery…"
@@ -1610,13 +1610,14 @@ msgid ""
 "A preset called '%1' is already in the gallery. Rename your preset (Manage… "
 "→ Rename…) before submitting."
 msgstr ""
-"名为'%1'的预设已存在于画廊中，提交前请通过'管理… > 重命名…'重命名您的预设。"
+"名为“%1”的预设已存在于画廊中，提交前请通过「管理…」>「重命名…」重命名您的预"
+"设。"
 
 #: menu/preset_manager_modal.lua:1584
 msgid ""
 "A submission for '%1' is already awaiting review. Wait for that one to be "
 "reviewed, or rename your preset to submit under a different name."
-msgstr "'%1'的提交已在等待审核，请等待该审核完成，或重命名预设以其他名称提交。"
+msgstr "“%1”的提交已在等待审核，请等待该审核完成，或重命名预设以其他名称提交。"
 
 #: menu/preset_manager_modal.lua:1587
 msgid "Submission failed: %1"
@@ -1653,7 +1654,7 @@ msgstr "提交失败 — 详情请查看 KOReader 日志。"
 
 #: menu/preset_manager_modal.lua:1630
 msgid "Delete preset '%1'?"
-msgstr "删除预设'%1'？"
+msgstr "删除预设“%1”？"
 
 #: menu/preset_manager_modal.lua:1673
 msgid "Offline — connect to preview this preset."
@@ -1661,7 +1662,7 @@ msgstr "离线 — 请连接网络以预览此预设。"
 
 #: menu/preset_manager_modal.lua:1675
 msgid "Couldn't download '%1'."
-msgstr "无法下载'%1'。"
+msgstr "无法下载“%1”。"
 
 #: menu/preset_manager_modal.lua:1681
 msgid "This preset appears invalid; skipping."
@@ -1676,7 +1677,7 @@ msgid ""
 "\n"
 "Install under a new name to keep both."
 msgstr ""
-"'%1'已存在于你的库中。\n"
+"“%1”已存在于你的库中。\n"
 "\n"
 "替换将用当前画廊版本覆盖你的本地副本。所有本地编辑将丢失。\n"
 "以新名称安装可同时保留两者。"
@@ -2011,7 +2012,7 @@ msgstr "短星期（周五）"
 
 #: menu/tokens_catalogue.lua:83
 msgid "Custom date/time format (strftime spec)"
-msgstr "自定义日期/时间格式（Strftime规范）"
+msgstr "自定义日期/时间格式（Strftime 规范）"
 
 #: menu/tokens_catalogue.lua:84
 msgid "Time left in chapter"
@@ -2263,7 +2264,7 @@ msgstr "已读百分比（排除跳过）"
 
 #: menu/tokens_catalogue.lua:152
 msgid "odd / even"
-msgstr "奇数 / 偶数"
+msgstr "奇数/偶数"
 
 #: menu/tokens_catalogue.lua:153
 msgid "If frontlight on"
@@ -2275,11 +2276,11 @@ msgstr "夜间模式已开启"
 
 #: menu/tokens_catalogue.lua:157
 msgid "EPUB / PDF / CBZ / …"
-msgstr "EPUB / PDF / CBZ / …"
+msgstr "EPUB/PDF/CBZ/…"
 
 #: menu/tokens_catalogue.lua:158
 msgid "Current HH:MM (24h)"
-msgstr "当前 HH:MM（24 小时制）"
+msgstr "当前 HH:MM（24小时制）"
 
 #: menu/tokens_catalogue.lua:159
 msgid "Mon–Sun"
@@ -2441,8 +2442,8 @@ msgid ""
 msgstr ""
 "词元\n"
 "\n"
-"词元是占位符，每次渲染预设时会被替换为实时数据。书籍 / 进度 / 时间 / 会话 / "
-"设备芯片中的每个条目都是一个词元，写作 %名称。它们会内联展开：\n"
+"词元是占位符，每次渲染预设时会被替换为实时数据。书籍/进度/时间/会话/设备芯片"
+"中的每个条目都是一个词元，写作 %名称。它们会内联展开：\n"
 "  %书名 — %当前页码/%总页数\n"
 "  → 1984 — 12/268\n"
 "\n"
@@ -2477,7 +2478,7 @@ msgstr ""
 "名]…[/if] 可在章节标题与书名相同时隐藏章节标题。\n"
 "\n"
 "完整的条件状态键列表（wifi、电量、亮度百分比、夜间模式、时间、格式……）请浏览 "
-"If/else 芯片——其中的每个参考条目都展示了一种条件的准确键名和运算符语法。\n"
+"If/else 芯片 — 其中的每个参考条目都展示了一种条件的准确键名和运算符语法。\n"
 "\n"
 "示例\n"
 "\n"
