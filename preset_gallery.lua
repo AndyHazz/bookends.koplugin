@@ -194,12 +194,38 @@ function Gallery.fetchCounts(user_agent, callback)
     callback(data.counts, nil)
 end
 
+--- Repo-relative path to a preset file, from the index entry's own preset_url
+--- when it has one, else derived from the slug.
+---
+--- The generator always writes `presets/<slug>.lua`, so the field is pure
+--- redundancy — about 7 KB of the index at 170 presets. It can't simply be
+--- dropped upstream, because released plugin versions read it straight out of
+--- the index and would break. Deriving it here means a future index can omit it
+--- safely once this has shipped and aged in; until then a present field still
+--- wins, so a hand-edited index with a non-standard path keeps working.
+---
+--- Returns nil for a slug that couldn't form a safe path (it lands in a URL).
+function Gallery.presetPath(slug, preset_url)
+    if type(preset_url) == "string" and preset_url ~= "" then
+        return preset_url
+    end
+    if type(slug) ~= "string" or not slug:match("^[a-z0-9-]+$") or #slug > 64 then
+        return nil
+    end
+    return "presets/" .. slug .. ".lua"
+end
+
 function Gallery.downloadPreset(slug, preset_url, user_agent, callback)
     if not Gallery.isOnline() then
         callback(nil, "offline")
         return
     end
-    local body = httpGet(BASE_URL .. preset_url, user_agent or "KOReader-Bookends")
+    local path = Gallery.presetPath(slug, preset_url)
+    if not path then
+        callback(nil, "bad preset reference")
+        return
+    end
+    local body = httpGet(BASE_URL .. path, user_agent or "KOReader-Bookends")
     if not body then callback(nil, "fetch failed"); return end
     local fn, err = loadstring(body)
     if not fn then callback(nil, "parse error: " .. tostring(err)); return end
