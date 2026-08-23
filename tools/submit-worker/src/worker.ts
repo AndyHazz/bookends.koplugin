@@ -230,6 +230,65 @@ async function ipSlugKey(ip: string, slug: string): Promise<string> {
 
 const COUNTS_CACHE_KEY = "https://bookends-submit.internal/counts";
 
+// Every install counter lives in ONE key as a { slug: n } blob, rather than a
+// key per preset.
+//
+// The per-preset layout made /counts cost one list plus one get per preset,
+// serialised. At 170 presets that measured 5.0 s cold and 171 KV reads a call --
+// which both froze the gallery (the plugin's fetch is synchronous on the UI
+// thread) and burned the 100k/day free-tier read allowance in a few hundred
+// refreshes. The edge cache in front of it barely helped, because handleInstall
+// invalidates it on every genuine install. Reading one key instead makes /counts
+// a single read whatever the gallery grows to.
+//
+// The install path costs exactly what it did before -- it was
+// get(count:slug) + put(count:slug) + put(lock), now it's
+// get(counts:all) + put(counts:all) + put(lock) -- so this spends nothing extra
+// from the much tighter 1k/day write allowance.
+//
+// Tradeoff: all bumps now read-modify-write the same key, so two installs of
+// *different* presets landing together can lose one, where separate keys would
+// have kept both. Same-slug contention could already lose bumps, and this is a
+// popularity signal rather than an accounting record, so the wider window is
+// acceptable. If it ever stops being acceptable the answer is D1, not more keys.
+const COUNTS_KEY = "counts:all";
+
+// The pre-blob layout. Read once to seed COUNTS_KEY, then never again -- the
+// existence of COUNTS_KEY is itself the "already migrated" marker, so there's no
+// separate flag to keep in sync. These keys are deliberately left in place
+// rather than deleted (deletes have their own daily allowance and stale keys
+// cost nothing), but they stop being updated the moment the blob exists, so
+// treat them as historical and never as a source of truth.
+const LEGACY_COUNT_PREFIX = "count:";
+
+/** Seed the aggregate blob from the legacy per-preset keys. Runs at most once. */
+async function migrateLegacyCounts(env: Env): Promise<Record<string, number>> {
+    const counts: Record<string, number> = {};
+    let cursor: string | undefined;
+    do {
+        const page = await env.INSTALL_COUNTS.list({ prefix: LEGACY_COUNT_PREFIX, cursor });
+        // Parallel, unlike the loop this replaces: it only runs once, but once
+        // was still 5 s of sequential round trips.
+        const values = await Promise.all(page.keys.map((k) => env.INSTALL_COUNTS.get(k.name)));
+        page.keys.forEach((k, i) => {
+            const n = parseInt(values[i] ?? "0", 10);
+            if (!Number.isNaN(n)) counts[k.name.slice(LEGACY_COUNT_PREFIX.length)] = n;
+        });
+        cursor = page.list_complete ? undefined : page.cursor;
+    } while (cursor);
+    // Written even when empty, so "absent" unambiguously means "never migrated"
+    // and a fresh namespace doesn't re-scan on every request.
+    await env.INSTALL_COUNTS.put(COUNTS_KEY, JSON.stringify(counts));
+    return counts;
+}
+
+/** All install counts, migrating from the legacy layout on first call. */
+async function loadCounts(env: Env): Promise<Record<string, number>> {
+    const blob = await env.INSTALL_COUNTS.get<Record<string, number>>(COUNTS_KEY, "json");
+    if (blob && typeof blob === "object") return blob;
+    return await migrateLegacyCounts(env);
+}
+
 async function handleInstall(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     if (request.method === "OPTIONS") return json(204, {});
     if (request.method !== "POST") return json(405, { ok: false, error: "use POST" });
@@ -257,13 +316,14 @@ async function handleInstall(request: Request, env: Env, ctx: ExecutionContext):
     }
 
     // Read-modify-write: KV has no atomic increments. Under contention we may
-    // lose the occasional bump, which is fine for a popularity signal.
-    const countKey = `count:${slug}`;
-    const current = parseInt((await env.INSTALL_COUNTS.get(countKey)) ?? "0", 10) || 0;
-    const next = current + 1;
+    // lose the occasional bump, which is fine for a popularity signal. See the
+    // COUNTS_KEY note on why that window is wider than it used to be.
+    const counts = await loadCounts(env);
+    const next = (counts[slug] ?? 0) + 1;
+    counts[slug] = next;
 
     await Promise.all([
-        env.INSTALL_COUNTS.put(countKey, String(next)),
+        env.INSTALL_COUNTS.put(COUNTS_KEY, JSON.stringify(counts)),
         env.INSTALL_COUNTS.put(lockKey, "1", { expirationTtl: ttl }),
     ]);
 
@@ -279,28 +339,19 @@ async function handleInstall(request: Request, env: Env, ctx: ExecutionContext):
 async function handleCounts(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     if (request.method !== "GET") return json(405, { ok: false, error: "use GET" });
 
-    // Edge-cache the response so repeated gallery refreshes don't hammer KV
-    // list. The cache key is the canonical URL without query string so clients
+    // Edge-cache the response so bursts of gallery refreshes collapse to one KV
+    // read. The cache key is the canonical URL without query string so clients
     // can't DoS the cache with ever-changing ?ts= values; staleness is bounded
     // by COUNTS_CACHE_SECONDS and the /install handler explicitly invalidates
-    // this entry whenever it actually bumps a counter.
+    // this entry whenever it actually bumps a counter. That invalidation used to
+    // be expensive to recover from (a full 171-read rescan); with COUNTS_KEY the
+    // miss path is a single read, so a cold cache is no longer a cliff.
     const cacheKey = new Request(COUNTS_CACHE_KEY);
     const cache = (caches as unknown as { default: Cache }).default;
     const cached = await cache.match(cacheKey);
     if (cached) return cached;
 
-    const counts: Record<string, number> = {};
-    let cursor: string | undefined;
-    do {
-        const page = await env.INSTALL_COUNTS.list({ prefix: "count:", cursor });
-        for (const k of page.keys) {
-            const slug = k.name.slice("count:".length);
-            const v = await env.INSTALL_COUNTS.get(k.name);
-            const n = parseInt(v ?? "0", 10);
-            if (!Number.isNaN(n)) counts[slug] = n;
-        }
-        cursor = page.list_complete ? undefined : page.cursor;
-    } while (cursor);
+    const counts = await loadCounts(env);
 
     const maxAge = parseInt(env.COUNTS_CACHE_SECONDS ?? "60", 10);
     const resp = new Response(JSON.stringify({ ok: true, counts }), {

@@ -4,6 +4,7 @@ docs/
 *~
 .DS_Store
 tools/submit-worker/node_modules/
+tools/submit-worker/dist/
 .claude/
 
 tools/.curator_scratch.json

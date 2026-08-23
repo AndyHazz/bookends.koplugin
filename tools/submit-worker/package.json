@@ -6,7 +6,9 @@
   "scripts": {
     "deploy": "wrangler deploy",
     "dev": "wrangler dev",
-    "tail": "wrangler tail"
+    "tail": "wrangler tail",
+    "typecheck": "tsc --noEmit",
+    "test": "rm -rf dist && tsc --outDir dist && mv dist/worker.js dist/worker.mjs && node test/counts.test.mjs"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250101.0",
