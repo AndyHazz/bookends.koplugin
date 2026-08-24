@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bookends\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-02 18:47+0100\n"
+"POT-Creation-Date: 2026-08-23 19:30+0100\n"
 "PO-Revision-Date: 2026-04-21 14:00+0000\n"
 "Language-Team: Bulgarian\n"
 "Language: bg_BG\n"
@@ -14,27 +14,28 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: bookends_colour_palette.lua:400 bookends_dialog_helpers.lua:101
-#: bookends_line_editor.lua:792 bookends_line_editor.lua:1058 main.lua:2317
-#: main.lua:3016 menu/main_menu.lua:55 menu/main_menu.lua:95
-#: menu/preset_manager_modal.lua:1131 menu/preset_manager_modal.lua:1252
-#: menu/preset_manager_modal.lua:1293 menu/preset_manager_modal.lua:1394
-#: menu/preset_manager_modal.lua:1438 menu/preset_manager_modal.lua:1540
-#: menu/preset_manager_modal.lua:1612 menu/preset_manager_modal.lua:1707
-#: menu/preset_manager_modal.lua:1731 menu/preset_manager_modal.lua:1755
+#: bookends_line_editor.lua:792 bookends_line_editor.lua:1058 main.lua:2432
+#: main.lua:3131 menu/main_menu.lua:55 menu/main_menu.lua:95
+#: menu/main_menu.lua:133 menu/main_menu.lua:590
+#: menu/preset_manager_modal.lua:1405 menu/preset_manager_modal.lua:1527
+#: menu/preset_manager_modal.lua:1568 menu/preset_manager_modal.lua:1669
+#: menu/preset_manager_modal.lua:1713 menu/preset_manager_modal.lua:1815
+#: menu/preset_manager_modal.lua:1889 menu/preset_manager_modal.lua:1984
+#: menu/preset_manager_modal.lua:2008 menu/preset_manager_modal.lua:2032
 #: menu/progress_bar_menu.lua:64
 msgid "Cancel"
 msgstr "Отказ"
 
 #: bookends_colour_palette.lua:402 bookends_dialog_helpers.lua:109
-#: bookends_line_editor.lua:505 bookends_line_editor.lua:632 main.lua:2327
-#: main.lua:2559 menu/colours_menu.lua:73 menu/colours_menu.lua:269
+#: bookends_line_editor.lua:505 bookends_line_editor.lua:632 main.lua:2442
+#: main.lua:2674 menu/colours_menu.lua:73 menu/colours_menu.lua:269
 #: menu/progress_bar_menu.lua:270 menu/progress_bar_menu.lua:503
 #: menu/progress_bar_menu.lua:545
 msgid "Default"
 msgstr "По подразбиране"
 
 #: bookends_colour_palette.lua:404 bookends_dialog_helpers.lua:116
-#: main.lua:2356 menu/preset_manager_modal.lua:587
+#: main.lua:2471 menu/preset_manager_modal.lua:691
 msgid "Apply"
 msgstr "Прилагане"
 
@@ -50,7 +51,7 @@ msgstr "Избор на цвят"
 msgid "Invalid hex colour (use #RGB or #RRGGBB)"
 msgstr "Невалиден хекс цвят (използвайте #RGB или #RRGGBB)"
 
-#: bookends_line_editor.lua:115 main.lua:1013
+#: bookends_line_editor.lua:115 main.lua:1114
 msgid "Regular"
 msgstr "Обикновен"
 
@@ -285,9 +286,9 @@ msgstr "Непрочетена"
 msgid "Custom colours"
 msgstr "Персонализирани цветове"
 
-#: bookends_line_editor.lua:661 bookends_updater.lua:267 main.lua:2854
-#: menu/icons_library.lua:453 menu/preset_manager_modal.lua:561
-#: menu/tokens_library.lua:458
+#: bookends_line_editor.lua:661 bookends_updater.lua:295 main.lua:2969
+#: menu/icons_library.lua:453 menu/preset_manager_modal.lua:665
+#: menu/tokens_library.lua:463
 msgid "Close"
 msgstr "Затваряне"
 
@@ -315,9 +316,9 @@ msgstr "Икони"
 msgid "Tokens"
 msgstr "Токени"
 
-#: bookends_line_editor.lua:826 main.lua:3018 menu/main_menu.lua:57
-#: menu/preset_manager_modal.lua:1135 menu/preset_manager_modal.lua:1294
-#: menu/preset_manager_modal.lua:1395
+#: bookends_line_editor.lua:826 main.lua:3133 menu/main_menu.lua:57
+#: menu/preset_manager_modal.lua:1409 menu/preset_manager_modal.lua:1569
+#: menu/preset_manager_modal.lua:1670
 msgid "Save"
 msgstr "Запазване"
 
@@ -341,8 +342,8 @@ msgstr "Преместване в"
 msgid "Line %1: %2"
 msgstr "Ред %1: %2"
 
-#: bookends_line_editor.lua:1054 menu/preset_manager_modal.lua:1237
-#: menu/preset_manager_modal.lua:1631
+#: bookends_line_editor.lua:1054 menu/preset_manager_modal.lua:1512
+#: menu/preset_manager_modal.lua:1908
 msgid "Delete"
 msgstr "Изтриване"
 
@@ -354,79 +355,79 @@ msgstr "Отваряне на страницата с версиите в бра
 msgid "Open"
 msgstr "Отваряне"
 
-#: bookends_updater.lua:189
+#: bookends_updater.lua:217
 msgid "Checking for updates..."
 msgstr "Проверка за актуализации..."
 
-#: bookends_updater.lua:201
+#: bookends_updater.lua:229
 msgid "Could not check for updates."
 msgstr "Неуспешна проверка за актуализации."
 
-#: bookends_updater.lua:238
+#: bookends_updater.lua:266
 msgid "Bookends is up to date."
 msgstr "Bookends е актуален."
 
-#: bookends_updater.lua:239
+#: bookends_updater.lua:267
 msgid "Version: "
 msgstr "Версия: "
 
-#: bookends_updater.lua:273
+#: bookends_updater.lua:301
 msgid "Update and restart"
 msgstr "Актуализиране и рестартиране"
 
-#: bookends_updater.lua:278
+#: bookends_updater.lua:306
 msgid "No download available for this release."
 msgstr "Няма наличен файл за изтегляне за тази версия."
 
-#: bookends_updater.lua:289
+#: bookends_updater.lua:317
 msgid "Update available!"
 msgstr "Налична е актуализация!"
 
-#: bookends_updater.lua:290
+#: bookends_updater.lua:318
 msgid "Installed: "
 msgstr "Инсталиран: "
 
-#: bookends_updater.lua:291
+#: bookends_updater.lua:319
 msgid "Latest: "
 msgstr "Последна: "
 
-#: bookends_updater.lua:316
+#: bookends_updater.lua:342
 msgid "Downloading update..."
 msgstr "Изтегляне на актуализацията..."
 
-#: bookends_updater.lua:378
+#: bookends_updater.lua:404
 msgid "Download failed."
 msgstr "Изтеглянето е неуспешно."
 
-#: bookends_updater.lua:390
+#: bookends_updater.lua:416
 msgid "Installation failed: "
 msgstr "Инсталирането е неуспешно: "
 
-#: bookends_updater.lua:407
+#: bookends_updater.lua:433
 msgid "Bookends updated to v"
 msgstr "Bookends е актуализиран до v"
 
-#: bookends_updater.lua:408
+#: bookends_updater.lua:434
 msgid "Restart KOReader now?"
 msgstr "Рестартиране на KOReader сега?"
 
-#: bookends_updater.lua:409 main.lua:59
+#: bookends_updater.lua:435 main.lua:59
 msgid "Restart"
 msgstr "Рестартиране"
 
-#: bookends_updater.lua:425
+#: bookends_updater.lua:451
 msgid "Could not install branch:"
 msgstr "Клонът не можа да бъде инсталиран:"
 
-#: bookends_updater.lua:444
+#: bookends_updater.lua:468
 msgid "Downloading latest release..."
 msgstr "Изтегляне на последната версия..."
 
-#: bookends_updater.lua:455
+#: bookends_updater.lua:479
 msgid "Could not fetch latest release."
 msgstr "Последната версия не можа да бъде изтеглена."
 
-#: bookends_updater.lua:468
+#: bookends_updater.lua:492
 msgid "Latest release has no downloadable zip."
 msgstr "Последната версия няма zip файл за изтегляне."
 
@@ -458,116 +459,121 @@ msgstr "Фантазия"
 msgid "Dismiss"
 msgstr "Затваряне"
 
-#: main.lua:145
+#: main.lua:152
 msgid "Top-left"
 msgstr "Горе вляво"
 
-#: main.lua:146
+#: main.lua:153
 msgid "Top-center"
 msgstr "Горе в центъра"
 
-#: main.lua:147
+#: main.lua:154
 msgid "Top-right"
 msgstr "Горе вдясно"
 
-#: main.lua:148
+#: main.lua:155
 msgid "Bottom-left"
 msgstr "Долу вляво"
 
-#: main.lua:149
+#: main.lua:156
 msgid "Bottom-center"
 msgstr "Долу в центъра"
 
-#: main.lua:150
+#: main.lua:157
 msgid "Bottom-right"
 msgstr "Долу вдясно"
 
-#: main.lua:262
+#: main.lua:306
+#, fuzzy
+msgid "Bookends presets folder"
+msgstr "Bookends: отваряне на библиотека с настройки"
+
+#: main.lua:327
 msgid "Bookends: toggle visibility"
 msgstr "Bookends: превключване на видимостта"
 
-#: main.lua:268
+#: main.lua:333
 msgid "Bookends: cycle preset"
 msgstr "Bookends: следваща предварителна настройка"
 
-#: main.lua:274
+#: main.lua:339
 msgid "Bookends: set visibility"
 msgstr "Bookends: задаване на видимост"
 
-#: main.lua:277
+#: main.lua:342
 msgid "on"
 msgstr "вкл."
 
-#: main.lua:277 menu/colours_menu.lua:302 menu/colours_menu.lua:309
+#: main.lua:342 menu/colours_menu.lua:302 menu/colours_menu.lua:309
 #: menu/colours_menu.lua:349
 msgid "off"
 msgstr "изкл."
 
-#: main.lua:282
+#: main.lua:347
 msgid "Bookends: open preset library"
 msgstr "Bookends: отваряне на библиотека с настройки"
 
-#: main.lua:371 main.lua:409 menu/preset_manager_modal.lua:1501
+#: main.lua:436 main.lua:474 menu/preset_manager_modal.lua:1776
 msgid "My setup"
 msgstr "Моята конфигурация"
 
-#: main.lua:372 main.lua:410 menu/preset_manager_modal.lua:1505
+#: main.lua:437 main.lua:475 menu/preset_manager_modal.lua:1780
 msgid "Imported from your earlier Bookends settings"
 msgstr "Импортирано от предишните ви настройки на Bookends"
 
-#: main.lua:552
+#: main.lua:646
 msgid "Preset error: %1"
 msgstr "Грешка в настройката: %1"
 
-#: main.lua:561
+#: main.lua:655
 msgid "Preset: %1"
 msgstr "Предварителна настройка: %1"
 
-#: main.lua:1014
+#: main.lua:1115
 msgid "Bold"
 msgstr "Удебелен"
 
-#: main.lua:1015
+#: main.lua:1116
 msgid "Italic"
 msgstr "Курсив"
 
-#: main.lua:1016
+#: main.lua:1117
 msgid "Bold italic"
 msgstr "Удебелен курсив"
 
-#: main.lua:2575
+#: main.lua:2690
 msgid "Select font"
 msgstr "Избор на шрифт"
 
-#: main.lua:2616
+#: main.lua:2731
 msgid "Font-family fonts"
 msgstr "Шрифтове по семейство"
 
-#: main.lua:2681
+#: main.lua:2796
 msgid "Fonts"
 msgstr "Шрифтове"
 
-#: main.lua:2775 menu/library_modal.lua:937
+#: main.lua:2890 menu/library_modal.lua:937
 msgid "Page %1 of %2"
 msgstr "Страница %1 от %2"
 
-#: main.lua:2864 main.lua:3038
+#: main.lua:2979 main.lua:3153
 msgid "Reset"
 msgstr "Нулиране"
 
-#: main.lua:2873
+#: main.lua:2988
 msgid "Set font"
 msgstr "Задаване на шрифт"
 
-#: main.lua:3012 menu/main_menu.lua:453 menu/main_menu.lua:455
+#: main.lua:3127 menu/main_menu.lua:502 menu/main_menu.lua:504
 msgid "Development branch"
 msgstr "Клон за разработка"
 
-#: main.lua:3014
+#: main.lua:3129
 msgid "Branch name (leave empty for stable)"
 msgstr "Име на клон (оставете празно за стабилна версия)"
 
-#: main.lua:3037
+#: main.lua:3152
 msgid ""
 "This will clear the development branch setting and install the latest stable "
 "release of Bookends, then restart KOReader. Continue?"
@@ -575,30 +581,42 @@ msgstr ""
 "Това ще изчисти настройките на клона за разработка и ще инсталира последната "
 "стабилна версия на Bookends, след което ще рестартира KOReader. Продължаване?"
 
-#: main.lua:3056
+#: main.lua:3171
 msgid "Bookends update available: v"
 msgstr "Налична актуализация на Bookends: v"
 
-#: main.lua:3064 menu/main_menu.lua:557 menu/progress_bar_menu.lua:277
+#: main.lua:3179 menu/main_menu.lua:667 menu/progress_bar_menu.lua:277
 #: menu/progress_bar_menu.lua:529
 msgid "Adjust margins"
 msgstr "Настройване на полета"
 
-#: main.lua:3066 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:532
+#: main.lua:3181 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:532
 msgid "Top"
 msgstr "Горе"
 
-#: main.lua:3067 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:533
+#: main.lua:3182 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:533
 msgid "Bottom"
 msgstr "Долу"
 
-#: main.lua:3068 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:532
+#: main.lua:3183 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:532
 msgid "Left"
 msgstr "Ляво"
 
-#: main.lua:3069 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:533
+#: main.lua:3184 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:533
 msgid "Right"
 msgstr "Дясно"
+
+#: _meta.lua:19 menu/main_menu.lua:18
+msgid "Bookends"
+msgstr "Bookends"
+
+#: _meta.lua:20
+msgid ""
+"Configurable text overlays at screen corners and edges with token expansion "
+"and icon support."
+msgstr ""
+"Конфигурируеми текстови слоеве по ъглите и ръбовете на екрана с разширяване "
+"на токени и поддръжка на икони."
 
 #: menu/colours_menu.lua:73
 msgid "per style"
@@ -1203,15 +1221,11 @@ msgstr "Търсене…"
 msgid "Search"
 msgstr "Търсене"
 
-#: menu/main_menu.lua:18 _meta.lua:19
-msgid "Bookends"
-msgstr "Bookends"
-
-#: menu/main_menu.lua:51 menu/preset_manager_modal.lua:1127
+#: menu/main_menu.lua:51 menu/preset_manager_modal.lua:1401
 msgid "Save preset"
 msgstr "Запазване на настройката"
 
-#: menu/main_menu.lua:53 menu/preset_manager_modal.lua:1129
+#: menu/main_menu.lua:53 menu/preset_manager_modal.lua:1403
 msgid "Preset name"
 msgstr "Име на настройката"
 
@@ -1219,48 +1233,64 @@ msgstr "Име на настройката"
 msgid "Saved preset:"
 msgstr "Запазена настройка:"
 
-#: menu/main_menu.lua:92 menu/preset_manager_modal.lua:1249
+#: menu/main_menu.lua:92 menu/preset_manager_modal.lua:1524
 msgid "Rename preset"
 msgstr "Преименуване на настройката"
 
-#: menu/main_menu.lua:97 menu/main_menu.lua:525
-#: menu/preset_manager_modal.lua:1253 menu/preset_manager_modal.lua:1440
+#: menu/main_menu.lua:97 menu/main_menu.lua:635
+#: menu/preset_manager_modal.lua:1528 menu/preset_manager_modal.lua:1715
 msgid "Rename"
 msgstr "Преименуване"
 
-#: menu/main_menu.lua:130 menu/main_menu.lua:132
+#: menu/main_menu.lua:129
+msgid "File extension"
+msgstr ""
+
+#: menu/main_menu.lua:131
+msgid "e.g. CBZ"
+msgstr ""
+
+#: menu/main_menu.lua:135
+msgid "Next"
+msgstr ""
+
+#: menu/main_menu.lua:158
+msgid "Hidden"
+msgstr ""
+
+#: menu/main_menu.lua:172 menu/main_menu.lua:174
 msgid "Bookends settings"
 msgstr "Настройки на Bookends"
 
-#: menu/main_menu.lua:130
+#: menu/main_menu.lua:172
 msgid "plugin update available"
 msgstr "налична актуализация на плъгина"
 
-#: menu/main_menu.lua:147 menu/main_menu.lua:149
+#: menu/main_menu.lua:189 menu/main_menu.lua:191
 msgid "Preset"
 msgstr "Предварителна настройка"
 
-#: menu/main_menu.lua:199
+#: menu/main_menu.lua:241
 msgid "Full width progress bars"
 msgstr "Ленти за напредъка на цяла ширина"
 
-#: menu/main_menu.lua:211
+#: menu/main_menu.lua:253
 msgid "Save current as new preset…"
 msgstr "Запазване на текущата като нова настройка…"
 
-#: menu/main_menu.lua:227
+#: menu/main_menu.lua:269
 msgid "Enable bookends"
 msgstr "Включване на Bookends"
 
-#: menu/main_menu.lua:238 menu/main_menu.lua:240
+#: menu/main_menu.lua:280 menu/main_menu.lua:282
 msgid "Disable stock status bar"
 msgstr "Изключване на вградената лента на състоянието"
 
-#: menu/main_menu.lua:238
+#: menu/main_menu.lua:280
 msgid "recommended"
 msgstr "препоръчано"
 
-#: menu/main_menu.lua:243
+#: menu/main_menu.lua:285
 msgid ""
 "Hides KOReader's built-in status bar. This simplifies the render pipeline "
 "and can reduce e-ink flicker on some devices. All status bar features are "
@@ -1271,28 +1301,28 @@ msgstr ""
 "устройства. Всички функции на лентата за състоянието са достъпни като токени "
 "на Bookends."
 
-#: menu/main_menu.lua:264 menu/main_menu.lua:274
-#: menu/preset_manager_modal.lua:1332
+#: menu/main_menu.lua:306 menu/main_menu.lua:316
+#: menu/preset_manager_modal.lua:1607
 msgid "Default font"
 msgstr "Шрифт по подразбиране"
 
-#: menu/main_menu.lua:300
+#: menu/main_menu.lua:342
 msgid "Bottom center tap gesture"
 msgstr "Докосване в долния център"
 
-#: menu/main_menu.lua:302
+#: menu/main_menu.lua:344
 msgid "toggle bookends"
 msgstr "превключване на Bookends"
 
-#: menu/main_menu.lua:304
+#: menu/main_menu.lua:346
 msgid "cycle presets"
 msgstr "смяна на настройките"
 
-#: menu/main_menu.lua:306
+#: menu/main_menu.lua:348
 msgid "preset library"
 msgstr "библиотека с настройки"
 
-#: menu/main_menu.lua:310
+#: menu/main_menu.lua:352
 msgid ""
 "Configure what happens when you tap the centre of the status bar area, and "
 "whether long-pressing a progress bar opens the skim dialog."
@@ -1301,28 +1331,28 @@ msgstr ""
 "и дали продълженото натискане на лента за напредъка отваря диалога за "
 "прелистване."
 
-#: menu/main_menu.lua:321
+#: menu/main_menu.lua:363
 msgid "Pass through"
 msgstr "Пропускане"
 
-#: menu/main_menu.lua:329
+#: menu/main_menu.lua:371
 msgid "Toggle bookends"
 msgstr "Превключване на Bookends"
 
-#: menu/main_menu.lua:343
+#: menu/main_menu.lua:385
 msgid "Cycle starred presets"
 msgstr "Смяна на отбелязаните настройки"
 
-#: menu/main_menu.lua:357
+#: menu/main_menu.lua:399
 msgid "Open preset library"
 msgstr "Отваряне на библиотека с настройки"
 
-#: menu/main_menu.lua:372
+#: menu/main_menu.lua:414
 msgid "Long-press progress bars to skim document"
 msgstr ""
 "Продължено натискане на лентите за напредъка за прелистване на документа"
 
-#: menu/main_menu.lua:380
+#: menu/main_menu.lua:422
 msgid ""
 "Opens the skim dialog when you long-press on a full-width progress bar. "
 "Replaces the stock status bar's long-press to skim feature."
@@ -1331,11 +1361,11 @@ msgstr ""
 "на цяла ширина. Замества функцията за прелистване с продължено натискане на "
 "вградената лента на състоянието."
 
-#: menu/main_menu.lua:387
+#: menu/main_menu.lua:429
 msgid "Include current page in pages-left tokens"
 msgstr "Включване на текущата страница в токените за оставащи страници"
 
-#: menu/main_menu.lua:388
+#: menu/main_menu.lua:430
 msgid ""
 "Affects %L (pages left in book) and %l (pages left in chapter). Off "
 "(default): 'n−1 → 0'. On: 'n → 1'."
@@ -1343,11 +1373,11 @@ msgstr ""
 "Влияе на %L (оставащи страници в книгата) и %l (оставащи страници в "
 "главата). Изкл. (по подразбиране): „n−1 → 0“. Вкл.: „n → 1“."
 
-#: menu/main_menu.lua:401
+#: menu/main_menu.lua:443
 msgid "Disable automatic clock/battery refresh"
 msgstr "Изключване на автоматичното опресняване на часовника/батерията"
 
-#: menu/main_menu.lua:414
+#: menu/main_menu.lua:456
 msgid ""
 "Stops the 60-second background timer that keeps the clock, battery, and time-"
 "left tokens updating without a page turn. Useful on devices where this timer "
@@ -1355,58 +1385,82 @@ msgid ""
 msgstr ""
 "Спира фоновия таймер на 60 секунди, който опреснява токените за часовника, "
 "батерията и оставащото време без обръщане на страница. Полезно на "
-"устройства, където този таймер пречи на съня/събуждането (напр. някои "
-"модели Pocketbook)."
+"устройства, където този таймер пречи на съня/събуждането (напр. някои модели "
+"Pocketbook)."
 
-#: menu/main_menu.lua:417
+#: menu/main_menu.lua:459
 msgid "Notify on wake when update available"
 msgstr "Известяване при събуждане, ако има налична актуализация"
 
-#: menu/main_menu.lua:437
+#: menu/main_menu.lua:479
 msgid "Update available"
 msgstr "Налична актуализация"
 
-#: menu/main_menu.lua:439
+#: menu/main_menu.lua:481
 msgid "Installed version"
 msgstr "Инсталирана версия"
 
-#: menu/main_menu.lua:447
+#: menu/main_menu.lua:489
+msgid "Auto preset by file type"
+msgstr ""
+
+#: menu/main_menu.lua:490
+msgid ""
+"Automatically hide Bookends, or switch to a specific preset, based on the "
+"document's file extension (e.g. hide for comic archives, use a plainer "
+"preset for PDFs)."
+msgstr ""
+
+#: menu/main_menu.lua:496
 msgid "Advanced"
 msgstr "Разширени"
 
-#: menu/main_menu.lua:466
+#: menu/main_menu.lua:515
 msgid "Check for updates"
 msgstr "Проверка за актуализации"
 
-#: menu/main_menu.lua:468
+#: menu/main_menu.lua:517
 msgid "Install branch"
 msgstr "Инсталиране на клон"
 
-#: menu/main_menu.lua:476
+#: menu/main_menu.lua:525
 msgid "Reset to latest stable release"
 msgstr "Нулиране до последната стабилна версия"
 
-#: menu/main_menu.lua:487 menu/main_menu.lua:490
+#: menu/main_menu.lua:536 menu/main_menu.lua:539
 msgid "Installed: v"
 msgstr "Инсталиран: v"
 
-#: menu/main_menu.lua:507
+#: menu/main_menu.lua:570
+msgid "Change"
+msgstr ""
+
+#: menu/main_menu.lua:580
+msgid "Remove rule"
+msgstr ""
+
+#: menu/main_menu.lua:599
+#, fuzzy
+msgid "Add rule…"
+msgstr "Добавяне на ред"
+
+#: menu/main_menu.lua:617
 msgid "Preset library…"
 msgstr "Библиотека с настройки…"
 
-#: menu/main_menu.lua:539 menu/main_menu.lua:543
+#: menu/main_menu.lua:649 menu/main_menu.lua:653
 msgid "Font scale"
 msgstr "Мащаб на шрифта"
 
-#: menu/main_menu.lua:567
+#: menu/main_menu.lua:677
 msgid "Truncation gap between regions"
 msgstr "Разстояние при съкращаване между областите"
 
-#: menu/main_menu.lua:571
+#: menu/main_menu.lua:681
 msgid "Truncation gap"
 msgstr "Разстояние при съкращаване"
 
-#: menu/main_menu.lua:582
+#: menu/main_menu.lua:692
 msgid "Prioritise left/right and truncate long center text"
 msgstr "Приоритет на ляво/дясно и съкращаване на дълъг централен текст"
 
@@ -1438,15 +1492,15 @@ msgstr "Допълнително ляво поле"
 msgid "Extra right margin"
 msgstr "Допълнително дясно поле"
 
-#: menu/preset_manager_modal.lua:295
+#: menu/preset_manager_modal.lua:306
 msgid "+ New blank preset"
 msgstr "+ Нова празна настройка"
 
-#: menu/preset_manager_modal.lua:311
+#: menu/preset_manager_modal.lua:322
 msgid "Discover more presets"
 msgstr "Открийте още настройки"
 
-#: menu/preset_manager_modal.lua:317
+#: menu/preset_manager_modal.lua:328
 msgid ""
 "Browse presets others have shared, preview them on your own status bar, and "
 "install the ones you like. Once installed, you can edit each preset freely "
@@ -1457,7 +1511,7 @@ msgstr ""
 "След инсталиране можете да редактирате всяка настройка свободно в раздела "
 "„Моите настройки“."
 
-#: menu/preset_manager_modal.lua:324
+#: menu/preset_manager_modal.lua:335
 msgid ""
 "Made something worth sharing? Submit it with the Manage button while viewing "
 "one of your own presets."
@@ -1465,121 +1519,133 @@ msgstr ""
 "Направили сте нещо, което си струва да споделите? Изпратете го с бутона "
 "„Управление“ при преглед на ваша предварителна настройка."
 
-#: menu/preset_manager_modal.lua:331
+#: menu/preset_manager_modal.lua:342
 msgid "Tap Latest or Popular above to load the gallery."
 msgstr ""
 "Докоснете „Последни“ или „Популярни“ по-горе, за да заредите галерията."
 
-#: menu/preset_manager_modal.lua:470
-msgid "Preset library"
-msgstr "Библиотека с настройки"
+#: menu/preset_manager_modal.lua:492
+msgid "Hidden (no overlay)"
+msgstr ""
 
-#: menu/preset_manager_modal.lua:472
-msgid "My presets"
-msgstr "Моите настройки"
+#: menu/preset_manager_modal.lua:544
+msgid "Preset for this file type"
+msgstr ""
 
-#: menu/preset_manager_modal.lua:473
-msgid "Gallery"
-msgstr "Галерия"
-
-#: menu/preset_manager_modal.lua:483 menu/preset_manager_modal.lua:495
-msgid "Latest"
-msgstr "Последни"
-
-#: menu/preset_manager_modal.lua:484
-msgid "Starred"
-msgstr "Отбелязани със звезда"
-
-#: menu/preset_manager_modal.lua:497
-msgid "Popular"
-msgstr "Популярни"
-
-#: menu/preset_manager_modal.lua:509
-msgid "Loading gallery…"
-msgstr "Зареждане на галерията…"
-
-#: menu/preset_manager_modal.lua:522
+#: menu/preset_manager_modal.lua:545 menu/preset_manager_modal.lua:626
 msgid "Search my presets by name or author…"
 msgstr "Търсене в моите настройки по име или автор…"
 
-#: menu/preset_manager_modal.lua:524
+#: menu/preset_manager_modal.lua:562
+msgid "Done"
+msgstr ""
+
+#: menu/preset_manager_modal.lua:574
+msgid "Preset library"
+msgstr "Библиотека с настройки"
+
+#: menu/preset_manager_modal.lua:576
+msgid "My presets"
+msgstr "Моите настройки"
+
+#: menu/preset_manager_modal.lua:577
+msgid "Gallery"
+msgstr "Галерия"
+
+#: menu/preset_manager_modal.lua:587 menu/preset_manager_modal.lua:599
+msgid "Latest"
+msgstr "Последни"
+
+#: menu/preset_manager_modal.lua:588
+msgid "Starred"
+msgstr "Отбелязани със звезда"
+
+#: menu/preset_manager_modal.lua:601
+msgid "Popular"
+msgstr "Популярни"
+
+#: menu/preset_manager_modal.lua:613
+msgid "Loading gallery…"
+msgstr "Зареждане на галерията…"
+
+#: menu/preset_manager_modal.lua:628
 msgid "Search gallery presets by name or author…"
 msgstr "Търсене в настройките от галерията по име или автор…"
 
-#: menu/preset_manager_modal.lua:566
+#: menu/preset_manager_modal.lua:670
 msgid "Manage…"
 msgstr "Управление…"
 
-#: menu/preset_manager_modal.lua:584 menu/preset_manager_modal.lua:587
-#: menu/preset_manager_modal.lua:1733
+#: menu/preset_manager_modal.lua:688 menu/preset_manager_modal.lua:691
+#: menu/preset_manager_modal.lua:2010
 msgid "Install"
 msgstr "Инсталиране"
 
-#: menu/preset_manager_modal.lua:824 menu/preset_manager_modal.lua:1691
+#: menu/preset_manager_modal.lua:1067 menu/preset_manager_modal.lua:1968
 msgid "Could not preview preset"
 msgstr "Предварителната настройка не може да бъде прегледана"
 
-#: menu/preset_manager_modal.lua:939
+#: menu/preset_manager_modal.lua:1182
 msgid "by"
 msgstr "от"
 
-#: menu/preset_manager_modal.lua:1188 menu/preset_manager_modal.lua:1502
+#: menu/preset_manager_modal.lua:1462 menu/preset_manager_modal.lua:1777
 msgid "Untitled"
 msgstr "Без заглавие"
 
-#: menu/preset_manager_modal.lua:1217
+#: menu/preset_manager_modal.lua:1492
 msgid "Rename…"
 msgstr "Преименуване…"
 
-#: menu/preset_manager_modal.lua:1221
+#: menu/preset_manager_modal.lua:1496
 msgid "Edit description…"
 msgstr "Редактиране на описанието…"
 
-#: menu/preset_manager_modal.lua:1225
+#: menu/preset_manager_modal.lua:1500
 msgid "Edit author…"
 msgstr "Редактиране на автора…"
 
-#: menu/preset_manager_modal.lua:1229
+#: menu/preset_manager_modal.lua:1504
 msgid "Duplicate"
 msgstr "Дублиране"
 
-#: menu/preset_manager_modal.lua:1233
+#: menu/preset_manager_modal.lua:1508
 msgid "Submit to gallery…"
 msgstr "Изпращане в галерията…"
 
-#: menu/preset_manager_modal.lua:1343
+#: menu/preset_manager_modal.lua:1618
 msgid "%1, line %2"
 msgstr "%1, ред %2"
 
-#: menu/preset_manager_modal.lua:1380
+#: menu/preset_manager_modal.lua:1655
 msgid "Edit description"
 msgstr "Редактиране на описанието"
 
-#: menu/preset_manager_modal.lua:1384
+#: menu/preset_manager_modal.lua:1659
 msgid "Edit author"
 msgstr "Редактиране на автора"
 
-#: menu/preset_manager_modal.lua:1388
+#: menu/preset_manager_modal.lua:1663
 msgid "copy"
 msgstr "копиране"
 
-#: menu/preset_manager_modal.lua:1391
+#: menu/preset_manager_modal.lua:1666
 msgid "Duplicate preset"
 msgstr "Дублиране на настройката"
 
-#: menu/preset_manager_modal.lua:1434
+#: menu/preset_manager_modal.lua:1709
 msgid "Rename before sharing"
 msgstr "Преименуване преди споделяне"
 
-#: menu/preset_manager_modal.lua:1485
+#: menu/preset_manager_modal.lua:1760
 msgid "Who should we credit as the author?"
 msgstr "Кого да посочим като автор?"
 
-#: menu/preset_manager_modal.lua:1490
+#: menu/preset_manager_modal.lua:1765
 msgid "One-line description of this preset"
 msgstr "Едноредово описание на тази настройка"
 
-#: menu/preset_manager_modal.lua:1509
+#: menu/preset_manager_modal.lua:1784
 msgid ""
 "'%1' is one of Bookends' default placeholder names. Give your preset "
 "something distinctive — that's how it'll appear in the gallery."
@@ -1587,24 +1653,24 @@ msgstr ""
 "„%1“ е едно от стандартните примерни имена на Bookends. Дайте на настройката "
 "си нещо отличително — така ще се показва в галерията."
 
-#: menu/preset_manager_modal.lua:1515
+#: menu/preset_manager_modal.lua:1790
 msgid ""
 "Write a short description that tells gallery users what your preset shows"
 msgstr ""
 "Напишете кратко описание, което казва на потребителите от галерията какво "
 "показва вашата настройка"
 
-#: menu/preset_manager_modal.lua:1537
+#: menu/preset_manager_modal.lua:1812
 msgid ""
 "Submit '%1' by %2 to the gallery? A pull request will be opened for review."
 msgstr ""
 "Изпращане на „%1“ от %2 в галерията? Ще бъде отворена заявка за преглед."
 
-#: menu/preset_manager_modal.lua:1539
+#: menu/preset_manager_modal.lua:1814
 msgid "Submit"
 msgstr "Изпращане"
 
-#: menu/preset_manager_modal.lua:1549
+#: menu/preset_manager_modal.lua:1824
 msgid ""
 "A preset called '%1' is already in the gallery. Rename your preset (Manage… "
 "→ Rename…) before submitting, so it doesn't collide with the existing entry."
@@ -1613,11 +1679,11 @@ msgstr ""
 "Преименувайте я (Управление… → Преименуване…) преди да я изпратите, за да не "
 "се застъпва с вече съществуващата."
 
-#: menu/preset_manager_modal.lua:1560
+#: menu/preset_manager_modal.lua:1837
 msgid "Submitting to gallery…"
 msgstr "Изпращане в галерията…"
 
-#: menu/preset_manager_modal.lua:1572
+#: menu/preset_manager_modal.lua:1849
 msgid ""
 "Thanks! Your submission is PR #%1.\n"
 "\n"
@@ -1627,7 +1693,7 @@ msgstr ""
 "\n"
 "Поддържащият ще я прегледа, преди да се появи в Галерията."
 
-#: menu/preset_manager_modal.lua:1581
+#: menu/preset_manager_modal.lua:1858
 msgid ""
 "A preset called '%1' is already in the gallery. Rename your preset (Manage… "
 "→ Rename…) before submitting."
@@ -1635,7 +1701,7 @@ msgstr ""
 "Предварителна настройка с името „%1“ вече съществува в галерията. "
 "Преименувайте я (Управление… → Преименуване…) преди да я изпратите."
 
-#: menu/preset_manager_modal.lua:1584
+#: menu/preset_manager_modal.lua:1861
 msgid ""
 "A submission for '%1' is already awaiting review. Wait for that one to be "
 "reviewed, or rename your preset to submit under a different name."
@@ -1643,11 +1709,11 @@ msgstr ""
 "Заявка за „%1“ вече очаква преглед. Изчакайте тя да бъде прегледана или "
 "преименувайте настройката си, за да я изпратите под различно име."
 
-#: menu/preset_manager_modal.lua:1587
+#: menu/preset_manager_modal.lua:1864
 msgid "Submission failed: %1"
 msgstr "Изпращането е неуспешно: %1"
 
-#: menu/preset_manager_modal.lua:1600
+#: menu/preset_manager_modal.lua:1877
 msgid ""
 "This preset uses specific fonts that won't exist on other devices. These "
 "overrides will be stripped from your submission so other users see their own "
@@ -1657,11 +1723,11 @@ msgstr ""
 "други устройства. Тези презаписвания ще бъдат премахнати от вашата заявка, "
 "така че другите потребители да виждат собствения си шрифт по подразбиране."
 
-#: menu/preset_manager_modal.lua:1602
+#: menu/preset_manager_modal.lua:1879
 msgid "Custom fonts in this preset:"
 msgstr "Персонализирани шрифтове в тази настройка:"
 
-#: menu/preset_manager_modal.lua:1608
+#: menu/preset_manager_modal.lua:1885
 msgid ""
 "Tip: for portable presets, pick a Font-family font (Serif, Sans-serif, etc.) "
 "instead of a specific one — those adapt to each user's font settings."
@@ -1670,31 +1736,31 @@ msgstr ""
 "и др.) вместо конкретен — те се адаптират към шрифтовите настройки на всеки "
 "потребител."
 
-#: menu/preset_manager_modal.lua:1611
+#: menu/preset_manager_modal.lua:1888
 msgid "Submit anyway"
 msgstr "Изпращане въпреки това"
 
-#: menu/preset_manager_modal.lua:1624
+#: menu/preset_manager_modal.lua:1901
 msgid "Submission failed — details in the KOReader log."
 msgstr "Изпращането е неуспешно — подробности в журнала на KOReader."
 
-#: menu/preset_manager_modal.lua:1630
+#: menu/preset_manager_modal.lua:1907
 msgid "Delete preset '%1'?"
 msgstr "Изтриване на настройката „%1“?"
 
-#: menu/preset_manager_modal.lua:1673
+#: menu/preset_manager_modal.lua:1950
 msgid "Offline — connect to preview this preset."
 msgstr "Офлайн — свържете се, за да прегледате тази настройка."
 
-#: menu/preset_manager_modal.lua:1675
+#: menu/preset_manager_modal.lua:1952
 msgid "Couldn't download '%1'."
 msgstr "„%1“ не можа да бъде изтеглен."
 
-#: menu/preset_manager_modal.lua:1681
+#: menu/preset_manager_modal.lua:1958
 msgid "This preset appears invalid; skipping."
 msgstr "Тази настройка изглежда невалидна; пропускане."
 
-#: menu/preset_manager_modal.lua:1704
+#: menu/preset_manager_modal.lua:1981
 msgid ""
 "'%1' already exists in your library.\n"
 "\n"
@@ -1710,15 +1776,15 @@ msgstr ""
 "\n"
 "Инсталирайте под ново име, за да запазите и двете."
 
-#: menu/preset_manager_modal.lua:1710
+#: menu/preset_manager_modal.lua:1987
 msgid "Replace"
 msgstr "Замяна"
 
-#: menu/preset_manager_modal.lua:1724
+#: menu/preset_manager_modal.lua:2001
 msgid "Install as new name…"
 msgstr "Инсталиране под ново име…"
 
-#: menu/preset_manager_modal.lua:1728
+#: menu/preset_manager_modal.lua:2005
 msgid "Install as"
 msgstr "Инсталиране като"
 
@@ -1883,7 +1949,7 @@ msgstr "Заглавие на главата без водещ номер (пр�
 msgid "Number from chapter title (when detected)"
 msgstr "Номер от заглавието на главата (при засичане)"
 
-#: menu/tokens_catalogue.lua:44 menu/tokens_catalogue.lua:141
+#: menu/tokens_catalogue.lua:44 menu/tokens_catalogue.lua:143
 msgid "Current chapter number"
 msgstr "Номер на текущата глава"
 
@@ -1896,514 +1962,548 @@ msgid "File name"
 msgstr "Име на файла"
 
 #: menu/tokens_catalogue.lua:47
+msgid "File position in folder"
+msgstr ""
+
+#: menu/tokens_catalogue.lua:48
+#, fuzzy
+msgid "Document files in folder"
+msgstr "Заглавие на документа"
+
+#: menu/tokens_catalogue.lua:49
 msgid "Book language"
 msgstr "Език на книгата"
 
-#: menu/tokens_catalogue.lua:48
+#: menu/tokens_catalogue.lua:50
 msgid "Document format (EPUB, PDF, etc.)"
 msgstr "Формат на документа (EPUB, PDF и др.)"
 
-#: menu/tokens_catalogue.lua:49
+#: menu/tokens_catalogue.lua:51
 msgid "Highlights count"
 msgstr "Брой маркирания"
 
-#: menu/tokens_catalogue.lua:50
+#: menu/tokens_catalogue.lua:52
 msgid "Notes count"
 msgstr "Брой бележки"
 
-#: menu/tokens_catalogue.lua:51
+#: menu/tokens_catalogue.lua:53
 msgid "Bookmarks count"
 msgstr "Брой отметки"
 
-#: menu/tokens_catalogue.lua:52
+#: menu/tokens_catalogue.lua:54
 msgid "Annotations count (bookmarks + highlights + notes)"
 msgstr "Брой анотации (отметки + маркирания + бележки)"
 
-#: menu/tokens_catalogue.lua:53
+#: menu/tokens_catalogue.lua:55
 msgid "Current page number"
 msgstr "Номер на текущата страница"
 
-#: menu/tokens_catalogue.lua:54
+#: menu/tokens_catalogue.lua:56
 msgid "Total pages"
 msgstr "Общ брой страници"
 
-#: menu/tokens_catalogue.lua:55
+#: menu/tokens_catalogue.lua:57
 msgid "Book percentage read"
 msgstr "Прочетен процент от книгата"
 
-#: menu/tokens_catalogue.lua:56
+#: menu/tokens_catalogue.lua:58
 msgid "Book % with 1 decimal (e.g. 45.3%)"
 msgstr "% от книгата с 1 десетична цифра (напр. 45.3%)"
 
-#: menu/tokens_catalogue.lua:57
+#: menu/tokens_catalogue.lua:59
 msgid "Book % with 2 decimal places"
 msgstr "% от книгата с 2 десетични цифри"
 
-#: menu/tokens_catalogue.lua:58
+#: menu/tokens_catalogue.lua:60
 msgid "Book % with 3 decimal places"
 msgstr "% от книгата с 3 десетични цифри"
 
-#: menu/tokens_catalogue.lua:59
+#: menu/tokens_catalogue.lua:61
 msgid "Book % with 4 decimal places"
 msgstr "% от книгата с 4 десетични цифри"
 
-#: menu/tokens_catalogue.lua:60
+#: menu/tokens_catalogue.lua:62
 msgid "Book percentage left"
 msgstr "Оставащ процент от книгата"
 
-#: menu/tokens_catalogue.lua:61
+#: menu/tokens_catalogue.lua:63
 msgid "Book % left with 1 decimal"
 msgstr "Оставащ % от книгата с 1 десетична цифра"
 
-#: menu/tokens_catalogue.lua:62
+#: menu/tokens_catalogue.lua:64
 msgid "Book % left with 2 decimals"
 msgstr "Оставащ % от книгата с 2 десетични цифри"
 
-#: menu/tokens_catalogue.lua:63
+#: menu/tokens_catalogue.lua:65
 msgid "Book % left with 3 decimals"
 msgstr "Оставащ % от книгата с 3 десетични цифри"
 
-#: menu/tokens_catalogue.lua:64
+#: menu/tokens_catalogue.lua:66
 msgid "Book % left with 4 decimals"
 msgstr "Оставащ % от книгата с 4 десетични цифри"
 
-#: menu/tokens_catalogue.lua:65
+#: menu/tokens_catalogue.lua:67
 msgid "Chapter percentage read"
 msgstr "Прочетен процент от главата"
 
-#: menu/tokens_catalogue.lua:66
+#: menu/tokens_catalogue.lua:68
 msgid "Chapter percentage left"
 msgstr "Оставащ процент от главата"
 
-#: menu/tokens_catalogue.lua:67
+#: menu/tokens_catalogue.lua:69
 msgid "Pages read in chapter"
 msgstr "Прочетени страници в главата"
 
-#: menu/tokens_catalogue.lua:68
+#: menu/tokens_catalogue.lua:70
 msgid "Total pages in chapter"
 msgstr "Общ брой страници в главата"
 
-#: menu/tokens_catalogue.lua:69
+#: menu/tokens_catalogue.lua:71
 msgid "Pages left in chapter"
 msgstr "Оставащи страници в главата"
 
-#: menu/tokens_catalogue.lua:70
+#: menu/tokens_catalogue.lua:72
 msgid "Pages left in book"
 msgstr "Оставащи страници в книгата"
 
-#: menu/tokens_catalogue.lua:71
+#: menu/tokens_catalogue.lua:73
 msgid "Progress bar (configure type in line editor)"
 msgstr "Лента за напредъка (настройте вида в редактора на редове)"
 
-#: menu/tokens_catalogue.lua:72
+#: menu/tokens_catalogue.lua:74
 msgid "Fixed-width progress bar (100px)"
 msgstr "Лента за напредъка с фиксирана ширина (100px)"
 
-#: menu/tokens_catalogue.lua:73
+#: menu/tokens_catalogue.lua:75
 msgid "Progress bar, 10px tall"
 msgstr "Лента за напредъка, 10px висока"
 
-#: menu/tokens_catalogue.lua:74
+#: menu/tokens_catalogue.lua:76
 msgid "Progress bar, 200px wide and 4px tall"
 msgstr "Лента за напредъка, 200px широка и 4px висока"
 
-#: menu/tokens_catalogue.lua:75
+#: menu/tokens_catalogue.lua:77
 msgid "Current time (24h, same as %time_24h)"
 msgstr "Текущ час (24 ч., същото като %time_24h)"
 
-#: menu/tokens_catalogue.lua:76
+#: menu/tokens_catalogue.lua:78
 msgid "12-hour clock"
 msgstr "12-часов часовник"
 
-#: menu/tokens_catalogue.lua:77
+#: menu/tokens_catalogue.lua:79
 msgid "24-hour clock"
 msgstr "24-часов часовник"
 
-#: menu/tokens_catalogue.lua:78
+#: menu/tokens_catalogue.lua:80
 msgid "Date short (28 Mar)"
 msgstr "Кратка дата (28 март)"
 
-#: menu/tokens_catalogue.lua:79
+#: menu/tokens_catalogue.lua:81
 msgid "Date long (28 March 2026)"
 msgstr "Пълна дата (28 март 2026)"
 
-#: menu/tokens_catalogue.lua:80
+#: menu/tokens_catalogue.lua:82
 msgid "Date numeric (28/03/2026)"
 msgstr "Цифрова дата (28/03/2026)"
 
-#: menu/tokens_catalogue.lua:81
+#: menu/tokens_catalogue.lua:83
 msgid "Weekday (Friday)"
 msgstr "Ден от седмицата (петък)"
 
-#: menu/tokens_catalogue.lua:82
+#: menu/tokens_catalogue.lua:84
 msgid "Weekday short (Fri)"
 msgstr "Кратък ден (пет)"
 
-#: menu/tokens_catalogue.lua:83
+#: menu/tokens_catalogue.lua:85
 msgid "Custom date/time format (strftime spec)"
 msgstr "Персонализиран формат за дата/час (спецификация strftime)"
 
-#: menu/tokens_catalogue.lua:84
+#: menu/tokens_catalogue.lua:86
 msgid "Time left in chapter"
 msgstr "Оставащо време до края на главата"
 
-#: menu/tokens_catalogue.lua:85
+#: menu/tokens_catalogue.lua:87
 msgid "Time left in book"
 msgstr "Оставащо време до края на книгата"
 
-#: menu/tokens_catalogue.lua:86
+#: menu/tokens_catalogue.lua:88
 msgid "Time left in chapter (hours only)"
 msgstr "Оставащо време до края на главата (само часове)"
 
-#: menu/tokens_catalogue.lua:87
+#: menu/tokens_catalogue.lua:89
 msgid "Time left in chapter (minutes only)"
 msgstr "Оставащо време до края на главата (само минути)"
 
-#: menu/tokens_catalogue.lua:88
+#: menu/tokens_catalogue.lua:90
 msgid "Time left in book (hours only)"
 msgstr "Оставащо време до края на книгата (само часове)"
 
-#: menu/tokens_catalogue.lua:89
+#: menu/tokens_catalogue.lua:91
 msgid "Time left in book (minutes only)"
 msgstr "Оставащо време до края на книгата (само минути)"
 
-#: menu/tokens_catalogue.lua:90
+#: menu/tokens_catalogue.lua:92
 msgid "Chapter finish time (clock)"
 msgstr "Час на завършване на главата"
 
-#: menu/tokens_catalogue.lua:91
+#: menu/tokens_catalogue.lua:93
 msgid "Book finish time (clock)"
 msgstr "Час на завършване на книгата"
 
-#: menu/tokens_catalogue.lua:92
+#: menu/tokens_catalogue.lua:94
 msgid "Chapter finish time (custom format)"
 msgstr "Час на завършване на главата (потребителски формат)"
 
-#: menu/tokens_catalogue.lua:93
+#: menu/tokens_catalogue.lua:95
 msgid "Book finish date (projected)"
 msgstr "Дата на завършване на книгата (прогноза)"
 
-#: menu/tokens_catalogue.lua:94
+#: menu/tokens_catalogue.lua:96
 msgid "Book finish date (custom format)"
 msgstr "Дата на завършване на книгата (потребителски формат)"
 
-#: menu/tokens_catalogue.lua:95
+#: menu/tokens_catalogue.lua:97
 msgid "Session reading time"
 msgstr "Време за четене за сесията"
 
-#: menu/tokens_catalogue.lua:96
+#: menu/tokens_catalogue.lua:98
 msgid "Session pages read"
 msgstr "Прочетени страници за сесията"
 
-#: menu/tokens_catalogue.lua:97
+#: menu/tokens_catalogue.lua:99
 msgid "Pages read today (all books)"
 msgstr "Прочетени страници днес (всички книги)"
 
-#: menu/tokens_catalogue.lua:98
+#: menu/tokens_catalogue.lua:100
 msgid "Reading time today (all books)"
 msgstr "Време за четене днес (всички книги)"
 
-#: menu/tokens_catalogue.lua:99
+#: menu/tokens_catalogue.lua:101
 msgid "Pages read today (current book)"
 msgstr "Прочетени страници днес (текуща книга)"
 
-#: menu/tokens_catalogue.lua:100
+#: menu/tokens_catalogue.lua:102
 msgid "Reading time today (current book)"
 msgstr "Време за четене днес (текуща книга)"
 
-#: menu/tokens_catalogue.lua:101
+#: menu/tokens_catalogue.lua:103
 msgid "Pages read in last 7 days (current book)"
 msgstr "Прочетени страници за последните 7 дни (текуща книга)"
 
-#: menu/tokens_catalogue.lua:102
+#: menu/tokens_catalogue.lua:104
 msgid "Reading time in last 7 days (current book)"
 msgstr "Време за четене за последните 7 дни (текуща книга)"
 
-#: menu/tokens_catalogue.lua:103 menu/tokens_catalogue.lua:148
+#: menu/tokens_catalogue.lua:105 menu/tokens_catalogue.lua:153
 msgid "Day streak (any book)"
 msgstr "Поредица от дни (всяка книга)"
 
-#: menu/tokens_catalogue.lua:104 menu/tokens_catalogue.lua:149
+#: menu/tokens_catalogue.lua:106 menu/tokens_catalogue.lua:154
 msgid "Day streak (current book)"
 msgstr "Поредица от дни (текуща книга)"
 
-#: menu/tokens_catalogue.lua:105
+#: menu/tokens_catalogue.lua:107
 msgid "Lifetime reading time (all books)"
 msgstr "Общо време за четене (всички книги)"
 
-#: menu/tokens_catalogue.lua:106
+#: menu/tokens_catalogue.lua:108
 msgid "Books finished (lifetime)"
 msgstr "Завършени книги (общо)"
 
-#: menu/tokens_catalogue.lua:107
+#: menu/tokens_catalogue.lua:109
 msgid "Reading speed (pages/hour)"
 msgstr "Скорост на четене (стр./час)"
 
-#: menu/tokens_catalogue.lua:108
+#: menu/tokens_catalogue.lua:110
 msgid "Average time per page"
 msgstr "Средно време на страница"
 
-#: menu/tokens_catalogue.lua:109
+#: menu/tokens_catalogue.lua:111
 msgid "Total reading time for book"
 msgstr "Общо време за четене на книгата"
 
-#: menu/tokens_catalogue.lua:110
+#: menu/tokens_catalogue.lua:112
 msgid "Pages read of this book (lifetime)"
 msgstr "Прочетени страници от книгата (общо)"
 
-#: menu/tokens_catalogue.lua:111
+#: menu/tokens_catalogue.lua:113
 msgid "Book read percentage (skip-aware)"
 msgstr "Прочетен процент от книгата (без прескочените)"
 
-#: menu/tokens_catalogue.lua:112
+#: menu/tokens_catalogue.lua:114
 msgid "Days reading this book"
 msgstr "Дни на четене на книгата"
 
-#: menu/tokens_catalogue.lua:113
+#: menu/tokens_catalogue.lua:115
 msgid "Pages per day for this book"
 msgstr "Страници на ден за книгата"
 
-#: menu/tokens_catalogue.lua:114
+#: menu/tokens_catalogue.lua:116
 msgid "Battery level"
 msgstr "Заряд на батерията"
 
-#: menu/tokens_catalogue.lua:115
+#: menu/tokens_catalogue.lua:117
 msgid "Plugin content"
 msgstr "Съдържание от плъгин"
 
-#: menu/tokens_catalogue.lua:116
+#: menu/tokens_catalogue.lua:118
 msgid "Frontlight brightness"
 msgstr "Яркост на предното осветление"
 
-#: menu/tokens_catalogue.lua:117 menu/tokens_catalogue.lua:154
+#: menu/tokens_catalogue.lua:119 menu/tokens_catalogue.lua:159
 msgid "Frontlight brightness %"
 msgstr "Яркост на предното осветление %"
 
-#: menu/tokens_catalogue.lua:118
+#: menu/tokens_catalogue.lua:120
 msgid "Frontlight warmth"
 msgstr "Топлина на предното осветление"
 
-#: menu/tokens_catalogue.lua:119 menu/tokens_catalogue.lua:155
+#: menu/tokens_catalogue.lua:121 menu/tokens_catalogue.lua:160
 msgid "Frontlight warmth %"
 msgstr "Топлина на предното осветление %"
 
-#: menu/tokens_catalogue.lua:120
+#: menu/tokens_catalogue.lua:122
 msgid "RAM used %"
 msgstr "Използвана RAM %"
 
-#: menu/tokens_catalogue.lua:121
+#: menu/tokens_catalogue.lua:123
 msgid "RAM used (MiB)"
 msgstr "Използвана RAM (МиБ)"
 
-#: menu/tokens_catalogue.lua:122
+#: menu/tokens_catalogue.lua:124
 msgid "Free disk space"
 msgstr "Свободно дисково пространство"
 
-#: menu/tokens_catalogue.lua:123
+#: menu/tokens_catalogue.lua:125
 msgid "Page X of Y, em-dash framed"
 msgstr "Страница X от Y, в рамка от тирета"
 
-#: menu/tokens_catalogue.lua:124
+#: menu/tokens_catalogue.lua:126
 msgid "Title ⋮ author (italic)"
 msgstr "Заглавие ⋮ автор (курсив)"
 
-#: menu/tokens_catalogue.lua:125
+#: menu/tokens_catalogue.lua:127
 msgid "Title in a chosen font"
 msgstr "Заглавие с избран шрифт"
 
-#: menu/tokens_catalogue.lua:126
+#: menu/tokens_catalogue.lua:128
 msgid "Bookmark(s) count + label"
 msgstr "Брой отметки + етикет"
 
-#: menu/tokens_catalogue.lua:127
+#: menu/tokens_catalogue.lua:129
 msgid "Highlight(s) count + label"
 msgstr "Брой маркирания + етикет"
 
-#: menu/tokens_catalogue.lua:128
+#: menu/tokens_catalogue.lua:130
 msgid "Hourglass session timer + pages"
 msgstr "Пясъчен часовник за сесията + страници"
 
-#: menu/tokens_catalogue.lua:129
+#: menu/tokens_catalogue.lua:131
 msgid "Sparkles 1"
 msgstr "Искрици 1"
 
-#: menu/tokens_catalogue.lua:130
+#: menu/tokens_catalogue.lua:132
 msgid "Sparkles 2"
 msgstr "Искрици 2"
 
-#: menu/tokens_catalogue.lua:134
+#: menu/tokens_catalogue.lua:136
 msgid "If Wi-Fi is on"
 msgstr "Ако Wi-Fi е включен"
 
-#: menu/tokens_catalogue.lua:135
+#: menu/tokens_catalogue.lua:137
 msgid "If connected"
 msgstr "Ако е свързан"
 
-#: menu/tokens_catalogue.lua:136
+#: menu/tokens_catalogue.lua:138
 msgid "Battery 0–100"
 msgstr "Батерия от 0 до 100"
 
-#: menu/tokens_catalogue.lua:137
+#: menu/tokens_catalogue.lua:139
 msgid "If charging"
 msgstr "Ако се зарежда"
 
-#: menu/tokens_catalogue.lua:138
+#: menu/tokens_catalogue.lua:140
 msgid "If page-turn flipped"
 msgstr "Ако посоката на превъртане е обърната"
 
-#: menu/tokens_catalogue.lua:139
+#: menu/tokens_catalogue.lua:141
 msgid "Book progress 0–100"
 msgstr "Напредък в книгата от 0 до 100"
 
-#: menu/tokens_catalogue.lua:140
+#: menu/tokens_catalogue.lua:142
 msgid "Chapter progress 0–100"
 msgstr "Напредък в главата от 0 до 100"
 
-#: menu/tokens_catalogue.lua:142
+#: menu/tokens_catalogue.lua:144
 msgid "Total chapters"
 msgstr "Общо глави"
 
-#: menu/tokens_catalogue.lua:143
+#: menu/tokens_catalogue.lua:145
+#, fuzzy
+msgid "Minutes left in chapter"
+msgstr "Оставащо време до края на главата"
+
+#: menu/tokens_catalogue.lua:146
+#, fuzzy
+msgid "Whole hours left in chapter"
+msgstr "Оставащи страници в главата"
+
+#: menu/tokens_catalogue.lua:147
+#, fuzzy
+msgid "Whole hours left in book"
+msgstr "Оставащи страници в книгата"
+
+#: menu/tokens_catalogue.lua:148
 msgid "Pages per hour"
 msgstr "Страници на час"
 
-#: menu/tokens_catalogue.lua:144
+#: menu/tokens_catalogue.lua:149
 msgid "Minutes this session"
 msgstr "Минути през сесията"
 
-#: menu/tokens_catalogue.lua:145
+#: menu/tokens_catalogue.lua:150
 msgid "Pages this session"
 msgstr "Страници през сесията"
 
-#: menu/tokens_catalogue.lua:146
+#: menu/tokens_catalogue.lua:151
 msgid "Pages read today"
 msgstr "Прочетени страници днес"
 
-#: menu/tokens_catalogue.lua:147
+#: menu/tokens_catalogue.lua:152
 msgid "Pages today (current book)"
 msgstr "Страници днес (текуща книга)"
 
-#: menu/tokens_catalogue.lua:150
+#: menu/tokens_catalogue.lua:155
 msgid "Books finished"
 msgstr "Завършени книги"
 
-#: menu/tokens_catalogue.lua:151
+#: menu/tokens_catalogue.lua:156
 msgid "Book read % (skip-aware)"
 msgstr "Прочетен % от книгата (без прескочените)"
 
-#: menu/tokens_catalogue.lua:152
+#: menu/tokens_catalogue.lua:157
 msgid "odd / even"
 msgstr "нечетна / четна"
 
-#: menu/tokens_catalogue.lua:153
+#: menu/tokens_catalogue.lua:158
 msgid "If frontlight on"
 msgstr "Ако предното осветление е включено"
 
-#: menu/tokens_catalogue.lua:156
+#: menu/tokens_catalogue.lua:161
 msgid "If night mode on"
 msgstr "Ако нощният режим е включен"
 
-#: menu/tokens_catalogue.lua:157
+#: menu/tokens_catalogue.lua:162
 msgid "EPUB / PDF / CBZ / …"
 msgstr "EPUB / PDF / CBZ / …"
 
-#: menu/tokens_catalogue.lua:158
+#: menu/tokens_catalogue.lua:163
 msgid "Current HH:MM (24h)"
 msgstr "Текущо ЧЧ:ММ (24 ч.)"
 
-#: menu/tokens_catalogue.lua:159
+#: menu/tokens_catalogue.lua:164
 msgid "Mon–Sun"
 msgstr "Пон–Нед"
 
-#: menu/tokens_catalogue.lua:160
+#: menu/tokens_catalogue.lua:165
 msgid "If book has title"
 msgstr "Ако книгата има заглавие"
 
-#: menu/tokens_catalogue.lua:161
+#: menu/tokens_catalogue.lua:166
 msgid "If book has author"
 msgstr "Ако книгата има автор"
 
-#: menu/tokens_catalogue.lua:162
+#: menu/tokens_catalogue.lua:167
 msgid "If book in series"
 msgstr "Ако книгата е от поредица"
 
-#: menu/tokens_catalogue.lua:163
+#: menu/tokens_catalogue.lua:168
 msgid "If chapter has title"
 msgstr "Ако главата има заглавие"
 
-#: menu/tokens_catalogue.lua:164
+#: menu/tokens_catalogue.lua:169
 msgid "Chapter title at depth 1/2/3"
 msgstr "Заглавие на главата на ниво 1/2/3"
 
-#: menu/tokens_catalogue.lua:165
+#: menu/tokens_catalogue.lua:170
 msgid "If book has 2+ authors"
 msgstr "Ако книгата има 2+ автори"
 
-#: menu/tokens_catalogue.lua:166
+#: menu/tokens_catalogue.lua:171
 msgid "Author with et al. for multi-author"
 msgstr "Автор с et al. за много автори"
 
-#: menu/tokens_catalogue.lua:167
+#: menu/tokens_catalogue.lua:172
 msgid "Wi-Fi icon only when Wi-Fi enabled"
 msgstr "Икона на Wi-Fi само когато Wi-Fi е включен"
 
-#: menu/tokens_catalogue.lua:168
+#: menu/tokens_catalogue.lua:173
 msgid "Low-battery warning"
 msgstr "Предупреждение за нисък заряд на батерията"
 
-#: menu/tokens_catalogue.lua:169
+#: menu/tokens_catalogue.lua:174
 msgid "Bolt when charging"
 msgstr "Мълния при зареждане"
 
-#: menu/tokens_catalogue.lua:170
+#: menu/tokens_catalogue.lua:175
 msgid "Arrow when page-turn flipped"
 msgstr "Стрелка при обърната посока на превъртане"
 
-#: menu/tokens_catalogue.lua:171
+#: menu/tokens_catalogue.lua:176
 msgid "Odd/even variations"
 msgstr "Вариации за нечетни/четни"
 
-#: menu/tokens_catalogue.lua:172
+#: menu/tokens_catalogue.lua:177
 msgid "Near end of book"
 msgstr "Близо до края на книгата"
 
-#: menu/tokens_catalogue.lua:173
+#: menu/tokens_catalogue.lua:178
 msgid "Frontlight on/off label"
 msgstr "Етикет вкл./изкл. на предното осветление"
 
-#: menu/tokens_catalogue.lua:174
+#: menu/tokens_catalogue.lua:179
 msgid "If format"
 msgstr "Ако форматът е"
 
-#: menu/tokens_catalogue.lua:175
+#: menu/tokens_catalogue.lua:180
 msgid "Weekends"
 msgstr "Почивни дни"
 
-#: menu/tokens_catalogue.lua:176
+#: menu/tokens_catalogue.lua:181
 msgid "Time window"
 msgstr "Времеви прозорец"
 
-#: menu/tokens_catalogue.lua:177
+#: menu/tokens_catalogue.lua:182
 msgid "Non-series books"
 msgstr "Книги извън поредица"
 
-#: menu/tokens_catalogue.lua:178
+#: menu/tokens_catalogue.lua:183
 msgid "Fall back to shallower chapter"
 msgstr "Връщане към по-плитка глава"
 
-#: menu/tokens_catalogue.lua:179
+#: menu/tokens_catalogue.lua:184
 msgid "Chapter number then title"
 msgstr "Номер на главата, след него заглавие"
 
-#: menu/tokens_catalogue.lua:180
+#: menu/tokens_catalogue.lua:185
 msgid "Long books (20+ chapters)"
 msgstr "Дълги книги (20+ глави)"
 
-#: menu/tokens_catalogue.lua:181
+#: menu/tokens_catalogue.lua:189
+#, fuzzy
+msgid "Time left in chapter, Kindle style"
+msgstr "Оставащо време до края на главата (само минути)"
+
+#: menu/tokens_catalogue.lua:190
+#, fuzzy
+msgid "Time left in book, Kindle style"
+msgstr "Оставащо време до края на книгата (само минути)"
+
+#: menu/tokens_catalogue.lua:191
 msgid "Chapter title only when different from book title"
 msgstr "Заглавие на главата само когато се различава от заглавието на книгата"
 
-#: menu/tokens_catalogue.lua:182
+#: menu/tokens_catalogue.lua:192
 msgid "Battery bars"
 msgstr "Стълбчета за батерията"
 
@@ -2416,6 +2516,7 @@ msgid "Tokens & conditionals"
 msgstr "Токени и условия"
 
 #: menu/tokens_library.lua:337
+#, fuzzy
 msgid ""
 "TOKENS\n"
 "\n"
@@ -2424,6 +2525,13 @@ msgid ""
 "chips is a token, written as %name. They expand inline:\n"
 "  %title — %page_num/%page_count\n"
 "  → 1984 — 12/268\n"
+"\n"
+"A token name runs until the next non-letter, so you need a space (or "
+"punctuation) before any following text. To butt text right up against a "
+"token, wrap the name in angle brackets:\n"
+"  %<book_time_left_h>h%<book_time_left_m>m\n"
+"  → 4h40m\n"
+"Width limits still work inside them: %<author{200}>.\n"
 "\n"
 "INLINE STYLING\n"
 "\n"
@@ -2521,30 +2629,22 @@ msgstr ""
 "  [if:time>=18:00 and time<18:30]6–6:30[/if]\n"
 "  [if:not series]Standalone[/if]\n"
 
-#: menu/tokens_library.lua:383
+#: menu/tokens_library.lua:388
 msgid "★ Favourites"
 msgstr "★ Любими"
 
-#: menu/tokens_library.lua:409
+#: menu/tokens_library.lua:414
 msgid "Search tokens by name, value, or expression…"
 msgstr "Търсене на токени по име, стойност или израз…"
 
-#: menu/tokens_library.lua:414
+#: menu/tokens_library.lua:419
 msgid "No favourites yet. Tap the ☆ on any token to add it."
 msgstr ""
 "Все още няма любими. Докоснете ☆ върху произволен токен, за да го добавите."
 
-#: menu/tokens_library.lua:461
+#: menu/tokens_library.lua:466
 msgid "Help"
 msgstr "Помощ"
-
-#: _meta.lua:20
-msgid ""
-"Configurable text overlays at screen corners and edges with token expansion "
-"and icon support."
-msgstr ""
-"Конфигурируеми текстови слоеве по ъглите и ръбовете на екрана с разширяване "
-"на токени и поддръжка на икони."
 
 #~ msgid "Wi-Fi is not enabled."
 #~ msgstr "Wi-Fi не е включен."
