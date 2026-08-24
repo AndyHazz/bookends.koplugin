@@ -2925,16 +2925,26 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     if needs("mem") then
         local meminfo = io.open("/proc/meminfo", "r")
         if meminfo then
-            local total, available
+            local total, memfree, buffers, cached, available
             for line in meminfo:lines() do
                 if line:match("^MemTotal:") then
                     total = tonumber(line:match("(%d+)"))
                 elseif line:match("^MemAvailable:") then
                     available = tonumber(line:match("(%d+)"))
+                elseif line:match("^MemFree:") then
+                    memfree = tonumber(line:match("(%d+)"))
+                elseif line:match("^Buffers:") then
+                    buffers = tonumber(line:match("(%d+)"))
+                elseif line:match("^Cached:") then
+                    cached = tonumber(line:match("(%d+)"))
                 end
                 if total and available then break end
             end
             meminfo:close()
+            -- Fallback for kernels without MemAvailable (e.g. Kindle KPW3 2.6.x)
+            if total and not available and memfree then
+                available = memfree + (buffers or 0) + (cached or 0)
+            end
             if total and available and total > 0 then
                 mem_usage = math.floor((total - available) / total * 100) .. "%"
             end
