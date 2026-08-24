@@ -116,6 +116,60 @@ function Updater.offerReleasesPage(message)
     end
 end
 
+-- Unpack a downloaded .zip into `dest`, stripping the archive's single
+-- top-level directory (release and GitHub branch zips wrap everything in
+-- bookends.koplugin/ or bookends.koplugin-<branch>/).
+--
+-- Extract via the core ffi/archiver (libarchive), the API KOReader itself uses
+-- for its dictionary downloader and archive viewer. This used to call
+-- Device:unpackArchive, which was only ever a thin wrapper around this same
+-- Reader; KOReader dropped the wrapper mid-2026 and the call started failing
+-- with "attempt to call method 'unpackArchive' (a nil value)", taking the whole
+-- reader down mid-update. Confirmed gone in v2026.07.2. Calling ffi/archiver
+-- directly works everywhere the wrapper did, since the wrapper depended on it,
+-- and keeps working now it's gone.
+--
+-- libarchive's write-to-disk auto-creates parent directories, so extracting
+-- each entry to its stripped path is sufficient. A missing extractor degrades
+-- to a clean error string -- the caller then offers the releases page -- rather
+-- than crashing, which is the failure mode that made this so unpleasant: the
+-- update path is also the recovery path, so a crash here leaves users unable
+-- to update to the fix.
+--
+-- Ported from bookshelf, which hit this first (its 78ec21c). The updater
+-- originally went bookends -> bookshelf, so the fix had to come back the other
+-- way.
+local function unpackStripRoot(zip_path, dest)
+    local ok_req, Archiver = pcall(require, "ffi/archiver")
+    if not (ok_req and Archiver and Archiver.Reader) then
+        return false, "archive extractor unavailable"
+    end
+    local arc = Archiver.Reader:new()
+    if not arc:open(zip_path) then
+        local e = arc.err
+        arc:close()
+        return false, e or "could not open archive"
+    end
+    local extract_err
+    for entry in arc:iterate() do
+        local rel = entry.path and entry.path:match("^[^/]+/(.+)$")
+        if rel and rel ~= "" then
+            if not arc:extractToPath(entry.path, dest .. "/" .. rel) then
+                extract_err = arc.err or "extract failed"
+                break
+            end
+        end
+    end
+    arc:close()
+    if extract_err then return false, extract_err end
+    return true
+end
+
+-- Test hook: the strip-root logic is pure once ffi/archiver is stubbed, and
+-- install() is too entangled with the network to exercise it any other way
+-- off-device.
+Updater._unpackStripRoot = unpackStripRoot
+
 --- Return the available update version and zip URL, or nil if none/not checked.
 function Updater.getAvailableUpdate()
     return _cached_version, _cached_zip_url
@@ -408,7 +462,7 @@ function Updater.install(zip_url, old_version, new_version, on_success, error_la
 
         -- Extract to plugin directory (strip root folder from ZIP)
         local plugin_path = DataStorage:getDataDir() .. "/plugins/bookends.koplugin"
-        local ok, err = Device:unpackArchive(zip_path, plugin_path, true)
+        local ok, err = unpackStripRoot(zip_path, plugin_path)
         pcall(os.remove, zip_path)
 
         if not ok then

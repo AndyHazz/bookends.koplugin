@@ -175,5 +175,104 @@ test("no updater path uses runWhenOnline", function()
     end
 end)
 
+
+-- unpackStripRoot: the release/branch zip wraps everything in a single top
+-- level dir, which must be stripped so files land directly in the plugin dir.
+--
+-- This path had no coverage and shipped broken: it called Device:unpackArchive,
+-- a wrapper KOReader dropped mid-2026, so every in-app update crashed the
+-- reader with "attempt to call method 'unpackArchive' (a nil value)". Nothing
+-- caught it because the only assertions here were about network routing.
+local function fakeArchiver(entries, opts)
+    opts = opts or {}
+    local extracted = {}
+    local Reader = {}
+    Reader.__index = Reader
+    function Reader:new() return setmetatable({ err = nil }, Reader) end
+    function Reader:open(path)
+        if opts.open_fails then self.err = "bad zip"; return false end
+        self.opened = path; return true
+    end
+    function Reader:iterate()
+        local i = 0
+        return function() i = i + 1; return entries[i] end
+    end
+    function Reader:extractToPath(key, dest)
+        if opts.fail_on and key == opts.fail_on then self.err = "extract boom"; return false end
+        extracted[#extracted + 1] = dest; return true
+    end
+    function Reader:close() self.closed = true end
+    package.loaded["ffi/archiver"] = { Reader = Reader }
+    return extracted
+end
+
+test("unpackStripRoot strips the wrapping directory", function()
+    local got = fakeArchiver({
+        { path = "bookends.koplugin/" },
+        { path = "bookends.koplugin/main.lua" },
+        { path = "bookends.koplugin/menu/main_menu.lua" },
+        { path = "bookends.koplugin/locale/es.po" },
+    })
+    local ok, err = Updater._unpackStripRoot("/tmp/x.zip", "/plugins/bookends.koplugin")
+    eq(ok, true)
+    eq(err, nil)
+    eq(#got, 3)
+    eq(got[1], "/plugins/bookends.koplugin/main.lua")
+    eq(got[2], "/plugins/bookends.koplugin/menu/main_menu.lua")
+    eq(got[3], "/plugins/bookends.koplugin/locale/es.po")
+end)
+
+test("unpackStripRoot handles a branch zip's versioned root dir", function()
+    -- GitHub branch archives wrap in bookends.koplugin-<branch>/ instead.
+    local got = fakeArchiver({
+        { path = "bookends.koplugin-master/main.lua" },
+        { path = "bookends.koplugin-master/_meta.lua" },
+    })
+    eq(Updater._unpackStripRoot("/tmp/x.zip", "/dest"), true)
+    eq(#got, 2)
+    eq(got[1], "/dest/main.lua")
+end)
+
+test("unpackStripRoot skips the bare root entry, keeps nested paths", function()
+    local got = fakeArchiver({
+        { path = "root/" },
+        { path = "root/a/b/c.lua" },
+    })
+    eq(Updater._unpackStripRoot("/tmp/x.zip", "/d"), true)
+    eq(#got, 1)
+    eq(got[1], "/d/a/b/c.lua")
+end)
+
+test("unpackStripRoot reports a clean error when the archive won't open", function()
+    fakeArchiver({}, { open_fails = true })
+    local ok, err = Updater._unpackStripRoot("/tmp/x.zip", "/d")
+    eq(ok, false)
+    eq(err, "bad zip")
+end)
+
+test("unpackStripRoot reports a clean error when an entry fails to extract", function()
+    fakeArchiver({ { path = "r/ok.lua" }, { path = "r/bad.lua" }, { path = "r/never.lua" } },
+                 { fail_on = "r/bad.lua" })
+    local ok, err = Updater._unpackStripRoot("/tmp/x.zip", "/d")
+    eq(ok, false)
+    eq(err, "extract boom")
+end)
+
+test("unpackStripRoot degrades cleanly with no extractor available", function()
+    -- Must return an error rather than raise: the update path is also the
+    -- recovery path, so a crash here would leave users stuck on the broken
+    -- version with no way to reach the fix.
+    package.loaded["ffi/archiver"] = nil
+    local real = _G.require
+    _G.require = function(n)
+        if n == "ffi/archiver" then error("no such module") end
+        return real(n)
+    end
+    local ok, err = Updater._unpackStripRoot("/tmp/x.zip", "/d")
+    _G.require = real
+    eq(ok, false)
+    eq(err, "archive extractor unavailable")
+end)
+
 print(pass .. " passed, " .. fail .. " failed")
 os.exit(fail == 0 and 0 or 1)
