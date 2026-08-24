@@ -480,9 +480,8 @@ msgid "Bottom-right"
 msgstr "Bas-droite"
 
 #: main.lua:306
-#, fuzzy
 msgid "Bookends presets folder"
-msgstr "Bookends : ouvrir la bibliothèque de presets"
+msgstr "Dossier des presets Bookends"
 
 #: main.lua:327
 msgid "Bookends: toggle visibility"
@@ -1242,19 +1241,19 @@ msgstr "Renommer"
 
 #: menu/main_menu.lua:129
 msgid "File extension"
-msgstr ""
+msgstr "Extension de fichier"
 
 #: menu/main_menu.lua:131
 msgid "e.g. CBZ"
-msgstr ""
+msgstr "ex. CBZ"
 
 #: menu/main_menu.lua:135
 msgid "Next"
-msgstr ""
+msgstr "Suivant"
 
 #: menu/main_menu.lua:158
 msgid "Hidden"
-msgstr ""
+msgstr "Masqué"
 
 #: menu/main_menu.lua:172 menu/main_menu.lua:174
 msgid "Bookends settings"
@@ -1399,7 +1398,7 @@ msgstr "Version installée"
 
 #: menu/main_menu.lua:489
 msgid "Auto preset by file type"
-msgstr ""
+msgstr "Preset auto par type de fichier"
 
 #: menu/main_menu.lua:490
 msgid ""
@@ -1407,6 +1406,9 @@ msgid ""
 "document's file extension (e.g. hide for comic archives, use a plainer "
 "preset for PDFs)."
 msgstr ""
+"Masque automatiquement Bookends, ou passe à un preset spécifique, selon "
+"l'extension de fichier du document (par exemple : masqué pour les archives "
+"de bandes dessinées, preset plus sobre pour les PDF)."
 
 #: menu/main_menu.lua:496
 msgid "Advanced"
@@ -1430,16 +1432,15 @@ msgstr "Installé : v"
 
 #: menu/main_menu.lua:570
 msgid "Change"
-msgstr ""
+msgstr "Modifier"
 
 #: menu/main_menu.lua:580
 msgid "Remove rule"
-msgstr ""
+msgstr "Supprimer la règle"
 
 #: menu/main_menu.lua:599
-#, fuzzy
 msgid "Add rule…"
-msgstr "Ajouter une ligne"
+msgstr "Ajouter une règle…"
 
 #: menu/main_menu.lua:617
 msgid "Preset library…"
@@ -1521,11 +1522,11 @@ msgstr "Touchez Récents ou Populaires ci-dessus pour charger la galerie."
 
 #: menu/preset_manager_modal.lua:492
 msgid "Hidden (no overlay)"
-msgstr ""
+msgstr "Masqué (aucune surcouche)"
 
 #: menu/preset_manager_modal.lua:544
 msgid "Preset for this file type"
-msgstr ""
+msgstr "Preset pour ce type de fichier"
 
 #: menu/preset_manager_modal.lua:545 menu/preset_manager_modal.lua:626
 msgid "Search my presets by name or author…"
@@ -1533,7 +1534,7 @@ msgstr "Rechercher mes presets par nom ou auteur…"
 
 #: menu/preset_manager_modal.lua:562
 msgid "Done"
-msgstr ""
+msgstr "Terminé"
 
 #: menu/preset_manager_modal.lua:574
 msgid "Preset library"
@@ -1958,12 +1959,11 @@ msgstr "Nom de fichier"
 
 #: menu/tokens_catalogue.lua:47
 msgid "File position in folder"
-msgstr ""
+msgstr "Position du fichier dans le dossier"
 
 #: menu/tokens_catalogue.lua:48
-#, fuzzy
 msgid "Document files in folder"
-msgstr "Titre du document"
+msgstr "Nombre de documents dans le dossier"
 
 #: menu/tokens_catalogue.lua:49
 msgid "Book language"
@@ -2334,19 +2334,16 @@ msgid "Total chapters"
 msgstr "Total des chapitres"
 
 #: menu/tokens_catalogue.lua:145
-#, fuzzy
 msgid "Minutes left in chapter"
-msgstr "Temps restant dans le chapitre"
+msgstr "Minutes restantes dans le chapitre"
 
 #: menu/tokens_catalogue.lua:146
-#, fuzzy
 msgid "Whole hours left in chapter"
-msgstr "Pages restantes dans le chapitre"
+msgstr "Heures entières restantes dans le chapitre"
 
 #: menu/tokens_catalogue.lua:147
-#, fuzzy
 msgid "Whole hours left in book"
-msgstr "Pages restantes dans le livre"
+msgstr "Heures entières restantes dans le livre"
 
 #: menu/tokens_catalogue.lua:148
 msgid "Pages per hour"
@@ -2485,14 +2482,12 @@ msgid "Long books (20+ chapters)"
 msgstr "Livres longs (20+ chapitres)"
 
 #: menu/tokens_catalogue.lua:189
-#, fuzzy
 msgid "Time left in chapter, Kindle style"
-msgstr "Temps restant dans le chapitre (minutes uniquement)"
+msgstr "Temps restant dans le chapitre, façon Kindle"
 
 #: menu/tokens_catalogue.lua:190
-#, fuzzy
 msgid "Time left in book, Kindle style"
-msgstr "Temps restant dans le livre (minutes uniquement)"
+msgstr "Temps restant dans le livre, façon Kindle"
 
 #: menu/tokens_catalogue.lua:191
 msgid "Chapter title only when different from book title"
@@ -2511,7 +2506,6 @@ msgid "Tokens & conditionals"
 msgstr "Jetons et conditions"
 
 #: menu/tokens_library.lua:337
-#, fuzzy
 msgid ""
 "TOKENS\n"
 "\n"
@@ -2580,6 +2574,14 @@ msgstr ""
 "%name. Ils se développent en ligne :\n"
 "  %title — %page_num/%page_count\n"
 "  → 1984 — 12/268\n"
+"\n"
+"Le nom d'un jeton se poursuit jusqu'au premier caractère non alphabétique, "
+"il faut donc un espace (ou une ponctuation) avant le texte qui suit. Pour "
+"coller du texte directement contre un jeton, entourez son nom de chevrons :\n"
+"  %<book_time_left_h>h%<book_time_left_m>m\n"
+"  → 4h40m\n"
+"Les limites de largeur fonctionnent toujours à l'intérieur : %<author"
+"{200}>.\n"
 "\n"
 "MISE EN FORME INTÉGRÉE\n"
 "\n"

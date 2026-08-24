@@ -480,9 +480,8 @@ msgid "Bottom-right"
 msgstr "Basso-destra"
 
 #: main.lua:306
-#, fuzzy
 msgid "Bookends presets folder"
-msgstr "Bookends: apri libreria preset"
+msgstr "Cartella preset Bookends"
 
 #: main.lua:327
 msgid "Bookends: toggle visibility"
@@ -1241,19 +1240,19 @@ msgstr "Rinomina"
 
 #: menu/main_menu.lua:129
 msgid "File extension"
-msgstr ""
+msgstr "Estensione file"
 
 #: menu/main_menu.lua:131
 msgid "e.g. CBZ"
-msgstr ""
+msgstr "es. CBZ"
 
 #: menu/main_menu.lua:135
 msgid "Next"
-msgstr ""
+msgstr "Avanti"
 
 #: menu/main_menu.lua:158
 msgid "Hidden"
-msgstr ""
+msgstr "Nascosto"
 
 #: menu/main_menu.lua:172 menu/main_menu.lua:174
 msgid "Bookends settings"
@@ -1398,7 +1397,7 @@ msgstr "Versione installata"
 
 #: menu/main_menu.lua:489
 msgid "Auto preset by file type"
-msgstr ""
+msgstr "Preset automatico per tipo di file"
 
 #: menu/main_menu.lua:490
 msgid ""
@@ -1406,6 +1405,9 @@ msgid ""
 "document's file extension (e.g. hide for comic archives, use a plainer "
 "preset for PDFs)."
 msgstr ""
+"Nasconde automaticamente Bookends, oppure passa a un preset specifico, in "
+"base all'estensione del file del documento (ad es. nascondi per gli archivi "
+"di fumetti, usa un preset più semplice per i PDF)."
 
 #: menu/main_menu.lua:496
 msgid "Advanced"
@@ -1429,16 +1431,15 @@ msgstr "Installato: v"
 
 #: menu/main_menu.lua:570
 msgid "Change"
-msgstr ""
+msgstr "Cambia"
 
 #: menu/main_menu.lua:580
 msgid "Remove rule"
-msgstr ""
+msgstr "Rimuovi regola"
 
 #: menu/main_menu.lua:599
-#, fuzzy
 msgid "Add rule…"
-msgstr "Aggiungi riga"
+msgstr "Aggiungi regola…"
 
 #: menu/main_menu.lua:617
 msgid "Preset library…"
@@ -1520,11 +1521,11 @@ msgstr "Tocca Ultimi o Popolari in alto per caricare la galleria."
 
 #: menu/preset_manager_modal.lua:492
 msgid "Hidden (no overlay)"
-msgstr ""
+msgstr "Nascosto (nessuna sovrapposizione)"
 
 #: menu/preset_manager_modal.lua:544
 msgid "Preset for this file type"
-msgstr ""
+msgstr "Preset per questo tipo di file"
 
 #: menu/preset_manager_modal.lua:545 menu/preset_manager_modal.lua:626
 msgid "Search my presets by name or author…"
@@ -1532,7 +1533,7 @@ msgstr "Cerca tra i miei preset per nome o autore…"
 
 #: menu/preset_manager_modal.lua:562
 msgid "Done"
-msgstr ""
+msgstr "Fine"
 
 #: menu/preset_manager_modal.lua:574
 msgid "Preset library"
@@ -1957,12 +1958,11 @@ msgstr "Nome file"
 
 #: menu/tokens_catalogue.lua:47
 msgid "File position in folder"
-msgstr ""
+msgstr "Posizione del file nella cartella"
 
 #: menu/tokens_catalogue.lua:48
-#, fuzzy
 msgid "Document files in folder"
-msgstr "Titolo documento"
+msgstr "Numero di documenti nella cartella"
 
 #: menu/tokens_catalogue.lua:49
 msgid "Book language"
@@ -2333,19 +2333,16 @@ msgid "Total chapters"
 msgstr "Capitoli totali"
 
 #: menu/tokens_catalogue.lua:145
-#, fuzzy
 msgid "Minutes left in chapter"
-msgstr "Tempo rimanente nel capitolo"
+msgstr "Minuti rimanenti nel capitolo"
 
 #: menu/tokens_catalogue.lua:146
-#, fuzzy
 msgid "Whole hours left in chapter"
-msgstr "Pagine rimanenti nel capitolo"
+msgstr "Ore intere rimanenti nel capitolo"
 
 #: menu/tokens_catalogue.lua:147
-#, fuzzy
 msgid "Whole hours left in book"
-msgstr "Pagine rimanenti nel libro"
+msgstr "Ore intere rimanenti nel libro"
 
 #: menu/tokens_catalogue.lua:148
 msgid "Pages per hour"
@@ -2484,14 +2481,12 @@ msgid "Long books (20+ chapters)"
 msgstr "Libri lunghi (20+ capitoli)"
 
 #: menu/tokens_catalogue.lua:189
-#, fuzzy
 msgid "Time left in chapter, Kindle style"
-msgstr "Tempo rimanente nel capitolo (solo minuti)"
+msgstr "Tempo rimanente nel capitolo, stile Kindle"
 
 #: menu/tokens_catalogue.lua:190
-#, fuzzy
 msgid "Time left in book, Kindle style"
-msgstr "Tempo rimanente nel libro (solo minuti)"
+msgstr "Tempo rimanente nel libro, stile Kindle"
 
 #: menu/tokens_catalogue.lua:191
 msgid "Chapter title only when different from book title"
@@ -2510,7 +2505,6 @@ msgid "Tokens & conditionals"
 msgstr "Token e condizionali"
 
 #: menu/tokens_library.lua:337
-#, fuzzy
 msgid ""
 "TOKENS\n"
 "\n"
@@ -2579,6 +2573,14 @@ msgstr ""
 "Vengono espansi in linea:\n"
 "  %title — %page_num/%page_count\n"
 "  → 1984 — 12/268\n"
+"\n"
+"Il nome di un token viene letto finché non si incontra un carattere che non "
+"è una lettera, quindi è necessario uno spazio (o un segno di punteggiatura) "
+"prima del testo successivo. Per far seguire il testo subito dopo un token, "
+"racchiudi il nome tra parentesi angolari:\n"
+"  %<book_time_left_h>h%<book_time_left_m>m\n"
+"  → 4h40m\n"
+"I limiti di larghezza funzionano anche al loro interno: %<author{200}>.\n"
 "\n"
 "STILE INLINE\n"
 "\n"

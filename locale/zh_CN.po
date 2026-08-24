@@ -486,9 +486,8 @@ msgid "Bottom-right"
 msgstr "右下"
 
 #: main.lua:306
-#, fuzzy
 msgid "Bookends presets folder"
-msgstr "阅读信息栏：打开预设库"
+msgstr "阅读信息栏预设文件夹"
 
 #: main.lua:327
 msgid "Bookends: toggle visibility"
@@ -1241,19 +1240,19 @@ msgstr "重命名"
 
 #: menu/main_menu.lua:129
 msgid "File extension"
-msgstr ""
+msgstr "文件扩展名"
 
 #: menu/main_menu.lua:131
 msgid "e.g. CBZ"
-msgstr ""
+msgstr "例如 CBZ"
 
 #: menu/main_menu.lua:135
 msgid "Next"
-msgstr ""
+msgstr "下一步"
 
 #: menu/main_menu.lua:158
 msgid "Hidden"
-msgstr ""
+msgstr "隐藏"
 
 #: menu/main_menu.lua:172 menu/main_menu.lua:174
 msgid "Bookends settings"
@@ -1389,7 +1388,7 @@ msgstr "已安装版本"
 
 #: menu/main_menu.lua:489
 msgid "Auto preset by file type"
-msgstr ""
+msgstr "按文件类型自动应用预设"
 
 #: menu/main_menu.lua:490
 msgid ""
@@ -1397,6 +1396,8 @@ msgid ""
 "document's file extension (e.g. hide for comic archives, use a plainer "
 "preset for PDFs)."
 msgstr ""
+"根据文档的文件扩展名，自动隐藏阅读信息栏或切换到指定预设（例如漫画压缩包隐藏"
+"显示、PDF 使用更简洁的预设）。"
 
 #: menu/main_menu.lua:496
 msgid "Advanced"
@@ -1420,16 +1421,15 @@ msgstr "已安装：v"
 
 #: menu/main_menu.lua:570
 msgid "Change"
-msgstr ""
+msgstr "更改"
 
 #: menu/main_menu.lua:580
 msgid "Remove rule"
-msgstr ""
+msgstr "删除规则"
 
 #: menu/main_menu.lua:599
-#, fuzzy
 msgid "Add rule…"
-msgstr "添加行"
+msgstr "添加规则…"
 
 #: menu/main_menu.lua:617
 msgid "Preset library…"
@@ -1508,11 +1508,11 @@ msgstr "点击上方的「最新」或「热门」载入画廊。"
 
 #: menu/preset_manager_modal.lua:492
 msgid "Hidden (no overlay)"
-msgstr ""
+msgstr "隐藏（不显示任何内容）"
 
 #: menu/preset_manager_modal.lua:544
 msgid "Preset for this file type"
-msgstr ""
+msgstr "此文件类型的预设"
 
 #: menu/preset_manager_modal.lua:545 menu/preset_manager_modal.lua:626
 msgid "Search my presets by name or author…"
@@ -1520,7 +1520,7 @@ msgstr "按名称或作者搜索我的预设…"
 
 #: menu/preset_manager_modal.lua:562
 msgid "Done"
-msgstr ""
+msgstr "完成"
 
 #: menu/preset_manager_modal.lua:574
 msgid "Preset library"
@@ -1933,12 +1933,11 @@ msgstr "文件名"
 
 #: menu/tokens_catalogue.lua:47
 msgid "File position in folder"
-msgstr ""
+msgstr "文件夹内文件序号"
 
 #: menu/tokens_catalogue.lua:48
-#, fuzzy
 msgid "Document files in folder"
-msgstr "文档标题"
+msgstr "文件夹内文档总数"
 
 #: menu/tokens_catalogue.lua:49
 msgid "Book language"
@@ -2309,19 +2308,16 @@ msgid "Total chapters"
 msgstr "章节总数"
 
 #: menu/tokens_catalogue.lua:145
-#, fuzzy
 msgid "Minutes left in chapter"
-msgstr "章节剩余阅读时间"
+msgstr "章节剩余分钟数"
 
 #: menu/tokens_catalogue.lua:146
-#, fuzzy
 msgid "Whole hours left in chapter"
-msgstr "章节未读页数"
+msgstr "章节剩余整小时数"
 
 #: menu/tokens_catalogue.lua:147
-#, fuzzy
 msgid "Whole hours left in book"
-msgstr "书籍未读页数"
+msgstr "书籍剩余整小时数"
 
 #: menu/tokens_catalogue.lua:148
 msgid "Pages per hour"
@@ -2460,14 +2456,12 @@ msgid "Long books (20+ chapters)"
 msgstr "长书（20章以上）"
 
 #: menu/tokens_catalogue.lua:189
-#, fuzzy
 msgid "Time left in chapter, Kindle style"
-msgstr "章节剩余阅读时间（仅分钟）"
+msgstr "章节剩余阅读时间（Kindle 风格）"
 
 #: menu/tokens_catalogue.lua:190
-#, fuzzy
 msgid "Time left in book, Kindle style"
-msgstr "书籍剩余阅读时间（仅分钟）"
+msgstr "书籍剩余阅读时间（Kindle 风格）"
 
 #: menu/tokens_catalogue.lua:191
 msgid "Chapter title only when different from book title"
@@ -2486,7 +2480,6 @@ msgid "Tokens & conditionals"
 msgstr "标记与条件"
 
 #: menu/tokens_library.lua:337
-#, fuzzy
 msgid ""
 "TOKENS\n"
 "\n"
@@ -2553,6 +2546,12 @@ msgstr ""
 "中的每个条目都是一个词元，写作 %名称。它们会内联展开：\n"
 "  %书名 — %当前页码/%总页数\n"
 "  → 1984 — 12/268\n"
+"\n"
+"词元名称会一直读取到下一个非字母字符为止，因此后面紧跟文字时需要先加一个空格"
+"（或标点符号）。如需让文字紧贴词元，可将名称用尖括号包裹：\n"
+"  %<book_time_left_h>h%<book_time_left_m>m\n"
+"  → 4h40m\n"
+"尖括号内同样支持宽度限制：%<author{200}>。\n"
 "\n"
 "内联样式\n"
 "\n"

@@ -484,9 +484,8 @@ msgid "Bottom-right"
 msgstr "Долу вдясно"
 
 #: main.lua:306
-#, fuzzy
 msgid "Bookends presets folder"
-msgstr "Bookends: отваряне на библиотека с настройки"
+msgstr "Папка с настройки на Bookends"
 
 #: main.lua:327
 msgid "Bookends: toggle visibility"
@@ -1244,19 +1243,19 @@ msgstr "Преименуване"
 
 #: menu/main_menu.lua:129
 msgid "File extension"
-msgstr ""
+msgstr "Разширение на файла"
 
 #: menu/main_menu.lua:131
 msgid "e.g. CBZ"
-msgstr ""
+msgstr "напр. CBZ"
 
 #: menu/main_menu.lua:135
 msgid "Next"
-msgstr ""
+msgstr "Напред"
 
 #: menu/main_menu.lua:158
 msgid "Hidden"
-msgstr ""
+msgstr "Скрито"
 
 #: menu/main_menu.lua:172 menu/main_menu.lua:174
 msgid "Bookends settings"
@@ -1402,7 +1401,7 @@ msgstr "Инсталирана версия"
 
 #: menu/main_menu.lua:489
 msgid "Auto preset by file type"
-msgstr ""
+msgstr "Автоматична настройка по тип файл"
 
 #: menu/main_menu.lua:490
 msgid ""
@@ -1410,6 +1409,9 @@ msgid ""
 "document's file extension (e.g. hide for comic archives, use a plainer "
 "preset for PDFs)."
 msgstr ""
+"Автоматично скрива Bookends или превключва към конкретна настройка според "
+"разширението на файла на документа (напр. скриване за архиви с комикси, по-"
+"семпла настройка за PDF файлове)."
 
 #: menu/main_menu.lua:496
 msgid "Advanced"
@@ -1433,16 +1435,15 @@ msgstr "Инсталиран: v"
 
 #: menu/main_menu.lua:570
 msgid "Change"
-msgstr ""
+msgstr "Промяна"
 
 #: menu/main_menu.lua:580
 msgid "Remove rule"
-msgstr ""
+msgstr "Премахване на правило"
 
 #: menu/main_menu.lua:599
-#, fuzzy
 msgid "Add rule…"
-msgstr "Добавяне на ред"
+msgstr "Добавяне на правило…"
 
 #: menu/main_menu.lua:617
 msgid "Preset library…"
@@ -1526,11 +1527,11 @@ msgstr ""
 
 #: menu/preset_manager_modal.lua:492
 msgid "Hidden (no overlay)"
-msgstr ""
+msgstr "Скрито (без слой)"
 
 #: menu/preset_manager_modal.lua:544
 msgid "Preset for this file type"
-msgstr ""
+msgstr "Настройка за този тип файлове"
 
 #: menu/preset_manager_modal.lua:545 menu/preset_manager_modal.lua:626
 msgid "Search my presets by name or author…"
@@ -1538,7 +1539,7 @@ msgstr "Търсене в моите настройки по име или ав�
 
 #: menu/preset_manager_modal.lua:562
 msgid "Done"
-msgstr ""
+msgstr "Готово"
 
 #: menu/preset_manager_modal.lua:574
 msgid "Preset library"
@@ -1963,12 +1964,11 @@ msgstr "Име на файла"
 
 #: menu/tokens_catalogue.lua:47
 msgid "File position in folder"
-msgstr ""
+msgstr "Позиция на файла в папката"
 
 #: menu/tokens_catalogue.lua:48
-#, fuzzy
 msgid "Document files in folder"
-msgstr "Заглавие на документа"
+msgstr "Брой файлове в папката"
 
 #: menu/tokens_catalogue.lua:49
 msgid "Book language"
@@ -2339,19 +2339,16 @@ msgid "Total chapters"
 msgstr "Общо глави"
 
 #: menu/tokens_catalogue.lua:145
-#, fuzzy
 msgid "Minutes left in chapter"
-msgstr "Оставащо време до края на главата"
+msgstr "Оставащи минути в главата"
 
 #: menu/tokens_catalogue.lua:146
-#, fuzzy
 msgid "Whole hours left in chapter"
-msgstr "Оставащи страници в главата"
+msgstr "Оставащи цели часове в главата"
 
 #: menu/tokens_catalogue.lua:147
-#, fuzzy
 msgid "Whole hours left in book"
-msgstr "Оставащи страници в книгата"
+msgstr "Оставащи цели часове в книгата"
 
 #: menu/tokens_catalogue.lua:148
 msgid "Pages per hour"
@@ -2490,14 +2487,12 @@ msgid "Long books (20+ chapters)"
 msgstr "Дълги книги (20+ глави)"
 
 #: menu/tokens_catalogue.lua:189
-#, fuzzy
 msgid "Time left in chapter, Kindle style"
-msgstr "Оставащо време до края на главата (само минути)"
+msgstr "Оставащо време до края на главата (стил Kindle)"
 
 #: menu/tokens_catalogue.lua:190
-#, fuzzy
 msgid "Time left in book, Kindle style"
-msgstr "Оставащо време до края на книгата (само минути)"
+msgstr "Оставащо време до края на книгата (стил Kindle)"
 
 #: menu/tokens_catalogue.lua:191
 msgid "Chapter title only when different from book title"
@@ -2516,7 +2511,6 @@ msgid "Tokens & conditionals"
 msgstr "Токени и условия"
 
 #: menu/tokens_library.lua:337
-#, fuzzy
 msgid ""
 "TOKENS\n"
 "\n"
@@ -2584,6 +2578,13 @@ msgstr ""
 "Сесия / Устройство е токен, записан като %name. Те се разширяват в реда:\n"
 "  %title — %page_num/%page_count\n"
 "  → 1984 — 12/268\n"
+"\n"
+"Името на токен продължава до първия символ, който не е буква, затова е "
+"нужен интервал (или пунктуационен знак) преди следващия текст. За да "
+"долепите текст плътно до токен, обвийте името му в остри скоби:\n"
+"  %<book_time_left_h>h%<book_time_left_m>m\n"
+"  → 4h40m\n"
+"Ограниченията за ширина все така работят и вътре в тях: %<author{200}>.\n"
 "\n"
 "ВГРАДЕНО ФОРМАТИРАНЕ\n"
 "\n"

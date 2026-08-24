@@ -483,9 +483,8 @@ msgid "Bottom-right"
 msgstr "Jobb alsó"
 
 #: main.lua:306
-#, fuzzy
 msgid "Bookends presets folder"
-msgstr "Bookends: előbeállítás-könyvtár megnyitása"
+msgstr "Bookends előbeállítás-mappa"
 
 #: main.lua:327
 msgid "Bookends: toggle visibility"
@@ -1244,19 +1243,19 @@ msgstr "Átnevezés"
 
 #: menu/main_menu.lua:129
 msgid "File extension"
-msgstr ""
+msgstr "Fájlkiterjesztés"
 
 #: menu/main_menu.lua:131
 msgid "e.g. CBZ"
-msgstr ""
+msgstr "pl. CBZ"
 
 #: menu/main_menu.lua:135
 msgid "Next"
-msgstr ""
+msgstr "Következő"
 
 #: menu/main_menu.lua:158
 msgid "Hidden"
-msgstr ""
+msgstr "Rejtett"
 
 #: menu/main_menu.lua:172 menu/main_menu.lua:174
 msgid "Bookends settings"
@@ -1400,7 +1399,7 @@ msgstr "Telepített verzió"
 
 #: menu/main_menu.lua:489
 msgid "Auto preset by file type"
-msgstr ""
+msgstr "Automatikus előbeállítás fájltípus szerint"
 
 #: menu/main_menu.lua:490
 msgid ""
@@ -1408,6 +1407,9 @@ msgid ""
 "document's file extension (e.g. hide for comic archives, use a plainer "
 "preset for PDFs)."
 msgstr ""
+"Automatikusan elrejti a Bookends-t, vagy egy adott előbeállításra vált a "
+"dokumentum fájlkiterjesztése alapján (pl. elrejtés képregényarchívumoknál, "
+"egyszerűbb előbeállítás PDF-eknél)."
 
 #: menu/main_menu.lua:496
 msgid "Advanced"
@@ -1431,16 +1433,15 @@ msgstr "Telepítve: v"
 
 #: menu/main_menu.lua:570
 msgid "Change"
-msgstr ""
+msgstr "Módosítás"
 
 #: menu/main_menu.lua:580
 msgid "Remove rule"
-msgstr ""
+msgstr "Szabály törlése"
 
 #: menu/main_menu.lua:599
-#, fuzzy
 msgid "Add rule…"
-msgstr "Sor hozzáadása"
+msgstr "Szabály hozzáadása…"
 
 #: menu/main_menu.lua:617
 msgid "Preset library…"
@@ -1523,11 +1524,11 @@ msgstr ""
 
 #: menu/preset_manager_modal.lua:492
 msgid "Hidden (no overlay)"
-msgstr ""
+msgstr "Rejtett (nincs overlay)"
 
 #: menu/preset_manager_modal.lua:544
 msgid "Preset for this file type"
-msgstr ""
+msgstr "Előbeállítás ehhez a fájltípushoz"
 
 #: menu/preset_manager_modal.lua:545 menu/preset_manager_modal.lua:626
 msgid "Search my presets by name or author…"
@@ -1535,7 +1536,7 @@ msgstr "Saját előbeállítások keresése név vagy szerző szerint…"
 
 #: menu/preset_manager_modal.lua:562
 msgid "Done"
-msgstr ""
+msgstr "Kész"
 
 #: menu/preset_manager_modal.lua:574
 msgid "Preset library"
@@ -1961,12 +1962,11 @@ msgstr "Fájlnév"
 
 #: menu/tokens_catalogue.lua:47
 msgid "File position in folder"
-msgstr ""
+msgstr "Fájl sorszáma a mappában"
 
 #: menu/tokens_catalogue.lua:48
-#, fuzzy
 msgid "Document files in folder"
-msgstr "Dokumentum címe"
+msgstr "Dokumentumfájlok száma a mappában"
 
 #: menu/tokens_catalogue.lua:49
 msgid "Book language"
@@ -2337,19 +2337,16 @@ msgid "Total chapters"
 msgstr "Összes fejezet"
 
 #: menu/tokens_catalogue.lua:145
-#, fuzzy
 msgid "Minutes left in chapter"
-msgstr "Fejezetből hátralévő idő"
+msgstr "Fejezetből hátralévő percek"
 
 #: menu/tokens_catalogue.lua:146
-#, fuzzy
 msgid "Whole hours left in chapter"
-msgstr "Fejezetből hátralévő oldalak"
+msgstr "Fejezetből hátralévő egész órák"
 
 #: menu/tokens_catalogue.lua:147
-#, fuzzy
 msgid "Whole hours left in book"
-msgstr "Könyvből hátralévő oldalak"
+msgstr "Könyvből hátralévő egész órák"
 
 #: menu/tokens_catalogue.lua:148
 msgid "Pages per hour"
@@ -2488,14 +2485,12 @@ msgid "Long books (20+ chapters)"
 msgstr "Hosszú könyvek (20+ fejezet)"
 
 #: menu/tokens_catalogue.lua:189
-#, fuzzy
 msgid "Time left in chapter, Kindle style"
-msgstr "Fejezetből hátralévő idő (csak perc)"
+msgstr "Fejezetből hátralévő idő, Kindle-stílusban"
 
 #: menu/tokens_catalogue.lua:190
-#, fuzzy
 msgid "Time left in book, Kindle style"
-msgstr "Könyvből hátralévő idő (csak perc)"
+msgstr "Könyvből hátralévő idő, Kindle-stílusban"
 
 #: menu/tokens_catalogue.lua:191
 msgid "Chapter title only when different from book title"
@@ -2514,7 +2509,6 @@ msgid "Tokens & conditionals"
 msgstr "Tokenek és feltételek"
 
 #: menu/tokens_library.lua:337
-#, fuzzy
 msgid ""
 "TOKENS\n"
 "\n"
@@ -2583,6 +2577,14 @@ msgstr ""
 "helyettesülnek:\n"
 "  %title — %page_num/%page_count\n"
 "  → 1984 — 12/268\n"
+"\n"
+"A token neve a következő nem betű karakterig tart, ezért szóköz (vagy "
+"írásjel) kell utána, mielőtt bármilyen szöveg következik. Ha szöveget "
+"közvetlenül egy token mellé szeretnél írni, zárd a nevet < és > jelek "
+"közé:\n"
+"  %<book_time_left_h>h%<book_time_left_m>m\n"
+"  → 4h40m\n"
+"A szélességkorlátozás ezeken belül is működik: %<author{200}>.\n"
 "\n"
 "SOR KÖZBENI FORMÁZÁS\n"
 "\n"
