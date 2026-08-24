@@ -306,12 +306,28 @@ async function handleInstall(request: Request, env: Env, ctx: ExecutionContext):
 
     const ttl = parseInt(env.INSTALL_DEDUPE_TTL_SECONDS ?? "86400", 10);
     const ip = request.headers.get("cf-connecting-ip") ?? "unknown";
-    const lockKey = `iplock:${slug}:${await ipSlugKey(ip, slug)}`;
+    // Dedupe lock lives in the edge cache, not KV.
+    //
+    // A fresh install used to cost two KV writes: the counter, and an
+    // `iplock:` key purely to remember "this IP already counted this slug".
+    // Writes are the tightest thing in the free tier by a distance — 1k/day
+    // against 100k reads — and measured 720/day, i.e. 72% of the cap for
+    // roughly 360 installs. Halving the per-install write cost halves that.
+    //
+    // The tradeoff is that the Cache API is per-colo rather than global, so
+    // the lock only holds at the edge location that served the install. A
+    // reader whose requests move between colos (mobile handover, VPN) could
+    // be counted twice, and cache eviction under pressure can drop a lock
+    // early. Both are acceptable for a popularity signal, and neither can
+    // inflate a count by more than a handful.
+    const lockKey = new Request(
+        `https://bookends-submit.internal/iplock/${slug}/${await ipSlugKey(ip, slug)}`,
+    );
 
     // If the same IP already pinged this slug within TTL, silently succeed
     // without bumping the counter. The client treats 200 as success either way.
-    const existing = await env.INSTALL_COUNTS.get(lockKey);
-    if (existing) {
+    const cache = (caches as unknown as { default: Cache }).default;
+    if (await cache.match(lockKey)) {
         return json(200, { ok: true, deduped: true });
     }
 
@@ -322,15 +338,18 @@ async function handleInstall(request: Request, env: Env, ctx: ExecutionContext):
     const next = (counts[slug] ?? 0) + 1;
     counts[slug] = next;
 
-    await Promise.all([
-        env.INSTALL_COUNTS.put(COUNTS_KEY, JSON.stringify(counts)),
-        env.INSTALL_COUNTS.put(lockKey, "1", { expirationTtl: ttl }),
-    ]);
+    // One KV write per install now, down from two.
+    await env.INSTALL_COUNTS.put(COUNTS_KEY, JSON.stringify(counts));
+
+    // Take the dedupe lock. Cache-Control is what gives it its lifetime, so the
+    // TTL setting still applies; it just expires at the edge instead of in KV.
+    ctx.waitUntil(cache.put(lockKey, new Response("1", {
+        headers: { "cache-control": `public, max-age=${ttl}` },
+    })));
 
     // Invalidate the edge-cached /counts so a user who just installed a preset
     // and hits Refresh sees their bump reflected. Dedupe hits above (which
     // don't bump) skip this — the cache stays warm for the common path.
-    const cache = (caches as unknown as { default: Cache }).default;
     ctx.waitUntil(cache.delete(new Request(COUNTS_CACHE_KEY)));
 
     return json(200, { ok: true, count: next });

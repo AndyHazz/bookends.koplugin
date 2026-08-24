@@ -115,7 +115,7 @@ await test("empty namespace writes an empty blob so it never rescans", async () 
     eq(ops.list, 0, "no rescan on the next call");
 });
 
-await test("/install bumps the blob and keeps the write count at 2", async () => {
+await test("/install bumps the blob with a single KV write", async () => {
     installCacheMock();
     const e = { ...env(), INSTALL_COUNTS: makeKV({ "counts:all": JSON.stringify({ alpha: 5 }) }) };
     resetOps();
@@ -124,7 +124,10 @@ await test("/install bumps the blob and keeps the write count at 2", async () =>
     eq(body.ok, true, "ok");
     eq(body.count, 6, "returned count");
     eq(JSON.parse(e.INSTALL_COUNTS._store.get("counts:all")), { alpha: 6 }, "blob bumped");
-    eq(ops.put, 2, "kv puts (counter blob + ip lock)");
+    // Was 2 (counter blob + iplock). The dedupe lock now lives in the edge
+    // cache, which doesn't touch the KV allowance -- writes are the tightest
+    // free-tier limit at 1k/day and this halves the per-install cost.
+    eq(ops.put, 1, "kv puts (counter blob only)");
 });
 
 await test("/install on an unseen slug starts it at 1", async () => {
@@ -135,13 +138,19 @@ await test("/install on an unseen slug starts it at 1", async () => {
     eq(JSON.parse(e.INSTALL_COUNTS._store.get("counts:all")), { alpha: 5, "brand-new": 1 }, "blob");
 });
 
-await test("/install dedupes a repeat from the same IP without bumping", async () => {
+await test("/install dedupes a repeat from the same IP without bumping or writing", async () => {
     installCacheMock();
     const e = { ...env(), INSTALL_COUNTS: makeKV({ "counts:all": JSON.stringify({ alpha: 5 }) }) };
     await worker.fetch(installReq("alpha", "9.9.9.9"), e, ctx);
     const r2 = await worker.fetch(installReq("alpha", "9.9.9.9"), e, ctx);
     eq((await r2.json()).deduped, true, "deduped");
     eq(JSON.parse(e.INSTALL_COUNTS._store.get("counts:all")), { alpha: 6 }, "only one bump");
+    // A deduped install must cost nothing at all in KV: the lock check is a
+    // cache lookup, so there's no longer even a read.
+    resetOps();
+    await worker.fetch(installReq("alpha", "9.9.9.9"), e, ctx);
+    eq(ops.get, 0, "kv gets on a deduped install");
+    eq(ops.put, 0, "kv puts on a deduped install");
 });
 
 await test("a different IP does bump the same slug", async () => {
