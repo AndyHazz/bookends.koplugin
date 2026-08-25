@@ -2951,6 +2951,42 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         end
     end
 
+    -- System-wide used / free memory in MB (whole-device view).
+    -- Mirrors the %mem fallback: resolves /proc/meminfo directly and uses
+    -- MemAvailable when present, else MemFree+Buffers+Cached (pre-3.14 kernels
+    -- such as Kindle KPW3 2.6.x). Unlike %mem (percentage) these report raw MiB.
+    local sysused_mb = ""
+    local sysfree_mb = ""
+    if needs("sysused") or needs("sysfree") then
+        local meminfo = io.open("/proc/meminfo", "r")
+        if meminfo then
+            local total, memfree, buffers, cached, available
+            for line in meminfo:lines() do
+                if line:match("^MemTotal:") then
+                    total = tonumber(line:match("(%d+)"))
+                elseif line:match("^MemAvailable:") then
+                    available = tonumber(line:match("(%d+)"))
+                elseif line:match("^MemFree:") then
+                    memfree = tonumber(line:match("(%d+)"))
+                elseif line:match("^Buffers:") then
+                    buffers = tonumber(line:match("(%d+)"))
+                elseif line:match("^Cached:") then
+                    cached = tonumber(line:match("(%d+)"))
+                end
+                if total and available then break end
+            end
+            meminfo:close()
+            -- Fallback for kernels without MemAvailable (e.g. Kindle KPW3 2.6.x)
+            if total and not available and memfree then
+                available = memfree + (buffers or 0) + (cached or 0)
+            end
+            if total and available and total > 0 then
+                sysused_mb = math.floor((total - available) / 1024) .. "M"
+                sysfree_mb = math.floor(available / 1024) .. "M"
+            end
+        end
+    end
+
     -- RAM usage (KOReader process RSS in MB)
     local ram_mb = ""
     if needs("ram") then
@@ -3112,6 +3148,8 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         nightmode = night_symbol,
         mem       = tostring(mem_usage),
         ram       = ram_mb,
+        sysused   = sysused_mb,
+        sysfree   = sysfree_mb,
         disk      = disk_avail,
         invert    = page_turn_symbol,
     }

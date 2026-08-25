@@ -121,6 +121,8 @@ M.TOKENS = {
     { description = _("Frontlight warmth %"), token = "%warmth_pct", chip = "device" },
     { description = _("RAM used %"), token = "%mem", chip = "device" },
     { description = _("RAM used (MiB)"), token = "%ram", chip = "device" },
+    { description = _("System memory used (MiB)"), token = "%sysused", chip = "device" },
+    { description = _("System memory free (MiB)"), token = "%sysfree", chip = "device" },
     { description = _("Free disk space"), token = "%disk", chip = "device" },
     { description = _("Page X of Y, em-dash framed"), token = "\xE2\x80\x94 Page %page_num of %page_count \xE2\x80\x94", chip = "templates", is_snippet = true },
     { description = _("Title \xE2\x8B\xAE author (italic)"), token = "%title \xE2\x8B\xAE [i]%author[/i]", chip = "templates", is_snippet = true },
