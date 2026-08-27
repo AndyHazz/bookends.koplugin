@@ -277,16 +277,91 @@ async function migrateLegacyCounts(env: Env): Promise<Record<string, number>> {
         cursor = page.list_complete ? undefined : page.cursor;
     } while (cursor);
     // Written even when empty, so "absent" unambiguously means "never migrated"
-    // and a fresh namespace doesn't re-scan on every request.
-    await env.INSTALL_COUNTS.put(COUNTS_KEY, JSON.stringify(counts));
+    // and a fresh namespace doesn't re-scan on every request. Persisted in the
+    // current { totals, days } shape rather than the flat one it replaced, so
+    // the stored document is canonical straight away -- loadCountsDoc would
+    // cope either way, but leaving a superseded shape on disk invites someone
+    // later to read it directly and get it wrong. No day buckets: the legacy
+    // counters are totals with no dates to attribute them to.
+    await env.INSTALL_COUNTS.put(COUNTS_KEY, JSON.stringify({ totals: counts, days: {} }));
     return counts;
 }
 
-/** All install counts, migrating from the legacy layout on first call. */
-async function loadCounts(env: Env): Promise<Record<string, number>> {
-    const blob = await env.INSTALL_COUNTS.get<Record<string, number>>(COUNTS_KEY, "json");
-    if (blob && typeof blob === "object") return blob;
-    return await migrateLegacyCounts(env);
+// Per-day install buckets, so "popular this week/month" is answerable later.
+//
+// Deliberately folded into the SAME key as the totals rather than living in a
+// `counts:<date>` key of its own. A separate key would cost a second write per
+// install, taking the per-install cost back to the 2 writes we just halved --
+// and writes are the tightest free-tier limit (1k/day) by two orders of
+// magnitude. Sharing the key keeps install at exactly one read and one write
+// however many windows we later want to report.
+//
+// Buckets are sparse: a day only lists slugs actually installed that day, so at
+// ~350 installs/day over ~100 distinct slugs this is a few KB per day against a
+// 25 MB value ceiling. RETENTION_DAYS is pruned on write so it can't creep.
+//
+// No historical backfill is possible -- the pre-existing counters were totals
+// with no dates attached. The legacy `count:<slug>` keys are a frozen snapshot
+// from the 2026-08-23 migration, which is the one historical datapoint that
+// exists; diffing them against totals gives installs-since-then. DON'T DELETE
+// THEM, they can't be regenerated.
+const RETENTION_DAYS = 35;
+
+interface CountsDoc {
+    totals: Record<string, number>;
+    days: Record<string, Record<string, number>>;   // "YYYY-MM-DD" -> slug -> n
+}
+
+/** UTC day key. UTC not local, so buckets line up with the KV quota window. */
+function dayKey(now: Date): string {
+    return now.toISOString().slice(0, 10);
+}
+
+/** Drop buckets older than RETENTION_DAYS. In-memory; caller persists. */
+function pruneDays(doc: CountsDoc, now: Date): void {
+    const cutoff = new Date(now.getTime() - RETENTION_DAYS * 86400_000);
+    const oldest = dayKey(cutoff);
+    for (const day of Object.keys(doc.days)) {
+        if (day < oldest) delete doc.days[day];   // ISO dates sort lexically
+    }
+}
+
+/**
+ * The counts document, upgrading older shapes on read.
+ *
+ * Three shapes exist in the wild and all must load:
+ *   { totals, days }            current
+ *   { slug: n }                 the flat blob shipped 2026-08-23
+ *   absent                      pre-blob; seed from the legacy count: keys
+ *
+ * The flat shape is detected by the absence of a `totals` object. Upgrading is
+ * in-memory only; it persists on the next install, so a read-only day costs no
+ * write.
+ */
+async function loadCountsDoc(env: Env): Promise<CountsDoc> {
+    const blob = await env.INSTALL_COUNTS.get<Record<string, unknown>>(COUNTS_KEY, "json");
+    if (blob && typeof blob === "object") {
+        if (blob.totals && typeof blob.totals === "object") {
+            return {
+                totals: blob.totals as Record<string, number>,
+                days: (blob.days && typeof blob.days === "object"
+                    ? blob.days : {}) as Record<string, Record<string, number>>,
+            };
+        }
+        return { totals: blob as Record<string, number>, days: {} };
+    }
+    return { totals: await migrateLegacyCounts(env), days: {} };
+}
+
+/** Sum the per-day buckets over the last `windowDays` days, inclusive of today. */
+function rollup(doc: CountsDoc, windowDays: number, now: Date): Record<string, number> {
+    const from = dayKey(new Date(now.getTime() - (windowDays - 1) * 86400_000));
+    const out: Record<string, number> = {};
+    for (const [day, slugs] of Object.entries(doc.days)) {
+        if (day < from) continue;
+        for (const [slug, n] of Object.entries(slugs)) out[slug] = (out[slug] ?? 0) + n;
+    }
+    return out;
 }
 
 async function handleInstall(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
@@ -334,12 +409,21 @@ async function handleInstall(request: Request, env: Env, ctx: ExecutionContext):
     // Read-modify-write: KV has no atomic increments. Under contention we may
     // lose the occasional bump, which is fine for a popularity signal. See the
     // COUNTS_KEY note on why that window is wider than it used to be.
-    const counts = await loadCounts(env);
-    const next = (counts[slug] ?? 0) + 1;
-    counts[slug] = next;
+    const doc = await loadCountsDoc(env);
+    const next = (doc.totals[slug] ?? 0) + 1;
+    doc.totals[slug] = next;
 
-    // One KV write per install now, down from two.
-    await env.INSTALL_COUNTS.put(COUNTS_KEY, JSON.stringify(counts));
+    // Same bump recorded against today's bucket, so windowed "popular this
+    // week/month" is answerable later. Costs no extra KV operation: it rides
+    // along in the write the totals were doing anyway.
+    const now = new Date();
+    const today = dayKey(now);
+    const bucket = doc.days[today] ?? (doc.days[today] = {});
+    bucket[slug] = (bucket[slug] ?? 0) + 1;
+    pruneDays(doc, now);
+
+    // Still one KV write per install.
+    await env.INSTALL_COUNTS.put(COUNTS_KEY, JSON.stringify(doc));
 
     // Take the dedupe lock. Cache-Control is what gives it its lifetime, so the
     // TTL setting still applies; it just expires at the edge instead of in KV.
@@ -370,10 +454,60 @@ async function handleCounts(request: Request, env: Env, ctx: ExecutionContext): 
     const cached = await cache.match(cacheKey);
     if (cached) return cached;
 
-    const counts = await loadCounts(env);
+    // Response shape is frozen: { ok, counts }. Released plugin versions parse
+    // exactly this, and the per-day data is deliberately NOT added here -- it
+    // would inflate a payload every gallery refresh downloads, for data no
+    // shipped client reads yet. It lives on /trending instead.
+    const counts = (await loadCountsDoc(env)).totals;
 
     const maxAge = parseInt(env.COUNTS_CACHE_SECONDS ?? "60", 10);
     const resp = new Response(JSON.stringify({ ok: true, counts }), {
+        status: 200,
+        headers: {
+            "content-type": "application/json",
+            "access-control-allow-origin": "*",
+            "cache-control": `public, max-age=${maxAge}, s-maxage=${maxAge}`,
+        },
+    });
+    ctx.waitUntil(cache.put(cacheKey, resp.clone()));
+    return resp;
+}
+
+const TRENDING_CACHE_KEY = "https://bookends-submit.internal/trending";
+
+/**
+ * GET /trending -> { ok, generated, windows: { "7": {slug:n}, "30": {slug:n} },
+ *                    days_retained, days_recorded }
+ *
+ * Windowed install counts from the per-day buckets. Separate from /counts so
+ * that endpoint's payload and response shape stay untouched for released
+ * clients; this one costs the same single KV read.
+ *
+ * Expect thin numbers until the buckets fill: recording started 2026-08-27, and
+ * nothing before that has dates. days_recorded tells a caller how much history
+ * actually backs the answer, so a client can hide a "this month" sort until
+ * there is a month of it rather than showing a confidently wrong ranking.
+ */
+async function handleTrending(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+    if (request.method !== "GET") return json(405, { ok: false, error: "use GET" });
+
+    const cacheKey = new Request(TRENDING_CACHE_KEY);
+    const cache = (caches as unknown as { default: Cache }).default;
+    const cached = await cache.match(cacheKey);
+    if (cached) return cached;
+
+    const doc = await loadCountsDoc(env);
+    const now = new Date();
+    const body = {
+        ok: true,
+        generated: now.toISOString(),
+        days_retained: RETENTION_DAYS,
+        days_recorded: Object.keys(doc.days).length,
+        windows: { "7": rollup(doc, 7, now), "30": rollup(doc, 30, now) },
+    };
+
+    const maxAge = parseInt(env.COUNTS_CACHE_SECONDS ?? "60", 10);
+    const resp = new Response(JSON.stringify(body), {
         status: 200,
         headers: {
             "content-type": "application/json",
@@ -392,6 +526,7 @@ export default {
         if (url.pathname === "/submit") return handleSubmit(request, env);
         if (url.pathname === "/install") return handleInstall(request, env, ctx);
         if (url.pathname === "/counts") return handleCounts(request, env, ctx);
+        if (url.pathname === "/trending") return handleTrending(request, env, ctx);
         return json(404, { ok: false, error: "not found" });
     },
 };
