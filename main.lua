@@ -1817,9 +1817,18 @@ function Bookends:_buildBookshelfStatusLine(screen_w)
     local line_cfg = self:resolveLineConfig(cfg.font_face, cfg.font_size,
                                             cfg.bold and "bold" or nil)
     line_cfg.uppercase = cfg.uppercase and true or false
-    local avail = screen_w - self.defaults.margin_left - self.defaults.margin_right
-    return OverlayWidget.buildTextWidget({ text }, { line_cfg },
-                                         cfg.alignment or "right", nil, avail)
+    -- Inset to match BOOKSHELF's content padding, not bookends' margins: the
+    -- whole point is that the strip does not move as the reader crosses
+    -- between the shelf and a book, and the two use different side padding
+    -- (37px vs 18px at 1248 wide). Returns the pad too, so the caller paints
+    -- at the same x.
+    local Size = require("ui/size")
+    local pad = StatusLine.sidePad(screen_w, Size and Size.padding
+                                   and Size.padding.fullscreen)
+    local avail = screen_w - pad * 2
+    local widget, w, h = OverlayWidget.buildTextWidget(
+        { text }, { line_cfg }, cfg.alignment or "right", nil, avail)
+    return widget, w, h, pad
 end
 
 function Bookends:_paintToInner(bb, x, y)
@@ -2140,10 +2149,11 @@ function Bookends:_paintToInner(bb, x, y)
         -- expands a template the reader never wrote: a raise here would take
         -- the whole overlay paint down, and an absent strip is a far better
         -- failure than a blank screen.
-        local ok_bs, widget, _bs_w, bs_h = pcall(
+        local ok_bs, widget, _bs_w, bs_h, bs_pad = pcall(
             self._buildBookshelfStatusLine, self, screen_w)
         if ok_bs and widget and bs_h and bs_h > 0 then
-            local bx, by = self.defaults.margin_left, self.defaults.margin_top
+            local bx, by = bs_pad or self.defaults.margin_left,
+                           self.defaults.margin_top
             widget:paintTo(bb, x + bx, y + by)
             -- Same entry shape as the position rows: the extents pass reads
             -- entry.widget and entry.x/y, and a bare widget crashed paintTo.

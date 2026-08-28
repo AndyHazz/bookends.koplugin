@@ -84,4 +84,20 @@ function StatusLine.fromSettings(settings)
     return StatusLine.resolve(raw), raw ~= nil
 end
 
+--- Bookshelf insets its content by this much on each side, and the mirrored
+--- strip has to match or the two lines sit at visibly different x - measured
+--- at 37px against bookends' own 18px margin on a 1248px screen, which is a
+--- ~20px jump on each edge as the reader crosses between shelf and book.
+---
+--- The formula is bookshelf's own: the natural padding scales with DPI but is
+--- capped at 3% of the width, so a high-DPI screen does not eat 240px of row
+--- width and shrink every cover. `padding_fullscreen` is injected (KOReader's
+--- Size.padding.fullscreen) so this file stays free of KOReader.
+function StatusLine.sidePad(screen_w, padding_fullscreen)
+    local natural = math.floor((tonumber(padding_fullscreen) or 0) * 2 * 0.8)
+    local capped  = math.floor((tonumber(screen_w) or 0) * 0.03)
+    if natural <= 0 then return capped end
+    return math.min(natural, capped)
+end
+
 return StatusLine
