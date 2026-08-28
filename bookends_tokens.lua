@@ -5,6 +5,23 @@ local BAR_PLACEHOLDER = require("bookends_overlay_widget").BAR_PLACEHOLDER
 local SPACER_PLACEHOLDER = require("bookends_overlay_widget").SPACER_PLACEHOLDER
 local Semantics = require("token_semantics")
 local CalibreMeta = require("calibre_metadata")
+-- gettext, bound to T rather than the conventional `_`: this file uses `_` as
+-- a throwaway elsewhere, and one careless rebinding would silently turn every
+-- translated string back into its msgid.
+--
+-- Resolved LAZILY and defensively, because bookends_i18n pulls in KOReader's
+-- logger at load: a top-level require here makes this whole module unloadable
+-- under a bare `lua`, which is exactly how six of the pure-Lua suites run. The
+-- untranslated fallback only ever shows if i18n is genuinely unavailable.
+local _gettext
+local function T(str)
+    if _gettext == nil then
+        local ok, i18n = pcall(require, "bookends_i18n")
+        _gettext = (ok and i18n and i18n.gettext) or false
+    end
+    if not _gettext then return str end
+    return _gettext(str)
+end
 
 local Tokens = {}
 
@@ -167,7 +184,7 @@ local function buildFolderListing(ui, dir)
     end)
     -- A comparator that errors (bad metadata on one entry, say) would otherwise
     -- take the whole paint down. An unsorted count is still a truthful count.
-    local _ = ok_sort
+    local _ok_sort = ok_sort  -- named, so gettext can never be shadowed here
 
     local files = {}
     for i = 1, #items do files[i] = items[i].path end
@@ -405,6 +422,16 @@ end
 -- keys already on the new vocabulary (batt, title, author, book_pct, speed,
 -- session, session_pages, wifi, connected, charging, light, invert, time,
 -- day, page, format, series) are unchanged and not aliased.
+-- Display words for the four canonical statuses. Deferred calls rather than
+-- eager strings so the active locale is read at render time, and a table rather
+-- than logic inside token_semantics so that module needs no gettext.
+local STATUS_LABELS = {
+    unread   = function() return T("Unread")   end,
+    reading  = function() return T("Reading")  end,
+    on_hold  = function() return T("On hold")  end,
+    finished = function() return T("Finished") end,
+}
+
 local STATE_ALIAS = {
     chapters        = "chap_count",    -- v4.1 name
     chapter         = "chap_num",      -- v4.1 name (chapter number)
@@ -2790,8 +2817,12 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     local series_name = ""
     local series_num = ""
     local book_language = ""
+    -- %author_count / %authors_short / %quote_source are listed here because
+    -- they are DERIVED from this block's title + authors_list; without them the
+    -- gate skips and they resolve empty for a template that names only them.
     if needs("title", "author", "authors",
              "author_1", "author_2", "author_3", "author_4", "author_5",
+             "author_count", "authors_short", "quote_source",
              "series", "series_name", "series_num", "lang") then
         local doc_props = ui.doc_props or {}
         local ok, props = pcall(doc.getProps, doc)
@@ -3065,6 +3096,128 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         end
     end
 
+    -- ── Per-book metadata ported from bookshelf (#348) ────────────────────
+    -- Formatting goes through the vendored token_semantics so the same book
+    -- reads the same on the shelf and in the reader. Each source is reached
+    -- defensively: on a reader every one of these can be legitimately absent
+    -- (no DocSettings yet, no highlights, no read history), and the right
+    -- answer then is an empty string so the line auto-hides.
+    local status_str, status_label_str = "", ""
+    local rating_stars, rating_num = "", ""
+    if needs("status", "status_label", "rating", "rating_number") then
+        local summary
+        local ds = ui.doc_settings
+        if ds and ds.readSetting then
+            local ok, v = pcall(function() return ds:readSetting("summary") end)
+            if ok and type(v) == "table" then summary = v end
+        end
+        status_str = Semantics.status(summary and summary.status)
+        status_label_str = Semantics.statusLabel(status_str, STATUS_LABELS)
+        local r = summary and tonumber(summary.rating)
+        rating_stars = Semantics.stars(r)
+        rating_num = (r and r > 0) and tostring(math.floor(r)) or ""
+    end
+
+    local description_str = ""
+    if needs("description") then
+        local doc_props = ui.doc_props or {}
+        local ok, props = pcall(doc.getProps, doc)
+        if not ok then props = {} end
+        description_str = doc_props.description or props.description or ""
+    end
+
+    local size_str, added_str, opened_str = "", "", ""
+    if needs("size", "added") then
+        local ok_lfs, lfs = pcall(require, "libs/libkoreader-lfs")
+        local file = doc and doc.file
+        if ok_lfs and lfs and lfs.attributes and file then
+            if needs("size") then
+                local ok, v = pcall(lfs.attributes, file, "size")
+                if ok then size_str = Semantics.fileSize(tonumber(v)) or "" end
+            end
+            if needs("added") then
+                -- Mirrors bookshelf's date_added, which is the file mtime.
+                local ok, v = pcall(lfs.attributes, file, "modification")
+                if ok then added_str = Semantics.isoDate(tonumber(v)) or "" end
+            end
+        end
+    end
+    if needs("opened") then
+        -- Mirrors bookshelf: ReadHistory, not the file mtime. A book absent
+        -- from the history has no date rather than a date in 1970.
+        local ok_rh, ReadHistory = pcall(require, "readhistory")
+        local file = doc and doc.file
+        if ok_rh and ReadHistory and file then
+            for _idx, item in ipairs(ReadHistory.hist or {}) do
+                if item.file == file then
+                    opened_str = Semantics.isoDate(tonumber(item.time)) or ""
+                    break
+                end
+            end
+        end
+    end
+
+    local favourite_str = ""
+    if needs("favourite", "favorite") then
+        local ok_rc, ReadCollection = pcall(require, "readcollection")
+        local file = doc and doc.file
+        if ok_rc and ReadCollection and file then
+            local fav = ReadCollection.coll and ReadCollection.coll.favorites
+            if fav and fav[file] ~= nil then
+                favourite_str = "\xE2\x98\x85"  -- U+2605, matching %rating's filled star
+            end
+        end
+    end
+
+    local author_count_str, authors_short_str = "", ""
+    if needs("author_count", "authors_short") then
+        if #authors_list > 0 then
+            author_count_str = tostring(#authors_list)
+            authors_short_str = Semantics.authorsShort(
+                authors_list, T(" and "), T(", et al."))
+        end
+    end
+
+    -- %quote / %quote_source: a highlight from THIS book. Deterministic (the
+    -- first highlight) rather than rotating: a status bar repaints constantly,
+    -- and a quote that changed on every repaint would be unreadable. Bookshelf
+    -- rotates its quote per selected book, which has no analogue here.
+    local quote_str, quote_source_str = "", ""
+    if needs("quote", "quote_source") then
+        local ann = ui.annotation
+        for _idx, item in ipairs((ann and ann.annotations) or {}) do
+            if type(item.text) == "string" and item.text ~= "" then
+                quote_str = "\xE2\x80\x9C" .. item.text .. "\xE2\x80\x9D"
+                local bits = {}
+                if title and title ~= "" then bits[#bits + 1] = tostring(title) end
+                if first_author and first_author ~= "" then
+                    bits[#bits + 1] = first_author
+                end
+                quote_source_str = table.concat(bits, ", ")
+                break
+            end
+        end
+    end
+
+    local sysused_str = ""
+    if needs("sysused") then
+        local meminfo = io.open("/proc/meminfo", "r")
+        if meminfo then
+            local total, available, memfree
+            for line in meminfo:lines() do
+                if line:match("^MemTotal:") then total = tonumber(line:match("(%d+)"))
+                elseif line:match("^MemAvailable:") then available = tonumber(line:match("(%d+)"))
+                elseif line:match("^MemFree:") then memfree = tonumber(line:match("(%d+)")) end
+            end
+            meminfo:close()
+            available = available or memfree
+            if total and available then
+                -- /proc/meminfo is in kB; Semantics.sysused takes bytes used.
+                sysused_str = Semantics.sysused((total - available) * 1024)
+            end
+        end
+    end
+
     -- Replace the elastic tokens with placeholders so the renderer knows where
     -- to put the widget. Both %bar and %spacer take "whatever width is left",
     -- so a line can only honour ONE of them:
@@ -3150,6 +3303,22 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         author      = first_author,
         authors     = authors,
         author_1    = authors_list[1] or "",
+        -- Ported from bookshelf for #348.
+        author_count  = author_count_str,
+        authors_short = authors_short_str,
+        status        = status_str,
+        status_label  = status_label_str,
+        rating        = rating_stars,
+        rating_number = rating_num,
+        description   = description_str,
+        size          = size_str,
+        added         = added_str,
+        opened        = opened_str,
+        favourite     = favourite_str,
+        favorite      = favourite_str,   -- US spelling alias, as in bookshelf
+        quote         = quote_str,
+        quote_source  = quote_source_str,
+        sysused       = sysused_str,
         author_2    = authors_list[2] or "",
         author_3    = authors_list[3] or "",
         author_4    = authors_list[4] or "",

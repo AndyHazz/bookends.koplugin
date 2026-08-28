@@ -115,6 +115,19 @@ Tokens are placeholders that expand to live values. Type `%` followed by a name,
 | `%filename` | File name (no path/extension) | *The_Great_Gatsby* |
 | `%file_num` | This file's position among the documents in its folder | *5* |
 | `%file_count` | Documents in this file's folder | *10* |
+| `%author_count` | Number of authors | *3* |
+| `%authors_short` | Short author list, collapsing to "et al." at three or more | *Frank Herbert, Brian Herbert, et al.* |
+| `%status` | Reading status value: `unread`, `reading`, `on_hold`, `finished` (never translated, so conditionals stay reliable) | *finished* |
+| `%status_label` | The same status as a word, translated | *Finished* |
+| `%rating` | Your rating as stars | *★★★★☆* |
+| `%rating_number` | Your rating as a number | *4* |
+| `%description` | Book description / blurb | *A desert planet…* |
+| `%size` | File size | *2 KB* |
+| `%added` | Date added, from the file's own date | *2024-03-09* |
+| `%opened` | Date the book was last opened | *2024-07-03* |
+| `%favourite` | A star when the book is in Favourites, empty otherwise | *★* |
+| `%quote` | A highlight from this book, in quotation marks | *"The spice must flow."* |
+| `%quote_source` | Title and author, to caption `%quote` | *Dune, Frank Herbert* |
 | `%lang` | Book language | *en* |
 | `%format` | Document format | *EPUB* |
 | `%highlights` | Number of highlights | *3* |
@@ -213,6 +226,7 @@ Tokens are placeholders that expand to live values. Type `%` followed by a name,
 | `%warmth_icon` | Warmth icon (dynamic) | Shown on devices with a warm frontlight |
 | `%nightmode` | Night-mode icon (dynamic) | Moon when inverted, sun when not |
 | `%mem` | RAM usage percentage | *33%* |
+| `%sysused` | System memory used, in MiB | *84 MiB* |
 | `%ram` | RAM usage in MiB | *128 MiB* |
 | `%disk` | Free disk space | *2.4 GB* |
 | `%invert` | Page-turn direction indicator | Changes when inverted |
