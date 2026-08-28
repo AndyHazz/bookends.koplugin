@@ -2875,15 +2875,18 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     local notes_count = ""
     local bookmarks_count = ""
     if needs("highlights", "notes", "bookmarks") and ui.annotation then
-        local h, n = ui.annotation:getNumberOfHighlightsAndNotes()
-        if needs("highlights") then highlights_count = tostring(h or 0) end
-        if needs("notes") then notes_count = tostring(n or 0) end
+        -- Counted through the vendored rule rather than KOReader's API, so the
+        -- library screen (which has only a sidecar to count) cannot disagree
+        -- with the reader (#348). The rule is copied FROM KOReader's
+        -- getNumberOfHighlightsAndNotes and checked against it line by line,
+        -- so the numbers here are unchanged.
+        local counts = Semantics.annotationCounts(ui.annotation.annotations)
+        if needs("highlights") then
+            highlights_count = tostring(counts.highlights)
+        end
+        if needs("notes") then notes_count = tostring(counts.notes) end
         if needs("bookmarks") then
-            local bm = 0
-            for _, item in ipairs(ui.annotation.annotations or {}) do
-                if not item.drawer then bm = bm + 1 end
-            end
-            bookmarks_count = tostring(bm)
+            bookmarks_count = tostring(counts.bookmarks)
         end
     end
 
