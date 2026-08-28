@@ -2,6 +2,7 @@ local Device = require("device")
 local datetime = require("datetime")
 local LocalDate = require("bookends_localdate")
 local BAR_PLACEHOLDER = require("bookends_overlay_widget").BAR_PLACEHOLDER
+local Semantics = require("token_semantics")
 
 local Tokens = {}
 
@@ -2808,11 +2809,15 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     local batt_symbol = ""
     if needs("batt", "batt_icon") then
         local powerd = Device:getPowerDevice()
-        local capacity = powerd:getCapacity()
-        if capacity then
-            batt_symbol = powerd:getBatterySymbol(powerd:isCharged(), powerd:isCharging(), capacity) or ""
-            batt_lvl = capacity .. "%"
-        end
+        local capacity = powerd and powerd:getCapacity()
+        batt_lvl = Semantics.batt(capacity)
+        batt_symbol = Semantics.battIcon(
+            powerd and function(charged, charging, cap)
+                return powerd:getBatterySymbol(charged, charging, cap)
+            end,
+            powerd and powerd:isCharged(),
+            powerd and powerd:isCharging(),
+            capacity)
     end
 
     -- Wi-Fi: always renders. The bundled symbol font ships only two wifi
@@ -2823,11 +2828,8 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     local wifi_symbol = ""
     if needs("wifi") then
         local NetworkMgr = require("ui/network/manager")
-        if NetworkMgr:isWifiOn() and NetworkMgr:isConnected() then
-            wifi_symbol = "\xEE\xB2\xA8" -- U+ECA8 wifi connected
-        else
-            wifi_symbol = "\xEE\xB2\xA9" -- U+ECA9 wifi-off (off or no link)
-        end
+        wifi_symbol = Semantics.wifi(NetworkMgr:isWifiOn(),
+                                     NetworkMgr:isConnected())
     end
 
     -- Frontlight on/off icon (dynamic). Lightbulb-on glyph (rays) when
@@ -2835,22 +2837,16 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     local light_symbol = ""
     if needs("light_icon") then
         local powerd = Device:getPowerDevice()
-        if powerd and powerd:frontlightIntensity() > 0 then
-            light_symbol = "\xEE\xB7\xA6" -- U+EDE6 lightbulb-on
-        else
-            light_symbol = "\xEE\xA8\xB5" -- U+EA35 lightbulb-outline
-        end
+        light_symbol = Semantics.lightIcon(
+            powerd and powerd:frontlightIntensity())
     end
 
     -- Night mode icon (dynamic). Moon glyph when night mode is active,
     -- sun glyph otherwise. Driven by KOReader's "night_mode" setting.
     local night_symbol = ""
     if needs("nightmode") then
-        if G_reader_settings:isTrue("night_mode") then
-            night_symbol = "\xEE\xB2\x93" -- U+EC93 weather-night
-        else
-            night_symbol = "\xEE\xB2\x98" -- U+EC98 weather-sunny
-        end
+        night_symbol = Semantics.nightmode(
+            G_reader_settings:isTrue("night_mode"))
     end
 
     -- Frontlight intensity as a 0-100 percentage with "%" suffix, matching
@@ -2860,10 +2856,8 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     local fl_intensity_pct = ""
     if needs("light_pct") then
         local pwd = Device:getPowerDevice()
-        if pwd and pwd.fl_max and pwd.fl_max > 0 then
-            fl_intensity_pct = math.floor(
-                pwd:frontlightIntensity() / pwd.fl_max * 100 + 0.5) .. "%"
-        end
+        fl_intensity_pct = Semantics.lightPct(
+            pwd and pwd:frontlightIntensity(), pwd and pwd.fl_max)
     end
 
     -- Frontlight warmth as a 0-100 percentage with "%" suffix.
@@ -2872,27 +2866,19 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     local fl_warmth_pct = ""
     if needs("warmth_pct") then
         local pwd = Device:getPowerDevice()
-        if pwd and Device:hasNaturalLight() then
-            fl_warmth_pct = math.floor(pwd:frontlightWarmth() + 0.5) .. "%"
-        end
+        fl_warmth_pct = Semantics.warmthPct(
+            pwd and pwd.frontlightWarmth and pwd:frontlightWarmth(),
+            Device:hasNaturalLight())
     end
 
-    -- Warmth icon (dynamic). Three-step ramp: thermometer-low for cool
-    -- (<34%), thermometer for mid (34-66%), thermometer-high for warm
-    -- (≥67%). Empty when the device has no natural-light hardware.
+    -- Warmth icon (dynamic). Ramp thresholds and glyphs live in
+    -- token_semantics so bookshelf cannot ramp differently.
     local warmth_symbol = ""
     if needs("warmth_icon") then
         local pwd = Device:getPowerDevice()
-        if pwd and Device:hasNaturalLight() then
-            local pct = pwd:frontlightWarmth()
-            if pct < 34 then
-                warmth_symbol = "\xEE\x88\x8C" -- U+E20C thermometer-low
-            elseif pct < 67 then
-                warmth_symbol = "\xEE\x88\x8A" -- U+E20A thermometer
-            else
-                warmth_symbol = "\xEE\x88\x8B" -- U+E20B thermometer-high
-            end
-        end
+        warmth_symbol = Semantics.warmthIcon(
+            pwd and pwd.frontlightWarmth and pwd:frontlightWarmth(),
+            Device:hasNaturalLight())
     end
 
     -- Aggregate output from plugins that register with KOReader's footer
@@ -2912,11 +2898,15 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     if needs("light", "warmth") then
         local powerd = Device:getPowerDevice()
         if needs("light") then
-            local val = powerd:frontlightIntensity()
-            fl_intensity = val == 0 and "OFF" or tostring(val)
+            fl_intensity = Semantics.light(
+                powerd and powerd:frontlightIntensity())
         end
-        if needs("warmth") and Device:hasNaturalLight() then
-            fl_warmth = tostring(powerd:toNativeWarmth(powerd:frontlightWarmth()))
+        if needs("warmth") then
+            local native
+            if powerd and powerd.toNativeWarmth and powerd.frontlightWarmth then
+                native = powerd:toNativeWarmth(powerd:frontlightWarmth())
+            end
+            fl_warmth = Semantics.warmth(native, Device:hasNaturalLight())
         end
     end
 
@@ -2946,7 +2936,7 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
                 available = memfree + (buffers or 0) + (cached or 0)
             end
             if total and available and total > 0 then
-                mem_usage = math.floor((total - available) / total * 100) .. "%"
+                mem_usage = Semantics.mem(total, available)
             end
         end
     end
@@ -2958,12 +2948,9 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         if statm then
             local line = statm:read("*l")
             statm:close()
-            if line then
-                local rss = line:match("%S+%s+(%d+)")
-                if rss then
-                    ram_mb = math.floor(tonumber(rss) * 4 / 1024) .. "M"
-                end
-            end
+            local rss = line and line:match("%S+%s+(%d+)")
+            -- statm reports PAGES; Semantics.ram takes kilobytes.
+            ram_mb = Semantics.ram(rss and tonumber(rss) * 4)
         end
     end
 
@@ -2974,9 +2961,7 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         if util.diskUsage then
             local drive = Device.home_dir or "/"
             local ok, usage = pcall(util.diskUsage, drive)
-            if ok and usage and type(usage.available) == "number" and usage.available > 0 then
-                disk_avail = string.format("%.1fG", usage.available / 1024 / 1024 / 1024)
-            end
+            if ok and usage then disk_avail = Semantics.disk(usage.available) end
         end
     end
 

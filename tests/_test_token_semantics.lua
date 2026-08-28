@@ -47,5 +47,25 @@ for _i, row in ipairs(fixture) do
     end)
 end
 
+-- Bookends' own token file must USE the module rather than carry a second
+-- copy of the rules. Grep-level assertion: cheap, and it catches the failure
+-- mode that matters (someone hand-editing a formatting rule back in).
+test("bookends_tokens.lua requires token_semantics", function()
+    local f = assert(io.open("bookends_tokens.lua", "r"))
+    local src = f:read("*a")
+    f:close()
+    assert(src:find('require("token_semantics")', 1, true)
+           or src:find("require('token_semantics')", 1, true),
+           "bookends_tokens.lua does not require token_semantics")
+end)
+
+test("bookends_tokens.lua no longer inlines the OFF literal", function()
+    local f = assert(io.open("bookends_tokens.lua", "r"))
+    local src = f:read("*a")
+    f:close()
+    assert(not src:find('== 0 and "OFF"', 1, true),
+           "the %light rule is still inlined; route it through Semantics.light")
+end)
+
 print(pass .. " passed, " .. fail .. " failed")
 os.exit(fail == 0 and 0 or 1)
