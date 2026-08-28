@@ -148,8 +148,6 @@ Tokens are placeholders that expand to live values. Type `%` followed by a name,
 | `%chap_time_left_eta` | Clock time you'd reach end of chapter | *14:47* |
 | `%book_time_left_eta` | Clock time you'd reach end of book | *18:20* |
 | `%book_finish_date` | Projected calendar date you'll finish the book | *9 Jun* |
-
-> **Time left at a TOC depth.** `%chap_time_left_N` and `%chap_time_left_N_eta{spec}` scope the remaining-time estimate to the level-`N` chapter, the same way the progress tokens above do. Both need the statistics plugin and render empty without it.
 | `%book_read_time` | Total reading time for book | *2h 30m* |
 | `%session_time` | Session reading time (skip-aware) | *0h 23m* |
 | `%session_pages` | Session pages read (skip-aware) | *14* |
@@ -161,6 +159,10 @@ Tokens are placeholders that expand to live values. Type `%` followed by a name,
 | `%book_pct_read` | Book read percentage (skip-aware) | *44* |
 | `%days_reading_book` | Distinct days you've read this book | *5* |
 | `%pages_per_day` | Pages per reading day for this book | *14* |
+
+> **Time left at a TOC depth.** `%chap_time_left_N` and `%chap_time_left_N_eta{spec}` scope the remaining-time estimate to the level-`N` chapter, the same way the progress tokens above do. Both need the statistics plugin and render empty without it.
+
+> **Duration formatting follows KOReader, not Bookends.** Every duration above is rendered by KOReader's own formatter, so the style comes from **Settings → Device → Time and date → Duration format**. The default is *classic*, which gives `7:36`; choose *letters* for `7h 36m`, or *modern* for a `7h36'` style. The examples in this table are shown in the *letters* style. Bookends deliberately does not override the choice, so durations match the rest of your reader.
 
 #### Device
 
