@@ -3,6 +3,7 @@ local datetime = require("datetime")
 local LocalDate = require("bookends_localdate")
 local BAR_PLACEHOLDER = require("bookends_overlay_widget").BAR_PLACEHOLDER
 local Semantics = require("token_semantics")
+local CalibreMeta = require("calibre_metadata")
 
 local Tokens = {}
 
@@ -112,6 +113,20 @@ local _folder_cache = nil  -- { dir = <path>, files = { <path>, ... } }
 --- Drop the memoised folder listing so the next read rescans. Called on
 --- document open/close: a folder gains and loses files between books, and
 --- nothing else would notice.
+--- Calibre custom-column fields for the open document, or nil.
+--- A seam rather than a direct call so tests can stub the reader.
+--- No settings gate, and no needs() check either: the brace dispatch only
+--- calls this when it has actually matched %calibre{...} in the format string,
+--- so the token's presence IS the trigger. Cost is proportional to use by
+--- construction rather than by a guard someone could forget. Nothing else in bookends
+--- consumes calibre data - %title and %author still come from the open
+--- document - so the blast radius is one token. See calibre_metadata.lua.
+function Tokens._calibreFieldsFor(ui)
+    local filepath = ui and ui.document and ui.document.file
+    if not filepath then return nil end
+    return CalibreMeta.fieldsFor(filepath, true)
+end
+
 function Tokens.flushFolderCache()
     _folder_cache = nil
 end
@@ -1939,6 +1954,10 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     -- name; consumed when building the substitution table. Used by the two
     -- %*_time_left_eta tokens and %book_finish_date.
     local date_formats = {}
+    -- Calibre custom-column map for this expand pass. false means "looked and
+    -- there is nothing", which is distinct from nil ("not looked yet") - a
+    -- status line naming three columns should probe once, not three times.
+    local calibre_fields = nil
 
     format_str = format_str:gsub("%%([%a_][%w_]*)(%b{})", function(name, brace)
         local content = brace:sub(2, -2)  -- strip { and }
@@ -1964,6 +1983,20 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         if name == "datetime" then
             -- Strftime escape hatch.
             return formatLocalizedDate(content)
+        end
+        if name == "calibre" then
+            -- Resolved inline like %datetime rather than rewritten to a
+            -- bareword: the field name lives in the brace, so there is no
+            -- bareword form to rewrite to. Fetched lazily and cached for the
+            -- pass. Field names match case-insensitively with or without
+            -- calibre's leading '#', so a column "#mood" answers to
+            -- %calibre{mood} and %calibre{#Mood} alike.
+            if calibre_fields == nil then
+                calibre_fields = Tokens._calibreFieldsFor(ui) or false
+            end
+            if not calibre_fields then return "" end
+            local key = tostring(content):gsub("^%s*#?", ""):gsub("%s*$", ""):lower()
+            return calibre_fields[key] or ""
         end
         -- %chap_time_left_eta{<strftime>} / %book_time_left_eta{<strftime>} /
         -- %book_finish_date{<strftime>}. Stash format and rewrite to bareword

@@ -67,5 +67,13 @@ test("bookends_tokens.lua no longer inlines the OFF literal", function()
            "the %light rule is still inlined; route it through Semantics.light")
 end)
 
+test("bookends_tokens.lua requires calibre_metadata", function()
+    local f = assert(io.open("bookends_tokens.lua", "r"))
+    local src = f:read("*a")
+    f:close()
+    assert(src:find('require("calibre_metadata")', 1, true),
+           "bookends_tokens.lua does not require calibre_metadata")
+end)
+
 print(pass .. " passed, " .. fail .. " failed")
 os.exit(fail == 0 and 0 or 1)
