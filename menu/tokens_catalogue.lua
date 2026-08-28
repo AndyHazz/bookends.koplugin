@@ -129,6 +129,8 @@ M.TOKENS = {
     { description = _("Days reading this book"), token = "%days_reading_book", chip = "session" },
     { description = _("Pages per day for this book"), token = "%pages_per_day", chip = "session" },
     { description = _("Battery level"), token = "%batt", chip = "device" },
+    { description = _("Wi-Fi icon (also answers to %wifi_icon)"), token = "%wifi", chip = "device" },
+    { description = _("Wi-Fi icon, Bookshelf's name for it"), token = "%wifi_icon", chip = "device" },
     { description = _("Plugin content"), token = "%plugin_content", chip = "device" },
     { description = _("Frontlight brightness"), token = "%light", chip = "device" },
     { description = _("Frontlight brightness %"), token = "%light_pct", chip = "device" },
