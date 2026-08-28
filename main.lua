@@ -2143,9 +2143,16 @@ function Bookends:_paintToInner(bb, x, y)
         local ok_bs, widget, _bs_w, bs_h = pcall(
             self._buildBookshelfStatusLine, self, screen_w)
         if ok_bs and widget and bs_h and bs_h > 0 then
-            widget:paintTo(bb, x + self.defaults.margin_left,
-                               y + self.defaults.margin_top)
-            self.widget_cache["__bs_status"] = widget
+            local bx, by = self.defaults.margin_left, self.defaults.margin_top
+            widget:paintTo(bb, x + bx, y + by)
+            -- Same entry shape as the position rows: the extents pass reads
+            -- entry.widget and entry.x/y, and a bare widget crashed paintTo.
+            -- The key starts with "t" on purpose - that pass buckets top vs
+            -- bottom by the key's first letter, and this strip is the topmost
+            -- thing on screen, so a "_" prefix filed it under the bottom rect
+            -- and would have mis-sized the background fill.
+            self.widget_cache["t_bookshelf_status"] =
+                { widget = widget, x = bx, y = by }
             self._bs_strip_h = bs_h
         end
     end

@@ -2946,7 +2946,7 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     -- Use [if:wifi=on]%wifi[/if] to hide on disabled, or [if:connected=yes] for
     -- connected-only.
     local wifi_symbol = ""
-    if needs("wifi") then
+    if needs("wifi", "wifi_icon") then
         local NetworkMgr = require("ui/network/manager")
         wifi_symbol = Semantics.wifi(NetworkMgr:isWifiOn(),
                                      NetworkMgr:isConnected())
@@ -3358,6 +3358,9 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         batt      = tostring(batt_lvl),
         batt_icon = tostring(batt_symbol),
         wifi      = wifi_symbol,
+        -- Same glyph under bookshelf's name for it, so a template copied
+        -- across resolves instead of printing the literal token (#348).
+        wifi_icon   = wifi_symbol,
         plugin_content = plugin_content,
         light     = fl_intensity,
         light_icon = light_symbol,
