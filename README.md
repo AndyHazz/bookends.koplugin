@@ -121,6 +121,11 @@ Tokens are placeholders that expand to live values. Type `%` followed by a name,
 | `%notes` | Number of notes | *1* |
 | `%bookmarks` | Number of bookmarks | *5* |
 | `%annotations` | Total annotations (highlights + notes + bookmarks) | *9* |
+| `%calibre{name}` | Any Calibre column, by its lookup name (the `#` is optional) | *cosy* |
+
+> **Calibre columns.** If your library is managed by Calibre, `%calibre{name}` shows any column from it, using the column's lookup name: a custom column `#mood` renders with `%calibre{mood}`. Text, list, number, date, yes/no and multi-value columns all work; long-text ("Comments") columns are skipped, being the wrong shape for a status line. Three standard fields come through the same way: `%calibre{pubdate}` (the year), `%calibre{publisher}` and `%calibre{rating}`. Conditionals work too, e.g. `[if:calibre{mood}="cosy"]Cosy read[/if]`.
+
+> This reads the `metadata.calibre` file Calibre writes into your KOReader home folder, and reads nothing at all unless one of your lines actually uses the token. One caveat worth knowing: KOReader's own wireless Calibre sync rewrites that file and permanently drops custom columns from it. A small `calibre.bookshelf.json` saved alongside preserves them and is shared with [Bookshelf](https://github.com/AndyHazz/bookshelf.koplugin) if you run both plugins.
 
 > **Author and last-digit families, typed manually.** `%author_1` through `%author_5` pick a specific author by position, the same way `%author_2` does. And `%page_num_lastdigit`, `%page_count_lastdigit`, `%pages_left_lastdigit`, `%chap_read_lastdigit`, `%chap_pages_lastdigit` and `%chap_pages_left_lastdigit` expose just the final digit of their counter, for languages whose grammar branches on it (Hungarian vowel harmony, for instance: `[if:page_num_lastdigit=3]`). Neither family appears in the token picker.
 

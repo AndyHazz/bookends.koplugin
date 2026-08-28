@@ -15,6 +15,10 @@ package.loaded["datetime"] = {
     secondsToClockDuration = function() return "" end,
 }
 package.loaded["bookends_overlay_widget"] = { BAR_PLACEHOLDER = "\x00BAR\x00" }
+-- menu/tokens_catalogue.lua wraps its descriptions in gettext at load, and the
+-- real bookends_i18n pulls in KOReader's logger and gettext. Stubbed the way
+-- _test_token_favourites does it, so the catalogue holds source strings.
+package.loaded["bookends_i18n"] = { gettext = function(str) return str end }
 _G.G_reader_settings = setmetatable({}, {
     __index = function() return function() return false end end,
     readSetting = function() return "classic" end,
@@ -122,6 +126,23 @@ end)
 
 test("a conditional does not stop %calibre resolving in the body", function()
     eq(expand("[if:calibre{mood}]%calibre{mood}[/if]"), "cosy")
+end)
+
+test("preview mode does not leak the literal token into a menu label", function()
+    local shown = Tokens.expandPreview("%calibre{mood}", ui, 0, 0, 2, nil)
+    assert(not shown:find("%calibre", 1, true),
+           "preview leaked the literal token: " .. shown)
+end)
+
+test("the catalogue offers %calibre", function()
+    local cat = dofile("menu/tokens_catalogue.lua")
+    local found = false
+    for _i, entry in ipairs(cat.TOKENS or {}) do
+        if tostring(entry.token or ""):find("calibre", 1, true) then
+            found = true
+        end
+    end
+    assert(found, "%calibre is not in the token catalogue")
 end)
 
 print(pass .. " passed, " .. fail .. " failed")

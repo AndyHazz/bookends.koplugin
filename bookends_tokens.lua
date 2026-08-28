@@ -2110,6 +2110,17 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         end)
         r = r:gsub("%%bar", preview.bar)
         -- Handle %datetime{...} — in preview mode, actually expand it (not a placeholder)
+        -- %calibre{col} resolves for REAL in preview, like %datetime below:
+        -- the document is open while the line editor is up, so the actual
+        -- column value is available and far more useful than a placeholder.
+        -- Without this branch the literal characters "%calibre{col}" reach
+        -- the menu label, which is what a reader would read as broken.
+        r = r:gsub("%%calibre(%b{})", function(brace)
+            local fields = Tokens._calibreFieldsFor(ui)
+            if not fields then return "" end
+            local key = brace:sub(2, -2):gsub("^%s*#?", ""):gsub("%s*$", ""):lower()
+            return fields[key] or ""
+        end)
         r = r:gsub("%%datetime(%b{})", function(brace)
             return formatLocalizedDate(brace:sub(2, -2))
         end)

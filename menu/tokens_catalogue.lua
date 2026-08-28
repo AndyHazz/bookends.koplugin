@@ -48,6 +48,7 @@ M.TOKENS = {
     { description = _("Document files in folder"), token = "%file_count", chip = "book" },
     { description = _("Book language"), token = "%lang", chip = "book" },
     { description = _("Document format (EPUB, PDF, etc.)"), token = "%format", chip = "book" },
+    { description = _("Calibre column by name, e.g. %calibre{mood}"), token = "%calibre{}", chip = "book", is_snippet = true },
     { description = _("Highlights count"), token = "%highlights", chip = "book" },
     { description = _("Notes count"), token = "%notes", chip = "book" },
     { description = _("Bookmarks count"), token = "%bookmarks", chip = "book" },
