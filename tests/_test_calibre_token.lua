@@ -46,9 +46,31 @@ Tokens._calibreFieldsFor = function()
     return FIELDS
 end
 
+-- A minimally complete reader UI. The conditional path in buildConditionState
+-- reaches for flow-aware page totals and the TOC, so a document stub with only
+-- a filepath is not enough once [if:...] is involved.
 local ui = {
-    document = { file = "/library/book.epub" },
-    view = { state = { page = 1 } },
+    document = {
+        file              = "/library/book.epub",
+        getCurrentPage    = function() return 100 end,
+        hasHiddenFlows    = function() return false end,
+        getPageCount      = function() return 500 end,
+        getTotalPagesLeft = function() return 400 end,
+    },
+    toc = {
+        toc = { { page = 1, title = "One", depth = 1 },
+                { page = 50, title = "Two", depth = 1 } },
+        getPreviousChapter  = function() return 50 end,
+        isChapterStart      = function() return false end,
+        getNextChapter      = function() return 200 end,
+        getChapterPagesLeft = function() return 100 end,
+        getChapterPagesDone = function() return 50 end,
+        getChapterPageCount = function() return 150 end,
+        getTocTitleByPage   = function() return "Two" end,
+        getMaxDepth         = function() return 1 end,
+    },
+    statistics = { avg_time = 30 },
+    view = { state = { page = 100 } },
 }
 
 local function expand(fmt)
@@ -83,6 +105,23 @@ test("no %calibre in the template means the reader is never consulted", function
     assert(not consulted,
            "the calibre file was probed for a template that does not name it; "
            .. "needs() is the gate and it leaked")
+end)
+
+test("[if:calibre{field}] is truthy when the column has a value", function()
+    eq(expand("[if:calibre{mood}]cosy book[/if]"), "cosy book")
+end)
+
+test("[if:calibre{field}] is falsy when the column is absent", function()
+    eq(expand("[if:calibre{nosuchcolumn}]never[/if]"), "")
+end)
+
+test("[if:calibre{field}=value] compares the string", function()
+    eq(expand('[if:calibre{mood}="cosy"]yes[else]no[/if]'), "yes")
+    eq(expand('[if:calibre{mood}="bleak"]yes[else]no[/if]'), "no")
+end)
+
+test("a conditional does not stop %calibre resolving in the body", function()
+    eq(expand("[if:calibre{mood}]%calibre{mood}[/if]"), "cosy")
 end)
 
 print(pass .. " passed, " .. fail .. " failed")

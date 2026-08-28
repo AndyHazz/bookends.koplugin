@@ -1175,7 +1175,18 @@ local function evaluateCondition(cond_str, state)
     -- Key pattern allows underscores ([%w_]+) to support names like book_pct.
     -- Operator pattern matches =, !=, <, >, <=, >=.
     -- Two-char operators are tried first so the longer match wins.
-    local key, op, value = cond_str:match("^([%w_]+)(>=)(.+)$")
+    -- Braced keys FIRST: [if:calibre{mood}="cosy"]. `[%w_]+` alone stops at
+    -- `calibre` and then finds `{` where it wants an operator, so without these
+    -- the whole condition falls through to the truthy path below, fails there
+    -- too, and silently swallows the branch. %b{} is a valid pattern item and
+    -- does not match plain keys, so every existing conditional is unaffected.
+    -- Conditionals are processed before the brace dispatch in Tokens.expand,
+    -- which is why resolving them here is the only option.
+    local key, op, value = cond_str:match("^([%w_]+%b{})(>=)(.+)$")
+    if not key then key, op, value = cond_str:match("^([%w_]+%b{})(<=)(.+)$") end
+    if not key then key, op, value = cond_str:match("^([%w_]+%b{})(!=)(.+)$") end
+    if not key then key, op, value = cond_str:match("^([%w_]+%b{})([=<>])(.+)$") end
+    if not key then key, op, value = cond_str:match("^([%w_]+)(>=)(.+)$") end
     if not key then key, op, value = cond_str:match("^([%w_]+)(<=)(.+)$") end
     if not key then key, op, value = cond_str:match("^([%w_]+)(!=)(.+)$") end
     if not key then key, op, value = cond_str:match("^([%w_]+)([=<>])(.+)$") end
@@ -1231,7 +1242,9 @@ local function evaluateCondition(cond_str, state)
         return false
     end
     -- No operator: truthy check
-    local key_only = cond_str:match("^([%w_]+)$")
+    -- Braced form first, same reasoning as the operator patterns above.
+    local key_only = cond_str:match("^([%w_]+%b{})$")
+                  or cond_str:match("^([%w_]+)$")
     if key_only then
         -- Try the key as-is first; fall back to aliased key if not found.
         local v = state[key_only]
@@ -1783,6 +1796,20 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
     if paint_ctx then
         paint_ctx._condition_state = state
     end
+    -- Calibre columns named by THIS template only. Scanning the format string
+    -- keeps an unnamed column free, matching how needs() gates the rest of the
+    -- expensive state. Keyed exactly as written, braces included, so
+    -- evaluateCondition can look up "calibre{mood}" verbatim - the value is
+    -- normalised for the field lookup, the key is not.
+    if format_str and format_str:find("calibre{", 1, true) then
+        local fields = Tokens._calibreFieldsFor(ui)
+        for raw in format_str:gmatch("calibre(%b{})") do
+            local inner = raw:sub(2, -2)
+            local key = tostring(inner):gsub("^%s*#?", ""):gsub("%s*$", ""):lower()
+            state["calibre" .. raw] = (fields and fields[key]) or ""
+        end
+    end
+
     return state
 end
 
@@ -1912,7 +1939,10 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     -- buildConditionState will reuse paint_ctx._condition_state if present,
     -- so multiple lines with [if:...] in the same paint share one build.
     if not preview_mode and format_str:find("%[if:") then
-        local state = Tokens.buildConditionState(ui, session_elapsed, session_pages_read, paint_ctx, stats_cache)
+        -- format_str is passed so buildConditionState can gate the columns it
+        -- resolves for [if:calibre{...}] to the ones this template names.
+        local state = Tokens.buildConditionState(ui, session_elapsed,
+            session_pages_read, paint_ctx, stats_cache, format_str)
         format_str = processConditionals(format_str, state)
         -- After stripping false branches, check if anything remains to expand
         if not format_str:find("%%") then
