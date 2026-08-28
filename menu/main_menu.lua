@@ -1,6 +1,7 @@
 --- Top-level Bookends menu (entry point from KOReader main menu).
 local Font = require("ui/font")
 local Tokens = require("bookends_tokens")
+local StatusLine = require("status_line")
 local Updater = require("bookends_updater")
 local Utils = require("bookends_utils")
 local _ = require("bookends_i18n").gettext
@@ -271,6 +272,30 @@ function Bookends:buildBookendsSettingsMenu()
             callback = function()
                 self.enabled = not self.enabled
                 self.settings:saveSetting("enabled", self.enabled)
+                self:markDirty()
+            end,
+        },
+        -- Mirrors the status line Bookshelf shows across the top of its
+        -- expanded shelf, so the strip reads the same in the reader (#348).
+        -- Edited in Bookshelf, not here: two editors for one line would drift,
+        -- and this one is a mirror by definition.
+        {
+            text_func = function()
+                local _cfg, customised = StatusLine.fromSettings(G_reader_settings)
+                if customised then
+                    return _("Use Bookshelf status line")
+                end
+                return _("Use Bookshelf status line") .. " (" .. _("default") .. ")"
+            end,
+            help_text = _("Shows Bookshelf's status line above the top row, with the same text, font and alignment, so it does not change as you move between the shelf and a book. Edit it in Bookshelf."),
+            checked_func = function()
+                return self.defaults.bookshelf_status_line and true or false
+            end,
+            callback = function()
+                self.defaults.bookshelf_status_line =
+                    not self.defaults.bookshelf_status_line
+                self.settings:saveSetting("bookshelf_status_line",
+                                          self.defaults.bookshelf_status_line)
                 self:markDirty()
             end,
         },

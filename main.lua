@@ -33,6 +33,7 @@ local InfoMessage = require("ui/widget/infomessage")
 local InputDialog = require("ui/widget/inputdialog")
 local OverlayWidget = require("bookends_overlay_widget")
 local Tokens = require("bookends_tokens")
+local StatusLine = require("status_line")
 local Updater = require("bookends_updater")
 local UIManager = require("ui/uimanager")
 local Utils = require("bookends_utils")
@@ -697,6 +698,10 @@ function Bookends:loadSettings()
         margin_left   = self.settings:readSetting("margin_left", self.DEFAULT_MARGINS.margin_left),
         margin_right  = self.settings:readSetting("margin_right", self.DEFAULT_MARGINS.margin_right),
         font_scale = self.settings:readSetting("font_scale", 100),
+        -- Mirror bookshelf's status line above the top row (#348). Off by
+        -- default: it is only meaningful to someone running both plugins, and
+        -- it moves the top row down, which nobody should get unasked.
+        bookshelf_status_line = self.settings:readSetting("bookshelf_status_line", false),
         overlap_gap = self.settings:readSetting("overlap_gap", 50),
         truncation_priority = self.settings:readSetting("truncation_priority", "center"),
     }
@@ -1786,6 +1791,37 @@ function Bookends:_assembleFillPositionsData(active_line_indices)
     return data
 end
 
+--- Build the mirrored bookshelf status line, or nil when it is switched off.
+--- Returns widget, w, h.
+---
+--- Renders bookshelf's OWN status region: same template, font, size, weight,
+--- case and alignment, so the strip reads identically whether the reader is
+--- looking at the shelf or at a book (#348). The config is resolved through
+--- the vendored status_line module, which supplies bookshelf's defaults when
+--- the user has never edited the region - which is most installs, since
+--- bookshelf writes that settings key only on an edit.
+---
+--- Full width by design: bookshelf's expanded strip spans the content width,
+--- and its default template leads with a %spacer split that only makes sense
+--- across the whole line.
+function Bookends:_buildBookshelfStatusLine(screen_w)
+    if not self.defaults.bookshelf_status_line then return nil end
+    local cfg = StatusLine.fromSettings(G_reader_settings)
+    if not cfg or type(cfg.template) ~= "string" or cfg.template == "" then
+        return nil
+    end
+    local text = Tokens.expand(cfg.template, self.ui, self.session_elapsed,
+                               self.session_pages_read, false,
+                               self.defaults.tick_width_multiplier, nil)
+    if not text or text == "" then return nil end
+    local line_cfg = self:resolveLineConfig(cfg.font_face, cfg.font_size,
+                                            cfg.bold and "bold" or nil)
+    line_cfg.uppercase = cfg.uppercase and true or false
+    local avail = screen_w - self.defaults.margin_left - self.defaults.margin_right
+    return OverlayWidget.buildTextWidget({ text }, { line_cfg },
+                                         cfg.alignment or "right", nil, avail)
+end
+
 function Bookends:_paintToInner(bb, x, y)
     self._hold_rects = {}
     self._bookmark_pages = self:getBookmarkPages()
@@ -2095,6 +2131,25 @@ function Bookends:_paintToInner(bb, x, y)
     end
     self.widget_cache = {}
 
+    -- The mirrored bookshelf status line sits ABOVE the top row, so it is
+    -- built first: the top row needs its height to know how far to move down,
+    -- and a strip that overlapped tl/tc/tr would be worse than no strip.
+    self._bs_strip_h = 0
+    do
+        -- pcall'd because this reaches into another plugin's settings and
+        -- expands a template the reader never wrote: a raise here would take
+        -- the whole overlay paint down, and an absent strip is a far better
+        -- failure than a blank screen.
+        local ok_bs, widget, _bs_w, bs_h = pcall(
+            self._buildBookshelfStatusLine, self, screen_w)
+        if ok_bs and widget and bs_h and bs_h > 0 then
+            widget:paintTo(bb, x + self.defaults.margin_left,
+                               y + self.defaults.margin_top)
+            self.widget_cache["__bs_status"] = widget
+            self._bs_strip_h = bs_h
+        end
+    end
+
     for _, row in ipairs({"top", "bottom"}) do
         local left_key = row == "top" and "tl" or "bl"
         local center_key = row == "top" and "tc" or "bc"
@@ -2200,6 +2255,10 @@ function Bookends:_paintToInner(bb, x, y)
                 if widget then
                     local v_margin, h_margin = self:getMargin(key)
                     local v_off = self:getPositionSetting(key, "v_offset") + v_margin
+                    -- Make room for the mirrored status strip above the top row.
+                    if pb.pos_def.v_anchor == "top" then
+                        v_off = v_off + (self._bs_strip_h or 0)
+                    end
                     local h_off = self:getPositionSetting(key, "h_offset") + h_margin
                     local px, py = OverlayWidget.computeCoordinates(
                         pb.pos_def.h_anchor, pb.pos_def.v_anchor,
