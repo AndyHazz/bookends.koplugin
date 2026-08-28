@@ -2,6 +2,7 @@ local Device = require("device")
 local datetime = require("datetime")
 local LocalDate = require("bookends_localdate")
 local BAR_PLACEHOLDER = require("bookends_overlay_widget").BAR_PLACEHOLDER
+local SPACER_PLACEHOLDER = require("bookends_overlay_widget").SPACER_PLACEHOLDER
 local Semantics = require("token_semantics")
 local CalibreMeta = require("calibre_metadata")
 
@@ -2203,6 +2204,7 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     end
 
     local has_bar = format_str:find("%%bar") ~= nil
+    local has_spacer = format_str:find("%%spacer") ~= nil
 
     local pageno = getCurrentPageNumber(ui)
     local doc = ui.document
@@ -3063,10 +3065,23 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         end
     end
 
-    -- Replace bar tokens with a placeholder so buildBarLine knows where to insert the bar.
+    -- Replace the elastic tokens with placeholders so the renderer knows where
+    -- to put the widget. Both %bar and %spacer take "whatever width is left",
+    -- so a line can only honour ONE of them:
+    --   * %bar wins if present, being the older and more visible feature;
+    --   * otherwise the FIRST %spacer becomes the gap;
+    --   * every other occurrence is stripped, never left as literal text -
+    --     a reader who wrote two of them should see a sensible line, not the
+    --     word "spacer" sitting in the middle of it.
     local result_str = format_str
     if has_bar then
         result_str = result_str:gsub("%%bar", BAR_PLACEHOLDER)
+        if has_spacer then
+            result_str = result_str:gsub("%%spacer", "")
+        end
+    elseif has_spacer then
+        result_str = result_str:gsub("%%spacer", SPACER_PLACEHOLDER, 1)
+        result_str = result_str:gsub("%%spacer", "")
     end
 
     local replace = {

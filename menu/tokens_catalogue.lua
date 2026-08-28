@@ -71,6 +71,7 @@ M.TOKENS = {
     { description = _("Total pages in chapter"), token = "%chap_pages", chip = "progress" },
     { description = _("Pages left in chapter"), token = "%chap_pages_left", chip = "progress" },
     { description = _("Pages left in book"), token = "%pages_left", chip = "progress" },
+    { description = _("Elastic gap: pushes the rest of the line to the far edge"), token = "%spacer", chip = "progress" },
     { description = _("Progress bar (configure type in line editor)"), token = "%bar", chip = "progress" },
     { description = _("Fixed-width progress bar (100px)"), token = "%bar{100}", chip = "progress" },
     { description = _("Progress bar, 10px tall"), token = "%bar{v10}", chip = "progress" },
