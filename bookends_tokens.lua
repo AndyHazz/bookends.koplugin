@@ -1514,6 +1514,16 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
     -- ToggleNightMode handlers in devicelistener.lua).
     state.night = G_reader_settings:isTrue("night_mode") and "on" or "off"
 
+    -- [if:full_width] (#348). Bookshelf sets this on the state for its
+    -- FULL-WIDTH status line and leaves it empty in the narrow cover-view
+    -- column, so a template can surface extra content only where there is room
+    -- (its issue #178). Every bookends line spans the screen, so the honest
+    -- answer here is always "yes" - and giving that answer matters: a template
+    -- copied across with [if:full_width] in it would otherwise silently drop
+    -- the guarded content, which reads as the token being broken. Overridable
+    -- via opts so the mirrored region can state it explicitly.
+    state.full_width = "yes"
+
     -- Page-based state
     local pageno = getCurrentPageNumber(ui)
     local doc = ui.document
