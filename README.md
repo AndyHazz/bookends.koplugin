@@ -52,6 +52,22 @@ Want to share a preset? See the [gallery repo's README](https://github.com/AndyH
 
 **Presets folder shortcut** — the presets folder registers itself with KOReader's *Folder shortcuts*, so you can jump straight to it from the file manager (long-press the folder icon in the title bar → **Folder shortcuts** → **Add** → *Bookends presets folder*). Handy for copying preset files on or off the device by hand. Needs a KOReader release with folder shortcuts; on older builds the entry simply doesn't appear.
 
+### Auto preset by file type
+
+Bookends can switch preset, or hide itself entirely, depending on the file you open. Under **Bookends settings > Auto preset by file type**, choose **Add rule…**, type a file extension, then pick either a preset or **Hidden (no overlay)**.
+
+| Rule | Effect |
+|------|--------|
+| `CBZ > Hidden` | No overlay at all while reading CBZ files |
+| `PDF > Compact` | Switches to your "Compact" preset for PDFs |
+| `EPUB > Rich detail` | Switches to "Rich detail" for EPUBs |
+
+Comics and manga are the case this was built for: hiding the overlay for CBZ and CBR keeps the artwork clear, and opening an EPUB again restores your usual preset with nothing to toggle by hand.
+
+Rules match on the extension, so one rule covers every file of that type. Long-press a rule to change or remove it.
+
+> **Your normal preset is remembered separately.** Bookends tracks the preset you chose yourself, distinct from whatever a rule switched you to, so removing a rule (or opening a file type with no rule) puts you back where you were rather than leaving you on the last rule's preset.
+
 ### Screen positions
 
 ```
@@ -92,6 +108,8 @@ Tokens are placeholders that expand to live values. Type `%` followed by a name,
 | `%series_num` | Series number only | *1* |
 | `%chap_title` | Chapter/section title (deepest level) | *Chapter 3: The Valley* |
 | `%chap_title_1`…`%chap_title_9` | Chapter title at TOC depth N (menu shows 1–3; deeper levels work when typed manually) | `%chap_title_1` → *Part II*, `%chap_title_2` → *Chapter 3* |
+| `%chap_title_num` | Just the number parsed out of the chapter title, when one is detected | *3* |
+| `%chap_title_name` | The chapter title with its leading number stripped | *The Valley* |
 | `%chap_num` | Current chapter number | *3* |
 | `%chap_count` | Total chapter count | *24* |
 | `%filename` | File name (no path/extension) | *The_Great_Gatsby* |
@@ -103,6 +121,8 @@ Tokens are placeholders that expand to live values. Type `%` followed by a name,
 | `%notes` | Number of notes | *1* |
 | `%bookmarks` | Number of bookmarks | *5* |
 | `%annotations` | Total annotations (highlights + notes + bookmarks) | *9* |
+
+> **Author and last-digit families, typed manually.** `%author_1` through `%author_5` pick a specific author by position, the same way `%author_2` does. And `%page_num_lastdigit`, `%page_count_lastdigit`, `%pages_left_lastdigit`, `%chap_read_lastdigit`, `%chap_pages_lastdigit` and `%chap_pages_left_lastdigit` expose just the final digit of their counter, for languages whose grammar branches on it (Hungarian vowel harmony, for instance: `[if:page_num_lastdigit=3]`). Neither family appears in the token picker.
 
 > **`%file_num` / `%file_count`** count the document files in the folder the open book sits in, ordered the same way the file manager shows them (your **sort by** and **reverse sorting** settings both apply). Mainly useful for comics and manga kept as one file per chapter, where the page and chapter tokens can only describe the chapter you're in: `File %file_num/%file_count` → *File 5/10*. The folder is read once per book opened, and only if one of these two tokens is in your preset.
 
@@ -159,6 +179,14 @@ Tokens are placeholders that expand to live values. Type `%` followed by a name,
 | `%book_pct_read` | Book read percentage (skip-aware) | *44* |
 | `%days_reading_book` | Distinct days you've read this book | *5* |
 | `%pages_per_day` | Pages per reading day for this book | *14* |
+| `%total_read_time` | Lifetime reading time across all books | *42h 10m* |
+| `%time_today_book` | Reading time today, this book only | *0h 40m* |
+| `%pages_today_book` | Pages read today, this book only | *18* |
+| `%time_week_book` | Reading time this week, this book only | *3h 05m* |
+| `%pages_week_book` | Pages read this week, this book only | *96* |
+| `%streak` | Consecutive days you've read anything | *7* |
+| `%book_streak` | Consecutive days you've read this book | *3* |
+| `%books_finished` | Books you've finished (lifetime) | *24* |
 
 > **Time left at a TOC depth.** `%chap_time_left_N` and `%chap_time_left_N_eta{spec}` scope the remaining-time estimate to the level-`N` chapter, the same way the progress tokens above do. Both need the statistics plugin and render empty without it.
 
@@ -173,7 +201,12 @@ Tokens are placeholders that expand to live values. Type `%` followed by a name,
 | `%wifi` | Wi-Fi icon (dynamic) | Hidden when off, changes when connected/disconnected |
 | `%plugin_content` | Plugin content (dynamic) | Aggregates output from plugins that register with KOReader's footer hook (e.g. `kobo.koplugin` Bluetooth, `readtimer.koplugin` countdown); hidden when none are reporting. Add a brace filter to restrict to one plugin: `%plugin_content{readtimer}` shows only the read-timer countdown, `%plugin_content{kobo}` only kobo.koplugin's contribution. |
 | `%light` | Frontlight brightness | *18* or *OFF* |
+| `%light_pct` | Frontlight brightness as a percentage | *56%* |
+| `%light_icon` | Frontlight icon (dynamic) | Lit bulb when on, outline when off |
 | `%warmth` | Frontlight warmth | *12* |
+| `%warmth_pct` | Frontlight warmth as a percentage | *50%* |
+| `%warmth_icon` | Warmth icon (dynamic) | Shown on devices with a warm frontlight |
+| `%nightmode` | Night-mode icon (dynamic) | Moon when inverted, sun when not |
 | `%mem` | RAM usage percentage | *33%* |
 | `%ram` | RAM usage in MiB | *128 MiB* |
 | `%disk` | Free disk space | *2.4 GB* |
