@@ -2207,6 +2207,23 @@ function Bookends:_paintToInner(bb, x, y)
                 local max_width = limits[rk.limit_key]
                 local widget, w, h
 
+                -- #108: a line with NO overlapping neighbour got no limit at
+                -- all, so a long chapter title simply exceeded the screen.
+                -- computeCoordinates then centred (or right-anchored) it to a
+                -- NEGATIVE x, and the START of the text ran off the left edge
+                -- and was clipped - which is what the reporter photographed:
+                -- "wenty-Eight: Welcome to the Revolution" with the "Chapter T"
+                -- missing. Truncation was always the intent; it was just
+                -- conditional on a collision that had not happened.
+                -- Left-anchored lines are exempt: they start at the margin and
+                -- run off the RIGHT, which the existing ellipsis path handles.
+                if not max_width then
+                    local _, hmargin = self:getMargin(key)
+                    local hoffset = self:getPositionSetting(key, "h_offset")
+                    local room = math.max(0, screen_w - 2 * (hmargin + hoffset))
+                    if pb.w and pb.w > room then max_width = room end
+                end
+
                 if max_width then
                     -- Truncation needed: free pre-built widget and rebuild with limit
                     if pb.widget and pb.widget.free then pb.widget:free() end
