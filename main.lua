@@ -1821,6 +1821,29 @@ function Bookends:_buildBookshelfStatusLine(screen_w)
                                self.session_pages_read, false,
                                self.defaults.tick_width_multiplier, nil)
     if not text or text == "" then return nil end
+
+    -- Library-wide numbers bookends does not compute. Bookshelf publishes what
+    -- it has already worked out (see StatusLine.STATS_KEY) and we substitute
+    -- it here. Slightly stale is the RIGHT answer: the promise of this strip
+    -- is that it does not change between the shelf and a book, and matching
+    -- what the shelf last showed keeps that promise better than a recount.
+    local stats = StatusLine.sharedStats(G_reader_settings)
+    for token, field in pairs(StatusLine.SHARED_STATS) do
+        if text:find("%" .. token, 1, true) then
+            local v = stats[field]
+            if token == "time_today_minutes" then
+                v = v and string.format("%dh %02dm", math.floor(v / 60), v % 60)
+            end
+            text = text:gsub("%%" .. token, v ~= nil and tostring(v) or "")
+        end
+    end
+
+    -- Anything still unresolved is BLANKED rather than left as text. This is
+    -- bookshelf's line, and it may legitimately use a token bookends has no
+    -- equivalent for; showing the reader "Books read: %books_read" is never
+    -- the right answer, and an empty gap at least reads as missing data.
+    text = text:gsub("%%[a-z_][a-z_0-9]*", "")
+    if text:match("^%s*$") then return nil end
     local line_cfg = self:resolveLineConfig(cfg.font_face, cfg.font_size,
                                             cfg.bold and "bold" or nil)
     line_cfg.uppercase = cfg.uppercase and true or false
@@ -2013,8 +2036,14 @@ function Bookends:_paintToInner(bb, x, y)
         local ok_bs, widget, _bs_w, bs_h, bs_pad = pcall(
             self._buildBookshelfStatusLine, self, screen_w)
         if ok_bs and widget and bs_h and bs_h > 0 then
-            local bx, by = bs_pad or self.defaults.margin_left,
-                           self.defaults.margin_top
+            -- Bookshelf insets this strip by its content padding on ALL sides,
+            -- so the mirror uses that padding vertically too, not bookends'
+            -- own margin_top. Measured before this: the reader strip sat 27px
+            -- higher than bookshelf's, which is exactly 37 minus 10 - the two
+            -- plugins' respective top insets. Matching x but not y is not
+            -- "does not move".
+            local bx = bs_pad or self.defaults.margin_left
+            local by = bs_pad or self.defaults.margin_top
             widget:paintTo(bb, x + bx, y + by)
             -- Same entry shape as the position rows: the extents pass reads
             -- entry.widget and entry.x/y, and a bare widget crashed paintTo.
@@ -2024,7 +2053,12 @@ function Bookends:_paintToInner(bb, x, y)
             -- and would have mis-sized the background fill.
             self.widget_cache["t_bookshelf_status"] =
                 { widget = widget, x = bx, y = by }
-            self._bs_strip_h = bs_h
+            -- What the top row must clear is the strip's BOTTOM edge, not just
+            -- its height: it starts at `by`, not at the top of the screen. The
+            -- row's own offset already includes margin_top, so subtract that
+            -- to avoid counting it twice.
+            self._bs_strip_h = math.max(0,
+                by + bs_h - (self.defaults.margin_top or 0))
         end
     end
 
