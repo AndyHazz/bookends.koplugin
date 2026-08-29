@@ -418,7 +418,13 @@ function Updater.install(zip_url, old_version, new_version, on_success, error_la
             local file = io.open(zip_path, "wb")
             if file then
                 local ok_dl, code = pcall(function()
-                    socketutil:set_timeout(socketutil.FILE_BLOCK_TIMEOUT, socketutil.FILE_TOTAL_TIMEOUT)
+                    -- Idle timeout only, NO total cap: FILE_TOTAL_TIMEOUT is
+                    -- an ABSOLUTE 60s ceiling on the whole transfer, which
+                    -- fails a download that is merely SLOW rather than stalled.
+                    -- FILE_BLOCK_TIMEOUT still catches a dead connection in
+                    -- 15s. Bookshelf hit this hardest (its zip is 6x larger),
+                    -- but the ceiling is wrong for both.
+                    socketutil:set_timeout(socketutil.FILE_BLOCK_TIMEOUT, -1)
                     local c = socket.skip(1, http.request({
                         url = zip_url,
                         method = "GET",
