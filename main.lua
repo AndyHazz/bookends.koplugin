@@ -698,10 +698,6 @@ function Bookends:loadSettings()
         margin_left   = self.settings:readSetting("margin_left", self.DEFAULT_MARGINS.margin_left),
         margin_right  = self.settings:readSetting("margin_right", self.DEFAULT_MARGINS.margin_right),
         font_scale = self.settings:readSetting("font_scale", 100),
-        -- Mirror bookshelf's status line above the top row (#348). Off by
-        -- default: it is only meaningful to someone running both plugins, and
-        -- it moves the top row down, which nobody should get unasked.
-        bookshelf_status_line = self.settings:readSetting("bookshelf_status_line", false),
         overlap_gap = self.settings:readSetting("overlap_gap", 50),
         truncation_priority = self.settings:readSetting("truncation_priority", "center"),
     }
@@ -1599,15 +1595,21 @@ function Bookends:_computeBarProgress(bar_cfg, pageno_local)
 end
 
 --- Compute the pixel rectangle (x,y,w,h) of a bar given its anchor/margins.
-local function computeBarRect(bar_cfg, x, y, screen_w, screen_h)
+-- top_inset: height of the mirrored bookshelf status line, when shown. Every
+-- top-anchored bar has to clear it for the same reason the top text rows do -
+-- otherwise the strip and the bar occupy the same pixels. Vertical bars get
+-- their top edge pushed down and their height reduced, so a full-height bar
+-- still ends where it did rather than overrunning the bottom.
+local function computeBarRect(bar_cfg, x, y, screen_w, screen_h, top_inset)
+    top_inset = top_inset or 0
     local anchor = bar_cfg.v_anchor or "bottom"
     local vertical = anchor == "left" or anchor == "right"
     local is_radial = (bar_cfg.style or "solid") == "radial" or bar_cfg.style == "radial_hollow"
     local bar_thickness = bar_cfg.height or (is_radial and 60 or 20)
     if vertical then
         -- margin_left/right reinterpreted as top/bottom insets
-        local bar_h = screen_h - (bar_cfg.margin_left or 0) - (bar_cfg.margin_right or 0)
-        local bar_y = y + (bar_cfg.margin_left or 0)
+        local bar_h = screen_h - (bar_cfg.margin_left or 0) - (bar_cfg.margin_right or 0) - top_inset
+        local bar_y = y + (bar_cfg.margin_left or 0) + top_inset
         local bar_x
         if anchor == "left" then
             bar_x = x + (bar_cfg.margin_v or 0)
@@ -1626,7 +1628,7 @@ local function computeBarRect(bar_cfg, x, y, screen_w, screen_h)
         local bar_x = x + (bar_cfg.margin_left or 0)
         local bar_y
         if anchor == "top" then
-            bar_y = y + (bar_cfg.margin_v or 0)
+            bar_y = y + (bar_cfg.margin_v or 0) + top_inset
         else
             bar_y = y + screen_h - bar_thickness - (bar_cfg.margin_v or 0)
         end
@@ -1655,7 +1657,8 @@ function Bookends:_renderProgressBars(bb, x, y, screen_w, screen_h)
 
     for _bar_idx, bar_cfg in ipairs(self.progress_bars or {}) do
         if bar_cfg.enabled then
-            local bar_x, bar_y, bar_w, bar_h, vertical = computeBarRect(bar_cfg, x, y, screen_w, screen_h)
+            local bar_x, bar_y, bar_w, bar_h, vertical = computeBarRect(
+                bar_cfg, x, y, screen_w, screen_h, self._bs_strip_h or 0)
             if bar_w > 0 and bar_h > 0 then
                 local pageno_local = Tokens.getCurrentPageNumber(self.ui) or 0
                 local pct, ticks = self:_computeBarProgress(bar_cfg, pageno_local)
@@ -1805,9 +1808,13 @@ end
 --- and its default template leads with a %spacer split that only makes sense
 --- across the whole line.
 function Bookends:_buildBookshelfStatusLine(screen_w)
-    if not self.defaults.bookshelf_status_line then return nil end
     local cfg = StatusLine.fromSettings(G_reader_settings)
-    if not cfg or type(cfg.template) ~= "string" or cfg.template == "" then
+    -- The switch lives in BOOKSHELF, beside the line it controls, rather than
+    -- in bookends' own settings: it is bookshelf's status line, edited in
+    -- bookshelf, so a second copy of the toggle over here would be a second
+    -- thing to keep in step. Absent or off means simply do nothing.
+    if not (cfg and cfg.show_in_reader) then return nil end
+    if type(cfg.template) ~= "string" or cfg.template == "" then
         return nil
     end
     local text = Tokens.expand(cfg.template, self.ui, self.session_elapsed,
@@ -1984,6 +1991,43 @@ function Bookends:_paintToInner(bb, x, y)
 
     -- Phase 0: Render full-width progress bars (drawn behind text, on top
     -- of BG fill). text_color / symbol_color are read directly above.
+    -- Freed and reset here rather than in the position phase below, because
+    -- the status strip is now the FIRST thing to put an entry in it.
+    if self.widget_cache then
+        OverlayWidget.freeWidgets(self.widget_cache)
+    end
+    self.widget_cache = {}
+
+    -- The mirrored bookshelf status line sits ABOVE everything else, so it is
+    -- built FIRST: both the top text rows and any top-anchored progress bar
+    -- need its height to know how far to move down. Built before
+    -- _renderProgressBars specifically because bars are painted there, and
+    -- reading _bs_strip_h after the fact would use the PREVIOUS paint's value
+    -- - stale by one frame, and zero on the very first paint.
+    self._bs_strip_h = 0
+    do
+        -- pcall'd because this reaches into another plugin's settings and
+        -- expands a template the reader never wrote: a raise here would take
+        -- the whole overlay paint down, and an absent strip is a far better
+        -- failure than a blank screen.
+        local ok_bs, widget, _bs_w, bs_h, bs_pad = pcall(
+            self._buildBookshelfStatusLine, self, screen_w)
+        if ok_bs and widget and bs_h and bs_h > 0 then
+            local bx, by = bs_pad or self.defaults.margin_left,
+                           self.defaults.margin_top
+            widget:paintTo(bb, x + bx, y + by)
+            -- Same entry shape as the position rows: the extents pass reads
+            -- entry.widget and entry.x/y, and a bare widget crashed paintTo.
+            -- The key starts with "t" on purpose - that pass buckets top vs
+            -- bottom by the key's first letter, and this strip is the topmost
+            -- thing on screen, so a "_" prefix filed it under the bottom rect
+            -- and would have mis-sized the background fill.
+            self.widget_cache["t_bookshelf_status"] =
+                { widget = widget, x = bx, y = by }
+            self._bs_strip_h = bs_h
+        end
+    end
+
     self:_renderProgressBars(bb, x, y, screen_w, screen_h)
 
     -- Check if anything changed
@@ -2135,37 +2179,6 @@ function Bookends:_paintToInner(bb, x, y)
     -- Phase 3: Calculate overlap limits per row
     local gap = self.defaults.overlap_gap
 
-    if self.widget_cache then
-        OverlayWidget.freeWidgets(self.widget_cache)
-    end
-    self.widget_cache = {}
-
-    -- The mirrored bookshelf status line sits ABOVE the top row, so it is
-    -- built first: the top row needs its height to know how far to move down,
-    -- and a strip that overlapped tl/tc/tr would be worse than no strip.
-    self._bs_strip_h = 0
-    do
-        -- pcall'd because this reaches into another plugin's settings and
-        -- expands a template the reader never wrote: a raise here would take
-        -- the whole overlay paint down, and an absent strip is a far better
-        -- failure than a blank screen.
-        local ok_bs, widget, _bs_w, bs_h, bs_pad = pcall(
-            self._buildBookshelfStatusLine, self, screen_w)
-        if ok_bs and widget and bs_h and bs_h > 0 then
-            local bx, by = bs_pad or self.defaults.margin_left,
-                           self.defaults.margin_top
-            widget:paintTo(bb, x + bx, y + by)
-            -- Same entry shape as the position rows: the extents pass reads
-            -- entry.widget and entry.x/y, and a bare widget crashed paintTo.
-            -- The key starts with "t" on purpose - that pass buckets top vs
-            -- bottom by the key's first letter, and this strip is the topmost
-            -- thing on screen, so a "_" prefix filed it under the bottom rect
-            -- and would have mis-sized the background fill.
-            self.widget_cache["t_bookshelf_status"] =
-                { widget = widget, x = bx, y = by }
-            self._bs_strip_h = bs_h
-        end
-    end
 
     for _, row in ipairs({"top", "bottom"}) do
         local left_key = row == "top" and "tl" or "bl"
