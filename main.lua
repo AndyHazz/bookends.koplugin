@@ -1828,13 +1828,22 @@ function Bookends:_buildBookshelfStatusLine(screen_w)
     -- is that it does not change between the shelf and a book, and matching
     -- what the shelf last showed keeps that promise better than a recount.
     local stats = StatusLine.sharedStats(G_reader_settings)
-    for token, field in pairs(StatusLine.SHARED_STATS) do
+    local duration_format =
+        G_reader_settings:readSetting("duration_format", "classic")
+    -- Longest name first: %pages_today must not be eaten by a shorter token
+    -- that is a prefix of it, the same hazard bookshelf's own expander loop
+    -- sorts for.
+    local shared_names = {}
+    for token in pairs(StatusLine.SHARED_STATS) do
+        shared_names[#shared_names + 1] = token
+    end
+    table.sort(shared_names, function(a, b) return #a > #b end)
+    for _idx, token in ipairs(shared_names) do
         if text:find("%" .. token, 1, true) then
-            local v = stats[field]
-            if token == "time_today_minutes" then
-                v = v and string.format("%dh %02dm", math.floor(v / 60), v % 60)
-            end
-            text = text:gsub("%%" .. token, v ~= nil and tostring(v) or "")
+            local spec = StatusLine.SHARED_STATS[token]
+            local rendered = StatusLine.formatShared(
+                spec, stats[spec.field], datetime, duration_format)
+            text = text:gsub("%%" .. token, function() return rendered end)
         end
     end
 

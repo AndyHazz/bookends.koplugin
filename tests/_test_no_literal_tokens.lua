@@ -218,6 +218,54 @@ test("bookshelf's documented tokens resolve here too", function()
         .. table.concat(gaps, " "))
 end)
 
+-- ── Nothing in bookshelf's PICKER may reach the reader as raw text ────────
+--
+-- Distinct from the check above, which reads bookshelf's README. This reads
+-- its CATALOGUE - what its line editor actually offers - because the mirrored
+-- status line shows bookshelf's own line, and whatever bookends' token scope
+-- is, a raw token in that strip is never right. The maintainer hit exactly
+-- this on device with "Books read: %books_read".
+--
+-- Three acceptable outcomes per token: bookends resolves it itself, the
+-- shared-stats bridge supplies it from numbers bookshelf publishes, or it is
+-- listed here as knowingly blank with a reason.
+local KNOWN_BLANK = {
+    hardcover_rating = "needs bookshelf's Hardcover client, auth and cache DB; "
+        .. "also per-book, so a published global could not stand in for it",
+    hardcover_stars  = "same as hardcover_rating",
+}
+
+test("every token bookshelf's picker offers is resolved, bridged or knowingly blank",
+function()
+    local path = "../bookshelf.koplugin/lib/bookshelf_tokens.lua"
+    local f = io.open(path, "r")
+    if not f then print("  SKIP: no sibling checkout at " .. path); return end
+    local src = f:read("*a")
+    f:close()
+
+    local StatusLine = dofile("status_line.lua")
+    local offered, seen = {}, {}
+    for n in src:gmatch('token%s*=%s*"%%([a-z_0-9]+)"') do
+        if not seen[n] then seen[n] = true; offered[#offered + 1] = n end
+    end
+    assert(#offered > 40, "only parsed " .. #offered .. " catalogue tokens")
+
+    local gaps = {}
+    for _i, name in ipairs(offered) do
+        local excused = KNOWN_BLANK[name] or StatusLine.SHARED_STATS[name]
+                        or name == "bar" or name == "spacer"
+        if not excused then
+            local out = Tokens.expand("%" .. name, ui, 120, 5, false, 2, nil)
+            if type(out) == "string" and out:find("%" .. name, 1, true) then
+                gaps[#gaps + 1] = "%" .. name
+            end
+        end
+    end
+    assert(#gaps == 0,
+        #gaps .. " token(s) bookshelf offers would reach the reader raw: "
+        .. table.concat(gaps, " "))
+end)
+
 print(pass .. " passed, " .. fail .. " failed  (" .. #names .. " own tokens, "
       .. (sib and #sib or 0) .. " sibling tokens checked)")
 os.exit(fail == 0 and 0 or 1)
