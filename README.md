@@ -453,7 +453,6 @@ The Bookends menu separates **global** settings (apply everywhere, never saved w
 |---------|---------|-------------|
 | Enable bookends | Off | Master on/off |
 | Disable stock status bar | Off | Hides KOReader's built-in status bar (recommended — see below) |
-| Use Bookshelf status line | Off | Shows [Bookshelf](https://github.com/AndyHazz/bookshelf.koplugin)'s status line above the top row, so the strip reads the same on the shelf and in a book (see below) |
 | Default font | Status bar font | Base font for all overlays; pick a font family slot for portable presets |
 | Bottom-center tap gesture | Toggle bookends | Action when you tap the centre of the status bar area |
 | Include current page in pages-left tokens | Off | Affects `%pages_left` and `%chap_pages_left` |
@@ -473,11 +472,11 @@ The Bookends menu separates **global** settings (apply everywhere, never saved w
 
 #### Using Bookshelf's status line
 
-If you also run [Bookshelf](https://github.com/AndyHazz/bookshelf.koplugin), **Bookends settings > Use Bookshelf status line** puts Bookshelf's own status line across the top of the reader, above your top-row regions. It uses the same text, font, size, weight and alignment, and the same side padding, so the strip does not jump as you move between the shelf and a book.
+If you also run [Bookshelf](https://github.com/AndyHazz/bookshelf.koplugin), it can put its own status line across the top of the reader, above your top-row regions, using the same text, font, size, weight, alignment and side padding, so the strip does not jump as you move between the shelf and a book.
 
-It is a mirror, so there is nothing to edit here: change the line in Bookshelf (**menu > Settings > Edit book detail view > Status line**) and the reader follows. If you have never edited it, both show Bookshelf's default line.
+**The switch is in Bookshelf, not here:** *menu > Settings > Also show status line in reader*, directly under the Status line entry. It sits beside the line it controls, so there is only one place to change either.
 
-Turning it on shifts your top-row regions down to make room for it.
+Bookends makes room for it by shifting your top-row regions down, along with any top-anchored progress bar.
 
 #### Disabling the stock status bar
 
