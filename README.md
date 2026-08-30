@@ -470,13 +470,11 @@ The Bookends menu separates **global** settings (apply everywhere, never saved w
 | Text colour | Black | Default text colour (per-preset) |
 | Symbol colour | Black | Default colour for icon glyphs |
 
-#### Using Bookshelf's status line
+#### Bookshelf's status line
 
-If you also run [Bookshelf](https://github.com/AndyHazz/bookshelf.koplugin), it can put its own status line across the top of the reader, above your top-row regions, using the same text, font, size, weight, alignment and side padding, so the strip does not jump as you move between the shelf and a book.
+If you also run [Bookshelf](https://github.com/AndyHazz/bookshelf.koplugin), it can put its own status line across the top of the reader. **Bookshelf draws it and Bookshelf owns the switch** (*menu > Settings > Also show status line in reader*), so it works whether or not Bookends is installed.
 
-**The switch is in Bookshelf, not here:** *menu > Settings > Also show status line in reader*, directly under the Status line entry. It sits beside the line it controls, so there is only one place to change either.
-
-Bookends makes room for it by shifting your top-row regions down, along with any top-anchored progress bar.
+All Bookends does is get out of the way: your top-row regions, and any top-anchored progress bar, shift down so the strip has room. Nothing to configure here.
 
 #### Disabling the stock status bar
 
