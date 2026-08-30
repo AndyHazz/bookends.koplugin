@@ -2182,10 +2182,16 @@ function Bookends:_paintToInner(bb, x, y)
         local center_key = row == "top" and "tc" or "bc"
         local right_key = row == "top" and "tr" or "br"
 
+        -- %bar and %spacer have no natural width, so pb.w for a position
+        -- carrying either is the elastic element filling the screen, not the
+        -- room the position needs. Measure the text instead. This used to test
+        -- bar_data, which covered %bar and missed %spacer: a centre spacer
+        -- reported 1248px, calculateRowLimits handed both neighbours a limit
+        -- of 0, and the left and right positions disappeared off the row.
         local function getOverlapWidth(key)
             local pb = pre_built[key]
             if not pb then return nil end
-            if bar_data[key] then
+            if OverlayWidget.hasElasticWidth(pb.line_texts) then
                 return OverlayWidget.measureTextWidth(pb.line_texts, pb.line_configs)
             end
             return pb.w
@@ -2247,7 +2253,7 @@ function Bookends:_paintToInner(bb, x, y)
                         pb.pos_def.h_anchor, screen_w,
                         self.defaults.margin_left, self.defaults.margin_right,
                         self:getPositionSetting(key, "h_offset"))
-                    local natural = bar_data[key]
+                    local natural = OverlayWidget.hasElasticWidth(pb.line_texts)
                         and OverlayWidget.measureTextWidth(pb.line_texts, pb.line_configs)
                         or pb.w
                     if natural and natural > room then max_width = room end
@@ -2260,7 +2266,7 @@ function Bookends:_paintToInner(bb, x, y)
                 -- the neighbours. Both are computed; whichever apply are
                 -- passed together.
                 local bar_avail
-                if bar_data[key] then
+                if OverlayWidget.hasElasticWidth(pb.line_texts) then
                     local _, hm = self:getMargin(key)
                     local ho = self:getPositionSetting(key, "h_offset") + hm
                     if pb.pos_def.h_anchor == "center" then

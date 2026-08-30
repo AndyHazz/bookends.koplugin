@@ -153,6 +153,33 @@ test("measureTextWidth ignores the spacer on a bar-less line", function()
            .. " got " .. tostring(spaced))
 end)
 
+-- hasElasticWidth is the rule both the overlap measurement and the #108 cap
+-- consult. It has to cover %spacer as well as %bar: they are the same kind of
+-- thing (no natural width, sized from what they are given), and the code used
+-- to ask "is there a bar here?" instead, which got %bar right and %spacer
+-- wrong. An unmeasured centre spacer reported the full screen width, so
+-- calculateRowLimits handed the left and right positions a limit of 0 and both
+-- disappeared off the row.
+test("hasElasticWidth covers the spacer, not just the bar", function()
+    local BAR = OverlayWidget.BAR_PLACEHOLDER
+    assert(OverlayWidget.hasElasticWidth({ "A" .. BAR }), "bar not detected")
+    assert(OverlayWidget.hasElasticWidth({ "A" .. SPACER .. "B" }), "spacer not detected")
+    assert(OverlayWidget.hasElasticWidth({ "plain", "A" .. SPACER }),
+           "elastic on a later line not detected")
+    assert(not OverlayWidget.hasElasticWidth({ "plain", "text" }),
+           "plain text reported as elastic")
+    assert(not OverlayWidget.hasElasticWidth({}), "empty reported as elastic")
+    assert(not OverlayWidget.hasElasticWidth(nil), "nil reported as elastic")
+end)
+
+test("a spacer line measures its text, not the width it would fill", function()
+    -- The number that matters: what the row-limit maths is told this position
+    -- needs. It must be the two characters, not the screen.
+    local measured = OverlayWidget.measureTextWidth({ "L" .. SPACER .. "R" }, { cfg() })
+    assert(measured == 2 * CHAR_W,
+           "expected " .. tostring(2 * CHAR_W) .. " got " .. tostring(measured))
+end)
+
 -- The premise the #108 overflow test rests on. That test asks "is this
 -- position wider than the room its margins leave?" and truncates if so. For a
 -- position carrying an auto-fill bar the WIDGET width is useless as an answer:

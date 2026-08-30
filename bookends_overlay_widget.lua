@@ -684,6 +684,29 @@ end
 -- line's text expands to additional visual rows that all share that config —
 -- mirroring the buildTextWidget contract so bar-flag config doesn't leak to
 -- wrap-rows of preceding lines.
+--- Does this position contain anything that has no natural width?
+---
+--- %bar and %spacer are both ELASTIC: buildTextWidget sizes them from the
+--- available width, so built unconstrained they are as wide as the screen.
+--- That makes the widget's own width useless for any question of the form
+--- "how much room does this position need" - the answer comes back as the
+--- whole screen no matter what the position actually contains. Callers use
+--- this to decide whether to trust the widget width or measure the text.
+---
+--- The bar case cost a release-blocking bug on its own; the spacer case cost
+--- a worse one, because an unmeasured centre spacer reported 1248px of
+--- content and calculateRowLimits truncated both its neighbours to zero, so
+--- the left and right positions vanished from the row entirely.
+function OverlayWidget.hasElasticWidth(line_texts)
+    for _i, text in ipairs(line_texts or {}) do
+        if text:find(BAR_PLACEHOLDER, 1, true)
+        or text:find(SPACER_PLACEHOLDER, 1, true) then
+            return true
+        end
+    end
+    return false
+end
+
 function OverlayWidget.measureTextWidth(line_texts, line_configs)
     local max_w = 0
     local default_cfg = { face = Font:getFace("cfont"), bold = false }
