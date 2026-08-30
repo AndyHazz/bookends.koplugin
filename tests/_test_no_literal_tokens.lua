@@ -218,6 +218,40 @@ test("bookshelf's documented tokens resolve here too", function()
         .. table.concat(gaps, " "))
 end)
 
+-- ── The same rule, in PREVIEW mode ─────────────────────────────────────────
+--
+-- The line editor and the position-menu subtitles render through
+-- expandPreview, which swaps each token for a short bracketed placeholder so a
+-- reader sees the SHAPE of the line without a document open. Tokens missing
+-- from that map fell through to `return "%" .. token` - the raw literal, in
+-- exactly the surface this suite exists to keep clean. The suite only ever
+-- exercised the real expansion, so it could not see it.
+test("no documented token survives as literal text in PREVIEW mode", function()
+    local gaps = {}
+    for _i, name in ipairs(names) do
+        local out = Tokens.expandPreview("%" .. name, ui, 120, 5, 2, nil)
+        if type(out) == "string" and out:find("%" .. name, 1, true) then
+            gaps[#gaps + 1] = "%" .. name
+        end
+    end
+    assert(#gaps == 0,
+        #gaps .. " token(s) show as raw text in the line editor and menu "
+        .. "subtitles: " .. table.concat(gaps, " "))
+end)
+
+test("the width-modifier form previews without leaking either", function()
+    local gaps = {}
+    for _i, name in ipairs(names) do
+        local out = Tokens.expandPreview("%" .. name .. "{200}", ui, 120, 5, 2, nil)
+        if type(out) == "string" and out:find("%" .. name, 1, true) then
+            gaps[#gaps + 1] = "%" .. name .. "{200}"
+        end
+    end
+    assert(#gaps == 0,
+        #gaps .. " token(s) leak their raw name when width-capped: "
+        .. table.concat(gaps, " "))
+end)
+
 print(pass .. " passed, " .. fail .. " failed  (" .. #names .. " own tokens, "
       .. (sib and #sib or 0) .. " sibling tokens checked)")
 os.exit(fail == 0 and 0 or 1)

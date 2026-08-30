@@ -111,6 +111,22 @@ test("no %calibre in the template means the reader is never consulted", function
            .. "needs() is the gate and it leaked")
 end)
 
+test("a shared paint_ctx still resolves each line's own calibre columns", function()
+    -- main.lua builds one paint_ctx and hands it to every expand() in the
+    -- paint, and buildConditionState short-circuits to the cached state table
+    -- on every call after the first. The calibre keys are gated on the CALLING
+    -- template's format string, so the short-circuit meant only the first
+    -- conditional-bearing line ever got its columns: a second line naming a
+    -- different column evaluated false, and its [else] branch won.
+    -- paint_ctx is the EIGHTH argument; the seventh is symbol_color.
+    local ctx = {}
+    eq(Tokens.expand("[if:calibre{mood}]A[/if]", ui, 0, 0, false, 2, nil, ctx), "A")
+    eq(Tokens.expand("[if:calibre{pubdate}]B[/if]", ui, 0, 0, false, 2, nil, ctx), "B")
+    eq(Tokens.expand('[if:calibre{pubdate}="1979"]C[else]D[/if]', ui, 0, 0, false, 2, nil, ctx), "C")
+    -- and the first line's column is still there afterwards
+    eq(Tokens.expand("[if:calibre{mood}]E[/if]", ui, 0, 0, false, 2, nil, ctx), "E")
+end)
+
 test("[if:calibre{field}] is truthy when the column has a value", function()
     eq(expand("[if:calibre{mood}]cosy book[/if]"), "cosy book")
 end)

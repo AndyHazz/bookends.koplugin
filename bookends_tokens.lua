@@ -278,7 +278,21 @@ end
 -- Accepts numbers, numeric strings, or labels that end in a digit
 -- (e.g. "page 547" -> "7"). Returns "" if the value has no trailing
 -- digit (nil, empty string, or non-numeric label like roman numerals).
+--
+-- A NUMBER is reduced to its integer part first. Leaning on tostring() made
+-- the answer depend on the interpreter: LuaJIT (5.1, what KOReader ships)
+-- renders 3.0 as "3", while 5.3+ renders "3.0" and this handed back "0" - the
+-- digit AFTER the point, which is never the units digit these tokens exist to
+-- expose. A fraction was worse on both: 3.7 answered "7".
+--
+-- "%.0f" rather than "%d": the latter raises on a non-integral float under
+-- 5.3+, and this one leaves nan/inf as words with no trailing digit, so they
+-- fall through to "" like any other non-numeric label. A STRING is still taken
+-- exactly as written, so a pagemap label keeps its own last character.
 function Tokens.lastDigit(value)
+    if type(value) == "number" then
+        value = string.format("%.0f", math.floor(math.abs(value)))
+    end
     return tostring(value or ""):match("(%d)$") or ""
 end
 
@@ -1436,9 +1450,42 @@ end
 --- Build a state table of raw values for conditional evaluation.
 --- If paint_ctx is provided and already has a cached state, returns it
 --- (shared across all expand() calls within one paint cycle).
+--- Add the calibre columns named by THIS template to a condition state.
+---
+--- Scanning the format string keeps an unnamed column free, matching how
+--- needs() gates the rest of the expensive state. Keyed exactly as written,
+--- braces included, so evaluateCondition can look up "calibre{mood}" verbatim
+--- - the value is normalised for the field lookup, the key is not.
+---
+--- Separate from the state build because it is the one part that is per-CALLER
+--- rather than per-paint. The state table is built once and shared across every
+--- line in a paint, so leaving this inside the build meant only the first
+--- conditional-bearing line ever got its columns resolved: a second line naming
+--- a different column evaluated false and took its [else] branch.
+local function addCalibreConditionKeys(state, ui, format_str)
+    if not (state and format_str and format_str:find("calibre{", 1, true)) then
+        return
+    end
+    local fields = Tokens._calibreFieldsFor(ui)
+    for raw in format_str:gmatch("calibre(%b{})") do
+        local key_written = "calibre" .. raw
+        -- Already resolved by an earlier line in this paint; the lookup is the
+        -- same either way, so skip the work rather than redo it.
+        if state[key_written] == nil then
+            local inner = raw:sub(2, -2)
+            local key = tostring(inner):gsub("^%s*#?", ""):gsub("%s*$", ""):lower()
+            state[key_written] = (fields and fields[key]) or ""
+        end
+    end
+end
+
 function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, paint_ctx, stats_cache, format_str)
     if paint_ctx and paint_ctx._condition_state then
-        return paint_ctx._condition_state
+        local cached = paint_ctx._condition_state
+        -- The shared table is built once per paint, but the calibre columns
+        -- are gated on the calling template, so each caller contributes its own.
+        addCalibreConditionKeys(cached, ui, format_str)
+        return cached
     end
 
     -- Optional format-string gating: when paint_ctx contains the union of all
@@ -1834,19 +1881,7 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
     if paint_ctx then
         paint_ctx._condition_state = state
     end
-    -- Calibre columns named by THIS template only. Scanning the format string
-    -- keeps an unnamed column free, matching how needs() gates the rest of the
-    -- expensive state. Keyed exactly as written, braces included, so
-    -- evaluateCondition can look up "calibre{mood}" verbatim - the value is
-    -- normalised for the field lookup, the key is not.
-    if format_str and format_str:find("calibre{", 1, true) then
-        local fields = Tokens._calibreFieldsFor(ui)
-        for raw in format_str:gmatch("calibre(%b{})") do
-            local inner = raw:sub(2, -2)
-            local key = tostring(inner):gsub("^%s*#?", ""):gsub("%s*$", ""):lower()
-            state["calibre" .. raw] = (fields and fields[key]) or ""
-        end
-    end
+    addCalibreConditionKeys(state, ui, format_str)
 
     return state
 end
@@ -2140,6 +2175,35 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
             mem = "[mem]", ram = "[rss]",
             disk = "[disk]",
             bar = "\xE2\x96\xB0\xE2\x96\xB0\xE2\x96\xB1\xE2\x96\xB1",  -- ▰▰▱▱
+            -- An elastic gap, not a name. There is nothing to split in a menu
+            -- row, so it previews as a space - the same thing bookshelf's
+            -- menuPreview does with it.
+            spacer = " ",
+            -- The rest of the catalogue. These had no entry at all, so they
+            -- fell through to the identity fallback and showed the reader the
+            -- raw "%token" in the line editor and the position-menu subtitles
+            -- - the #348 sweep documented a batch of tokens without extending
+            -- this map. Labelled after the token rather than with invented
+            -- wording, which is a maintainer's call, not a mechanical one.
+            wifi_icon = "[wifi]",
+            authors = "[authors]", authors_short = "[authors]",
+            author_2 = "[author.2]", author_count = "[author.count]",
+            description = "[description]",
+            status = "[status]", status_label = "[status]",
+            rating = "[rating]", rating_number = "[rating.n]",
+            favourite = "[favourite]",
+            quote = "[quote]", quote_source = "[quote.source]",
+            added = "[added]", opened = "[opened]",
+            size = "[size]",
+            file_num = "[file.num]", file_count = "[file.count]",
+            book_pct_read = "[read%]",
+            book_pages_read = "[bk.pages]",
+            pages_today = "[pages.today]", time_today = "[time.today]",
+            days_reading_book = "[days]", pages_per_day = "[per.day]",
+            avg_page_time = "[pg.time]",
+            book_time_left_h = "[time.h]", book_time_left_m = "[time.m]",
+            chap_time_left_h = "[ch.time.h]", chap_time_left_m = "[ch.time.m]",
+            sysused = "[sys]",
         }
         -- Strip %bar{N} and %X{N} for preview, showing limit in label
         -- %bar{N} must be replaced before %bar (longer pattern first)
@@ -2217,6 +2281,14 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
             end
             return "%" .. token .. "{" .. n .. "}"
         end)
+        -- The fallback stays an IDENTITY on purpose. It is reached by things
+        -- that are not tokens at all - a legacy "%A" under legacy_literal, a
+        -- bare "%datetime" with no brace - which must survive as typed. It is
+        -- also reached by the labels inserted above, two of which carry a
+        -- literal percent followed by letters ("[ch%left]"), so anything that
+        -- rewrites here corrupts them. A documented token that lands here is a
+        -- GAP IN THE MAP, and the fix is an entry, not a cleverer fallback;
+        -- tests/_test_no_literal_tokens.lua fails when one is missing.
         r = r:gsub("%%([%a_][%w_]*)", function(token)
             local label = preview[token]
             if label then return label end

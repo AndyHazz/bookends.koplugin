@@ -1839,10 +1839,30 @@ test("lastDigit: empty string -> empty", function() eq(Tokens.lastDigit(""), "")
 test("lastDigit: trailing non-digit -> empty", function()
     eq(Tokens.lastDigit("page %"), "")
 end)
-test("lastDigit: float -> last digit of integer part shown by tostring", function()
-    -- Lua's tostring(3.0) is "3.0" on 5.1, so last digit char is "0".
-    -- Documents the surprising-but-stable behaviour.
-    eq(Tokens.lastDigit(3.0), "0")
+test("lastDigit: a float answers for its INTEGER part, on any interpreter", function()
+    -- This used to lean on tostring() and pin whatever the interpreter did,
+    -- with a comment that had it backwards: LuaJIT (5.1, what KOReader ships)
+    -- renders 3.0 as "3", while 5.3+ renders "3.0". So the desktop suite was
+    -- asserting "0" - the digit AFTER the point - for a family of tokens whose
+    -- entire job is the UNITS digit of a page counter, for languages whose
+    -- grammar branches on it (#55). Wrong digit, wrong suffix, and only on
+    -- half the interpreters.
+    eq(Tokens.lastDigit(3.0), "3")
+    eq(Tokens.lastDigit(12.0), "2")
+    eq(Tokens.lastDigit(547), "7")
+    -- A fraction is already odd for a page counter, but the integer part is
+    -- the only reading that makes sense: 3.7 is on page 3, not page 7.
+    eq(Tokens.lastDigit(3.7), "3")
+    eq(Tokens.lastDigit(12.9), "2")
+    -- Non-finite values have no units digit at all.
+    eq(Tokens.lastDigit(0/0), "")
+    eq(Tokens.lastDigit(1/0), "")
+end)
+
+test("lastDigit: string forms are unchanged", function()
+    eq(Tokens.lastDigit("page 547"), "7")
+    eq(Tokens.lastDigit("3.0"), "0", "a STRING is taken as written")
+    eq(Tokens.lastDigit("xii"), "")
 end)
 
 test("currentChapterRange: returns [start, end) for the chapter containing current_pageno", function()
