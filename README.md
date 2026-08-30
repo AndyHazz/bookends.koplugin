@@ -474,7 +474,7 @@ The Bookends menu separates **global** settings (apply everywhere, never saved w
 
 If you also run [Bookshelf](https://github.com/AndyHazz/bookshelf.koplugin), it can put its own status line across the top of the reader. **Bookshelf draws it and Bookshelf owns the switch** (*menu > Settings > Also show status line in reader*), so it works whether or not Bookends is installed.
 
-All Bookends does is get out of the way: your top-row regions, and any top-anchored progress bar, shift down so the strip has room. Nothing to configure here.
+All Bookends does is get out of the way: your top-row regions, and any top-anchored progress bar, all shift down by the height of the strip, so they keep the spacing you set between them. Nothing to configure here.
 
 #### Disabling the stock status bar
 

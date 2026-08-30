@@ -1595,15 +1595,20 @@ function Bookends:_computeBarProgress(bar_cfg, pageno_local)
 end
 
 --- Compute the pixel rectangle (x,y,w,h) of a bar given its anchor/margins.
--- top_inset: the absolute height bookshelf's status strip occupies from the
--- top of the screen, when shown. Every top-anchored bar has to clear it for
--- the same reason the top text rows do - otherwise the strip and the bar
--- occupy the same pixels. Clamped rather than added: the bar is already
--- positioned by its own margin_v, so adding the inset put it margin_v px too
--- low when it cleared the strip anyway, and adding a margin_top-adjusted inset
--- put it margin_top px too HIGH and straight through the strip. Vertical bars
--- get their top edge pushed down and their height reduced, so a full-height
--- bar still ends where it did rather than overrunning the bottom.
+-- top_inset: the height bookshelf's status strip occupies at the top of the
+-- screen, when shown. It is ADDED to every top-anchored bar, exactly as it is
+-- added to every top-anchored text row - the strip translates the whole top
+-- region down by its own height, so relative spacing survives.
+--
+-- It was briefly clamped instead (max(margin_v, inset)), which reads as the
+-- tighter, cleverer rule and is wrong: a bar already below the strip did not
+-- move at all while the text rows moved by the full delta, so the gap between
+-- a bar and the row under it changed depending on the bar's margin. Worst case
+-- a margin_v=0 bar and the top row both landed on the strip's bottom edge and
+-- painted over each other.
+--
+-- Vertical bars get their top edge pushed down and their height reduced, so a
+-- full-height bar still ends where it did rather than overrunning the bottom.
 local function computeBarRect(bar_cfg, x, y, screen_w, screen_h, top_inset)
     top_inset = top_inset or 0
     local anchor = bar_cfg.v_anchor or "bottom"
@@ -1612,7 +1617,7 @@ local function computeBarRect(bar_cfg, x, y, screen_w, screen_h, top_inset)
     local bar_thickness = bar_cfg.height or (is_radial and 60 or 20)
     if vertical then
         -- margin_left/right reinterpreted as top/bottom insets
-        local bar_top = math.max(bar_cfg.margin_left or 0, top_inset)
+        local bar_top = (bar_cfg.margin_left or 0) + top_inset
         local bar_h = screen_h - bar_top - (bar_cfg.margin_right or 0)
         local bar_y = y + bar_top
         local bar_x
@@ -1633,7 +1638,7 @@ local function computeBarRect(bar_cfg, x, y, screen_w, screen_h, top_inset)
         local bar_x = x + (bar_cfg.margin_left or 0)
         local bar_y
         if anchor == "top" then
-            bar_y = y + math.max(bar_cfg.margin_v or 0, top_inset)
+            bar_y = y + (bar_cfg.margin_v or 0) + top_inset
         else
             bar_y = y + screen_h - bar_thickness - (bar_cfg.margin_v or 0)
         end
@@ -1807,22 +1812,29 @@ end
 --- agreeing. All that is needed here is to keep out of its way: bookshelf
 --- publishes the space it occupies and we move the top row, and any
 --- top-anchored progress bar, below it.
---- Returns the ABSOLUTE height from the top of the screen, not a delta. Each
---- consumer clamps against its own margin: the text rows sit at margin_top,
---- the bars at their own margin_v, and pre-subtracting one of those here made
---- the other wrong (a top-anchored bar overlapped the strip by margin_top).
+--- Returns the height the strip occupies, which is also the distance every
+--- top-anchored element moves down. ONE number, deliberately: there were two
+--- for a while - this absolute height, and a margin_top-adjusted delta for the
+--- text rows - and the consumers picked different ones, so bars and text
+--- stopped moving together. Anything anchored to the top adds this and nothing
+--- else, which keeps the whole top region rigid.
+---
+--- The consequence, which is correct: a row's margin_top is now measured from
+--- the bottom of the strip rather than from the top of the screen, so the row
+--- sits margin_top px BELOW the strip instead of flush against it.
+--- The y a top-anchored TEXT row paints at, given its stored v_offset and the
+--- margin for its position. Extracted so the regression suite can measure the
+--- real thing on both sides of the invariant: the bar side goes through
+--- computeBarRect, and if this lived inline in the paint path the test could
+--- only re-implement it, which is how the two drifted apart in the first place.
+function Bookends:_topRowOffset(v_offset, v_margin)
+    return v_offset + v_margin + (self._bs_strip_h or 0)
+end
+
 function Bookends:_bookshelfStatusReserve()
     local ok, h = pcall(StatusLine.reservedHeight, G_reader_settings)
     if not ok or not h or h <= 0 then return 0 end
     return h
-end
-
---- How far a top-anchored TEXT row has to move to clear the strip. The row
---- already sits at margin_top, so only the excess counts.
-function Bookends:_bookshelfStatusShift()
-    local strip = self._bs_strip_h or 0
-    if strip <= 0 then return 0 end
-    return math.max(0, strip - (self.defaults.margin_top or 0))
 end
 
 function Bookends:_paintToInner(bb, x, y)
@@ -1978,8 +1990,12 @@ function Bookends:_paintToInner(bb, x, y)
                     -- the extents come from the STORED v_offsets, which know
                     -- nothing about the shift, so an unextended fill left the
                     -- bottom of the row sitting on unfilled page.
+                    -- Content moved down by exactly strip_h, so the region
+                    -- to fill is the same height as before and simply starts
+                    -- lower. (This used to be top_y + shift - strip_h, back
+                    -- when shift and strip_h were two different numbers.)
                     local strip_h = self._bs_strip_h or 0
-                    local fill_h = extents.top_y + self:_bookshelfStatusShift() - strip_h
+                    local fill_h = extents.top_y
                     if fill_h > 0 then
                         OverlayWidget.bbPaintRect(bb, x, y + strip_h, screen_w, fill_h, bg_color)
                     end
@@ -2289,9 +2305,12 @@ function Bookends:_paintToInner(bb, x, y)
                 if widget then
                     local v_margin, h_margin = self:getMargin(key)
                     local v_off = self:getPositionSetting(key, "v_offset") + v_margin
-                    -- Make room for bookshelf's status strip above the top row.
+                    -- Make room for bookshelf's status strip above the top
+                    -- row. Same value the top-anchored bars add, so the two
+                    -- keep their relative spacing.
                     if pb.pos_def.v_anchor == "top" then
-                        v_off = v_off + self:_bookshelfStatusShift()
+                        v_off = self:_topRowOffset(
+                            self:getPositionSetting(key, "v_offset"), v_margin)
                     end
                     local h_off = self:getPositionSetting(key, "h_offset") + h_margin
                     local px, py = OverlayWidget.computeCoordinates(
@@ -3294,5 +3313,11 @@ function Bookends:showMarginAdjuster(touchmenu_instance)
         parent_menu = touchmenu_instance,
     }
 end
+
+-- Exposed for tests only. The invariant worth pinning is that a top-anchored
+-- BAR and a top-anchored TEXT ROW move by the same amount when bookshelf's
+-- status strip appears; that lives across two call sites, so a unit test of
+-- the shift value alone would not have caught them diverging - and did not.
+Bookends._computeBarRect = computeBarRect
 
 return Bookends
