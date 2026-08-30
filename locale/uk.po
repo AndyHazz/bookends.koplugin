@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bookends 5.7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-29 09:06+0100\n"
+"POT-Creation-Date: 2026-08-30 11:21+0100\n"
 "PO-Revision-Date: 2026-08-21 05:07+0200\n"
 "Last-Translator: advokatb <igor.butsky@gmail.com>\n"
 "Language-Team: advokatb <igor.butsky@gmail.com>\n"
@@ -18,9 +18,9 @@ msgstr ""
 "X-Generator: Poedit 1.7.5\n"
 
 #: bookends_colour_palette.lua:400 bookends_dialog_helpers.lua:101
-#: bookends_line_editor.lua:792 bookends_line_editor.lua:1058 main.lua:2525
-#: main.lua:3224 menu/main_menu.lua:56 menu/main_menu.lua:96
-#: menu/main_menu.lua:134 menu/main_menu.lua:615
+#: bookends_line_editor.lua:792 bookends_line_editor.lua:1058 main.lua:2485
+#: main.lua:3184 menu/main_menu.lua:55 menu/main_menu.lua:95
+#: menu/main_menu.lua:133 menu/main_menu.lua:590
 #: menu/preset_manager_modal.lua:1405 menu/preset_manager_modal.lua:1527
 #: menu/preset_manager_modal.lua:1568 menu/preset_manager_modal.lua:1669
 #: menu/preset_manager_modal.lua:1713 menu/preset_manager_modal.lua:1815
@@ -31,15 +31,15 @@ msgid "Cancel"
 msgstr "Скасувати"
 
 #: bookends_colour_palette.lua:402 bookends_dialog_helpers.lua:109
-#: bookends_line_editor.lua:505 bookends_line_editor.lua:632 main.lua:2535
-#: main.lua:2767 menu/colours_menu.lua:73 menu/colours_menu.lua:269
+#: bookends_line_editor.lua:505 bookends_line_editor.lua:632 main.lua:2495
+#: main.lua:2727 menu/colours_menu.lua:73 menu/colours_menu.lua:269
 #: menu/progress_bar_menu.lua:270 menu/progress_bar_menu.lua:503
 #: menu/progress_bar_menu.lua:545
 msgid "Default"
 msgstr "За замовчуванням"
 
 #: bookends_colour_palette.lua:404 bookends_dialog_helpers.lua:116
-#: main.lua:2564 menu/preset_manager_modal.lua:691
+#: main.lua:2524 menu/preset_manager_modal.lua:691
 msgid "Apply"
 msgstr "Застосувати"
 
@@ -55,7 +55,7 @@ msgstr "Вибрати колір"
 msgid "Invalid hex colour (use #RGB or #RRGGBB)"
 msgstr "Невірний HEX-колір (використовуйте #RGB або #RRGGBB)"
 
-#: bookends_line_editor.lua:115 main.lua:1119
+#: bookends_line_editor.lua:115 main.lua:1115
 msgid "Regular"
 msgstr "Звичайний"
 
@@ -291,7 +291,7 @@ msgstr "Непрочитане"
 msgid "Custom colours"
 msgstr "Користувацькі кольори"
 
-#: bookends_line_editor.lua:661 bookends_updater.lua:349 main.lua:3062
+#: bookends_line_editor.lua:661 bookends_updater.lua:349 main.lua:3022
 #: menu/icons_library.lua:453 menu/preset_manager_modal.lua:665
 #: menu/tokens_library.lua:463
 msgid "Close"
@@ -321,7 +321,7 @@ msgstr "Іконки"
 msgid "Tokens"
 msgstr "Токени"
 
-#: bookends_line_editor.lua:826 main.lua:3226 menu/main_menu.lua:58
+#: bookends_line_editor.lua:826 main.lua:3186 menu/main_menu.lua:57
 #: menu/preset_manager_modal.lua:1409 menu/preset_manager_modal.lua:1569
 #: menu/preset_manager_modal.lua:1670
 msgid "Save"
@@ -421,39 +421,60 @@ msgstr "Останнє: "
 msgid "Downloading update..."
 msgstr "Завантаження оновлення..."
 
-#: bookends_updater.lua:464
+#: bookends_updater.lua:460
+#, fuzzy
+msgid "the connection failed"
+msgstr "Якщо з'єднано"
+
+#: bookends_updater.lua:463
+msgid "the connection timed out"
+msgstr ""
+
+#: bookends_updater.lua:465
+msgid "the secure connection failed"
+msgstr ""
+
+#: bookends_updater.lua:468
+msgid "there was no response"
+msgstr ""
+
+#: bookends_updater.lua:484 bookends_updater.lua:489
+msgid "the file could not be saved"
+msgstr ""
+
+#: bookends_updater.lua:516
 msgid "Download failed."
 msgstr "Не вдалося завантажити."
 
-#: bookends_updater.lua:476
+#: bookends_updater.lua:528
 msgid "Installation failed: "
 msgstr "Не вдалося встановити: "
 
-#: bookends_updater.lua:493
+#: bookends_updater.lua:545
 msgid "Bookends updated to v"
 msgstr "Bookends оновлено до v"
 
-#: bookends_updater.lua:494
+#: bookends_updater.lua:546
 msgid "Restart KOReader now?"
 msgstr "Перезапустити KOReader зараз?"
 
-#: bookends_updater.lua:495 main.lua:60
+#: bookends_updater.lua:547 main.lua:60
 msgid "Restart"
 msgstr "Перезапустити"
 
-#: bookends_updater.lua:511
+#: bookends_updater.lua:563
 msgid "Could not install branch:"
 msgstr "Не вдалося встановити гілку:"
 
-#: bookends_updater.lua:528
+#: bookends_updater.lua:580
 msgid "Downloading latest release..."
 msgstr "Завантаження останнього релізу..."
 
-#: bookends_updater.lua:539
+#: bookends_updater.lua:591
 msgid "Could not fetch latest release."
 msgstr "Не вдалося отримати останній реліз."
 
-#: bookends_updater.lua:552
+#: bookends_updater.lua:604
 msgid "Latest release has no downloadable zip."
 msgstr "В останньому релізі немає завантажуваного zip."
 
@@ -554,51 +575,51 @@ msgstr "Помилка пресета: %1"
 msgid "Preset: %1"
 msgstr "Пресет: %1"
 
-#: main.lua:1120
+#: main.lua:1116
 msgid "Bold"
 msgstr "Жирний"
 
-#: main.lua:1121
+#: main.lua:1117
 msgid "Italic"
 msgstr "Курсив"
 
-#: main.lua:1122
+#: main.lua:1118
 msgid "Bold italic"
 msgstr "Жирний курсив"
 
-#: main.lua:2783
+#: main.lua:2743
 msgid "Select font"
 msgstr "Вибрати шрифт"
 
-#: main.lua:2824
+#: main.lua:2784
 msgid "Font-family fonts"
 msgstr "Шрифти сімейств"
 
-#: main.lua:2889
+#: main.lua:2849
 msgid "Fonts"
 msgstr "Шрифти"
 
-#: main.lua:2983 menu/library_modal.lua:937
+#: main.lua:2943 menu/library_modal.lua:937
 msgid "Page %1 of %2"
 msgstr "Сторінка %1 з %2"
 
-#: main.lua:3072 main.lua:3246
+#: main.lua:3032 main.lua:3206
 msgid "Reset"
 msgstr "Скинути"
 
-#: main.lua:3081
+#: main.lua:3041
 msgid "Set font"
 msgstr "Встановити шрифт"
 
-#: main.lua:3220 menu/main_menu.lua:527 menu/main_menu.lua:529
+#: main.lua:3180 menu/main_menu.lua:502 menu/main_menu.lua:504
 msgid "Development branch"
 msgstr "Гілка розробки"
 
-#: main.lua:3222
+#: main.lua:3182
 msgid "Branch name (leave empty for stable)"
 msgstr "Назва гілки (залиште порожнім для стабільної)"
 
-#: main.lua:3245
+#: main.lua:3205
 msgid ""
 "This will clear the development branch setting and install the latest stable "
 "release of Bookends, then restart KOReader. Continue?"
@@ -606,32 +627,32 @@ msgstr ""
 "Це очистить налаштування гілки розробки та встановить останній стабільний "
 "випуск Bookends, потім перезапустить KOReader. Продовжити?"
 
-#: main.lua:3264
+#: main.lua:3224
 msgid "Bookends update available: v"
 msgstr "Доступне оновлення Bookends: v"
 
-#: main.lua:3272 menu/main_menu.lua:692 menu/progress_bar_menu.lua:277
+#: main.lua:3232 menu/main_menu.lua:667 menu/progress_bar_menu.lua:277
 #: menu/progress_bar_menu.lua:529
 msgid "Adjust margins"
 msgstr "Налаштувати поля"
 
-#: main.lua:3274 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:532
+#: main.lua:3234 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:532
 msgid "Top"
 msgstr "Верх"
 
-#: main.lua:3275 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:533
+#: main.lua:3235 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:533
 msgid "Bottom"
 msgstr "Низ"
 
-#: main.lua:3276 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:532
+#: main.lua:3236 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:532
 msgid "Left"
 msgstr "Ліворуч"
 
-#: main.lua:3277 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:533
+#: main.lua:3237 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:533
 msgid "Right"
 msgstr "Праворуч"
 
-#: _meta.lua:19 menu/main_menu.lua:19
+#: _meta.lua:19 menu/main_menu.lua:18
 msgid "Bookends"
 msgstr "Bookends"
 
@@ -653,8 +674,7 @@ msgstr "Прозорий"
 
 #: menu/colours_menu.lua:90 menu/colours_menu.lua:104 menu/colours_menu.lua:276
 #: menu/colours_menu.lua:283 menu/colours_menu.lua:289
-#: menu/colours_menu.lua:296 menu/main_menu.lua:288
-#: menu/progress_bar_menu.lua:360
+#: menu/colours_menu.lua:296 menu/progress_bar_menu.lua:360
 msgid "default"
 msgstr "за замовчуванням"
 
@@ -1244,87 +1264,76 @@ msgstr "Пошук…"
 msgid "Search"
 msgstr "Пошук"
 
-#: menu/main_menu.lua:52 menu/preset_manager_modal.lua:1401
+#: menu/main_menu.lua:51 menu/preset_manager_modal.lua:1401
 msgid "Save preset"
 msgstr "Зберегти пресет"
 
-#: menu/main_menu.lua:54 menu/preset_manager_modal.lua:1403
+#: menu/main_menu.lua:53 menu/preset_manager_modal.lua:1403
 msgid "Preset name"
 msgstr "Назва пресета"
 
-#: menu/main_menu.lua:69
+#: menu/main_menu.lua:68
 msgid "Saved preset:"
 msgstr "Пресет збережено:"
 
-#: menu/main_menu.lua:93 menu/preset_manager_modal.lua:1524
+#: menu/main_menu.lua:92 menu/preset_manager_modal.lua:1524
 msgid "Rename preset"
 msgstr "Перейменувати пресет"
 
-#: menu/main_menu.lua:98 menu/main_menu.lua:660
+#: menu/main_menu.lua:97 menu/main_menu.lua:635
 #: menu/preset_manager_modal.lua:1528 menu/preset_manager_modal.lua:1715
 msgid "Rename"
 msgstr "Перейменувати"
 
-#: menu/main_menu.lua:130
+#: menu/main_menu.lua:129
 msgid "File extension"
 msgstr "Розширення файлу"
 
-#: menu/main_menu.lua:132
+#: menu/main_menu.lua:131
 msgid "e.g. CBZ"
 msgstr "напр. CBZ"
 
-#: menu/main_menu.lua:136
+#: menu/main_menu.lua:135
 msgid "Next"
 msgstr "Далі"
 
-#: menu/main_menu.lua:159
+#: menu/main_menu.lua:158
 msgid "Hidden"
 msgstr "Приховано"
 
-#: menu/main_menu.lua:173 menu/main_menu.lua:175
+#: menu/main_menu.lua:172 menu/main_menu.lua:174
 msgid "Bookends settings"
 msgstr "Налаштування Bookends"
 
-#: menu/main_menu.lua:173
+#: menu/main_menu.lua:172
 msgid "plugin update available"
 msgstr "доступне оновлення плагіна"
 
-#: menu/main_menu.lua:190 menu/main_menu.lua:192
+#: menu/main_menu.lua:189 menu/main_menu.lua:191
 msgid "Preset"
 msgstr "Пресет"
 
-#: menu/main_menu.lua:242
+#: menu/main_menu.lua:241
 msgid "Full width progress bars"
 msgstr "Смуги прогресу на всю ширину"
 
-#: menu/main_menu.lua:254
+#: menu/main_menu.lua:253
 msgid "Save current as new preset…"
 msgstr "Зберегти поточний як новий пресет…"
 
-#: menu/main_menu.lua:270
+#: menu/main_menu.lua:269
 msgid "Enable bookends"
 msgstr "Увімкнути Bookends"
 
-#: menu/main_menu.lua:286 menu/main_menu.lua:288
-msgid "Use Bookshelf status line"
-msgstr ""
-
-#: menu/main_menu.lua:290
-msgid ""
-"Shows Bookshelf's status line above the top row, with the same text, font "
-"and alignment, so it does not change as you move between the shelf and a "
-"book. Edit it in Bookshelf."
-msgstr ""
-
-#: menu/main_menu.lua:305 menu/main_menu.lua:307
+#: menu/main_menu.lua:280 menu/main_menu.lua:282
 msgid "Disable stock status bar"
 msgstr "Вимкнути стандартну панель статусу"
 
-#: menu/main_menu.lua:305
+#: menu/main_menu.lua:280
 msgid "recommended"
 msgstr "рекомендовано"
 
-#: menu/main_menu.lua:310
+#: menu/main_menu.lua:285
 msgid ""
 "Hides KOReader's built-in status bar. This simplifies the render pipeline "
 "and can reduce e-ink flicker on some devices. All status bar features are "
@@ -1334,28 +1343,28 @@ msgstr ""
 "може зменшити мерехтіння e-ink на деяких пристроях. Усі функції панелі "
 "статусу доступні як токени Bookends."
 
-#: menu/main_menu.lua:331 menu/main_menu.lua:341
+#: menu/main_menu.lua:306 menu/main_menu.lua:316
 #: menu/preset_manager_modal.lua:1607
 msgid "Default font"
 msgstr "Шрифт за замовчуванням"
 
-#: menu/main_menu.lua:367
+#: menu/main_menu.lua:342
 msgid "Bottom center tap gesture"
 msgstr "Жест дотику внизу по центру"
 
-#: menu/main_menu.lua:369
+#: menu/main_menu.lua:344
 msgid "toggle bookends"
 msgstr "перемкнути bookends"
 
-#: menu/main_menu.lua:371
+#: menu/main_menu.lua:346
 msgid "cycle presets"
 msgstr "перебрати пресети"
 
-#: menu/main_menu.lua:373
+#: menu/main_menu.lua:348
 msgid "preset library"
 msgstr "бібліотека пресетів"
 
-#: menu/main_menu.lua:377
+#: menu/main_menu.lua:352
 msgid ""
 "Configure what happens when you tap the centre of the status bar area, and "
 "whether long-pressing a progress bar opens the skim dialog."
@@ -1363,27 +1372,27 @@ msgstr ""
 "Налаштуйте, що відбувається при дотику в центрі панелі статусу, і чи "
 "відкриває утримання на смузі прогресу діалог швидкого перегляду."
 
-#: menu/main_menu.lua:388
+#: menu/main_menu.lua:363
 msgid "Pass through"
 msgstr "Пропустити"
 
-#: menu/main_menu.lua:396
+#: menu/main_menu.lua:371
 msgid "Toggle bookends"
 msgstr "Перемкнути bookends"
 
-#: menu/main_menu.lua:410
+#: menu/main_menu.lua:385
 msgid "Cycle starred presets"
 msgstr "Перебрати позначені зірочкою пресети"
 
-#: menu/main_menu.lua:424
+#: menu/main_menu.lua:399
 msgid "Open preset library"
 msgstr "Відкрити бібліотеку пресетів"
 
-#: menu/main_menu.lua:439
+#: menu/main_menu.lua:414
 msgid "Long-press progress bars to skim document"
 msgstr "Утримання на смузі прогресу для швидкого перегляду документа"
 
-#: menu/main_menu.lua:447
+#: menu/main_menu.lua:422
 msgid ""
 "Opens the skim dialog when you long-press on a full-width progress bar. "
 "Replaces the stock status bar's long-press to skim feature."
@@ -1391,11 +1400,11 @@ msgstr ""
 "Відкриває діалог швидкого перегляду при утриманні на смузі прогресу на всю "
 "ширину. Замінює функцію утримання для перегляду стандартної панелі статусу."
 
-#: menu/main_menu.lua:454
+#: menu/main_menu.lua:429
 msgid "Include current page in pages-left tokens"
 msgstr "Враховувати поточну сторінку в токенах «сторінок залишилось»"
 
-#: menu/main_menu.lua:455
+#: menu/main_menu.lua:430
 msgid ""
 "Affects %L (pages left in book) and %l (pages left in chapter). Off "
 "(default): 'n−1 → 0'. On: 'n → 1'."
@@ -1403,11 +1412,11 @@ msgstr ""
 "Впливає на %L (сторінок залишилось у книзі) та %l (сторінок залишилось у "
 "главі). Вимкнено (за замовчуванням): «n−1 → 0». Увімкнено: «n → 1»."
 
-#: menu/main_menu.lua:468
+#: menu/main_menu.lua:443
 msgid "Disable automatic clock/battery refresh"
 msgstr "Вимкнути автоматичне оновлення годинника/батареї"
 
-#: menu/main_menu.lua:481
+#: menu/main_menu.lua:456
 msgid ""
 "Stops the 60-second background timer that keeps the clock, battery, and time-"
 "left tokens updating without a page turn. Useful on devices where this timer "
@@ -1417,23 +1426,23 @@ msgstr ""
 "та часу, що залишився, без перегортання сторінки. Корисно на пристроях, де "
 "цей таймер заважає засинанню/пробудженню (напр., деякі моделі Pocketbook)."
 
-#: menu/main_menu.lua:484
+#: menu/main_menu.lua:459
 msgid "Notify on wake when update available"
 msgstr "Сповіщати при пробудженні, якщо є оновлення"
 
-#: menu/main_menu.lua:504
+#: menu/main_menu.lua:479
 msgid "Update available"
 msgstr "Доступне оновлення"
 
-#: menu/main_menu.lua:506
+#: menu/main_menu.lua:481
 msgid "Installed version"
 msgstr "Встановлена версія"
 
-#: menu/main_menu.lua:514
+#: menu/main_menu.lua:489
 msgid "Auto preset by file type"
 msgstr "Автопресет за типом файлу"
 
-#: menu/main_menu.lua:515
+#: menu/main_menu.lua:490
 msgid ""
 "Automatically hide Bookends, or switch to a specific preset, based on the "
 "document's file extension (e.g. hide for comic archives, use a plainer "
@@ -1443,55 +1452,55 @@ msgstr ""
 "розширення файлу документа (напр., приховати для архівів коміксів, "
 "застосувати простіший пресет для PDF)."
 
-#: menu/main_menu.lua:521
+#: menu/main_menu.lua:496
 msgid "Advanced"
 msgstr "Розширені"
 
-#: menu/main_menu.lua:540
+#: menu/main_menu.lua:515
 msgid "Check for updates"
 msgstr "Перевірити оновлення"
 
-#: menu/main_menu.lua:542
+#: menu/main_menu.lua:517
 msgid "Install branch"
 msgstr "Встановити гілку"
 
-#: menu/main_menu.lua:550
+#: menu/main_menu.lua:525
 msgid "Reset to latest stable release"
 msgstr "Скинути до останнього стабільного випуску"
 
-#: menu/main_menu.lua:561 menu/main_menu.lua:564
+#: menu/main_menu.lua:536 menu/main_menu.lua:539
 msgid "Installed: v"
 msgstr "Встановлено: v"
 
-#: menu/main_menu.lua:595
+#: menu/main_menu.lua:570
 msgid "Change"
 msgstr "Змінити"
 
-#: menu/main_menu.lua:605
+#: menu/main_menu.lua:580
 msgid "Remove rule"
 msgstr "Вилучити правило"
 
-#: menu/main_menu.lua:624
+#: menu/main_menu.lua:599
 msgid "Add rule…"
 msgstr "Додати правило…"
 
-#: menu/main_menu.lua:642
+#: menu/main_menu.lua:617
 msgid "Preset library…"
 msgstr "Бібліотека пресетів…"
 
-#: menu/main_menu.lua:674 menu/main_menu.lua:678
+#: menu/main_menu.lua:649 menu/main_menu.lua:653
 msgid "Font scale"
 msgstr "Масштаб шрифту"
 
-#: menu/main_menu.lua:702
+#: menu/main_menu.lua:677
 msgid "Truncation gap between regions"
 msgstr "Проміжок обрізання між областями"
 
-#: menu/main_menu.lua:706
+#: menu/main_menu.lua:681
 msgid "Truncation gap"
 msgstr "Проміжок обрізання"
 
-#: menu/main_menu.lua:717
+#: menu/main_menu.lua:692
 msgid "Prioritise left/right and truncate long center text"
 msgstr "Пріоритет лівій/правій частині та обрізати довгий центральний текст"
 

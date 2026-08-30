@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bookends\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-29 09:06+0100\n"
+"POT-Creation-Date: 2026-08-30 11:21+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,9 +18,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: bookends_colour_palette.lua:400 bookends_dialog_helpers.lua:101
-#: bookends_line_editor.lua:792 bookends_line_editor.lua:1058 main.lua:2525
-#: main.lua:3224 menu/main_menu.lua:56 menu/main_menu.lua:96
-#: menu/main_menu.lua:134 menu/main_menu.lua:615
+#: bookends_line_editor.lua:792 bookends_line_editor.lua:1058 main.lua:2485
+#: main.lua:3184 menu/main_menu.lua:55 menu/main_menu.lua:95
+#: menu/main_menu.lua:133 menu/main_menu.lua:590
 #: menu/preset_manager_modal.lua:1405 menu/preset_manager_modal.lua:1527
 #: menu/preset_manager_modal.lua:1568 menu/preset_manager_modal.lua:1669
 #: menu/preset_manager_modal.lua:1713 menu/preset_manager_modal.lua:1815
@@ -31,15 +31,15 @@ msgid "Cancel"
 msgstr ""
 
 #: bookends_colour_palette.lua:402 bookends_dialog_helpers.lua:109
-#: bookends_line_editor.lua:505 bookends_line_editor.lua:632 main.lua:2535
-#: main.lua:2767 menu/colours_menu.lua:73 menu/colours_menu.lua:269
+#: bookends_line_editor.lua:505 bookends_line_editor.lua:632 main.lua:2495
+#: main.lua:2727 menu/colours_menu.lua:73 menu/colours_menu.lua:269
 #: menu/progress_bar_menu.lua:270 menu/progress_bar_menu.lua:503
 #: menu/progress_bar_menu.lua:545
 msgid "Default"
 msgstr ""
 
 #: bookends_colour_palette.lua:404 bookends_dialog_helpers.lua:116
-#: main.lua:2564 menu/preset_manager_modal.lua:691
+#: main.lua:2524 menu/preset_manager_modal.lua:691
 msgid "Apply"
 msgstr ""
 
@@ -55,7 +55,7 @@ msgstr ""
 msgid "Invalid hex colour (use #RGB or #RRGGBB)"
 msgstr ""
 
-#: bookends_line_editor.lua:115 main.lua:1119
+#: bookends_line_editor.lua:115 main.lua:1115
 msgid "Regular"
 msgstr ""
 
@@ -291,7 +291,7 @@ msgstr ""
 msgid "Custom colours"
 msgstr ""
 
-#: bookends_line_editor.lua:661 bookends_updater.lua:349 main.lua:3062
+#: bookends_line_editor.lua:661 bookends_updater.lua:349 main.lua:3022
 #: menu/icons_library.lua:453 menu/preset_manager_modal.lua:665
 #: menu/tokens_library.lua:463
 msgid "Close"
@@ -321,7 +321,7 @@ msgstr ""
 msgid "Tokens"
 msgstr ""
 
-#: bookends_line_editor.lua:826 main.lua:3226 menu/main_menu.lua:58
+#: bookends_line_editor.lua:826 main.lua:3186 menu/main_menu.lua:57
 #: menu/preset_manager_modal.lua:1409 menu/preset_manager_modal.lua:1569
 #: menu/preset_manager_modal.lua:1670
 msgid "Save"
@@ -420,39 +420,59 @@ msgstr ""
 msgid "Downloading update..."
 msgstr ""
 
-#: bookends_updater.lua:464
+#: bookends_updater.lua:460
+msgid "the connection failed"
+msgstr ""
+
+#: bookends_updater.lua:463
+msgid "the connection timed out"
+msgstr ""
+
+#: bookends_updater.lua:465
+msgid "the secure connection failed"
+msgstr ""
+
+#: bookends_updater.lua:468
+msgid "there was no response"
+msgstr ""
+
+#: bookends_updater.lua:484 bookends_updater.lua:489
+msgid "the file could not be saved"
+msgstr ""
+
+#: bookends_updater.lua:516
 msgid "Download failed."
 msgstr ""
 
-#: bookends_updater.lua:476
+#: bookends_updater.lua:528
 msgid "Installation failed: "
 msgstr ""
 
-#: bookends_updater.lua:493
+#: bookends_updater.lua:545
 msgid "Bookends updated to v"
 msgstr ""
 
-#: bookends_updater.lua:494
+#: bookends_updater.lua:546
 msgid "Restart KOReader now?"
 msgstr ""
 
-#: bookends_updater.lua:495 main.lua:60
+#: bookends_updater.lua:547 main.lua:60
 msgid "Restart"
 msgstr ""
 
-#: bookends_updater.lua:511
+#: bookends_updater.lua:563
 msgid "Could not install branch:"
 msgstr ""
 
-#: bookends_updater.lua:528
+#: bookends_updater.lua:580
 msgid "Downloading latest release..."
 msgstr ""
 
-#: bookends_updater.lua:539
+#: bookends_updater.lua:591
 msgid "Could not fetch latest release."
 msgstr ""
 
-#: bookends_updater.lua:552
+#: bookends_updater.lua:604
 msgid "Latest release has no downloadable zip."
 msgstr ""
 
@@ -553,82 +573,82 @@ msgstr ""
 msgid "Preset: %1"
 msgstr ""
 
-#: main.lua:1120
+#: main.lua:1116
 msgid "Bold"
 msgstr ""
 
-#: main.lua:1121
+#: main.lua:1117
 msgid "Italic"
 msgstr ""
 
-#: main.lua:1122
+#: main.lua:1118
 msgid "Bold italic"
 msgstr ""
 
-#: main.lua:2783
+#: main.lua:2743
 msgid "Select font"
 msgstr ""
 
-#: main.lua:2824
+#: main.lua:2784
 msgid "Font-family fonts"
 msgstr ""
 
-#: main.lua:2889
+#: main.lua:2849
 msgid "Fonts"
 msgstr ""
 
-#: main.lua:2983 menu/library_modal.lua:937
+#: main.lua:2943 menu/library_modal.lua:937
 msgid "Page %1 of %2"
 msgstr ""
 
-#: main.lua:3072 main.lua:3246
+#: main.lua:3032 main.lua:3206
 msgid "Reset"
 msgstr ""
 
-#: main.lua:3081
+#: main.lua:3041
 msgid "Set font"
 msgstr ""
 
-#: main.lua:3220 menu/main_menu.lua:527 menu/main_menu.lua:529
+#: main.lua:3180 menu/main_menu.lua:502 menu/main_menu.lua:504
 msgid "Development branch"
 msgstr ""
 
-#: main.lua:3222
+#: main.lua:3182
 msgid "Branch name (leave empty for stable)"
 msgstr ""
 
-#: main.lua:3245
+#: main.lua:3205
 msgid ""
 "This will clear the development branch setting and install the latest stable "
 "release of Bookends, then restart KOReader. Continue?"
 msgstr ""
 
-#: main.lua:3264
+#: main.lua:3224
 msgid "Bookends update available: v"
 msgstr ""
 
-#: main.lua:3272 menu/main_menu.lua:692 menu/progress_bar_menu.lua:277
+#: main.lua:3232 menu/main_menu.lua:667 menu/progress_bar_menu.lua:277
 #: menu/progress_bar_menu.lua:529
 msgid "Adjust margins"
 msgstr ""
 
-#: main.lua:3274 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:532
+#: main.lua:3234 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:532
 msgid "Top"
 msgstr ""
 
-#: main.lua:3275 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:533
+#: main.lua:3235 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:533
 msgid "Bottom"
 msgstr ""
 
-#: main.lua:3276 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:532
+#: main.lua:3236 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:532
 msgid "Left"
 msgstr ""
 
-#: main.lua:3277 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:533
+#: main.lua:3237 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:533
 msgid "Right"
 msgstr ""
 
-#: _meta.lua:19 menu/main_menu.lua:19
+#: _meta.lua:19 menu/main_menu.lua:18
 msgid "Bookends"
 msgstr ""
 
@@ -648,8 +668,7 @@ msgstr ""
 
 #: menu/colours_menu.lua:90 menu/colours_menu.lua:104 menu/colours_menu.lua:276
 #: menu/colours_menu.lua:283 menu/colours_menu.lua:289
-#: menu/colours_menu.lua:296 menu/main_menu.lua:288
-#: menu/progress_bar_menu.lua:360
+#: menu/colours_menu.lua:296 menu/progress_bar_menu.lua:360
 msgid "default"
 msgstr ""
 
@@ -1229,239 +1248,228 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#: menu/main_menu.lua:52 menu/preset_manager_modal.lua:1401
+#: menu/main_menu.lua:51 menu/preset_manager_modal.lua:1401
 msgid "Save preset"
 msgstr ""
 
-#: menu/main_menu.lua:54 menu/preset_manager_modal.lua:1403
+#: menu/main_menu.lua:53 menu/preset_manager_modal.lua:1403
 msgid "Preset name"
 msgstr ""
 
-#: menu/main_menu.lua:69
+#: menu/main_menu.lua:68
 msgid "Saved preset:"
 msgstr ""
 
-#: menu/main_menu.lua:93 menu/preset_manager_modal.lua:1524
+#: menu/main_menu.lua:92 menu/preset_manager_modal.lua:1524
 msgid "Rename preset"
 msgstr ""
 
-#: menu/main_menu.lua:98 menu/main_menu.lua:660
+#: menu/main_menu.lua:97 menu/main_menu.lua:635
 #: menu/preset_manager_modal.lua:1528 menu/preset_manager_modal.lua:1715
 msgid "Rename"
 msgstr ""
 
-#: menu/main_menu.lua:130
+#: menu/main_menu.lua:129
 msgid "File extension"
 msgstr ""
 
-#: menu/main_menu.lua:132
+#: menu/main_menu.lua:131
 msgid "e.g. CBZ"
 msgstr ""
 
-#: menu/main_menu.lua:136
+#: menu/main_menu.lua:135
 msgid "Next"
 msgstr ""
 
-#: menu/main_menu.lua:159
+#: menu/main_menu.lua:158
 msgid "Hidden"
 msgstr ""
 
-#: menu/main_menu.lua:173 menu/main_menu.lua:175
+#: menu/main_menu.lua:172 menu/main_menu.lua:174
 msgid "Bookends settings"
 msgstr ""
 
-#: menu/main_menu.lua:173
+#: menu/main_menu.lua:172
 msgid "plugin update available"
 msgstr ""
 
-#: menu/main_menu.lua:190 menu/main_menu.lua:192
+#: menu/main_menu.lua:189 menu/main_menu.lua:191
 msgid "Preset"
 msgstr ""
 
-#: menu/main_menu.lua:242
+#: menu/main_menu.lua:241
 msgid "Full width progress bars"
 msgstr ""
 
-#: menu/main_menu.lua:254
+#: menu/main_menu.lua:253
 msgid "Save current as new preset…"
 msgstr ""
 
-#: menu/main_menu.lua:270
+#: menu/main_menu.lua:269
 msgid "Enable bookends"
 msgstr ""
 
-#: menu/main_menu.lua:286 menu/main_menu.lua:288
-msgid "Use Bookshelf status line"
-msgstr ""
-
-#: menu/main_menu.lua:290
-msgid ""
-"Shows Bookshelf's status line above the top row, with the same text, font "
-"and alignment, so it does not change as you move between the shelf and a "
-"book. Edit it in Bookshelf."
-msgstr ""
-
-#: menu/main_menu.lua:305 menu/main_menu.lua:307
+#: menu/main_menu.lua:280 menu/main_menu.lua:282
 msgid "Disable stock status bar"
 msgstr ""
 
-#: menu/main_menu.lua:305
+#: menu/main_menu.lua:280
 msgid "recommended"
 msgstr ""
 
-#: menu/main_menu.lua:310
+#: menu/main_menu.lua:285
 msgid ""
 "Hides KOReader's built-in status bar. This simplifies the render pipeline "
 "and can reduce e-ink flicker on some devices. All status bar features are "
 "available as Bookends tokens."
 msgstr ""
 
-#: menu/main_menu.lua:331 menu/main_menu.lua:341
+#: menu/main_menu.lua:306 menu/main_menu.lua:316
 #: menu/preset_manager_modal.lua:1607
 msgid "Default font"
 msgstr ""
 
-#: menu/main_menu.lua:367
+#: menu/main_menu.lua:342
 msgid "Bottom center tap gesture"
 msgstr ""
 
-#: menu/main_menu.lua:369
+#: menu/main_menu.lua:344
 msgid "toggle bookends"
 msgstr ""
 
-#: menu/main_menu.lua:371
+#: menu/main_menu.lua:346
 msgid "cycle presets"
 msgstr ""
 
-#: menu/main_menu.lua:373
+#: menu/main_menu.lua:348
 msgid "preset library"
 msgstr ""
 
-#: menu/main_menu.lua:377
+#: menu/main_menu.lua:352
 msgid ""
 "Configure what happens when you tap the centre of the status bar area, and "
 "whether long-pressing a progress bar opens the skim dialog."
 msgstr ""
 
-#: menu/main_menu.lua:388
+#: menu/main_menu.lua:363
 msgid "Pass through"
 msgstr ""
 
-#: menu/main_menu.lua:396
+#: menu/main_menu.lua:371
 msgid "Toggle bookends"
 msgstr ""
 
-#: menu/main_menu.lua:410
+#: menu/main_menu.lua:385
 msgid "Cycle starred presets"
 msgstr ""
 
-#: menu/main_menu.lua:424
+#: menu/main_menu.lua:399
 msgid "Open preset library"
 msgstr ""
 
-#: menu/main_menu.lua:439
+#: menu/main_menu.lua:414
 msgid "Long-press progress bars to skim document"
 msgstr ""
 
-#: menu/main_menu.lua:447
+#: menu/main_menu.lua:422
 msgid ""
 "Opens the skim dialog when you long-press on a full-width progress bar. "
 "Replaces the stock status bar's long-press to skim feature."
 msgstr ""
 
-#: menu/main_menu.lua:454
+#: menu/main_menu.lua:429
 msgid "Include current page in pages-left tokens"
 msgstr ""
 
-#: menu/main_menu.lua:455
+#: menu/main_menu.lua:430
 msgid ""
 "Affects %L (pages left in book) and %l (pages left in chapter). Off "
 "(default): 'n−1 → 0'. On: 'n → 1'."
 msgstr ""
 
-#: menu/main_menu.lua:468
+#: menu/main_menu.lua:443
 msgid "Disable automatic clock/battery refresh"
 msgstr ""
 
-#: menu/main_menu.lua:481
+#: menu/main_menu.lua:456
 msgid ""
 "Stops the 60-second background timer that keeps the clock, battery, and time-"
 "left tokens updating without a page turn. Useful on devices where this timer "
 "interferes with sleep/wake (e.g. some Pocketbook models)."
 msgstr ""
 
-#: menu/main_menu.lua:484
+#: menu/main_menu.lua:459
 msgid "Notify on wake when update available"
 msgstr ""
 
-#: menu/main_menu.lua:504
+#: menu/main_menu.lua:479
 msgid "Update available"
 msgstr ""
 
-#: menu/main_menu.lua:506
+#: menu/main_menu.lua:481
 msgid "Installed version"
 msgstr ""
 
-#: menu/main_menu.lua:514
+#: menu/main_menu.lua:489
 msgid "Auto preset by file type"
 msgstr ""
 
-#: menu/main_menu.lua:515
+#: menu/main_menu.lua:490
 msgid ""
 "Automatically hide Bookends, or switch to a specific preset, based on the "
 "document's file extension (e.g. hide for comic archives, use a plainer "
 "preset for PDFs)."
 msgstr ""
 
-#: menu/main_menu.lua:521
+#: menu/main_menu.lua:496
 msgid "Advanced"
 msgstr ""
 
-#: menu/main_menu.lua:540
+#: menu/main_menu.lua:515
 msgid "Check for updates"
 msgstr ""
 
-#: menu/main_menu.lua:542
+#: menu/main_menu.lua:517
 msgid "Install branch"
 msgstr ""
 
-#: menu/main_menu.lua:550
+#: menu/main_menu.lua:525
 msgid "Reset to latest stable release"
 msgstr ""
 
-#: menu/main_menu.lua:561 menu/main_menu.lua:564
+#: menu/main_menu.lua:536 menu/main_menu.lua:539
 msgid "Installed: v"
 msgstr ""
 
-#: menu/main_menu.lua:595
+#: menu/main_menu.lua:570
 msgid "Change"
 msgstr ""
 
-#: menu/main_menu.lua:605
+#: menu/main_menu.lua:580
 msgid "Remove rule"
 msgstr ""
 
-#: menu/main_menu.lua:624
+#: menu/main_menu.lua:599
 msgid "Add rule…"
 msgstr ""
 
-#: menu/main_menu.lua:642
+#: menu/main_menu.lua:617
 msgid "Preset library…"
 msgstr ""
 
-#: menu/main_menu.lua:674 menu/main_menu.lua:678
+#: menu/main_menu.lua:649 menu/main_menu.lua:653
 msgid "Font scale"
 msgstr ""
 
-#: menu/main_menu.lua:702
+#: menu/main_menu.lua:677
 msgid "Truncation gap between regions"
 msgstr ""
 
-#: menu/main_menu.lua:706
+#: menu/main_menu.lua:681
 msgid "Truncation gap"
 msgstr ""
 
-#: menu/main_menu.lua:717
+#: menu/main_menu.lua:692
 msgid "Prioritise left/right and truncate long center text"
 msgstr ""
 
