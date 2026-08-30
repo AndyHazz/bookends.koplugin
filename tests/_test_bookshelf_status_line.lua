@@ -1,13 +1,16 @@
--- The "Bookshelf status line" mirror (#348): bookends renders the same status
--- line bookshelf shows across the top of its expanded shelf, so switching
--- between the shelf and the reader does not change what that strip says.
+-- Bookshelf's status line in the reader (#348). BOOKENDS DOES NOT DRAW IT:
+-- bookshelf draws it itself, with the same builder its expanded shelf uses, so
+-- the two are identical by construction rather than by two renderers agreeing,
+-- and the feature works with bookends absent. All bookends does is get out of
+-- the way - move its top row, and any top-anchored bar, below the strip.
 --
--- Interop is through a settings KEY, not through bookshelf's code: reading
+-- Interop is through settings KEYS, not through bookshelf's code: reading
 -- G_reader_settings needs no pcall(require) of a sibling plugin, so it cannot
--- break when bookshelf refactors. What this suite pins is the resolution -
--- especially the case that matters most, where bookshelf has never written the
--- key because the user never edited a region, and the mirror must still show
--- what bookshelf actually renders rather than nothing.
+-- break when bookshelf refactors. What this suite pins is that contract - the
+-- resolution of the line's own config (still read here, because the picker
+-- subtitle and the parity checker both care), the switch, and the reserved
+-- height, including the case that matters most: bookshelf never writes the
+-- regions key until a region is edited, so the defaults have to be right.
 --
 -- Usage: lua tests/_test_bookshelf_status_line.lua
 
@@ -26,9 +29,11 @@ local function eq(a, e, msg)
     end
 end
 
-local function fakeSettings(value)
+local function fakeSettings(value, reserved, show_in_reader)
     return { readSetting = function(_self, key)
         if key == StatusLine.SETTINGS_KEY then return value end
+        if key == StatusLine.RESERVED_KEY then return reserved end
+        if key == StatusLine.SHOW_IN_READER_KEY then return show_in_reader end
         return nil
     end }
 end
@@ -95,6 +100,48 @@ test("a broken settings object degrades instead of raising", function()
     })
     assert(ok, "fromSettings raised: " .. tostring(cfg))
     eq(cfg.template, StatusLine.DEFAULTS.template)
+end)
+
+test("a published height is only honoured while the switch is on", function()
+    -- Bookshelf writes the height when it PAINTS, and has no chance to clear
+    -- it if it is disabled or uninstalled between sessions. Reserving on the
+    -- bare number left a permanent gap at the top of the reader for a strip
+    -- nobody draws, so the switch is the gate and the height is only the size.
+    eq(StatusLine.reservedHeight(fakeSettings(nil, 60, nil)), 0)
+    eq(StatusLine.reservedHeight(fakeSettings(nil, 60, false)), 0)
+    eq(StatusLine.reservedHeight(fakeSettings(nil, 60, true)), 60)
+end)
+
+test("the reader switch is its own key, not a field on the status region", function()
+    -- It used to live in the region entry. The line editor's "Default" button
+    -- clears the draft and copies every key out of DEFAULTS, so resetting the
+    -- status line's WORDING also silently switched the reader strip off. A
+    -- region edit must not be able to reach this.
+    eq(StatusLine.DEFAULTS.show_in_reader, nil)
+    eq(StatusLine.showInReader(fakeSettings(nil, nil, nil)), false)
+    eq(StatusLine.showInReader(fakeSettings(nil, nil, true)), true)
+    -- A region entry claiming the old field name has no effect any more.
+    eq(StatusLine.showInReader(
+        fakeSettings({ status = { show_in_reader = true } }, nil, nil)), false)
+end)
+
+test("showInReader degrades to false rather than raising", function()
+    eq(StatusLine.showInReader(nil), false)
+    local ok, v = pcall(StatusLine.showInReader, {
+        readSetting = function() error("settings exploded") end,
+    })
+    assert(ok, "showInReader raised: " .. tostring(v))
+    eq(v, false)
+end)
+
+test("reservedHeight degrades to 0 rather than raising", function()
+    eq(StatusLine.reservedHeight(nil), 0)
+    eq(StatusLine.reservedHeight({}), 0)
+    local ok, v = pcall(StatusLine.reservedHeight, {
+        readSetting = function() error("settings exploded") end,
+    })
+    assert(ok, "reservedHeight raised: " .. tostring(v))
+    eq(v, 0)
 end)
 
 print(pass .. " passed, " .. fail .. " failed")

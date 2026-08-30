@@ -1595,11 +1595,15 @@ function Bookends:_computeBarProgress(bar_cfg, pageno_local)
 end
 
 --- Compute the pixel rectangle (x,y,w,h) of a bar given its anchor/margins.
--- top_inset: height of the mirrored bookshelf status line, when shown. Every
--- top-anchored bar has to clear it for the same reason the top text rows do -
--- otherwise the strip and the bar occupy the same pixels. Vertical bars get
--- their top edge pushed down and their height reduced, so a full-height bar
--- still ends where it did rather than overrunning the bottom.
+-- top_inset: the absolute height bookshelf's status strip occupies from the
+-- top of the screen, when shown. Every top-anchored bar has to clear it for
+-- the same reason the top text rows do - otherwise the strip and the bar
+-- occupy the same pixels. Clamped rather than added: the bar is already
+-- positioned by its own margin_v, so adding the inset put it margin_v px too
+-- low when it cleared the strip anyway, and adding a margin_top-adjusted inset
+-- put it margin_top px too HIGH and straight through the strip. Vertical bars
+-- get their top edge pushed down and their height reduced, so a full-height
+-- bar still ends where it did rather than overrunning the bottom.
 local function computeBarRect(bar_cfg, x, y, screen_w, screen_h, top_inset)
     top_inset = top_inset or 0
     local anchor = bar_cfg.v_anchor or "bottom"
@@ -1608,8 +1612,9 @@ local function computeBarRect(bar_cfg, x, y, screen_w, screen_h, top_inset)
     local bar_thickness = bar_cfg.height or (is_radial and 60 or 20)
     if vertical then
         -- margin_left/right reinterpreted as top/bottom insets
-        local bar_h = screen_h - (bar_cfg.margin_left or 0) - (bar_cfg.margin_right or 0) - top_inset
-        local bar_y = y + (bar_cfg.margin_left or 0) + top_inset
+        local bar_top = math.max(bar_cfg.margin_left or 0, top_inset)
+        local bar_h = screen_h - bar_top - (bar_cfg.margin_right or 0)
+        local bar_y = y + bar_top
         local bar_x
         if anchor == "left" then
             bar_x = x + (bar_cfg.margin_v or 0)
@@ -1628,7 +1633,7 @@ local function computeBarRect(bar_cfg, x, y, screen_w, screen_h, top_inset)
         local bar_x = x + (bar_cfg.margin_left or 0)
         local bar_y
         if anchor == "top" then
-            bar_y = y + (bar_cfg.margin_v or 0) + top_inset
+            bar_y = y + math.max(bar_cfg.margin_v or 0, top_inset)
         else
             bar_y = y + screen_h - bar_thickness - (bar_cfg.margin_v or 0)
         end
@@ -1802,12 +1807,22 @@ end
 --- agreeing. All that is needed here is to keep out of its way: bookshelf
 --- publishes the space it occupies and we move the top row, and any
 --- top-anchored progress bar, below it.
+--- Returns the ABSOLUTE height from the top of the screen, not a delta. Each
+--- consumer clamps against its own margin: the text rows sit at margin_top,
+--- the bars at their own margin_v, and pre-subtracting one of those here made
+--- the other wrong (a top-anchored bar overlapped the strip by margin_top).
 function Bookends:_bookshelfStatusReserve()
     local ok, h = pcall(StatusLine.reservedHeight, G_reader_settings)
     if not ok or not h or h <= 0 then return 0 end
-    -- The top row's own offset already includes margin_top, so subtract it to
-    -- avoid counting that gap twice.
-    return math.max(0, h - (self.defaults.margin_top or 0))
+    return h
+end
+
+--- How far a top-anchored TEXT row has to move to clear the strip. The row
+--- already sits at margin_top, so only the excess counts.
+function Bookends:_bookshelfStatusShift()
+    local strip = self._bs_strip_h or 0
+    if strip <= 0 then return 0 end
+    return math.max(0, strip - (self.defaults.margin_top or 0))
 end
 
 function Bookends:_paintToInner(bb, x, y)
@@ -1938,6 +1953,10 @@ function Bookends:_paintToInner(bb, x, y)
         end
     end
 
+    -- Reserve room for bookshelf's in-reader status line, which bookshelf
+    -- paints itself. Read before the fill and the bars, because both need it.
+    self._bs_strip_h = self:_bookshelfStatusReserve()
+
     -- Background fill: paint behind progress bars and text. See spec
     -- docs/superpowers/specs/2026-05-04-bookends-background-fill-design.md.
     -- Sits between Phase 1 (which determines which lines actually render) and
@@ -1951,7 +1970,19 @@ function Bookends:_paintToInner(bb, x, y)
                 local positions_data = self:_assembleFillPositionsData(active_line_indices)
                 local extents = OverlayWidget.computeEndFillExtents(positions_data, screen_h)
                 if extents.top_any_enabled and extents.top_y > 0 then
-                    OverlayWidget.bbPaintRect(bb, x, y, screen_w, extents.top_y, bg_color)
+                    -- Start BELOW bookshelf's strip and extend by however far
+                    -- the top row moved down for it. Two reasons, both real:
+                    -- ReaderView paints its view modules in pairs() order, so
+                    -- we cannot count on drawing before bookshelf does and a
+                    -- fill starting at y would sometimes erase the strip; and
+                    -- the extents come from the STORED v_offsets, which know
+                    -- nothing about the shift, so an unextended fill left the
+                    -- bottom of the row sitting on unfilled page.
+                    local strip_h = self._bs_strip_h or 0
+                    local fill_h = extents.top_y + self:_bookshelfStatusShift() - strip_h
+                    if fill_h > 0 then
+                        OverlayWidget.bbPaintRect(bb, x, y + strip_h, screen_w, fill_h, bg_color)
+                    end
                 end
                 if extents.bottom_any_enabled and extents.bottom_y < screen_h then
                     local h = screen_h - extents.bottom_y
@@ -1963,18 +1994,13 @@ function Bookends:_paintToInner(bb, x, y)
 
     -- Phase 0: Render full-width progress bars (drawn behind text, on top
     -- of BG fill). text_color / symbol_color are read directly above.
-    -- Freed and reset here rather than in the position phase below, because
-    -- the status strip is now the FIRST thing to put an entry in it.
-    if self.widget_cache then
-        OverlayWidget.freeWidgets(self.widget_cache)
-    end
-    self.widget_cache = {}
-
-    -- Reserve room for bookshelf's in-reader status line, which bookshelf
-    -- paints itself. Read before the bars, because they need it too and a
-    -- value read afterwards would be a frame stale.
-    self._bs_strip_h = self:_bookshelfStatusReserve()
-
+    --
+    -- The widget cache is NOT reset here. It briefly was, to make room for a
+    -- status-strip entry that no longer exists, and that broke the
+    -- unchanged-frame fast path below: it repaints from widget_cache and
+    -- returns, so an emptied cache meant every such frame painted nothing at
+    -- all and dropped the hold rects with it. The reset belongs after that
+    -- early return, in the position phase, which is where it lives again.
     self:_renderProgressBars(bb, x, y, screen_w, screen_h)
 
     -- Check if anything changed
@@ -2126,6 +2152,14 @@ function Bookends:_paintToInner(bb, x, y)
     -- Phase 3: Calculate overlap limits per row
     local gap = self.defaults.overlap_gap
 
+    -- Past the unchanged-frame fast path, so the cached widgets it repaints
+    -- from are still intact when it runs. Anything freed above this line is
+    -- freed out from under that path.
+    if self.widget_cache then
+        OverlayWidget.freeWidgets(self.widget_cache)
+    end
+    self.widget_cache = {}
+
 
     for _, row in ipairs({"top", "bottom"}) do
         local left_key = row == "top" and "tl" or "bl"
@@ -2175,12 +2209,18 @@ function Bookends:_paintToInner(bb, x, y)
                 -- "wenty-Eight: Welcome to the Revolution" with the "Chapter T"
                 -- missing. Truncation was always the intent; it was just
                 -- conditional on a collision that had not happened.
-                -- Left-anchored lines are exempt: they start at the margin and
-                -- run off the RIGHT, which the existing ellipsis path handles.
+                -- The room depends on the ANCHOR, which this originally did
+                -- not account for: it doubled the position's own margin, and
+                -- getMargin hands back margin_right for tc/tr/bc/br, so the
+                -- near margin was counted twice and the far one not at all.
+                -- A left-anchored line with an h_offset lost it twice over and
+                -- truncated early. OverlayWidget.marginRoom has the per-anchor
+                -- arithmetic, with the cases pinned in tests/_test_row_limits.
                 if not max_width then
-                    local _, hmargin = self:getMargin(key)
-                    local hoffset = self:getPositionSetting(key, "h_offset")
-                    local room = math.max(0, screen_w - 2 * (hmargin + hoffset))
+                    local room = OverlayWidget.marginRoom(
+                        pb.pos_def.h_anchor, screen_w,
+                        self.defaults.margin_left, self.defaults.margin_right,
+                        self:getPositionSetting(key, "h_offset"))
                     if pb.w and pb.w > room then max_width = room end
                 end
 
@@ -2249,9 +2289,9 @@ function Bookends:_paintToInner(bb, x, y)
                 if widget then
                     local v_margin, h_margin = self:getMargin(key)
                     local v_off = self:getPositionSetting(key, "v_offset") + v_margin
-                    -- Make room for the mirrored status strip above the top row.
+                    -- Make room for bookshelf's status strip above the top row.
                     if pb.pos_def.v_anchor == "top" then
-                        v_off = v_off + (self._bs_strip_h or 0)
+                        v_off = v_off + self:_bookshelfStatusShift()
                     end
                     local h_off = self:getPositionSetting(key, "h_offset") + h_margin
                     local px, py = OverlayWidget.computeCoordinates(
