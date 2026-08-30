@@ -429,16 +429,32 @@ function Updater.install(zip_url, old_version, new_version, on_success, error_la
             local file = io.open(tmp_path, "wb")
             if file then
                 local ok_dl, code, headers, status = pcall(function()
-                    -- Idle timeout only, NO total cap: FILE_TOTAL_TIMEOUT is
-                    -- an ABSOLUTE 60s ceiling on the whole transfer, which
-                    -- fails a download that is merely SLOW rather than stalled.
-                    -- FILE_BLOCK_TIMEOUT still catches a dead connection in
-                    -- 15s. Bookshelf hit this hardest (its zip is 6x larger),
-                    -- but the ceiling is wrong for both.
-                    socketutil:set_timeout(socketutil.FILE_BLOCK_TIMEOUT, -1)
-                    -- socketutil's own sink rather than ltn12's: it enforces
-                    -- the sink timeout, which is what surfaces a stalled
-                    -- transfer as SINK_TIMEOUT_CODE instead of hanging.
+                    -- FILE_TOTAL_TIMEOUT is an ABSOLUTE 60s ceiling on the
+                    -- whole transfer, so it fails a download that is merely
+                    -- SLOW rather than stalled. Bookshelf hit this hardest
+                    -- (its zip is 6x larger), but the ceiling is wrong for
+                    -- both. 300s instead: bookshelf's 3MB needs ~10 KB/s and
+                    -- bookends' 485KB needs ~1.6 KB/s, which no working
+                    -- connection falls under.
+                    --
+                    -- NOT -1 (uncapped), tempting as that is. http.request
+                    -- blocks, and this runs on the UI loop with no Trapper
+                    -- and no cancel, so an unbounded transfer freezes
+                    -- KOReader until the user kills it. A ceiling that
+                    -- reports a failure beats a hang.
+                    --
+                    -- FILE_BLOCK_TIMEOUT is the idle timeout and catches a
+                    -- dead connection in 15s, but it RESETS on every chunk,
+                    -- so it alone cannot bound a connection that dribbles.
+                    socketutil:set_timeout(socketutil.FILE_BLOCK_TIMEOUT, 300)
+                    -- socketutil's sink rather than ltn12's: it enforces the
+                    -- total timeout above, surfacing a dribbling transfer as
+                    -- SINK_TIMEOUT_CODE. The socket timeout only covers the
+                    -- wait BEFORE data arrives; once chunks are flowing this
+                    -- sink is the only thing still counting. Note it decides
+                    -- at CONSTRUCTION time and degrades to a plain
+                    -- ltn12.sink.file when total_timeout is negative, so it
+                    -- has to be built after set_timeout, as it is here.
                     local sink = socketutil.file_sink and socketutil.file_sink(file)
                                  or ltn12.sink.file(file)
                     local c, h, st = socket.skip(1, http.request({
