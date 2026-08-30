@@ -2232,26 +2232,37 @@ function Bookends:_paintToInner(bb, x, y)
                 -- A left-anchored line with an h_offset lost it twice over and
                 -- truncated early. OverlayWidget.marginRoom has the per-anchor
                 -- arithmetic, with the cases pinned in tests/_test_row_limits.
+                -- Measure the TEXT, not the widget, when the position
+                -- carries a bar. An auto-fill bar has no natural width - built
+                -- unconstrained it takes the whole screen - so pb.w is the
+                -- bar's placeholder size and says nothing about whether the
+                -- text overflows. Testing pb.w meant this fired for every
+                -- auto-fill bar, which then took the `if max_width` branch and
+                -- skipped the row-aware bar sizing below entirely, so the bar
+                -- filled the margin box and painted straight over the left and
+                -- right positions. measureTextWidth is what getOverlapWidth
+                -- already uses for the same reason.
                 if not max_width then
                     local room = OverlayWidget.marginRoom(
                         pb.pos_def.h_anchor, screen_w,
                         self.defaults.margin_left, self.defaults.margin_right,
                         self:getPositionSetting(key, "h_offset"))
-                    if pb.w and pb.w > room then max_width = room end
+                    local natural = bar_data[key]
+                        and OverlayWidget.measureTextWidth(pb.line_texts, pb.line_configs)
+                        or pb.w
+                    if natural and natural > room then max_width = room end
                 end
 
-                if max_width then
-                    -- Truncation needed: free pre-built widget and rebuild with limit
-                    if pb.widget and pb.widget.free then pb.widget:free() end
-                    widget, w, h = OverlayWidget.buildTextWidget(
-                        pb.line_texts, pb.line_configs, pb.pos_def.h_anchor, max_width, max_width)
-                elseif bar_data[key] then
-                    -- Bar position without truncation: rebuild with row-aware available width
-                    -- so auto-fill bars don't exceed the space overlap prevention would allow
-                    if pb.widget and pb.widget.free then pb.widget:free() end
+                -- Truncation limit and bar width are INDEPENDENT. They used
+                -- to be an if/elseif, so a bar position that needed truncating
+                -- lost its row-aware width and fell back to the truncation
+                -- limit, which is the margin box rather than the gap between
+                -- the neighbours. Both are computed; whichever apply are
+                -- passed together.
+                local bar_avail
+                if bar_data[key] then
                     local _, hm = self:getMargin(key)
                     local ho = self:getPositionSetting(key, "h_offset") + hm
-                    local bar_avail
                     if pb.pos_def.h_anchor == "center" then
                         local lw = getOverlapWidth(left_key) or 0
                         local rw = getOverlapWidth(right_key) or 0
@@ -2295,10 +2306,15 @@ function Bookends:_paintToInner(bb, x, y)
                             bar_avail = math.max(0, screen_w - left_m - right_m)
                         end
                     end
+                end
+
+                if max_width or bar_avail then
+                    if pb.widget and pb.widget.free then pb.widget:free() end
                     widget, w, h = OverlayWidget.buildTextWidget(
-                        pb.line_texts, pb.line_configs, pb.pos_def.h_anchor, nil, bar_avail)
+                        pb.line_texts, pb.line_configs, pb.pos_def.h_anchor,
+                        max_width, bar_avail or max_width)
                 else
-                    -- No truncation: reuse pre-built widget
+                    -- Nothing to constrain: reuse pre-built widget
                     widget, w, h = pb.widget, pb.w, pb.h
                 end
 

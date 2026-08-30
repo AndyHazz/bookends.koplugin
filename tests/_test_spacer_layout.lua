@@ -153,6 +153,30 @@ test("measureTextWidth ignores the spacer on a bar-less line", function()
            .. " got " .. tostring(spaced))
 end)
 
+-- The premise the #108 overflow test rests on. That test asks "is this
+-- position wider than the room its margins leave?" and truncates if so. For a
+-- position carrying an auto-fill bar the WIDGET width is useless as an answer:
+-- an auto-fill bar has no natural width, so built unconstrained it takes the
+-- whole screen and the test fires every time. It then set a truncation limit,
+-- which sent main.lua down the truncation branch and skipped the row-aware bar
+-- sizing entirely - so the bar filled the margin box and painted straight over
+-- the left and right positions on its row. measureTextWidth is the honest
+-- signal because it drops the bar placeholder; these pin that it stays that
+-- way, and that a bar line's measurement really is much smaller than a
+-- full-width widget.
+test("measureTextWidth drops the bar itself, not just the spacer", function()
+    local c = cfg(); c.bar = true
+    local BAR = OverlayWidget.BAR_PLACEHOLDER
+    local with_bar = OverlayWidget.measureTextWidth({ "AB" .. BAR }, { c })
+    assert(with_bar == 2 * CHAR_W,
+           "the bar placeholder was measured: expected " .. tostring(2 * CHAR_W)
+           .. " got " .. tostring(with_bar))
+    -- A bar-only line measures as nothing at all, which is the case that made
+    -- the old pb.w test wrong by the full width of the screen.
+    local bar_only = OverlayWidget.measureTextWidth({ BAR }, { c })
+    assert(bar_only == 0, "a bar-only line should measure 0, got " .. tostring(bar_only))
+end)
+
 test("measureTextWidth still ignores the spacer on a bar line", function()
     local c = cfg(); c.bar = true
     local plain  = OverlayWidget.measureTextWidth({ "AB" }, { c })
