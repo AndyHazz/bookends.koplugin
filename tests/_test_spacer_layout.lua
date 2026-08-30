@@ -139,5 +139,26 @@ test("text wider than the line leaves no gap rather than a negative one", functi
     assert(row.width >= 0)
 end)
 
+test("measureTextWidth ignores the spacer on a bar-less line", function()
+    -- %spacer is an elastic gap: it has no intrinsic width, and the renderer
+    -- distributes the slack itself. The placeholder was only stripped for
+    -- lines carrying a %bar, so on any other line it was measured as a notdef
+    -- glyph and inflated the overlap width, truncating the opposite position
+    -- on that row for no reason.
+    local plain  = OverlayWidget.measureTextWidth({ "AB" }, { cfg() })
+    local spaced = OverlayWidget.measureTextWidth({ "A" .. SPACER .. "B" }, { cfg() })
+    assert(plain == 2 * CHAR_W, "harness changed: plain=" .. tostring(plain))
+    assert(spaced == plain,
+           "spacer inflated the width: expected " .. tostring(plain)
+           .. " got " .. tostring(spaced))
+end)
+
+test("measureTextWidth still ignores the spacer on a bar line", function()
+    local c = cfg(); c.bar = true
+    local plain  = OverlayWidget.measureTextWidth({ "AB" }, { c })
+    local spaced = OverlayWidget.measureTextWidth({ "A" .. SPACER .. "B" }, { c })
+    assert(spaced == plain, "bar line regressed: " .. tostring(spaced))
+end)
+
 print(pass .. " passed, " .. fail .. " failed")
 os.exit(fail == 0 and 0 or 1)

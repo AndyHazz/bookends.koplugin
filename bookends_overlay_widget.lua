@@ -690,9 +690,15 @@ function OverlayWidget.measureTextWidth(line_texts, line_configs)
     for ci, cfg_text in ipairs(line_texts) do
         local cfg = line_configs[ci] or line_configs[#line_configs] or default_cfg
         for row in cfg_text:gmatch("([^\n]+)") do
-            local measure_text = row
+            -- The spacer is an elastic gap with no intrinsic width, on ANY
+            -- line: buildTextWidget distributes the slack itself. Stripping it
+            -- only for bar lines left the placeholder in the measurement
+            -- everywhere else, where TextWidget sized it as a notdef glyph and
+            -- inflated the overlap width, truncating the opposite position on
+            -- that row for no reason.
+            local measure_text = row:gsub(SPACER_PLACEHOLDER, "")
             if cfg.bar then
-                measure_text = row:gsub(BAR_PLACEHOLDER, ""):gsub(SPACER_PLACEHOLDER, "")
+                measure_text = measure_text:gsub(BAR_PLACEHOLDER, "")
             end
             -- Strip BBCode tags so they don't inflate the overlap-prevention
             -- width and falsely trigger the truncation path for bar lines.
@@ -1236,6 +1242,41 @@ end
 --   collapse the opposite margin (issue #43). Omitted → fall back to the
 --   symmetric 2*h_offset reservation.
 -- Returns { left=max_w|nil, center=max_w|nil, right=max_w|nil }.
+--- The widest a line can be before it overflows bookends' own margins (#108).
+---
+--- calculateRowLimits only caps a line that COLLIDES with a neighbour, so a
+--- line alone on its row was never measured against the screen at all and a
+--- long chapter title ran off the edge. This is the fallback cap for that
+--- case, and it depends on the anchor:
+---
+---   left    x = ml + off            -> room = screen - ml - off - mr
+---   right   x = screen - w - mr - off -> room = screen - mr - off - ml
+---   center  x = (screen - w)/2 + off -> symmetric about the middle, so
+---           both margins bind at once and the tighter one wins:
+---           x >= ml       gives w <= screen - 2*(ml - off)
+---           x + w <= s-mr gives w <= screen - 2*(mr + off)
+---
+--- Doing this inline with the position's OWN margin doubled was only right for
+--- a centred line on symmetric margins: getMargin hands back margin_right for
+--- tc/tr/bc/br, so the near margin was counted twice and the far one not at
+--- all, and a left-anchored line lost twice its h_offset instead of once.
+--- @return number  a non-negative width
+function OverlayWidget.marginRoom(h_anchor, screen_w, margin_left, margin_right, h_offset)
+    screen_w     = tonumber(screen_w) or 0
+    margin_left  = tonumber(margin_left) or 0
+    margin_right = tonumber(margin_right) or 0
+    h_offset     = tonumber(h_offset) or 0
+    local room
+    if h_anchor == "center" then
+        room = screen_w - 2 * math.max(margin_left - h_offset, margin_right + h_offset)
+    elseif h_anchor == "right" then
+        room = screen_w - margin_right - h_offset - margin_left
+    else
+        room = screen_w - margin_left - h_offset - margin_right
+    end
+    return math.max(0, room)
+end
+
 function OverlayWidget.calculateRowLimits(left_w, center_w, right_w, screen_w, gap, h_offset, priority, left_offset, right_offset)
     local limits = { left = nil, center = nil, right = nil }
 

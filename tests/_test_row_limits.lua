@@ -78,5 +78,49 @@ test("backward compat: offsets omitted falls back to 2*h_offset", function()
     eq(limits.left, 1156, "fallback to 2*h_offset")
 end)
 
+-- ── OverlayWidget.marginRoom (issue #108) ───────────────────────────────────
+-- The widest a line can be before it overflows BOOKENDS' own margins, for a
+-- line with no overlapping neighbour to cap it. The #108 fix computed this
+-- inline as screen_w - 2*(near_margin + h_offset) for every position, which is
+-- only right for a centred line on symmetric margins: getMargin returns
+-- margin_right for tc/tr/bc/br, so the near margin was doubled and the far one
+-- ignored, and a left-anchored line lost twice its own h_offset.
+
+test("centred, symmetric margins: both margins reserved", function()
+    eq(OverlayWidget.marginRoom("center", 1236, 18, 18, 0), 1200)
+end)
+
+test("centred: the TIGHTER margin governs both sides", function()
+    -- centring is symmetric about the middle, so the wider margin binds first
+    eq(OverlayWidget.marginRoom("center", 1236, 18, 40, 0), 1236 - 80)
+    eq(OverlayWidget.marginRoom("center", 1236, 40, 18, 0), 1236 - 80)
+end)
+
+test("centred: h_offset slides the line toward one margin", function()
+    -- +10 shifts right, so the right margin binds: (w+screen)/2 + 10 <= screen - 18
+    eq(OverlayWidget.marginRoom("center", 1236, 18, 18, 10), 1236 - 56)
+end)
+
+test("right-anchored: near margin plus offset, far margin once", function()
+    eq(OverlayWidget.marginRoom("right", 1236, 18, 18, 0), 1200)
+    eq(OverlayWidget.marginRoom("right", 1236, 18, 18, 50), 1150)
+end)
+
+test("left-anchored: its own offset counted once, not twice", function()
+    -- the old inline maths gave 1236 - 2*(18+50) = 1100 here
+    eq(OverlayWidget.marginRoom("left", 1236, 18, 18, 50), 1150)
+    eq(OverlayWidget.marginRoom("left", 1236, 18, 18, 0), 1200)
+end)
+
+test("asymmetric margins are respected per side", function()
+    eq(OverlayWidget.marginRoom("left",  1236, 10, 60, 0), 1236 - 70)
+    eq(OverlayWidget.marginRoom("right", 1236, 10, 60, 0), 1236 - 70)
+end)
+
+test("never returns a negative room", function()
+    eq(OverlayWidget.marginRoom("center", 100, 400, 400, 0), 0)
+    eq(OverlayWidget.marginRoom("left", 100, 400, 400, 0), 0)
+end)
+
 print(pass .. " pass / " .. fail .. " fail")
 os.exit(fail == 0 and 0 or 1)
