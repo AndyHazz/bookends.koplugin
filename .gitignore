@@ -9,3 +9,9 @@ tools/submit-worker/dist/
 
 tools/.curator_scratch.json
 tools/__pycache__/
+
+assets/bookends-social.*
+
+# Agent scratch: never belongs in the repo.
+.superpowers/
+.claude/
