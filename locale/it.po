@@ -350,20 +350,19 @@ msgstr "Lettura"
 
 #: bookends_tokens.lua:431
 msgid "On hold"
-msgstr ""
+msgstr "In attesa"
 
 #: bookends_tokens.lua:432
-#, fuzzy
 msgid "Finished"
-msgstr "Libri terminati"
+msgstr "Finito"
 
 #: bookends_tokens.lua:3190
 msgid " and "
-msgstr ""
+msgstr " e "
 
 #: bookends_tokens.lua:3190
 msgid ", et al."
-msgstr ""
+msgstr ", et al."
 
 #: bookends_updater.lua:105
 msgid "Open the releases page in a browser?"
@@ -414,25 +413,24 @@ msgid "Downloading update..."
 msgstr "Download aggiornamento..."
 
 #: bookends_updater.lua:460
-#, fuzzy
 msgid "the connection failed"
-msgstr "Se connesso"
+msgstr "la connessione non è riuscita"
 
 #: bookends_updater.lua:463
 msgid "the connection timed out"
-msgstr ""
+msgstr "la connessione è scaduta"
 
 #: bookends_updater.lua:465
 msgid "the secure connection failed"
-msgstr ""
+msgstr "la connessione sicura non è riuscita"
 
 #: bookends_updater.lua:468
 msgid "there was no response"
-msgstr ""
+msgstr "non è arrivata alcuna risposta"
 
 #: bookends_updater.lua:484 bookends_updater.lua:489
 msgid "the file could not be saved"
-msgstr ""
+msgstr "non è stato possibile salvare il file"
 
 #: bookends_updater.lua:516
 msgid "Download failed."
@@ -2004,60 +2002,56 @@ msgid "Document files in folder"
 msgstr "Numero di documenti nella cartella"
 
 #: menu/tokens_catalogue.lua:49
-#, fuzzy
 msgid "Number of authors"
-msgstr "N° note"
+msgstr "Numero di autori"
 
 #: menu/tokens_catalogue.lua:50
 msgid "Short author list ('A, B, et al.' for 3+)"
-msgstr ""
+msgstr "Elenco autori abbreviato ('A, B, et al.' per 3+)"
 
 #: menu/tokens_catalogue.lua:51
 msgid "Reading status value (unread/reading/on_hold/finished)"
-msgstr ""
+msgstr "Valore dello stato di lettura (unread/reading/on_hold/finished)"
 
 #: menu/tokens_catalogue.lua:52
 msgid "Reading status as a word"
-msgstr ""
+msgstr "Stato di lettura come testo"
 
 #: menu/tokens_catalogue.lua:53
 msgid "Your rating as stars"
-msgstr ""
+msgstr "La tua valutazione in stelle"
 
 #: menu/tokens_catalogue.lua:54
-#, fuzzy
 msgid "Your rating as a number"
-msgstr "Pagina corrente"
+msgstr "La tua valutazione come numero"
 
 #: menu/tokens_catalogue.lua:55
-#, fuzzy
 msgid "Book description / blurb"
-msgstr "Modifica descrizione"
+msgstr "Descrizione del libro (trama)"
 
 #: menu/tokens_catalogue.lua:56
-#, fuzzy
 msgid "File size"
-msgstr "Dimensione font"
+msgstr "Dimensione file"
 
 #: menu/tokens_catalogue.lua:57
 msgid "Date added (file date)"
-msgstr ""
+msgstr "Data di aggiunta (data del file)"
 
 #: menu/tokens_catalogue.lua:58
 msgid "Date last opened"
-msgstr ""
+msgstr "Data dell'ultima apertura"
 
 #: menu/tokens_catalogue.lua:59
 msgid "Star glyph when the book is a favourite"
-msgstr ""
+msgstr "Simbolo a stella se il libro è un preferito"
 
 #: menu/tokens_catalogue.lua:60
 msgid "A highlight from this book"
-msgstr ""
+msgstr "Un'evidenziazione da questo libro"
 
 #: menu/tokens_catalogue.lua:61
 msgid "Title and author for the quote"
-msgstr ""
+msgstr "Titolo e autore dell'evidenziazione"
 
 #: menu/tokens_catalogue.lua:62
 msgid "Book language"
@@ -2070,7 +2064,7 @@ msgstr "Formato documento (EPUB, PDF, ecc.)"
 #: menu/tokens_catalogue.lua:64
 #, lua-format
 msgid "Calibre column by name, e.g. %calibre{mood}"
-msgstr ""
+msgstr "Colonna Calibre per nome, ad es. %calibre{mood}"
 
 #: menu/tokens_catalogue.lua:65
 msgid "Highlights count"
@@ -2162,7 +2156,7 @@ msgstr "Pagine rimanenti nel libro"
 
 #: menu/tokens_catalogue.lua:87
 msgid "Elastic gap: pushes the rest of the line to the far edge"
-msgstr ""
+msgstr "Spazio elastico: spinge il resto della riga fino al bordo opposto"
 
 #: menu/tokens_catalogue.lua:88
 msgid "Progress bar (configure type in line editor)"
@@ -2342,11 +2336,11 @@ msgstr "Livello batteria"
 
 #: menu/tokens_catalogue.lua:132
 msgid "Wi-Fi icon (also answers to %wifi_icon)"
-msgstr ""
+msgstr "Icona Wi-Fi (risponde anche a %wifi_icon)"
 
 #: menu/tokens_catalogue.lua:133
 msgid "Wi-Fi icon, Bookshelf's name for it"
-msgstr ""
+msgstr "Icona Wi-Fi, nome usato in Bookshelf"
 
 #: menu/tokens_catalogue.lua:134
 msgid "Plugin content"
@@ -2374,7 +2368,7 @@ msgstr "RAM usata %"
 
 #: menu/tokens_catalogue.lua:140
 msgid "System memory used (MiB)"
-msgstr ""
+msgstr "Memoria di sistema utilizzata (MiB)"
 
 #: menu/tokens_catalogue.lua:141
 msgid "RAM used (MiB)"

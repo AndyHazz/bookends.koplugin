@@ -356,20 +356,19 @@ msgstr "阅读"
 
 #: bookends_tokens.lua:431
 msgid "On hold"
-msgstr ""
+msgstr "搁置"
 
 #: bookends_tokens.lua:432
-#, fuzzy
 msgid "Finished"
-msgstr "已读完书籍"
+msgstr "读完"
 
 #: bookends_tokens.lua:3190
 msgid " and "
-msgstr ""
+msgstr " 和 "
 
 #: bookends_tokens.lua:3190
 msgid ", et al."
-msgstr ""
+msgstr " 等"
 
 #: bookends_updater.lua:105
 msgid "Open the releases page in a browser?"
@@ -420,25 +419,24 @@ msgid "Downloading update..."
 msgstr "正在下载更新…"
 
 #: bookends_updater.lua:460
-#, fuzzy
 msgid "the connection failed"
-msgstr "已连接"
+msgstr "连接失败"
 
 #: bookends_updater.lua:463
 msgid "the connection timed out"
-msgstr ""
+msgstr "连接超时"
 
 #: bookends_updater.lua:465
 msgid "the secure connection failed"
-msgstr ""
+msgstr "安全连接失败"
 
 #: bookends_updater.lua:468
 msgid "there was no response"
-msgstr ""
+msgstr "没有响应"
 
 #: bookends_updater.lua:484 bookends_updater.lua:489
 msgid "the file could not be saved"
-msgstr ""
+msgstr "无法保存文件"
 
 #: bookends_updater.lua:516
 msgid "Download failed."
@@ -1980,58 +1978,55 @@ msgstr "文件夹内文档总数"
 
 #: menu/tokens_catalogue.lua:49
 msgid "Number of authors"
-msgstr ""
+msgstr "作者数量"
 
 #: menu/tokens_catalogue.lua:50
 msgid "Short author list ('A, B, et al.' for 3+)"
-msgstr ""
+msgstr "简短作者列表（3 位以上时为“A, B 等”）"
 
 #: menu/tokens_catalogue.lua:51
 msgid "Reading status value (unread/reading/on_hold/finished)"
-msgstr ""
+msgstr "阅读状态值（unread/reading/on_hold/finished）"
 
 #: menu/tokens_catalogue.lua:52
 msgid "Reading status as a word"
-msgstr ""
+msgstr "阅读状态文字"
 
 #: menu/tokens_catalogue.lua:53
 msgid "Your rating as stars"
-msgstr ""
+msgstr "评分（星形显示）"
 
 #: menu/tokens_catalogue.lua:54
-#, fuzzy
 msgid "Your rating as a number"
-msgstr "当前页码"
+msgstr "评分（数字显示）"
 
 #: menu/tokens_catalogue.lua:55
-#, fuzzy
 msgid "Book description / blurb"
-msgstr "编辑描述"
+msgstr "书籍简介"
 
 #: menu/tokens_catalogue.lua:56
-#, fuzzy
 msgid "File size"
-msgstr "字号"
+msgstr "文件大小"
 
 #: menu/tokens_catalogue.lua:57
 msgid "Date added (file date)"
-msgstr ""
+msgstr "添加日期（文件日期）"
 
 #: menu/tokens_catalogue.lua:58
 msgid "Date last opened"
-msgstr ""
+msgstr "上次打开日期"
 
 #: menu/tokens_catalogue.lua:59
 msgid "Star glyph when the book is a favourite"
-msgstr ""
+msgstr "收藏书籍时显示的星形符号"
 
 #: menu/tokens_catalogue.lua:60
 msgid "A highlight from this book"
-msgstr ""
+msgstr "本书中的一条高亮"
 
 #: menu/tokens_catalogue.lua:61
 msgid "Title and author for the quote"
-msgstr ""
+msgstr "引文对应的书名与作者"
 
 #: menu/tokens_catalogue.lua:62
 msgid "Book language"
@@ -2044,7 +2039,7 @@ msgstr "文档格式（EPUB、PDF等）"
 #: menu/tokens_catalogue.lua:64
 #, lua-format
 msgid "Calibre column by name, e.g. %calibre{mood}"
-msgstr ""
+msgstr "按名称调用 Calibre 自定义列，例如 %calibre{mood}"
 
 #: menu/tokens_catalogue.lua:65
 msgid "Highlights count"
@@ -2136,7 +2131,7 @@ msgstr "书籍未读页数"
 
 #: menu/tokens_catalogue.lua:87
 msgid "Elastic gap: pushes the rest of the line to the far edge"
-msgstr ""
+msgstr "弹性间隔：将本行其余内容推至最远端"
 
 #: menu/tokens_catalogue.lua:88
 msgid "Progress bar (configure type in line editor)"
@@ -2316,11 +2311,11 @@ msgstr "电池电量"
 
 #: menu/tokens_catalogue.lua:132
 msgid "Wi-Fi icon (also answers to %wifi_icon)"
-msgstr ""
+msgstr "Wi-Fi 图标（别名 %wifi_icon）"
 
 #: menu/tokens_catalogue.lua:133
 msgid "Wi-Fi icon, Bookshelf's name for it"
-msgstr ""
+msgstr "Wi-Fi 图标，Bookshelf 中的对应名称"
 
 #: menu/tokens_catalogue.lua:134
 msgid "Plugin content"
@@ -2348,7 +2343,7 @@ msgstr "内存使用百分比"
 
 #: menu/tokens_catalogue.lua:140
 msgid "System memory used (MiB)"
-msgstr ""
+msgstr "系统内存使用量（MiB）"
 
 #: menu/tokens_catalogue.lua:141
 msgid "RAM used (MiB)"

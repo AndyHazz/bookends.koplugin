@@ -353,20 +353,19 @@ msgstr "Olvasás"
 
 #: bookends_tokens.lua:431
 msgid "On hold"
-msgstr ""
+msgstr "Félretéve"
 
 #: bookends_tokens.lua:432
-#, fuzzy
 msgid "Finished"
-msgstr "Befejezett könyvek"
+msgstr "Befejezett"
 
 #: bookends_tokens.lua:3190
 msgid " and "
-msgstr ""
+msgstr " és "
 
 #: bookends_tokens.lua:3190
 msgid ", et al."
-msgstr ""
+msgstr ", et al."
 
 #: bookends_updater.lua:105
 msgid "Open the releases page in a browser?"
@@ -417,25 +416,24 @@ msgid "Downloading update..."
 msgstr "Frissítés letöltése..."
 
 #: bookends_updater.lua:460
-#, fuzzy
 msgid "the connection failed"
-msgstr "Ha kapcsolódva van"
+msgstr "a kapcsolat nem jött létre"
 
 #: bookends_updater.lua:463
 msgid "the connection timed out"
-msgstr ""
+msgstr "a kapcsolat túllépte az időkorlátot"
 
 #: bookends_updater.lua:465
 msgid "the secure connection failed"
-msgstr ""
+msgstr "a biztonságos kapcsolat nem jött létre"
 
 #: bookends_updater.lua:468
 msgid "there was no response"
-msgstr ""
+msgstr "nem érkezett válasz"
 
 #: bookends_updater.lua:484 bookends_updater.lua:489
 msgid "the file could not be saved"
-msgstr ""
+msgstr "a fájlt nem sikerült elmenteni"
 
 #: bookends_updater.lua:516
 msgid "Download failed."
@@ -2008,60 +2006,56 @@ msgid "Document files in folder"
 msgstr "Dokumentumfájlok száma a mappában"
 
 #: menu/tokens_catalogue.lua:49
-#, fuzzy
 msgid "Number of authors"
-msgstr "Jegyzetek száma"
+msgstr "Szerzők száma"
 
 #: menu/tokens_catalogue.lua:50
 msgid "Short author list ('A, B, et al.' for 3+)"
-msgstr ""
+msgstr "Rövid szerzőlista ('A, B, et al.' 3+ esetén)"
 
 #: menu/tokens_catalogue.lua:51
 msgid "Reading status value (unread/reading/on_hold/finished)"
-msgstr ""
+msgstr "Olvasási állapot értéke (unread/reading/on_hold/finished)"
 
 #: menu/tokens_catalogue.lua:52
 msgid "Reading status as a word"
-msgstr ""
+msgstr "Olvasási állapot szóként"
 
 #: menu/tokens_catalogue.lua:53
 msgid "Your rating as stars"
-msgstr ""
+msgstr "Értékelésed csillagokkal"
 
 #: menu/tokens_catalogue.lua:54
-#, fuzzy
 msgid "Your rating as a number"
-msgstr "Jelenlegi oldalszám"
+msgstr "Értékelésed számként"
 
 #: menu/tokens_catalogue.lua:55
-#, fuzzy
 msgid "Book description / blurb"
-msgstr "Leírás szerkesztése"
+msgstr "Könyvleírás / ismertető"
 
 #: menu/tokens_catalogue.lua:56
-#, fuzzy
 msgid "File size"
-msgstr "Betűméret"
+msgstr "Fájlméret"
 
 #: menu/tokens_catalogue.lua:57
 msgid "Date added (file date)"
-msgstr ""
+msgstr "Hozzáadás dátuma (fájl dátuma)"
 
 #: menu/tokens_catalogue.lua:58
 msgid "Date last opened"
-msgstr ""
+msgstr "Utolsó megnyitás dátuma"
 
 #: menu/tokens_catalogue.lua:59
 msgid "Star glyph when the book is a favourite"
-msgstr ""
+msgstr "Csillag jelzés, ha a könyv kedvenc"
 
 #: menu/tokens_catalogue.lua:60
 msgid "A highlight from this book"
-msgstr ""
+msgstr "Egy kiemelés ebből a könyvből"
 
 #: menu/tokens_catalogue.lua:61
 msgid "Title and author for the quote"
-msgstr ""
+msgstr "Cím és szerző az idézethez"
 
 #: menu/tokens_catalogue.lua:62
 msgid "Book language"
@@ -2074,7 +2068,7 @@ msgstr "Dokumentumformátum (EPUB, PDF, stb.)"
 #: menu/tokens_catalogue.lua:64
 #, lua-format
 msgid "Calibre column by name, e.g. %calibre{mood}"
-msgstr ""
+msgstr "Calibre oszlop név szerint, pl. %calibre{mood}"
 
 #: menu/tokens_catalogue.lua:65
 msgid "Highlights count"
@@ -2166,7 +2160,7 @@ msgstr "Könyvből hátralévő oldalak"
 
 #: menu/tokens_catalogue.lua:87
 msgid "Elastic gap: pushes the rest of the line to the far edge"
-msgstr ""
+msgstr "Rugalmas térköz: a sor további részét a szélére tolja"
 
 #: menu/tokens_catalogue.lua:88
 msgid "Progress bar (configure type in line editor)"
@@ -2346,11 +2340,11 @@ msgstr "Akkumulátor szintje"
 
 #: menu/tokens_catalogue.lua:132
 msgid "Wi-Fi icon (also answers to %wifi_icon)"
-msgstr ""
+msgstr "Wi-Fi ikon (%wifi_icon néven is elérhető)"
 
 #: menu/tokens_catalogue.lua:133
 msgid "Wi-Fi icon, Bookshelf's name for it"
-msgstr ""
+msgstr "Wi-Fi ikon, a Bookshelf ezen a néven használja"
 
 #: menu/tokens_catalogue.lua:134
 msgid "Plugin content"
@@ -2378,7 +2372,7 @@ msgstr "RAM-használat %"
 
 #: menu/tokens_catalogue.lua:140
 msgid "System memory used (MiB)"
-msgstr ""
+msgstr "Rendszermemória használat (MiB)"
 
 #: menu/tokens_catalogue.lua:141
 msgid "RAM used (MiB)"

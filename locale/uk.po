@@ -358,20 +358,19 @@ msgstr "Читання"
 
 #: bookends_tokens.lua:431
 msgid "On hold"
-msgstr ""
+msgstr "На черзі"
 
 #: bookends_tokens.lua:432
-#, fuzzy
 msgid "Finished"
-msgstr "Книг завершено"
+msgstr "Прочитано"
 
 #: bookends_tokens.lua:3190
 msgid " and "
-msgstr ""
+msgstr " і "
 
 #: bookends_tokens.lua:3190
 msgid ", et al."
-msgstr ""
+msgstr ", та ін."
 
 #: bookends_updater.lua:105
 msgid "Open the releases page in a browser?"
@@ -422,25 +421,24 @@ msgid "Downloading update..."
 msgstr "Завантаження оновлення..."
 
 #: bookends_updater.lua:460
-#, fuzzy
 msgid "the connection failed"
-msgstr "Якщо з'єднано"
+msgstr "не вдалося під'єднатися"
 
 #: bookends_updater.lua:463
 msgid "the connection timed out"
-msgstr ""
+msgstr "минув час очікування з'єднання"
 
 #: bookends_updater.lua:465
 msgid "the secure connection failed"
-msgstr ""
+msgstr "не вдалося встановити захищене з'єднання"
 
 #: bookends_updater.lua:468
 msgid "there was no response"
-msgstr ""
+msgstr "не отримано відповіді"
 
 #: bookends_updater.lua:484 bookends_updater.lua:489
 msgid "the file could not be saved"
-msgstr ""
+msgstr "не вдалося зберегти файл"
 
 #: bookends_updater.lua:516
 msgid "Download failed."
@@ -2007,58 +2005,55 @@ msgstr "Кількість документів у теці"
 
 #: menu/tokens_catalogue.lua:49
 msgid "Number of authors"
-msgstr ""
+msgstr "Кількість авторів"
 
 #: menu/tokens_catalogue.lua:50
 msgid "Short author list ('A, B, et al.' for 3+)"
-msgstr ""
+msgstr "Короткий список авторів («А, Б, та ін.» для 3+)"
 
 #: menu/tokens_catalogue.lua:51
 msgid "Reading status value (unread/reading/on_hold/finished)"
-msgstr ""
+msgstr "Значення статусу читання (unread/reading/on_hold/finished)"
 
 #: menu/tokens_catalogue.lua:52
 msgid "Reading status as a word"
-msgstr ""
+msgstr "Статус читання словом"
 
 #: menu/tokens_catalogue.lua:53
 msgid "Your rating as stars"
-msgstr ""
+msgstr "Ваша оцінка зірками"
 
 #: menu/tokens_catalogue.lua:54
-#, fuzzy
 msgid "Your rating as a number"
-msgstr "Номер поточної сторінки"
+msgstr "Ваша оцінка числом"
 
 #: menu/tokens_catalogue.lua:55
-#, fuzzy
 msgid "Book description / blurb"
-msgstr "Редагувати опис"
+msgstr "Опис книги / анотація"
 
 #: menu/tokens_catalogue.lua:56
-#, fuzzy
 msgid "File size"
-msgstr "Розмір шрифту"
+msgstr "Розмір файлу"
 
 #: menu/tokens_catalogue.lua:57
 msgid "Date added (file date)"
-msgstr ""
+msgstr "Дата додавання (дата файлу)"
 
 #: menu/tokens_catalogue.lua:58
 msgid "Date last opened"
-msgstr ""
+msgstr "Дата останнього відкриття"
 
 #: menu/tokens_catalogue.lua:59
 msgid "Star glyph when the book is a favourite"
-msgstr ""
+msgstr "Зірка, якщо книга в обраному"
 
 #: menu/tokens_catalogue.lua:60
 msgid "A highlight from this book"
-msgstr ""
+msgstr "Виділення з цієї книги"
 
 #: menu/tokens_catalogue.lua:61
 msgid "Title and author for the quote"
-msgstr ""
+msgstr "Назва та автор для цитати"
 
 #: menu/tokens_catalogue.lua:62
 msgid "Book language"
@@ -2071,7 +2066,7 @@ msgstr "Формат документа (EPUB, PDF тощо)"
 #: menu/tokens_catalogue.lua:64
 #, lua-format
 msgid "Calibre column by name, e.g. %calibre{mood}"
-msgstr ""
+msgstr "Стовпець Calibre за назвою, напр. %calibre{mood}"
 
 #: menu/tokens_catalogue.lua:65
 msgid "Highlights count"
@@ -2163,7 +2158,7 @@ msgstr "Сторінок залишилось у книзі"
 
 #: menu/tokens_catalogue.lua:87
 msgid "Elastic gap: pushes the rest of the line to the far edge"
-msgstr ""
+msgstr "Гнучкий проміжок: притискає решту рядка до дальнього краю"
 
 #: menu/tokens_catalogue.lua:88
 msgid "Progress bar (configure type in line editor)"
@@ -2343,11 +2338,11 @@ msgstr "Рівень заряду батареї"
 
 #: menu/tokens_catalogue.lua:132
 msgid "Wi-Fi icon (also answers to %wifi_icon)"
-msgstr ""
+msgstr "Іконка Wi-Fi (також відповідає на %wifi_icon)"
 
 #: menu/tokens_catalogue.lua:133
 msgid "Wi-Fi icon, Bookshelf's name for it"
-msgstr ""
+msgstr "Іконка Wi-Fi, за назвою з Bookshelf"
 
 #: menu/tokens_catalogue.lua:134
 msgid "Plugin content"
@@ -2375,7 +2370,7 @@ msgstr "Використано ОЗП %"
 
 #: menu/tokens_catalogue.lua:140
 msgid "System memory used (MiB)"
-msgstr ""
+msgstr "Використано системної пам'яті (МіБ)"
 
 #: menu/tokens_catalogue.lua:141
 msgid "RAM used (MiB)"
