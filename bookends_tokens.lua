@@ -3208,7 +3208,18 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         local doc_props = ui.doc_props or {}
         local ok, props = pcall(doc.getProps, doc)
         if not ok then props = {} end
-        description_str = doc_props.description or props.description or ""
+        local raw = doc_props.description or props.description or ""
+        -- A <dc:description> is HTML. Untreated it renders literally - a
+        -- device screenshot showed "<p>The first ever collection of..." on the
+        -- status line. Bookshelf has always sanitised this; the port in
+        -- 85aa7c8 took the token and left the sanitiser behind, so it now
+        -- lives in the vendored module where only one copy can exist.
+        description_str = Semantics.cleanDescription(raw)
+        -- Then flatten: cleanDescription keeps paragraph breaks, which is
+        -- right for bookshelf's hero card and wrong for a status line, where
+        -- an embedded \n starts a new visual row and would silently push the
+        -- rest of the overlay around. One line, single-spaced.
+        description_str = description_str:gsub("%s+", " "):gsub("^ ", ""):gsub(" $", "")
     end
 
     local size_str, added_str, opened_str = "", "", ""
