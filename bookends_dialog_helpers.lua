@@ -9,14 +9,30 @@ local DialogHelpers = {}
 
 --- Hide the parent touch menu while a transient dialog is open so the
 --- user can see live visual changes, returning a function that re-shows it.
+---
+--- `touchmenu_instance` is only a real TouchMenu when KOReader drew the menu.
+--- A third-party menu host can render our items in its own widget and pass a
+--- plain-table proxy instead - ZenOS does exactly that, handing callbacks a
+--- table with just updateItems/closeMenu/onClose/handleEvent. Re-showing that
+--- proxy puts a non-widget on UIManager._window_stack, which `show` accepts
+--- (it only needs handleEvent) and the next repaint dies on, taking KOReader
+--- with it: "attempt to call method 'paintTo' (a nil value)" (#112). So only
+--- hide what we can prove is paintable; against any other host the dialog just
+--- opens over the menu instead of in place of it.
 function DialogHelpers.hideParentMenu(touchmenu_instance)
     if not touchmenu_instance then return function() end end
+    local function refresh()
+        if type(touchmenu_instance.updateItems) == "function" then
+            touchmenu_instance:updateItems()
+        end
+    end
     -- The UIManager stack holds show_parent (a CenterContainer), not the TouchMenu itself.
     local container = touchmenu_instance.show_parent or touchmenu_instance
+    if type(container.paintTo) ~= "function" then return refresh end
     UIManager:close(container, "ui")
     return function()
         UIManager:show(container)
-        touchmenu_instance:updateItems()
+        refresh()
     end
 end
 
