@@ -121,7 +121,7 @@ end
 --- total/available pair) so no caller has to agree with another about units.
 function Semantics.sysused(used_bytes)
     if not used_bytes then return "" end
-    return math.floor(used_bytes / 1024 / 1024 + 0.5) .. " MiB"
+    return math.floor(used_bytes / 1024 / 1024 + 0.5) .. "M"
 end
 
 --- %batt - battery capacity with a "%" suffix.

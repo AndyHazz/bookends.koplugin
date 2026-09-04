@@ -3299,17 +3299,21 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     if needs("sysused") then
         local meminfo = io.open("/proc/meminfo", "r")
         if meminfo then
-            local total, available, memfree
+            local total, available, memfree, buffers, cached
             for line in meminfo:lines() do
                 if line:match("^MemTotal:") then total = tonumber(line:match("(%d+)"))
                 elseif line:match("^MemAvailable:") then available = tonumber(line:match("(%d+)"))
-                elseif line:match("^MemFree:") then memfree = tonumber(line:match("(%d+)")) end
+                elseif line:match("^MemFree:") then memfree = tonumber(line:match("(%d+)"))
+                elseif line:match("^Buffers:") then buffers = tonumber(line:match("(%d+)"))
+                elseif line:match("^Cached:") then cached = tonumber(line:match("(%d+)")) end
             end
             meminfo:close()
-            available = available or memfree
-            if total and available then
+            -- Fallback to MemFree+Buffers+Cached when MemAvailable absent
+            -- (same as KOReader util.calcFreeMem; needed on pre-3.14 KPW3 2.6.x)
+            local free_kb = available or ((memfree or 0) + (buffers or 0) + (cached or 0))
+            if total and free_kb then
                 -- /proc/meminfo is in kB; Semantics.sysused takes bytes used.
-                sysused_str = Semantics.sysused((total - available) * 1024)
+                sysused_str = Semantics.sysused((total - free_kb) * 1024)
             end
         end
     end
