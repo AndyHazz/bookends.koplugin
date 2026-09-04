@@ -179,10 +179,10 @@ test("%quote is empty when the book has no highlights", function()
     eq(ex("%quote_source", ui), "")
 end)
 
-test("%sysused reports memory in MiB", function()
+test("%sysused reports memory with the short M suffix", function()
     local got = ex("%sysused")
-    assert(got:find("MiB", 1, true) or got == "",
-           "expected a MiB value or empty, got: " .. got)
+    assert(got:match("^%d+M$") or got == "",
+           "expected a MiB value with the short M suffix or empty, got: " .. got)
 end)
 
 print(pass .. " passed, " .. fail .. " failed")

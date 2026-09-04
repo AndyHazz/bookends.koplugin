@@ -227,8 +227,8 @@ Tokens are placeholders that expand to live values. Type `%` followed by a name,
 | `%warmth_icon` | Warmth icon (dynamic) | Shown on devices with a warm frontlight |
 | `%nightmode` | Night-mode icon (dynamic) | Moon when inverted, sun when not |
 | `%mem` | RAM usage percentage | *33%* |
-| `%sysused` | System memory used, in MiB | *84 MiB* |
-| `%ram` | RAM usage in MiB | *128 MiB* |
+| `%sysused` | System memory used, in MiB | *84M* |
+| `%ram` | RAM usage in MiB | *128M* |
 | `%disk` | Free disk space | *2.4 GB* |
 | `%invert` | Page-turn direction indicator | Changes when inverted |
 
