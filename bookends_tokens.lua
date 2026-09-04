@@ -3308,12 +3308,17 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
                 elseif line:match("^Cached:") then cached = tonumber(line:match("(%d+)")) end
             end
             meminfo:close()
-            -- Fallback to MemFree+Buffers+Cached when MemAvailable absent
-            -- (same as KOReader util.calcFreeMem; needed on pre-3.14 KPW3 2.6.x)
-            local free_kb = available or ((memfree or 0) + (buffers or 0) + (cached or 0))
-            if total and free_kb then
+            -- Fallback for kernels without MemAvailable (e.g. Kindle KPW3 2.6.x).
+            -- MemFree alone badly overstates usage on a small device: the kernel
+            -- caches nearly all otherwise-free RAM for file I/O, but that cache is
+            -- reclaimable and available to us. Same shape as the %mem fallback
+            -- above, so the two parsers cannot drift apart again.
+            if total and not available and memfree then
+                available = memfree + (buffers or 0) + (cached or 0)
+            end
+            if total and available and total > 0 then
                 -- /proc/meminfo is in kB; Semantics.sysused takes bytes used.
-                sysused_str = Semantics.sysused((total - free_kb) * 1024)
+                sysused_str = Semantics.sysused((total - available) * 1024)
             end
         end
     end
