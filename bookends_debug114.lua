@@ -25,8 +25,15 @@ So this logs, in order, for a short window around each network event:
   * _refresh   - every refresh actually enqueued for the panel: mode + region
   * repaint    - the stack before the pass, and the lowest index that actually
                  painted (a widget's dirty flag is cleared when it paints)
+  * PANEL      - the Screen call UIManager actually made, after painting
+  * DIRECT     - a Screen:refreshX() that bypassed UIManager entirely
   * note       - Bookends-side decisions (gated repaint fired / skipped, the
                  overlay paint rects handed to setDirty)
+
+setDirty, _refresh and DIRECT lines carry `from=` - a short chain of
+source:line for the calling frames. That is what tells a third-party plugin's
+repaint apart from Bookends' own: ours reads plugins/bookends.koplugin/...,
+KOReader's own reads frontend/..., anything else names itself.
 
 Everything is off unless armed, and arming happens only on a network event (or
 explicitly), so a normal reading session logs nothing.
@@ -85,6 +92,29 @@ end
 
 --- Exposed so call sites outside this file name widgets the same way.
 Debug114.widgetName = widgetName
+
+-- Who asked for this. Without it the log names the TARGET of a setDirty and
+-- never the caller, so Bookends marking ReaderUI dirty and some other plugin
+-- doing the same thing are the same line. A two-or-three frame chain of
+-- short_src:line is enough to tell them apart: KOReader's own callers show as
+-- frontend/..., a third-party one as plugins/<name>.koplugin/....
+-- debug.getinfo is affordable here because it only runs inside an armed window.
+local function caller(skip)
+    skip = skip or 3
+    local out = {}
+    for lvl = skip, skip + 2 do
+        -- No pcall here: it would add a stack frame and shift every level by
+        -- one. debug.getinfo returns nil for an out-of-range level rather than
+        -- erroring, which is the only failure we need to handle.
+        local info = debug.getinfo(lvl, "Sl")
+        if not info then break end
+        local src = tostring(info.short_src or "?")
+        src = src:gsub("^.*/koreader/", ""):gsub("^%.%./", "")
+        out[#out + 1] = src .. ":" .. tostring(info.currentline)
+    end
+    if #out == 0 then return "?" end
+    return table.concat(out, " < ")
+end
 
 local function regionStr(r)
     if r == nil then return "nil" end
@@ -150,7 +180,8 @@ function Debug114.install()
         if Debug114.armed() then
             Debug114.log("setDirty", widgetName(widget),
                 "type=" .. tostring(refreshtype),
-                "region=" .. regionStr(refreshregion))
+                "region=" .. regionStr(refreshregion),
+                "from=" .. caller(3))
         end
         return orig_setDirty(self, widget, refreshtype, refreshregion, refreshdither)
     end
@@ -158,7 +189,8 @@ function Debug114.install()
     local orig_refresh = UIManager._refresh
     UIManager._refresh = function(self, mode, region, dither)
         if Debug114.armed() then
-            Debug114.log("_refresh", tostring(mode), regionStr(region))
+            Debug114.log("_refresh", tostring(mode), regionStr(region),
+                "from=" .. caller(3))
         end
         return orig_refresh(self, mode, region, dither)
     end
@@ -219,6 +251,33 @@ function Debug114.install()
     else
         Debug114.log("panel refresh hooks NOT installed (refresh_methods upvalue not found)")
     end
+
+    -- Refreshes that bypass UIManager altogether. The refresh_methods table
+    -- above holds the ORIGINAL function references, captured when uimanager.lua
+    -- loaded, and the wrappers there call those directly - so UIManager's own
+    -- flushes never pass through the instance methods wrapped here. Anything
+    -- logged as DIRECT is therefore someone calling Screen:refreshX() by hand,
+    -- which is the one case the window-stack view is blind to.
+    local ok_screen = pcall(function()
+        local Screen = require("device").screen
+        for _, m in ipairs({ "refreshUI", "refreshPartial", "refreshFull",
+                             "refreshFast", "refreshA2", "refreshFlashUI",
+                             "refreshFlashPartial", "refreshNoMergeUI",
+                             "refreshNoMergePartial" }) do
+            local fn = Screen[m]
+            if type(fn) == "function" then
+                Screen[m] = function(this, x, y, w, h, dither)
+                    if Debug114.armed() then
+                        Debug114.log("DIRECT", m, string.format("(%s,%s %sx%s)",
+                            tostring(x), tostring(y), tostring(w), tostring(h)),
+                            "from=" .. caller(3))
+                    end
+                    return fn(this, x, y, w, h, dither)
+                end
+            end
+        end
+    end)
+    Debug114.log("direct Screen refresh hooks installed:", tostring(ok_screen))
 
     local orig_show = UIManager.show
     UIManager.show = function(self, widget, refreshtype, refreshregion, x, y, refreshdither)
