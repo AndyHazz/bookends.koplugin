@@ -1054,8 +1054,19 @@ function Bookends:_scheduleRepaint(dispatcher)
         self._repaint_scheduled = true
         UIManager:nextTick(function()
             self._repaint_scheduled = false
-            if self.dirty then dispatcher() end
+            if self.dirty then
+                dispatcher()
+            elseif self._debug114 then
+                -- paintTo clears self.dirty, so a repaint that lands between
+                -- the schedule and the tick swallows this dispatcher.
+                self._debug114.note("_scheduleRepaint tick: dirty already false, dispatcher skipped")
+            end
         end)
+    elseif self._debug114 then
+        -- A tick is already pending; it will run the EARLIER dispatcher, not
+        -- this one. Harmless when both do the same thing, worth seeing when
+        -- markDirty and markOverlayDirty interleave.
+        self._debug114.note("_scheduleRepaint: dispatcher dropped, one already pending")
     end
 
     -- Debounced autosave. settings:saveSetting only updates RAM; without this
@@ -1091,7 +1102,16 @@ end
 -- Falls back to the full markDirty path until the first paint has populated
 -- the region cache (chicken-and-egg: we don't know the dimen pre-paint).
 function Bookends:markOverlayDirty()
+    -- DEBUG BRANCH (#114): the note below fires inside the dispatcher, which
+    -- is a nextTick later. Log the call itself too, so a gap between the two
+    -- is visible - the first device trace had nine seconds between the
+    -- network event and the dispatch, which is suspiciously close to the
+    -- reporter's "give it a little to update in the menu".
+    if self._debug114 then self._debug114.note("markOverlayDirty called") end
     if not self._top_paint_rect and not self._bottom_paint_rect then
+        if self._debug114 then
+            self._debug114.note("markOverlayDirty -> markDirty (no paint rects yet)")
+        end
         return self:markDirty()
     end
     self:_scheduleRepaint(function()
@@ -1100,7 +1120,7 @@ function Bookends:markOverlayDirty()
                 if not g then return "nil" end
                 return string.format("(%s,%s %sx%s)", g.x, g.y, g.w, g.h)
             end
-            self._debug114.note("markOverlayDirty top=" .. r(self._top_paint_rect)
+            self._debug114.note("markOverlayDirty DISPATCH top=" .. r(self._top_paint_rect)
                 .. " bottom=" .. r(self._bottom_paint_rect))
         end
         if self._top_paint_rect then

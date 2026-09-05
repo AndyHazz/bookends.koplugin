@@ -190,6 +190,36 @@ function Debug114.install()
         if not ok then error(err) end
     end
 
+    -- The actual panel updates. UIManager merges and promotes overlapping
+    -- refreshes inside _refresh() and only flushes them at the END of a repaint
+    -- pass, so the regions logged above are what was *requested*, not what the
+    -- panel got. refresh_methods is a file-local in uimanager.lua, reachable
+    -- only as an upvalue of the original _repaint closure; the table can be
+    -- mutated in place to wrap the Screen calls that actually drive the panel.
+    -- Best effort - if the upvalue moves in a future KOReader we lose this one
+    -- line rather than the whole build.
+    local ok_panel, methods = pcall(function()
+        return require("userpatch").getUpValue(orig_repaint, "refresh_methods")
+    end)
+    if ok_panel and type(methods) == "table" then
+        local wrapped = 0
+        for mode, fn in pairs(methods) do
+            if type(fn) == "function" then
+                methods[mode] = function(screen, x, y, w, h, dither)
+                    if Debug114.armed() then
+                        Debug114.log("PANEL", mode, string.format("(%s,%s %sx%s)",
+                            tostring(x), tostring(y), tostring(w), tostring(h)))
+                    end
+                    return fn(screen, x, y, w, h, dither)
+                end
+                wrapped = wrapped + 1
+            end
+        end
+        Debug114.log("panel refresh hooks installed:", wrapped)
+    else
+        Debug114.log("panel refresh hooks NOT installed (refresh_methods upvalue not found)")
+    end
+
     local orig_show = UIManager.show
     UIManager.show = function(self, widget, refreshtype, refreshregion, x, y, refreshdither)
         Debug114.log("show", widgetName(widget),
