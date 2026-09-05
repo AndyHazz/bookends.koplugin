@@ -102,15 +102,24 @@ Debug114.widgetName = widgetName
 local function caller(skip)
     skip = skip or 3
     local out = {}
-    for lvl = skip, skip + 2 do
+    for lvl = skip, skip + 8 do
         -- No pcall here: it would add a stack frame and shift every level by
         -- one. debug.getinfo returns nil for an out-of-range level rather than
         -- erroring, which is the only failure we need to handle.
         local info = debug.getinfo(lvl, "Sl")
         if not info then break end
         local src = tostring(info.short_src or "?")
-        src = src:gsub("^.*/koreader/", ""):gsub("^%.%./", "")
-        out[#out + 1] = src .. ":" .. tostring(info.currentline)
+        -- Skip frames belonging to this file, and the [C] boundary of its
+        -- pcall around _repaint. They are the instrumentation standing on the
+        -- stack, not part of the answer to "who asked for this repaint" - and
+        -- leaving them in made every refresh flushed during a repaint pass
+        -- read "from=... < bookends_debug114.lua:210", which is exactly the
+        -- false positive the from= field exists to rule out.
+        if not src:find("bookends_debug114", 1, true) and src ~= "[C]" then
+            src = src:gsub("^.*/koreader/", ""):gsub("^%.%./", "")
+            out[#out + 1] = src .. ":" .. tostring(info.currentline)
+            if #out >= 3 then break end
+        end
     end
     if #out == 0 then return "?" end
     return table.concat(out, " < ")
