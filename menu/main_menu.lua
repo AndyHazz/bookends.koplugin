@@ -495,6 +495,36 @@ function Bookends:buildBookendsSettingsMenu()
         {
             text = _("Advanced"),
             sub_item_table = {
+                -- DEBUG BRANCH (#114) only. Plain strings on purpose: these
+                -- must never reach the translation template. Do not merge.
+                {
+                    text = "Debug #114: skip repaint when covered",
+                    help_text = "Experiment for issue #114. When a menu or dialog is "
+                        .. "covering the page, skip the wifi/battery overlay repaint "
+                        .. "entirely. If the page stops drawing over the menu with this "
+                        .. "on, the repaint is the trigger.",
+                    checked_func = function()
+                        return self.settings:isTrue("debug114_skip_covered")
+                    end,
+                    callback = function()
+                        self.settings:saveSetting("debug114_skip_covered",
+                            not self.settings:isTrue("debug114_skip_covered"))
+                        self.settings:flush()
+                    end,
+                    keep_menu_open = true,
+                },
+                {
+                    text = "Debug #114: start logging (60s)",
+                    help_text = "Writes the window stack, every setDirty and every "
+                        .. "screen refresh to crash.log for 60 seconds. Reproduce the "
+                        .. "problem, then send crash.log.",
+                    keep_menu_open = true,
+                    callback = function()
+                        if self._debug114 then
+                            self._debug114.arm("menu", 60)
+                        end
+                    end,
+                },
                 {
                     text_func = function()
                         local b = self.dev_branch or ""

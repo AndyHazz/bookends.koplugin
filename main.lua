@@ -175,6 +175,11 @@ require("bookends_textwidget_patch")  -- TextWidget: paint ColorRGB32 fgcolor as
 function Bookends:init()
     self:openSettings()
     self:loadSettings()
+    -- DEBUG BRANCH (#114) only: wraps UIManager's paint/refresh plumbing so a
+    -- network event with a menu open leaves a trace in crash.log. Inert until
+    -- armed (see bookends_debug114.lua). Do not merge to master.
+    self._debug114 = require("bookends_debug114")
+    self._debug114.install()
     self.ui.menu:registerToMainMenu(self)
     self.ui.view:registerViewModule("bookends", self)
     self:registerFolderShortcut()
@@ -1090,6 +1095,14 @@ function Bookends:markOverlayDirty()
         return self:markDirty()
     end
     self:_scheduleRepaint(function()
+        if self._debug114 then
+            local function r(g)
+                if not g then return "nil" end
+                return string.format("(%s,%s %sx%s)", g.x, g.y, g.w, g.h)
+            end
+            self._debug114.note("markOverlayDirty top=" .. r(self._top_paint_rect)
+                .. " bottom=" .. r(self._bottom_paint_rect))
+        end
         if self._top_paint_rect then
             UIManager:setDirty(self.ui, "ui", self._top_paint_rect)
         end
@@ -1239,6 +1252,21 @@ end
 -- do schedule lands outside the patch's 0.17 s `restoring` window.
 function Bookends:gatedRepaint(token_names, debounce)
     if not self:anyActiveLineUses(token_names) then return end
+    -- DEBUG BRANCH (#114). The experiment: when a menu or dialog is covering
+    -- ReaderUI the overlay is not visible anyway, so marking ReaderUI dirty
+    -- only buys a full-page repaint under the menu. If the artifact goes away
+    -- with this on, the repaint (not the refresh region) is the trigger.
+    if self._debug114 then
+        self._debug114.note("gatedRepaint", table.concat(token_names, ","))
+        if self.settings and self.settings:isTrue("debug114_skip_covered") then
+            local top = UIManager:getTopmostVisibleWidget()
+            if top and top ~= self.ui then
+                self._debug114.note("gatedRepaint SKIPPED, covered by",
+                    self._debug114.widgetName(top))
+                return
+            end
+        end
+    end
     if debounce and debounce > 0 then
         if self._gated_repaint_pending then
             UIManager:unschedule(self._gated_repaint_pending)
@@ -1282,8 +1310,15 @@ local PLUGIN_CONTENT_TOKENS = { "plugin_content" }
 function Bookends:onFrontlightStateChanged()    self:gatedRepaint(FRONTLIGHT_TOKENS, 0.3) end
 function Bookends:onCharging()                  self:gatedRepaint(BATTERY_TOKENS) end
 function Bookends:onNotCharging()               self:gatedRepaint(BATTERY_TOKENS) end
-function Bookends:onNetworkConnected()          self:gatedRepaint(WIFI_TOKENS) end
-function Bookends:onNetworkDisconnected()       self:gatedRepaint(WIFI_TOKENS) end
+-- DEBUG BRANCH (#114): arm the instrumentation on the reported trigger.
+function Bookends:onNetworkConnected()
+    if self._debug114 then self._debug114.arm("NetworkConnected") end
+    self:gatedRepaint(WIFI_TOKENS)
+end
+function Bookends:onNetworkDisconnected()
+    if self._debug114 then self._debug114.arm("NetworkDisconnected") end
+    self:gatedRepaint(WIFI_TOKENS)
+end
 -- Plugins (kobo.koplugin BT, readtimer countdown, ...) broadcast
 -- RefreshAdditionalContent on state change. Stock footer repaints on this
 -- (readerfooter.lua:2716); we do too so %plugin_content updates without
