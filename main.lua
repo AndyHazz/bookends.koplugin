@@ -1332,11 +1332,11 @@ function Bookends:onCharging()                  self:gatedRepaint(BATTERY_TOKENS
 function Bookends:onNotCharging()               self:gatedRepaint(BATTERY_TOKENS) end
 -- DEBUG BRANCH (#114): arm the instrumentation on the reported trigger.
 function Bookends:onNetworkConnected()
-    if self._debug114 then self._debug114.arm("NetworkConnected") end
+    if self._debug114 then self._debug114.arm("NetworkConnected", 45) end
     self:gatedRepaint(WIFI_TOKENS)
 end
 function Bookends:onNetworkDisconnected()
-    if self._debug114 then self._debug114.arm("NetworkDisconnected") end
+    if self._debug114 then self._debug114.arm("NetworkDisconnected", 45) end
     self:gatedRepaint(WIFI_TOKENS)
 end
 -- Plugins (kobo.koplugin BT, readtimer countdown, ...) broadcast

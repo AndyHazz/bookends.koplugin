@@ -25,6 +25,10 @@ So this logs, in order, for a short window around each network event:
   * _refresh   - every refresh actually enqueued for the panel: mode + region
   * repaint    - the stack before the pass, and the lowest index that actually
                  painted (a widget's dirty flag is cleared when it paints)
+  * PAINT      - each widget that actually painted in the pass, in order. This
+                 is the line the whole question turns on: if ReaderUI paints
+                 and no menu PAINT follows it, the page went into the frame-
+                 buffer with nothing put back on top.
   * PANEL      - the Screen call UIManager actually made, after painting
   * DIRECT     - a Screen:refreshX() that bypassed UIManager entirely
   * note       - Bookends-side decisions (gated repaint fired / skipped, the
@@ -206,7 +210,15 @@ function Debug114.install()
 
     local orig_repaint = UIManager._repaint
     UIManager._repaint = function(self)
-        if not Debug114.armed() then return orig_repaint(self) end
+        if not Debug114.armed() then
+            -- One-shot marker so a log that simply stops is distinguishable
+            -- from one where the window was open and nothing happened.
+            if Debug114.armed_until > 0 then
+                Debug114.armed_until = 0
+                Debug114.log("DISARMED")
+            end
+            return orig_repaint(self)
+        end
         local stack = self._window_stack
         -- Snapshot (widget, dirty) pairs by identity: the stack itself can be
         -- reordered or shortened during the pass (widgets close), so indices
@@ -216,7 +228,37 @@ function Debug114.install()
             snapshot[i] = { widget = stack[i].widget, dirty = self._dirty[stack[i].widget] and true or false }
         end
         Debug114.dumpStack("pre-repaint")
+
+        -- Wrap each stack widget's paintTo for the duration of THIS pass.
+        -- "lowest painted index" only says where painting started; everything
+        -- above it is assumed to follow, because that is what UIManager's
+        -- propagation does. But the whole question in #114 is whether the menu
+        -- really did repaint over the page, so inferring it from the rule is
+        -- assuming the answer. These PAINT lines observe it instead.
+        local restore = {}
+        for i = 1, #stack do
+            local w = stack[i].widget
+            local fn = w.paintTo
+            if type(fn) == "function" and restore[w] == nil then
+                -- rawget distinguishes a widget's own paintTo from one reached
+                -- through its class metatable: restoring the latter means
+                -- clearing the field, not writing the function back onto the
+                -- instance.
+                restore[w] = { own = rawget(w, "paintTo") }
+                local name = widgetName(w)
+                w.paintTo = function(...)
+                    Debug114.log("PAINT", name)
+                    return fn(...)
+                end
+            end
+        end
+
         local ok, err = pcall(orig_repaint, self)
+
+        for w, r in pairs(restore) do
+            if r.own ~= nil then w.paintTo = r.own else w.paintTo = nil end
+        end
+
         pcall(function()
             local painted_from
             for i = 1, #snapshot do
