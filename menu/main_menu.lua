@@ -518,8 +518,14 @@ function Bookends:buildBookendsSettingsMenu()
                     help_text = "Writes the window stack, every setDirty and every "
                         .. "screen refresh to crash.log for 60 seconds. Reproduce the "
                         .. "problem, then send crash.log.",
-                    keep_menu_open = true,
+                    -- No keep_menu_open: TouchMenu closes itself after the
+                    -- callback, which is half the feedback. The notification is
+                    -- the other half - without either, the first device test
+                    -- had the item tapped twice five seconds apart because
+                    -- nothing on screen said it had started.
                     callback = function()
+                        local Notification = require("ui/widget/notification")
+                        Notification:notify("Debug #114: logging for 60s")
                         if self._debug114 then
                             self._debug114.arm("menu", 60)
                         end
