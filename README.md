@@ -229,7 +229,7 @@ Tokens are placeholders that expand to live values. Type `%` followed by a name,
 | `%mem` | RAM usage percentage | *33%* |
 | `%sysused` | System memory used, in MiB | *84M* |
 | `%ram` | RAM usage in MiB | *128M* |
-| `%disk` | Free disk space | *2.4 GB* |
+| `%disk` | Free disk space | *2.4G* |
 | `%invert` | Page-turn direction indicator | Changes when inverted |
 
 Page tokens respect **stable page numbers** and **hidden flows** (non-linear EPUB content). All reading-time and pages-read tokens (session, today, lifetime) come from the **statistics plugin** and are skip-aware — pages flicked through faster than the dwell threshold (default 5s) don't count. Session counters reset each time you open the book or wake from suspend.
