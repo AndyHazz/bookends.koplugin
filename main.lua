@@ -1086,6 +1086,37 @@ end
 -- Falls back to the full markDirty path until the first paint has populated
 -- the region cache (chicken-and-egg: we don't know the dimen pre-paint).
 function Bookends:markOverlayDirty()
+    -- #114: while a menu or dialog covers the reader the overlay is not
+    -- visible, so repainting buys nothing except a full-page write to the
+    -- framebuffer underneath the menu - and that write races KOReader's
+    -- in-flight panel update for the menu's own region. The reporter's
+    -- screenshots show the result: a rectangle of the menu replaced by
+    -- correctly-positioned page content, varying in extent from part of the
+    -- menu body to all of it, which is what a race looks like rather than a
+    -- logic error. Flag the content stale instead, and let the repaint that
+    -- follows the menu closing pick it up.
+    --
+    -- This sits in markOverlayDirty rather than in gatedRepaint because the
+    -- 60s heartbeat calls it directly for clock and time-left tokens. Gating
+    -- only the event path would have left a menu left open for a minute
+    -- triggering the identical repaint - the reporter's own preset carries
+    -- %time_12h, so they could have hit this without touching wifi at all.
+    --
+    -- markDirty is deliberately NOT gated. Every menu and the line editor use
+    -- it for live preview, where the reader IS covered and repainting behind
+    -- the dialog is the whole point. Only markOverlayDirty's two callers are
+    -- value ticks that nobody can see under a menu.
+    --
+    -- getTopmostVisibleWidget skips `invisible` widgets, so our own flipping
+    -- halo (and any other toast overlay of that shape) does not count as
+    -- covering us.
+    local top = UIManager:getTopmostVisibleWidget()
+    if top and top ~= self.ui then
+        self.dirty = true
+        self._tick_cache = nil
+        self._deferred_overlay_repaint = true
+        return
+    end
     if not self._top_paint_rect and not self._bottom_paint_rect then
         return self:markDirty()
     end
@@ -1490,6 +1521,33 @@ function Bookends:paintTo(bb, x, y)
     -- code paths (notably %batt_icon → powerd:isCharging via lipc) block for
     -- ~10s after fork because the parent shares a stateful FD with the child.
     if Bookends._is_subprocess then return end
+
+    -- #114: a value-tick repaint was deferred while something covered the
+    -- reader. We are being painted now, so the framebuffer is current again,
+    -- but the refresh that came with this paint belongs to whichever widget
+    -- closed and its region need not include our two bands (an InfoMessage
+    -- refreshes only its own rect). One regional refresh on the next tick
+    -- makes sure they land.
+    --
+    -- This lives here rather than at the end of _paintToInner because the
+    -- unchanged-frame fast path returns early from there, and by the time the
+    -- menu closes the content usually IS unchanged: it was re-expanded during
+    -- the covered paint underneath the menu. That early return is precisely
+    -- the case the deferral has to survive.
+    --
+    -- Gated on being uncovered, because paintTo also runs while the menu is
+    -- open (ReaderUI paints underneath it, before the menu paints on top), and
+    -- clearing the deferral there would reinstate the repaint exactly where it
+    -- was skipped. Scheduling rather than calling setDirty inline keeps the
+    -- no-second-refresh-during-paint rule above intact.
+    if self._deferred_overlay_repaint then
+        local top = UIManager:getTopmostVisibleWidget()
+        if not top or top == self.ui then
+            self._deferred_overlay_repaint = nil
+            UIManager:nextTick(function() self:markOverlayDirty() end)
+        end
+    end
+
     local ok, err = xpcall(self._paintToInner, debug.traceback, self, bb, x, y)
     if not ok then
         self._paint_error_count = (self._paint_error_count or 0) + 1
