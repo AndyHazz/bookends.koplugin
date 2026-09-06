@@ -1239,6 +1239,23 @@ end
 -- do schedule lands outside the patch's 0.17 s `restoring` window.
 function Bookends:gatedRepaint(token_names, debounce)
     if not self:anyActiveLineUses(token_names) then return end
+    -- #114: while a menu or dialog covers the reader, the overlay is not
+    -- visible, so marking ReaderUI dirty here buys nothing except a full-page
+    -- repaint of the framebuffer underneath the menu - which is exactly the
+    -- write that appears to race KOReader's in-flight panel update for the
+    -- menu's own region. Flag the content stale instead and let the repaint
+    -- that follows the menu closing pick it up.
+    --
+    -- getTopmostVisibleWidget skips `invisible` widgets, so our own flipping
+    -- halo (and any other toast overlay of that shape) does not count as
+    -- covering us.
+    local top = UIManager:getTopmostVisibleWidget()
+    if top and top ~= self.ui then
+        self.dirty = true
+        self._tick_cache = nil
+        self._deferred_overlay_repaint = true
+        return
+    end
     if debounce and debounce > 0 then
         if self._gated_repaint_pending then
             UIManager:unschedule(self._gated_repaint_pending)
@@ -1490,6 +1507,33 @@ function Bookends:paintTo(bb, x, y)
     -- code paths (notably %batt_icon → powerd:isCharging via lipc) block for
     -- ~10s after fork because the parent shares a stateful FD with the child.
     if Bookends._is_subprocess then return end
+
+    -- #114: a gated repaint was skipped while something covered the reader.
+    -- We are being painted now, so the framebuffer is current again - but the
+    -- refresh that came with this paint belongs to whichever widget closed,
+    -- and its region need not include our two bands (an InfoMessage refreshes
+    -- only its own rect). One regional refresh on the next tick makes sure
+    -- they land.
+    --
+    -- This sits in paintTo rather than at the end of _paintToInner because the
+    -- unchanged-frame fast path returns early from there, and by the time the
+    -- menu closes the content usually IS unchanged - it was re-expanded during
+    -- the covered paint underneath the menu. That early return is exactly the
+    -- case this has to survive.
+    --
+    -- Gated on being uncovered: paintTo also runs while the menu is open
+    -- (ReaderUI paints underneath it, before the menu paints on top), and
+    -- clearing the deferral there would reinstate the repaint precisely where
+    -- it was skipped. Scheduling rather than calling setDirty inline keeps the
+    -- existing no-second-refresh-during-paint rule intact.
+    if self._deferred_overlay_repaint then
+        local top = UIManager:getTopmostVisibleWidget()
+        if not top or top == self.ui then
+            self._deferred_overlay_repaint = nil
+            UIManager:nextTick(function() self:markOverlayDirty() end)
+        end
+    end
+
     local ok, err = xpcall(self._paintToInner, debug.traceback, self, bb, x, y)
     if not ok then
         self._paint_error_count = (self._paint_error_count or 0) + 1
