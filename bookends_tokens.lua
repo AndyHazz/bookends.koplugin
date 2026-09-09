@@ -1547,6 +1547,17 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
         end
     end
 
+    -- Bluetooth page-turner state (published by the btbattery plugin on the
+    -- reader footer). Missing plugin or no data => treated as disconnected.
+    local bt_footer = ui and ui.view and ui.view.footer
+    local bt_state = bt_footer and bt_footer.btbattery_state
+    if type(bt_state) == "table" then
+        state.bt_connected = bt_state.connected and "yes" or "no"
+        if type(bt_state.battery) == "number" then
+            state.bt_battery = bt_state.battery
+        end
+    end
+
     -- Page-turn direction (any of: global key inversion flags, per-book reading order)
     local G = G_reader_settings
     local page_turn_inverted =
@@ -2167,6 +2178,7 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
             streak = "[streak]", book_streak = "[bk.streak]",
             total_read_time = "[lifetime]", books_finished = "[done]",
             batt = "[batt]", batt_icon = "[batt]", wifi = "[wifi]",
+            bt_battery = "[bt]", bt_connected = "[bt]",
             plugin_content = "[plugins]",
             invert = "[invert]",
             light = "[light]", light_icon = "[light]", light_pct = "[light]",
@@ -3012,6 +3024,25 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
             capacity)
     end
 
+    -- Bluetooth page-turner battery & connection (state published by the
+    -- btbattery plugin on the reader footer).
+    local bt_battery = ""
+    local bt_connected = ""
+    if needs("bt_battery", "bt_connected") then
+        local bt_footer = ui and ui.view and ui.view.footer
+        local bt_state = bt_footer and bt_footer.btbattery_state
+        if type(bt_state) == "table" and bt_state.connected then
+            -- Nerd Fonts "bluetooth" glyph (U+E7AE), the same icon Bookends'
+            -- icons library offers. Renders only if the overlay font covers
+            -- it; users without such a font can write "BT" in the [if:...]
+            -- branch instead.
+            bt_connected = "\238\158\174"
+            if type(bt_state.battery) == "number" then
+                bt_battery = bt_state.battery .. "%"
+            end
+        end
+    end
+
     -- Wi-Fi: always renders. The bundled symbol font ships only two wifi
     -- glyphs (U+ECA8 wifi, U+ECA9 wifi-off), so "off" and "enabled-but-no-link"
     -- share the wifi-off glyph — both communicate "no working connection".
@@ -3449,6 +3480,8 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         -- Device
         batt      = tostring(batt_lvl),
         batt_icon = tostring(batt_symbol),
+        bt_battery   = tostring(bt_battery),
+        bt_connected = tostring(bt_connected),
         wifi      = wifi_symbol,
         -- Same glyph under bookshelf's name for it, so a template copied
         -- across resolves instead of printing the literal token (#348).
