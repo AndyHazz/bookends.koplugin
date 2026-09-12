@@ -30,9 +30,20 @@ end
 -- Local copy: the repository this was extracted from still needs its own for
 -- directory walking, so this is a deliberate duplicate of four trivial lines
 -- rather than a new cross-module dependency.
+-- Collapse repeated slashes. KOReader stores home_dir however it was set, and
+-- a trailing slash there used to reach all the way through: the library root
+-- kept it, every map key became "<root>//<lpath>", and no book's own path ever
+-- matched one. The file was still FOUND (POSIX is happy with "//"), so it
+-- parsed, the harvest sidecar was written with every column in it, and not one
+-- book resolved -- which is precisely what issue 372 reported.
+local function _normPath(p)
+    if type(p) ~= "string" then return p end
+    return (p:gsub("//+", "/"))
+end
+
 local function _joinPath(parent, child)
     if parent == "/" then return "/" .. child end
-    return parent .. "/" .. child
+    return _normPath(parent .. "/" .. child)
 end
 
 -- ─── Calibre metadata.calibre loader ─────────────────────────────────────────
@@ -146,7 +157,7 @@ local function _calibreMetadataFor(filepath, enabled)
     local now = os.time()
     if (now - _calibre_state.last_check) <= CALIBRE_TTL
             and _calibre_state.map ~= nil then
-        return _calibre_state.map[filepath]
+        return _calibre_state.map[_normPath(filepath)]
     end
     _calibre_state.last_check = now
     local home = G_reader_settings:readSetting("home_dir") or "/"
@@ -169,7 +180,7 @@ local function _calibreMetadataFor(filepath, enabled)
     if _calibre_state.file_path == meta_path
             and _calibre_state.file_mtime == mtime
             and _calibre_state.map then
-        return _calibre_state.map[filepath]
+        return _calibre_state.map[_normPath(filepath)]
     end
     -- (Re)parse the JSON file. Calibre's bundled rapidjson exposes
     -- load_calibre for the metadata.calibre format; fall back to the
@@ -357,7 +368,7 @@ local function _calibreMetadataFor(filepath, enabled)
             if book.user_metadata ~= nil or book.author_sort ~= nil then
                 calibre_written = true
             end
-            map[lib_root .. "/" .. book.lpath] = full and slim(book) or book
+            map[_normPath(lib_root .. "/" .. book.lpath)] = full and slim(book) or book
         end
     end
     if full and calibre_written then
@@ -365,7 +376,7 @@ local function _calibreMetadataFor(filepath, enabled)
         local harvest = {}
         for _i, book in ipairs(data) do
             if type(book) == "table" and book.lpath then
-                local entry = map[lib_root .. "/" .. book.lpath]
+                local entry = map[_normPath(lib_root .. "/" .. book.lpath)]
                 if entry and (entry.author_sort or entry.extra_series
                               or entry.calibre) then
                     harvest[book.lpath] = {
@@ -418,7 +429,7 @@ local function _calibreMetadataFor(filepath, enabled)
     _calibre_state.file_path  = meta_path
     _calibre_state.file_mtime = mtime
     _calibre_state.map        = map
-    return map[filepath]
+    return map[_normPath(filepath)]
 end
 
 -- notify(state, bytes): optional host hook, called with "start" before a parse
