@@ -781,6 +781,28 @@ end
 -- fallbacks. Only affects directives formatLocalizedDate leaves to native
 -- os.date (weekday/month names go through LocalDate instead, see below).
 local _date_locale_cache = {} -- language code -> locale string or false
+--- The frontlight warmth as (device-native, KOReader 0-100), or nil, nil when
+--- the device cannot report it. One reader for every warmth site, because the
+--- value CAN be nil on hardware that says it has a natural light:
+--- KindlePowerD:frontlightWarmthHW reads the level over lipc and has no else
+--- branch, so with no lipc handle - a framework-stopped Kindle - it returns
+--- nil, powerd.fl_warmth stays nil for the session, and frontlightWarmth()
+--- hands back nil while hasNaturalLight() is still true. KOReader's own
+--- toNativeWarmth then divides by it unchecked and the paint dies.
+--- Intensity has no such hole: frontlightIntensityHW falls back to sysfs, so
+--- it is never nil, which is why only warmth ever crashed.
+local function readWarmth(powerd)
+    if not (powerd and powerd.frontlightWarmth) then return nil, nil end
+    local pct = powerd:frontlightWarmth()
+    if type(pct) ~= "number" then return nil, nil end
+    local native
+    if powerd.toNativeWarmth then
+        native = powerd:toNativeWarmth(pct)
+        if type(native) ~= "number" then native = nil end
+    end
+    return native, pct
+end
+
 local function getDateLocale()
     local ok, GetText = pcall(require, "gettext")
     if not ok or not GetText or not GetText.current_lang or GetText.current_lang == "C" then
@@ -1557,12 +1579,15 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
             state.light_pct = math.floor(
                 powerd:frontlightIntensity() / powerd.fl_max * 100 + 0.5)
         end
-        if Device:hasNaturalLight() and powerd.frontlightWarmth then
+        if Device:hasNaturalLight() then
             -- state.warmth keeps the device-native value (0-24 on Kindle)
             -- for users with conditionals tied to that scale; warmth_pct
             -- is the normalised 0-100 frontlightWarmth() return value.
-            state.warmth = powerd:toNativeWarmth(powerd:frontlightWarmth())
-            state.warmth_pct = math.floor(powerd:frontlightWarmth() + 0.5)
+            -- Both keys stay ABSENT when the device cannot report warmth, so
+            -- [if:warmth>10] reads false rather than taking the paint down.
+            local native, pct = readWarmth(powerd)
+            if native then state.warmth = native end
+            if pct then state.warmth_pct = math.floor(pct + 0.5) end
         end
     end
 
@@ -3095,9 +3120,8 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     local fl_warmth_pct = ""
     if needs("warmth_pct") then
         local pwd = Device:getPowerDevice()
-        fl_warmth_pct = Semantics.warmthPct(
-            pwd and pwd.frontlightWarmth and pwd:frontlightWarmth(),
-            Device:hasNaturalLight())
+        local _native_warmth, pct = readWarmth(pwd)
+        fl_warmth_pct = Semantics.warmthPct(pct, Device:hasNaturalLight())
     end
 
     -- Warmth icon (dynamic). Ramp thresholds and glyphs live in
@@ -3105,9 +3129,8 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     local warmth_symbol = ""
     if needs("warmth_icon") then
         local pwd = Device:getPowerDevice()
-        warmth_symbol = Semantics.warmthIcon(
-            pwd and pwd.frontlightWarmth and pwd:frontlightWarmth(),
-            Device:hasNaturalLight())
+        local _native_warmth, pct = readWarmth(pwd)
+        warmth_symbol = Semantics.warmthIcon(pct, Device:hasNaturalLight())
     end
 
     -- Aggregate output from plugins that register with KOReader's footer
@@ -3131,10 +3154,7 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
                 powerd and powerd:frontlightIntensity())
         end
         if needs("warmth") then
-            local native
-            if powerd and powerd.toNativeWarmth and powerd.frontlightWarmth then
-                native = powerd:toNativeWarmth(powerd:frontlightWarmth())
-            end
+            local native = readWarmth(powerd)
             fl_warmth = Semantics.warmth(native, Device:hasNaturalLight())
         end
     end
