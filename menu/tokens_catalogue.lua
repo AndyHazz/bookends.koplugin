@@ -60,6 +60,8 @@ M.TOKENS = {
     { description = _("A highlight from this book"), token = "%quote", chip = "book" },
     { description = _("Title and author for the quote"), token = "%quote_source", chip = "book" },
     { description = _("Book language"), token = "%lang", chip = "book" },
+    { description = _("First genre, from the book's keywords"), token = "%genre", chip = "book" },
+    { description = _("All genres, comma-separated"), token = "%genres", chip = "book" },
     { description = _("Document format (EPUB, PDF, etc.)"), token = "%format", chip = "book" },
     { description = _("Calibre column by name, e.g. %calibre{mood}"), token = "%calibre{}", chip = "book", is_snippet = true },
     { description = _("Highlights count"), token = "%highlights", chip = "book" },

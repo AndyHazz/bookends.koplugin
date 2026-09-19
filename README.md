@@ -129,12 +129,16 @@ Tokens are placeholders that expand to live values. Type `%` followed by a name,
 | `%quote` | A highlight from this book, in quotation marks | *"The spice must flow."* |
 | `%quote_source` | Title and author, to caption `%quote` | *Dune, Frank Herbert* |
 | `%lang` | Book language | *en* |
+| `%genre` | First genre, from the book's Keywords | *Fantasy* |
+| `%genres` | All genres, comma-separated | *Fantasy, Fiction* |
 | `%format` | Document format | *EPUB* |
 | `%highlights` | Number of highlights | *3* |
 | `%notes` | Number of notes | *1* |
 | `%bookmarks` | Number of bookmarks | *5* |
 | `%annotations` | Total annotations (highlights + notes + bookmarks) | *9* |
 | `%calibre{name}` | Any Calibre column, by its lookup name (the `#` is optional) | *cosy* |
+
+> **Genres.** `%genre` and `%genres` read the book's **Keywords** field, the one KOReader shows under *Book information* and lets you edit there. Keywords separated by commas, semicolons, pipes or line breaks each count as a genre, and a spaced slash splits a subject heading, so `Fiction / Fantasy` reads as two. A slash with no spaces around it stays part of the tag. If a book has no keywords both tokens are empty, so `[if:genres]` hides the line rather than leaving a gap.
 
 > **Calibre columns.** If your library is managed by Calibre, `%calibre{name}` shows any column from it, using the column's lookup name: a custom column `#mood` renders with `%calibre{mood}`. Text, list, number, date, yes/no and multi-value columns all work; long-text ("Comments") columns are skipped, being the wrong shape for a status line. Three standard fields come through the same way: `%calibre{pubdate}` (the year), `%calibre{publisher}` and `%calibre{rating}`. Conditionals work too, e.g. `[if:calibre{mood}="cosy"]Cosy read[/if]`.
 
@@ -322,6 +326,8 @@ Comparison operators: `=` (equals), `!=` (not equals), `<` (less than), `>` (gre
 | `series_name` | string | Series name without index (matches `%series_name`) |
 | `series_num` | string | Series index, e.g. `"2"` (matches `%series_num`) |
 | `lang` | string | Document language code, e.g. `"en"` (matches `%lang`) |
+| `genre` | string | First genre (matches `%genre`) |
+| `genres` | string | All genres, comma-separated (matches `%genres`). `[if:not genres]` means "no genres set" |
 | `filename` | string | File name without extension (matches `%filename`) |
 | `chap_title` | string | Current chapter title (matches `%chap_title`) |
 | `chap_title_1` | string | Chapter title at depth 1 (matches `%chap_title_1`) |

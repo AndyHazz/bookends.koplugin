@@ -757,6 +757,25 @@ local function splitAuthors(authors_raw)
     return list
 end
 
+--- Split a Keywords field into a genre list, or an empty list.
+--- The rule is bookshelf's `splitGenreTags`, kept in step deliberately so the
+--- same book reads the same on the shelf and in the reader: comma, semicolon,
+--- pipe and newline separate, and a SPACED slash separates a BISAC-style
+--- subject hierarchy ("Fiction / Fantasy"). A bare slash is part of the tag
+--- itself ("hurt/comfort", bookshelf's #240), so it must not split - hence
+--- normalising the spaced form to a newline up front rather than adding "/"
+--- to the separator class.
+local function splitGenres(keywords)
+    local list = {}
+    if type(keywords) ~= "string" or keywords == "" then return list end
+    local norm = keywords:gsub("%s+/%s+", "\n")
+    for part in norm:gmatch("[^,;|\n]+") do
+        local trimmed = part:match("^%s*(.-)%s*$")
+        if trimmed ~= "" then list[#list + 1] = trimmed end
+    end
+    return list
+end
+
 -- Map KOReader UI language to a system locale for localized date strings.
 -- Preserves the regional code first (e.g. pt_BR), then tries generic
 -- fallbacks. Only affects directives formatLocalizedDate leaves to native
@@ -1723,6 +1742,12 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
         end
         state.series = series
         state.lang = doc_props.language or props.language or ""
+        -- Strings, not a count: [if:genres] reads "this book has genres" the
+        -- way [if:series] reads "this book is in a series", which is the
+        -- gating bookshelf documents for the same token.
+        local genre_list = splitGenres(doc_props.keywords or props.keywords)
+        state.genre  = genre_list[1] or ""
+        state.genres = table.concat(genre_list, ", ")
     end
 
     -- Chapter titles (reuses the helper already called for state.chap_num/chap_count)
@@ -2158,6 +2183,7 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
             chap_title = "[chapter]",
             chap_title_num = "[ch.#]", chap_title_name = "[chapter]",
             filename = "[file]", lang = "[lang]",
+            genre = "[genre]", genres = "[genres]",
             format = "[format]",
             highlights = "[highlights]", notes = "[notes]",
             bookmarks = "[bookmarks]", annotations = "[annotations]",
@@ -2899,13 +2925,16 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
     local series_name = ""
     local series_num = ""
     local book_language = ""
+    local first_genre = ""
+    local genres = ""
     -- %author_count / %authors_short / %quote_source are listed here because
     -- they are DERIVED from this block's title + authors_list; without them the
     -- gate skips and they resolve empty for a template that names only them.
     if needs("title", "author", "authors",
              "author_1", "author_2", "author_3", "author_4", "author_5",
              "author_count", "authors_short", "quote_source",
-             "series", "series_name", "series_num", "lang") then
+             "series", "series_name", "series_num", "lang",
+             "genre", "genres") then
         local doc_props = ui.doc_props or {}
         local ok, props = pcall(doc.getProps, doc)
         if not ok then props = {} end
@@ -2923,6 +2952,14 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         end
         if needs("lang") then
             book_language = doc_props.language or props.language or ""
+        end
+        if needs("genre", "genres") then
+            -- doc_props.keywords is KOReader's merged value, so an edit in
+            -- Show info wins over what the file embeds. Calibre tags are NOT
+            -- consulted: %calibre{...} is the one token that reads that file.
+            local genre_list = splitGenres(doc_props.keywords or props.keywords)
+            first_genre = genre_list[1] or ""
+            genres = table.concat(genre_list, ", ")
         end
     end
 
@@ -3438,6 +3475,8 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         file_num    = file_num,
         file_count  = file_count,
         lang        = book_language,
+        genre       = first_genre,
+        genres      = genres,
         format      = doc_format,
         highlights  = highlights_count,
         notes       = notes_count,
