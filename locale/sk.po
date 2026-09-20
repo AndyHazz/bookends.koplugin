@@ -1,0 +1,2628 @@
+# Bookends — KOReader Plugin
+# Slovak translation
+msgid ""
+msgstr ""
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-30 11:21+0100\n"
+"Language: sk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+#: bookends_colour_palette.lua:400 bookends_dialog_helpers.lua:101
+#: bookends_line_editor.lua:792 bookends_line_editor.lua:1058 main.lua:2485
+#: main.lua:3184 menu/main_menu.lua:55 menu/main_menu.lua:95
+#: menu/main_menu.lua:133 menu/main_menu.lua:590
+#: menu/preset_manager_modal.lua:1405 menu/preset_manager_modal.lua:1527
+#: menu/preset_manager_modal.lua:1568 menu/preset_manager_modal.lua:1669
+#: menu/preset_manager_modal.lua:1713 menu/preset_manager_modal.lua:1815
+#: menu/preset_manager_modal.lua:1889 menu/preset_manager_modal.lua:1984
+#: menu/preset_manager_modal.lua:2008 menu/preset_manager_modal.lua:2032
+#: menu/progress_bar_menu.lua:64
+msgid "Cancel"
+msgstr "Zrušiť"
+
+#: bookends_colour_palette.lua:402 bookends_dialog_helpers.lua:109
+#: bookends_line_editor.lua:505 bookends_line_editor.lua:632 main.lua:2495
+#: main.lua:2727 menu/colours_menu.lua:73 menu/colours_menu.lua:269
+#: menu/progress_bar_menu.lua:270 menu/progress_bar_menu.lua:503
+#: menu/progress_bar_menu.lua:545
+msgid "Default"
+msgstr "Predvolené"
+
+#: bookends_colour_palette.lua:404 bookends_dialog_helpers.lua:116
+#: main.lua:2524 menu/preset_manager_modal.lua:691
+msgid "Apply"
+msgstr "Použiť"
+
+#: bookends_colour_palette.lua:406 menu/colours_menu.lua:257
+msgid "White"
+msgstr "Biela"
+
+#: bookends_colour_palette.lua:441 bookends_colour_palette.lua:561
+msgid "Pick a color"
+msgstr "Vyberte farbu"
+
+#: bookends_colour_palette.lua:529
+msgid "Invalid hex colour (use #RGB or #RRGGBB)"
+msgstr "Neplatná hex farba (použite #RGB alebo #RRGGBB)"
+
+#: bookends_line_editor.lua:115 main.lua:1115
+msgid "Regular"
+msgstr "Normálne"
+
+#: bookends_line_editor.lua:121 bookends_line_editor.lua:448
+#: menu/progress_bar_menu.lua:463
+msgid "Size"
+msgstr "Veľkosť"
+
+#: bookends_line_editor.lua:128
+msgid "Font"
+msgstr "Písmo"
+
+#: bookends_line_editor.lua:130
+msgid "Font..."
+msgstr "Písmo..."
+
+#: bookends_line_editor.lua:142
+msgid "Odd pg"
+msgstr "Nepárne st."
+
+#: bookends_line_editor.lua:143
+msgid "Even pg"
+msgstr "Párne st."
+
+#: bookends_line_editor.lua:144
+msgid "All pg"
+msgstr "Všetky st."
+
+#: bookends_line_editor.lua:180
+msgid "- Progress bar"
+msgstr "- Lišta priebehu"
+
+#: bookends_line_editor.lua:180
+msgid "+ Progress bar"
+msgstr "+ Lišta priebehu"
+
+#: bookends_line_editor.lua:185
+msgid "Bar style…"
+msgstr "Štýl lišty…"
+
+#: bookends_line_editor.lua:216 bookends_line_editor.lua:567
+#: menu/progress_bar_menu.lua:143
+msgid "Bordered"
+msgstr "S okrajom"
+
+#: bookends_line_editor.lua:216 bookends_line_editor.lua:246
+#: menu/progress_bar_menu.lua:143 menu/progress_bar_menu.lua:144
+#: menu/progress_bar_menu.lua:418
+msgid "Solid"
+msgstr "Plná"
+
+#: bookends_line_editor.lua:216 menu/progress_bar_menu.lua:143
+msgid "Rounded"
+msgstr "Zaoblená"
+
+#: bookends_line_editor.lua:217 menu/progress_bar_menu.lua:143
+msgid "Metro"
+msgstr "Metro"
+
+#: bookends_line_editor.lua:217 menu/progress_bar_menu.lua:143
+msgid "Wave"
+msgstr "Vlna"
+
+#: bookends_line_editor.lua:217 menu/progress_bar_menu.lua:143
+msgid "Radial"
+msgstr "Kruhová"
+
+#: bookends_line_editor.lua:218 menu/progress_bar_menu.lua:143
+msgid "Radial hollow"
+msgstr "Kruhová dutá"
+
+#: bookends_line_editor.lua:218 menu/progress_bar_menu.lua:143
+msgid "Pacman"
+msgstr "Pacman"
+
+#: bookends_line_editor.lua:222 menu/progress_bar_menu.lua:124
+msgid "Chapter ticks: off"
+msgstr "Značky kapitol: vypnuté"
+
+#: bookends_line_editor.lua:223 menu/progress_bar_menu.lua:126
+msgid "Chapter ticks: top level"
+msgstr "Značky kapitol: prvá úroveň"
+
+#: bookends_line_editor.lua:224 menu/progress_bar_menu.lua:127
+msgid "Chapter ticks: top 2 levels"
+msgstr "Značky kapitol: prvé 2 úrovne"
+
+#: bookends_line_editor.lua:225 menu/progress_bar_menu.lua:125
+msgid "Chapter ticks: all levels"
+msgstr "Značky kapitol: všetky úrovne"
+
+#: bookends_line_editor.lua:238 menu/progress_bar_menu.lua:416
+msgid "Off"
+msgstr "Vypnuté"
+
+#: bookends_line_editor.lua:239 menu/progress_bar_menu.lua:416
+msgid "Start of session"
+msgstr "Začiatok relácie"
+
+#: bookends_line_editor.lua:240 menu/progress_bar_menu.lua:416
+msgid "Book opened"
+msgstr "Otvorenie knihy"
+
+#: bookends_line_editor.lua:241 menu/progress_bar_menu.lua:416
+msgid "Bookmarks"
+msgstr "Záložky"
+
+#: bookends_line_editor.lua:242 menu/progress_bar_menu.lua:416
+msgid "Today"
+msgstr "Dnes"
+
+#: bookends_line_editor.lua:246 menu/progress_bar_menu.lua:418
+msgid "Chevron"
+msgstr "Chevron"
+
+#: bookends_line_editor.lua:285
+msgid "Disable custom colours"
+msgstr "Vypnúť vlastné farby"
+
+#: bookends_line_editor.lua:285
+msgid "Enable custom colours"
+msgstr "Zapnúť vlastné farby"
+
+#: bookends_line_editor.lua:338 bookends_line_editor.lua:341
+#: menu/progress_bar_menu.lua:332 menu/progress_bar_menu.lua:337
+msgid "Tick height"
+msgstr "Výška značky"
+
+#: bookends_line_editor.lua:353 bookends_line_editor.lua:356
+#: menu/progress_bar_menu.lua:358 menu/progress_bar_menu.lua:360
+#: menu/progress_bar_menu.lua:366
+msgid "Tick width"
+msgstr "Šírka značky"
+
+#: bookends_line_editor.lua:371 bookends_line_editor.lua:398
+#: bookends_line_editor.lua:511
+msgid "Back"
+msgstr "Späť"
+
+#: bookends_line_editor.lua:378
+msgid "Bar colours"
+msgstr "Farby lišty"
+
+#: bookends_line_editor.lua:392 bookends_line_editor.lua:410
+#: menu/progress_bar_menu.lua:511
+msgid "Top marker"
+msgstr "Horná značka"
+
+#: bookends_line_editor.lua:395 bookends_line_editor.lua:410
+#: menu/progress_bar_menu.lua:515
+msgid "Bottom marker"
+msgstr "Dolná značka"
+
+#: bookends_line_editor.lua:402 bookends_line_editor.lua:650
+#: menu/progress_bar_menu.lua:402
+msgid "Markers"
+msgstr "Značky"
+
+#: bookends_line_editor.lua:418 bookends_line_editor.lua:543
+#: menu/progress_bar_menu.lua:111 menu/progress_bar_menu.lua:432
+msgid "Type"
+msgstr "Typ"
+
+#: bookends_line_editor.lua:435 bookends_line_editor.lua:567
+#: menu/progress_bar_menu.lua:144 menu/progress_bar_menu.lua:450
+msgid "Style"
+msgstr "Štýl"
+
+#: bookends_line_editor.lua:452
+msgid "size"
+msgstr "veľkosť"
+
+#: bookends_line_editor.lua:461 menu/progress_bar_menu.lua:474
+msgid "Offset"
+msgstr "Posun"
+
+#: bookends_line_editor.lua:465
+msgid "offset"
+msgstr "posun"
+
+#: bookends_line_editor.lua:475 menu/progress_bar_menu.lua:485
+msgid "Colour"
+msgstr "Farba"
+
+#: bookends_line_editor.lua:479
+msgid "colour"
+msgstr "farba"
+
+#: bookends_line_editor.lua:505 menu/progress_bar_menu.lua:503
+msgid "tick colour"
+msgstr "farba značky"
+
+#: bookends_line_editor.lua:543 menu/progress_bar_menu.lua:111
+#: menu/tokens_catalogue.lua:21
+msgid "Book"
+msgstr "Kniha"
+
+#: bookends_line_editor.lua:543 menu/progress_bar_menu.lua:111
+msgid "Chapter"
+msgstr "Kapitola"
+
+#: bookends_line_editor.lua:579 menu/progress_bar_menu.lua:188
+msgid "Fill: right to left"
+msgstr "Plnenie: sprava doľava"
+
+#: bookends_line_editor.lua:579 menu/progress_bar_menu.lua:187
+msgid "Fill: left to right"
+msgstr "Plnenie: zľava doprava"
+
+#: bookends_line_editor.lua:595 bookends_line_editor.lua:597
+#: bookends_line_editor.lua:599 menu/progress_bar_menu.lua:226
+msgid "Thickness"
+msgstr "Hrúbka"
+
+#: bookends_line_editor.lua:595 bookends_line_editor.lua:632
+msgid "auto"
+msgstr "auto"
+
+#: bookends_line_editor.lua:607 menu/progress_bar_menu.lua:238
+msgid "Bar thickness"
+msgstr "Hrúbka lišty"
+
+#: bookends_line_editor.lua:609 menu/progress_bar_menu.lua:243
+msgid "Read"
+msgstr "Prečítané"
+
+#: bookends_line_editor.lua:610 bookends_tokens.lua:429
+#: menu/progress_bar_menu.lua:244
+msgid "Unread"
+msgstr "Neprečítané"
+
+#: bookends_line_editor.lua:640
+msgid "Custom colours"
+msgstr "Vlastné farby"
+
+#: bookends_line_editor.lua:661 bookends_updater.lua:349 main.lua:3022
+#: menu/icons_library.lua:453 menu/preset_manager_modal.lua:665
+#: menu/tokens_library.lua:463
+msgid "Close"
+msgstr "Zavrieť"
+
+#: bookends_line_editor.lua:666
+msgid "Bar style"
+msgstr "Štýl lišty"
+
+#: bookends_line_editor.lua:687
+msgid "Font size"
+msgstr "Veľkosť písma"
+
+#: bookends_line_editor.lua:687
+msgid "line"
+msgstr "riadok"
+
+#: bookends_line_editor.lua:750
+msgid "Position"
+msgstr "Pozícia"
+
+#: bookends_line_editor.lua:807
+msgid "Icons"
+msgstr "Ikony"
+
+#: bookends_line_editor.lua:816
+msgid "Tokens"
+msgstr "Tokeny"
+
+#: bookends_line_editor.lua:826 main.lua:3186 menu/main_menu.lua:57
+#: menu/preset_manager_modal.lua:1409 menu/preset_manager_modal.lua:1569
+#: menu/preset_manager_modal.lua:1670
+msgid "Save"
+msgstr "Uložiť"
+
+#: bookends_line_editor.lua:867 menu/position_menu.lua:44
+msgid "Line"
+msgstr "Riadok"
+
+#: bookends_line_editor.lua:978 menu/progress_bar_menu.lua:46
+msgid "Move up"
+msgstr "Posunúť hore"
+
+#: bookends_line_editor.lua:988 menu/progress_bar_menu.lua:55
+msgid "Move down"
+msgstr "Posunúť dole"
+
+#: bookends_line_editor.lua:1042
+msgid "Move to"
+msgstr "Presunúť na"
+
+#: bookends_line_editor.lua:1052
+msgid "Line %1: %2"
+msgstr "Riadok %1: %2"
+
+#: bookends_line_editor.lua:1054 menu/preset_manager_modal.lua:1512
+#: menu/preset_manager_modal.lua:1908
+msgid "Delete"
+msgstr "Zmazať"
+
+#: bookends_tokens.lua:430 menu/icons_catalogue.lua:27
+msgid "Reading"
+msgstr "Číta sa"
+
+#: bookends_tokens.lua:431
+msgid "On hold"
+msgstr "Pozastavené"
+
+#: bookends_tokens.lua:432
+msgid "Finished"
+msgstr "Dokončené"
+
+#: bookends_tokens.lua:3190
+msgid " and "
+msgstr " a "
+
+#: bookends_tokens.lua:3190
+msgid ", et al."
+msgstr " a kol."
+
+#: bookends_updater.lua:105
+msgid "Open the releases page in a browser?"
+msgstr "Otvoriť stránku s vydaniami v prehliadači?"
+
+#: bookends_updater.lua:106
+msgid "Open"
+msgstr "Otvoriť"
+
+#: bookends_updater.lua:271
+msgid "Checking for updates..."
+msgstr "Kontrolujú sa aktualizácie..."
+
+#: bookends_updater.lua:283
+msgid "Could not check for updates."
+msgstr "Nepodarilo sa skontrolovať aktualizácie."
+
+#: bookends_updater.lua:320
+msgid "Bookends is up to date."
+msgstr "Bookends je aktuálny."
+
+#: bookends_updater.lua:321
+msgid "Version: "
+msgstr "Verzia: "
+
+#: bookends_updater.lua:355
+msgid "Update and restart"
+msgstr "Aktualizovať a reštartovať"
+
+#: bookends_updater.lua:360
+msgid "No download available for this release."
+msgstr "Pre toto vydanie nie je k dispozícii súbor na stiahnutie."
+
+#: bookends_updater.lua:371
+msgid "Update available!"
+msgstr "Je dostupná aktualizácia!"
+
+#: bookends_updater.lua:372
+msgid "Installed: "
+msgstr "Nainštalované: "
+
+#: bookends_updater.lua:373
+msgid "Latest: "
+msgstr "Najnovšie: "
+
+#: bookends_updater.lua:396
+msgid "Downloading update..."
+msgstr "Sťahuje sa aktualizácia..."
+
+#: bookends_updater.lua:460
+msgid "the connection failed"
+msgstr "spojenie zlyhalo"
+
+#: bookends_updater.lua:463
+msgid "the connection timed out"
+msgstr "spojenie vypršalo"
+
+#: bookends_updater.lua:465
+msgid "the secure connection failed"
+msgstr "zabezpečené spojenie zlyhalo"
+
+#: bookends_updater.lua:468
+msgid "there was no response"
+msgstr "neprišla žiadna odpoveď"
+
+#: bookends_updater.lua:484 bookends_updater.lua:489
+msgid "the file could not be saved"
+msgstr "súbor sa nepodarilo uložiť"
+
+#: bookends_updater.lua:516
+msgid "Download failed."
+msgstr "Sťahovanie zlyhalo."
+
+#: bookends_updater.lua:528
+msgid "Installation failed: "
+msgstr "Inštalácia zlyhala: "
+
+#: bookends_updater.lua:545
+msgid "Bookends updated to v"
+msgstr "Bookends aktualizovaný na v"
+
+#: bookends_updater.lua:546
+msgid "Restart KOReader now?"
+msgstr "Reštartovať KOReader teraz?"
+
+#: bookends_updater.lua:547 main.lua:60
+msgid "Restart"
+msgstr "Reštartovať"
+
+#: bookends_updater.lua:563
+msgid "Could not install branch:"
+msgstr "Nepodarilo sa nainštalovať vetvu:"
+
+#: bookends_updater.lua:580
+msgid "Downloading latest release..."
+msgstr "Sťahuje sa najnovšie vydanie..."
+
+#: bookends_updater.lua:591
+msgid "Could not fetch latest release."
+msgstr "Nepodarilo sa načítať najnovšie vydanie."
+
+#: bookends_updater.lua:604
+msgid "Latest release has no downloadable zip."
+msgstr "Najnovšie vydanie neobsahuje zip na stiahnutie."
+
+#: bookends_utils.lua:8 bookends_utils.lua:197
+msgid "UI font"
+msgstr "Písmo rozhrania"
+
+#: bookends_utils.lua:9
+msgid "Serif"
+msgstr "Serif"
+
+#: bookends_utils.lua:10
+msgid "Sans-serif"
+msgstr "Sans-serif"
+
+#: bookends_utils.lua:11
+msgid "Monospace"
+msgstr "Monospace"
+
+#: bookends_utils.lua:12
+msgid "Cursive"
+msgstr "Cursive"
+
+#: bookends_utils.lua:13
+msgid "Fantasy"
+msgstr "Fantasy"
+
+#: main.lua:61
+msgid "Dismiss"
+msgstr "Odmietnuť"
+
+#: main.lua:153
+msgid "Top-left"
+msgstr "Vľavo hore"
+
+#: main.lua:154
+msgid "Top-center"
+msgstr "V strede hore"
+
+#: main.lua:155
+msgid "Top-right"
+msgstr "Vpravo hore"
+
+#: main.lua:156
+msgid "Bottom-left"
+msgstr "Vľavo dole"
+
+#: main.lua:157
+msgid "Bottom-center"
+msgstr "V strede dole"
+
+#: main.lua:158
+msgid "Bottom-right"
+msgstr "Vpravo dole"
+
+#: main.lua:307
+msgid "Bookends presets folder"
+msgstr "Priečinok predvolieb Bookends"
+
+#: main.lua:328
+msgid "Bookends: toggle visibility"
+msgstr "Bookends: prepnúť zobrazenie"
+
+#: main.lua:334
+msgid "Bookends: cycle preset"
+msgstr "Bookends: prepínať predvoľby"
+
+#: main.lua:340
+msgid "Bookends: set visibility"
+msgstr "Bookends: nastaviť zobrazenie"
+
+#: main.lua:343
+msgid "on"
+msgstr "zap."
+
+#: main.lua:343 menu/colours_menu.lua:302 menu/colours_menu.lua:309
+#: menu/colours_menu.lua:349
+msgid "off"
+msgstr "vyp."
+
+#: main.lua:348
+msgid "Bookends: open preset library"
+msgstr "Bookends: otvoriť knižnicu predvolieb"
+
+#: main.lua:437 main.lua:475 menu/preset_manager_modal.lua:1776
+msgid "My setup"
+msgstr "Moje nastavenie"
+
+#: main.lua:438 main.lua:476 menu/preset_manager_modal.lua:1780
+msgid "Imported from your earlier Bookends settings"
+msgstr "Importované z vášho predchádzajúceho nastavenia Bookends"
+
+#: main.lua:647
+msgid "Preset error: %1"
+msgstr "Chyba predvoľby: %1"
+
+#: main.lua:656
+msgid "Preset: %1"
+msgstr "Predvoľba: %1"
+
+#: main.lua:1116
+msgid "Bold"
+msgstr "Tučné"
+
+#: main.lua:1117
+msgid "Italic"
+msgstr "Kurzíva"
+
+#: main.lua:1118
+msgid "Bold italic"
+msgstr "Tučná kurzíva"
+
+#: main.lua:2743
+msgid "Select font"
+msgstr "Vyberte písmo"
+
+#: main.lua:2784
+msgid "Font-family fonts"
+msgstr "Rodiny písiem"
+
+#: main.lua:2849
+msgid "Fonts"
+msgstr "Písma"
+
+#: main.lua:2943 menu/library_modal.lua:937
+msgid "Page %1 of %2"
+msgstr "Strana %1 z %2"
+
+#: main.lua:3032 main.lua:3206
+msgid "Reset"
+msgstr "Obnoviť"
+
+#: main.lua:3041
+msgid "Set font"
+msgstr "Nastaviť písmo"
+
+#: main.lua:3180 menu/main_menu.lua:502 menu/main_menu.lua:504
+msgid "Development branch"
+msgstr "Vývojová vetva"
+
+#: main.lua:3182
+msgid "Branch name (leave empty for stable)"
+msgstr "Názov vetvy (prázdne = stabilná verzia)"
+
+#: main.lua:3205
+msgid ""
+"This will clear the development branch setting and install the latest stable "
+"release of Bookends, then restart KOReader. Continue?"
+msgstr "Týmto sa zruší nastavenie vývojovej vetvy, nainštaluje sa najnovšie stabilné vydanie Bookends a KOReader sa reštartuje. Pokračovať?"
+
+#: main.lua:3224
+msgid "Bookends update available: v"
+msgstr "Dostupná aktualizácia Bookends: v"
+
+#: main.lua:3232 menu/main_menu.lua:667 menu/progress_bar_menu.lua:277
+#: menu/progress_bar_menu.lua:529
+msgid "Adjust margins"
+msgstr "Upraviť okraje"
+
+#: main.lua:3234 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:532
+msgid "Top"
+msgstr "Hore"
+
+#: main.lua:3235 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:533
+msgid "Bottom"
+msgstr "Dole"
+
+#: main.lua:3236 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:532
+msgid "Left"
+msgstr "Vľavo"
+
+#: main.lua:3237 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:533
+msgid "Right"
+msgstr "Vpravo"
+
+#: _meta.lua:19 menu/main_menu.lua:18
+msgid "Bookends"
+msgstr "Bookends"
+
+#: _meta.lua:20
+msgid ""
+"Configurable text overlays at screen corners and edges with token expansion "
+"and icon support."
+msgstr "Konfigurovateľné textové prekrytia v rohoch a na okrajoch obrazovky s rozvíjaním tokenov a podporou ikon."
+
+#: menu/colours_menu.lua:73
+msgid "per style"
+msgstr "podľa štýlu"
+
+#: menu/colours_menu.lua:75
+msgid "Transparent"
+msgstr "Priehľadná"
+
+#: menu/colours_menu.lua:90 menu/colours_menu.lua:104 menu/colours_menu.lua:276
+#: menu/colours_menu.lua:283 menu/colours_menu.lua:289
+#: menu/colours_menu.lua:296 menu/progress_bar_menu.lua:360
+msgid "default"
+msgstr "predvolené"
+
+#: menu/colours_menu.lua:91
+msgid "transparent"
+msgstr "priehľadná"
+
+#: menu/colours_menu.lua:110
+msgid "Progress bar colour"
+msgstr "Farba lišty priebehu"
+
+#: menu/colours_menu.lua:114
+msgid "Progress bar colour (% black)"
+msgstr "Farba lišty priebehu (% čiernej)"
+
+#: menu/colours_menu.lua:123
+msgid "Progress bar track colour"
+msgstr "Farba dráhy lišty"
+
+#: menu/colours_menu.lua:127
+msgid "Progress bar track colour (% black)"
+msgstr "Farba dráhy lišty (% čiernej)"
+
+#: menu/colours_menu.lua:136
+msgid "Tick color"
+msgstr "Farba značky"
+
+#: menu/colours_menu.lua:140
+msgid "Tick color (% black)"
+msgstr "Farba značky (% čiernej)"
+
+#: menu/colours_menu.lua:148
+msgid "Invert tick color on read portion"
+msgstr "Invertovať farbu značky na prečítanej časti"
+
+#: menu/colours_menu.lua:161
+msgid "Border color"
+msgstr "Farba okraja"
+
+#: menu/colours_menu.lua:165
+msgid "Border color (% black)"
+msgstr "Farba okraja (% čiernej)"
+
+#: menu/colours_menu.lua:175 menu/colours_menu.lua:177
+#: menu/colours_menu.lua:183
+msgid "Border thickness"
+msgstr "Hrúbka okraja"
+
+#: menu/colours_menu.lua:197
+msgid "Tick inversion color"
+msgstr "Farba invertovanej značky"
+
+#: menu/colours_menu.lua:201
+msgid "Tick inversion color (% black)"
+msgstr "Farba invertovanej značky (% čiernej)"
+
+#: menu/colours_menu.lua:225
+msgid "No background"
+msgstr "Bez pozadia"
+
+#: menu/colours_menu.lua:276 menu/colours_menu.lua:283
+#: menu/colours_menu.lua:319 menu/progress_bar_menu.lua:34
+msgid "book"
+msgstr "kniha"
+
+#: menu/colours_menu.lua:289 menu/colours_menu.lua:296
+#: menu/colours_menu.lua:334
+msgid "text"
+msgstr "text"
+
+#: menu/colours_menu.lua:315 menu/colours_menu.lua:319
+msgid "Text color"
+msgstr "Farba textu"
+
+#: menu/colours_menu.lua:329 menu/colours_menu.lua:334
+msgid "Icon color"
+msgstr "Farba ikon"
+
+#: menu/colours_menu.lua:331
+msgid ""
+"Applies to Nerd Font and FontAwesome icon glyphs (the Private Use Area "
+"range, e.g. %W, %B, %k). Unicode symbols in the regular text ranges (like "
+"the hourglass \"⌛\") follow the text color instead.\n"
+"\n"
+"An inline [c=#RRGGBB]…[/c] tag in a line overrides the icon colour for any "
+"glyphs inside it."
+msgstr "Platí pre glyfy ikon Nerd Font a FontAwesome (rozsah Private Use Area, napr. %W, %B, %k). Symboly Unicode v bežných textových rozsahoch (napríklad presýpacie hodiny \"⌛\") sa riadia farbou textu.\n\nZnačka [c=#RRGGBB]…[/c] vnútri riadku prepíše farbu ikon pre všetky glyfy, ktoré obsahuje."
+
+#: menu/colours_menu.lua:344 menu/colours_menu.lua:349
+msgid "Background colour"
+msgstr "Farba pozadia"
+
+#: menu/colours_menu.lua:346
+msgid ""
+"Solid fill drawn behind the top and bottom overlay regions, edge to edge "
+"across the screen. Choose a colour to enable, hold this row or tap Default "
+"in the picker to turn off."
+msgstr "Plná výplň vykreslená za hornou a dolnou oblasťou prekrytia, cez celú šírku obrazovky. Zapnete ju výberom farby; vypnete podržaním tohto riadku alebo voľbou Predvolené vo výbere farieb."
+
+#: menu/icons_catalogue.lua:24 menu/tokens_catalogue.lua:20
+msgid "All"
+msgstr "Všetko"
+
+#: menu/icons_catalogue.lua:25
+msgid "Dynamic"
+msgstr "Dynamické"
+
+#: menu/icons_catalogue.lua:26 menu/tokens_catalogue.lua:25
+msgid "Device"
+msgstr "Zariadenie"
+
+#: menu/icons_catalogue.lua:28 menu/tokens_catalogue.lua:23
+msgid "Time"
+msgstr "Čas"
+
+#: menu/icons_catalogue.lua:29
+msgid "Symbols"
+msgstr "Symboly"
+
+#: menu/icons_catalogue.lua:30
+msgid "Arrows"
+msgstr "Šípky"
+
+#: menu/icons_catalogue.lua:31
+msgid "Blocks"
+msgstr "Bloky"
+
+#: menu/icons_catalogue.lua:32
+msgid "Separators"
+msgstr "Oddeľovače"
+
+#: menu/icons_catalogue.lua:33
+msgid "SVG icon folder"
+msgstr "Priečinok s ikonami SVG"
+
+#: menu/icons_catalogue.lua:38
+msgid "Battery"
+msgstr "Batéria"
+
+#: menu/icons_catalogue.lua:39
+msgid "Wi-Fi"
+msgstr "Wi-Fi"
+
+#: menu/icons_catalogue.lua:40
+msgid "Frontlight"
+msgstr "Podsvietenie"
+
+#: menu/icons_catalogue.lua:41
+msgid "Warmth"
+msgstr "Teplota svetla"
+
+#: menu/icons_catalogue.lua:42
+msgid "Night mode"
+msgstr "Nočný režim"
+
+#: menu/icons_catalogue.lua:173
+msgid "Sun (outline)"
+msgstr "Slnko (obrys)"
+
+#: menu/icons_catalogue.lua:174
+msgid "Hot springs / warmth"
+msgstr "Horúce pramene / teplo"
+
+#: menu/icons_catalogue.lua:175
+msgid "Spade"
+msgstr "Piky"
+
+#: menu/icons_catalogue.lua:176
+msgid "Club"
+msgstr "Kríže"
+
+#: menu/icons_catalogue.lua:177
+msgid "Heart"
+msgstr "Srdce"
+
+#: menu/icons_catalogue.lua:178
+msgid "Diamond suit"
+msgstr "Káro"
+
+#: menu/icons_catalogue.lua:179
+msgid "Star (filled)"
+msgstr "Hviezda (plná)"
+
+#: menu/icons_catalogue.lua:180
+msgid "Star (outline)"
+msgstr "Hviezda (obrys)"
+
+#: menu/icons_catalogue.lua:181
+msgid "Infinity"
+msgstr "Nekonečno"
+
+#: menu/icons_catalogue.lua:182
+msgid "Section sign"
+msgstr "Znak paragrafu"
+
+#: menu/icons_catalogue.lua:183
+msgid "Pilcrow / paragraph"
+msgstr "Znak odseku"
+
+#: menu/icons_catalogue.lua:184
+msgid "Dagger"
+msgstr "Krížik"
+
+#: menu/icons_catalogue.lua:185
+msgid "Double dagger"
+msgstr "Dvojitý krížik"
+
+#: menu/icons_catalogue.lua:186
+msgid "Numero"
+msgstr "Znak čísla"
+
+#: menu/icons_catalogue.lua:187
+msgid "High voltage"
+msgstr "Vysoké napätie"
+
+#: menu/icons_catalogue.lua:213
+msgid "Arrow left"
+msgstr "Šípka doľava"
+
+#: menu/icons_catalogue.lua:214
+msgid "Arrow right"
+msgstr "Šípka doprava"
+
+#: menu/icons_catalogue.lua:215
+msgid "Arrow up"
+msgstr "Šípka hore"
+
+#: menu/icons_catalogue.lua:216
+msgid "Arrow down"
+msgstr "Šípka dole"
+
+#: menu/icons_catalogue.lua:217
+msgid "Double arrow left"
+msgstr "Dvojitá šípka doľava"
+
+#: menu/icons_catalogue.lua:218
+msgid "Double arrow right"
+msgstr "Dvojitá šípka doprava"
+
+#: menu/icons_catalogue.lua:219
+msgid "Double arrow up"
+msgstr "Dvojitá šípka hore"
+
+#: menu/icons_catalogue.lua:220
+msgid "Double arrow down"
+msgstr "Dvojitá šípka dole"
+
+#: menu/icons_catalogue.lua:221
+msgid "Arrows left-right"
+msgstr "Šípky doľava-doprava"
+
+#: menu/icons_catalogue.lua:222
+msgid "Double arrows right"
+msgstr "Dvojité šípky doprava"
+
+#: menu/icons_catalogue.lua:223
+msgid "Left harpoon with right arrow"
+msgstr "Harpúna doľava so šípkou doprava"
+
+#: menu/icons_catalogue.lua:224
+msgid "Curved back arrow"
+msgstr "Zahnutá šípka späť"
+
+#: menu/icons_catalogue.lua:225
+msgid "Arrow left with tail"
+msgstr "Šípka doľava s chvostom"
+
+#: menu/icons_catalogue.lua:226
+msgid "Arrow right with tail"
+msgstr "Šípka doprava s chvostom"
+
+#: menu/icons_catalogue.lua:227
+msgid "Arrow left to bar"
+msgstr "Šípka doľava k zarážke"
+
+#: menu/icons_catalogue.lua:228
+msgid "Arrow right to bar"
+msgstr "Šípka doprava k zarážke"
+
+#: menu/icons_catalogue.lua:229
+msgid "Arrow left hooked"
+msgstr "Šípka doľava s háčikom"
+
+#: menu/icons_catalogue.lua:230
+msgid "Arrow right hooked"
+msgstr "Šípka doprava s háčikom"
+
+#: menu/icons_catalogue.lua:231
+msgid "Arrow right then up"
+msgstr "Šípka doprava a hore"
+
+#: menu/icons_catalogue.lua:232
+msgid "Arrow right then down"
+msgstr "Šípka doprava a dole"
+
+#: menu/icons_catalogue.lua:233
+msgid "Arrow up then left"
+msgstr "Šípka hore a doľava"
+
+#: menu/icons_catalogue.lua:234
+msgid "Arrow up then right"
+msgstr "Šípka hore a doprava"
+
+#: menu/icons_catalogue.lua:235
+msgid "Arrow down then left"
+msgstr "Šípka dole a doľava"
+
+#: menu/icons_catalogue.lua:236
+msgid "Arrow down then right"
+msgstr "Šípka dole a doprava"
+
+#: menu/icons_catalogue.lua:237
+msgid "Circle arrow left"
+msgstr "Šípka v krúžku doľava"
+
+#: menu/icons_catalogue.lua:238
+msgid "Circle arrow right"
+msgstr "Šípka v krúžku doprava"
+
+#: menu/icons_catalogue.lua:239
+msgid "Heavy arrow right"
+msgstr "Hrubá šípka doprava"
+
+#: menu/icons_catalogue.lua:240
+msgid "Heavy round arrow right"
+msgstr "Hrubá oblá šípka doprava"
+
+#: menu/icons_catalogue.lua:241
+msgid "Triangle-head right"
+msgstr "Trojuholníkový hrot doprava"
+
+#: menu/icons_catalogue.lua:242
+msgid "Heavy triangle right"
+msgstr "Hrubý trojuholník doprava"
+
+#: menu/icons_catalogue.lua:243
+msgid "Arrowhead right"
+msgstr "Hrot šípky doprava"
+
+#: menu/icons_catalogue.lua:244
+msgid "Long arrow left"
+msgstr "Dlhá šípka doľava"
+
+#: menu/icons_catalogue.lua:245
+msgid "Long arrow right"
+msgstr "Dlhá šípka doprava"
+
+#: menu/icons_catalogue.lua:246
+msgid "Single angle left"
+msgstr "Jednoduchá lomená zátvorka doľava"
+
+#: menu/icons_catalogue.lua:247
+msgid "Single angle right"
+msgstr "Jednoduchá lomená zátvorka doprava"
+
+#: menu/icons_catalogue.lua:248
+msgid "Double angle left"
+msgstr "Dvojitá lomená zátvorka doľava"
+
+#: menu/icons_catalogue.lua:249
+msgid "Double angle right"
+msgstr "Dvojitá lomená zátvorka doprava"
+
+#: menu/icons_catalogue.lua:350
+msgid "Block (full)"
+msgstr "Blok (plný)"
+
+#: menu/icons_catalogue.lua:351
+msgid "Block (dark)"
+msgstr "Blok (tmavý)"
+
+#: menu/icons_catalogue.lua:352
+msgid "Block (medium)"
+msgstr "Blok (stredný)"
+
+#: menu/icons_catalogue.lua:353
+msgid "Block (light)"
+msgstr "Blok (svetlý)"
+
+#: menu/icons_catalogue.lua:354
+msgid "Upper half block"
+msgstr "Horný polovičný blok"
+
+#: menu/icons_catalogue.lua:355
+msgid "Right half block"
+msgstr "Pravý polovičný blok"
+
+#: menu/icons_catalogue.lua:356
+msgid "Lower 1/8 block"
+msgstr "Dolný blok 1/8"
+
+#: menu/icons_catalogue.lua:357
+msgid "Lower 2/8 block"
+msgstr "Dolný blok 2/8"
+
+#: menu/icons_catalogue.lua:358
+msgid "Lower 3/8 block"
+msgstr "Dolný blok 3/8"
+
+#: menu/icons_catalogue.lua:359
+msgid "Lower 4/8 block"
+msgstr "Dolný blok 4/8"
+
+#: menu/icons_catalogue.lua:360
+msgid "Lower 5/8 block"
+msgstr "Dolný blok 5/8"
+
+#: menu/icons_catalogue.lua:361
+msgid "Lower 6/8 block"
+msgstr "Dolný blok 6/8"
+
+#: menu/icons_catalogue.lua:362
+msgid "Lower 7/8 block"
+msgstr "Dolný blok 7/8"
+
+#: menu/icons_catalogue.lua:363
+msgid "Left 1/8 block"
+msgstr "Ľavý blok 1/8"
+
+#: menu/icons_catalogue.lua:364
+msgid "Left 2/8 block"
+msgstr "Ľavý blok 2/8"
+
+#: menu/icons_catalogue.lua:365
+msgid "Left 3/8 block"
+msgstr "Ľavý blok 3/8"
+
+#: menu/icons_catalogue.lua:366
+msgid "Left 4/8 block"
+msgstr "Ľavý blok 4/8"
+
+#: menu/icons_catalogue.lua:367
+msgid "Left 5/8 block"
+msgstr "Ľavý blok 5/8"
+
+#: menu/icons_catalogue.lua:368
+msgid "Left 6/8 block"
+msgstr "Ľavý blok 6/8"
+
+#: menu/icons_catalogue.lua:369
+msgid "Left 7/8 block"
+msgstr "Ľavý blok 7/8"
+
+#: menu/icons_catalogue.lua:370
+msgid "Square (filled)"
+msgstr "Štvorec (plný)"
+
+#: menu/icons_catalogue.lua:371
+msgid "Square (empty)"
+msgstr "Štvorec (prázdny)"
+
+#: menu/icons_catalogue.lua:372
+msgid "Rectangle (filled)"
+msgstr "Obdĺžnik (plný)"
+
+#: menu/icons_catalogue.lua:373
+msgid "Rectangle (empty)"
+msgstr "Obdĺžnik (prázdny)"
+
+#: menu/icons_catalogue.lua:374
+msgid "Vertical block"
+msgstr "Zvislý blok"
+
+#: menu/icons_catalogue.lua:375
+msgid "Vertical block (empty)"
+msgstr "Zvislý blok (prázdny)"
+
+#: menu/icons_catalogue.lua:376
+msgid "Slant block"
+msgstr "Šikmý blok"
+
+#: menu/icons_catalogue.lua:377
+msgid "Slant block (empty)"
+msgstr "Šikmý blok (prázdny)"
+
+#: menu/icons_catalogue.lua:378
+msgid "Circle (filled)"
+msgstr "Kruh (plný)"
+
+#: menu/icons_catalogue.lua:379
+msgid "Circle (empty)"
+msgstr "Kruh (prázdny)"
+
+#: menu/icons_catalogue.lua:380
+msgid "Circle (left half)"
+msgstr "Kruh (ľavá polovica)"
+
+#: menu/icons_catalogue.lua:381
+msgid "Circle (right half)"
+msgstr "Kruh (pravá polovica)"
+
+#: menu/icons_catalogue.lua:382
+msgid "Circle (lower half)"
+msgstr "Kruh (dolná polovica)"
+
+#: menu/icons_catalogue.lua:383
+msgid "Circle (upper half)"
+msgstr "Kruh (horná polovica)"
+
+#: menu/icons_catalogue.lua:384
+msgid "Diamond (filled)"
+msgstr "Kosoštvorec (plný)"
+
+#: menu/icons_catalogue.lua:385
+msgid "Diamond (empty)"
+msgstr "Kosoštvorec (prázdny)"
+
+#: menu/icons_catalogue.lua:388
+msgid "Vertical bar"
+msgstr "Zvislá čiara"
+
+#: menu/icons_catalogue.lua:389
+msgid "Bullet"
+msgstr "Odrážka"
+
+#: menu/icons_catalogue.lua:390
+msgid "Middle dot"
+msgstr "Stredová bodka"
+
+#: menu/icons_catalogue.lua:391
+msgid "Vertical ellipsis"
+msgstr "Zvislá výpustka"
+
+#: menu/icons_catalogue.lua:392
+msgid "Em dash"
+msgstr "Dlhá pomlčka"
+
+#: menu/icons_catalogue.lua:393
+msgid "En dash"
+msgstr "Krátka pomlčka"
+
+#: menu/icons_catalogue.lua:394
+msgid "Horizontal ellipsis"
+msgstr "Vodorovná výpustka"
+
+#: menu/icons_catalogue.lua:395
+msgid "Slash"
+msgstr "Lomka"
+
+#: menu/icons_catalogue.lua:396
+msgid "Division slash"
+msgstr "Deliaca lomka"
+
+#: menu/icons_catalogue.lua:397
+msgid "Fraction slash"
+msgstr "Zlomková lomka"
+
+#: menu/icons_catalogue.lua:398
+msgid "Double fraction slash"
+msgstr "Dvojitá zlomková lomka"
+
+#: menu/icons_catalogue.lua:399
+msgid "Tilde"
+msgstr "Vlnovka"
+
+#: menu/icons_catalogue.lua:400
+msgid "Triangular bullet"
+msgstr "Trojuholníková odrážka"
+
+#: menu/icons_library.lua:366
+msgid "Icons library"
+msgstr "Knižnica ikon"
+
+#: menu/icons_library.lua:398
+msgid "Search %1 icons by name…"
+msgstr "Hľadať medzi %1 ikonami podľa názvu…"
+
+#: menu/icons_library.lua:435
+msgid "Drop .svg or .png files in koreader/icons/"
+msgstr "Súbory .svg alebo .png vložte do koreader/icons/"
+
+#: menu/library_modal.lua:442
+msgid "Search…"
+msgstr "Hľadať…"
+
+#: menu/library_modal.lua:478
+msgid "Search"
+msgstr "Hľadať"
+
+#: menu/main_menu.lua:51 menu/preset_manager_modal.lua:1401
+msgid "Save preset"
+msgstr "Uložiť predvoľbu"
+
+#: menu/main_menu.lua:53 menu/preset_manager_modal.lua:1403
+msgid "Preset name"
+msgstr "Názov predvoľby"
+
+#: menu/main_menu.lua:68
+msgid "Saved preset:"
+msgstr "Uložená predvoľba:"
+
+#: menu/main_menu.lua:92 menu/preset_manager_modal.lua:1524
+msgid "Rename preset"
+msgstr "Premenovať predvoľbu"
+
+#: menu/main_menu.lua:97 menu/main_menu.lua:635
+#: menu/preset_manager_modal.lua:1528 menu/preset_manager_modal.lua:1715
+msgid "Rename"
+msgstr "Premenovať"
+
+#: menu/main_menu.lua:129
+msgid "File extension"
+msgstr "Prípona súboru"
+
+#: menu/main_menu.lua:131
+msgid "e.g. CBZ"
+msgstr "napr. CBZ"
+
+#: menu/main_menu.lua:135
+msgid "Next"
+msgstr "Ďalej"
+
+#: menu/main_menu.lua:158
+msgid "Hidden"
+msgstr "Skryté"
+
+#: menu/main_menu.lua:172 menu/main_menu.lua:174
+msgid "Bookends settings"
+msgstr "Nastavenia Bookends"
+
+#: menu/main_menu.lua:172
+msgid "plugin update available"
+msgstr "dostupná aktualizácia pluginu"
+
+#: menu/main_menu.lua:189 menu/main_menu.lua:191
+msgid "Preset"
+msgstr "Predvoľba"
+
+#: menu/main_menu.lua:241
+msgid "Full width progress bars"
+msgstr "Lišty priebehu cez celú šírku"
+
+#: menu/main_menu.lua:253
+msgid "Save current as new preset…"
+msgstr "Uložiť aktuálne ako novú predvoľbu…"
+
+#: menu/main_menu.lua:269
+msgid "Enable bookends"
+msgstr "Zapnúť bookends"
+
+#: menu/main_menu.lua:280 menu/main_menu.lua:282
+msgid "Disable stock status bar"
+msgstr "Vypnúť pôvodný stavový riadok"
+
+#: menu/main_menu.lua:280
+msgid "recommended"
+msgstr "odporúčané"
+
+#: menu/main_menu.lua:285
+msgid ""
+"Hides KOReader's built-in status bar. This simplifies the render pipeline "
+"and can reduce e-ink flicker on some devices. All status bar features are "
+"available as Bookends tokens."
+msgstr "Skryje vstavaný stavový riadok KOReaderu. Zjednoduší to vykresľovanie a na niektorých zariadeniach zníži blikanie e-ink displeja. Všetky funkcie stavového riadku sú dostupné ako tokeny Bookends."
+
+#: menu/main_menu.lua:306 menu/main_menu.lua:316
+#: menu/preset_manager_modal.lua:1607
+msgid "Default font"
+msgstr "Predvolené písmo"
+
+#: menu/main_menu.lua:342
+msgid "Bottom center tap gesture"
+msgstr "Ťuknutie v strede dole"
+
+#: menu/main_menu.lua:344
+msgid "toggle bookends"
+msgstr "prepnúť bookends"
+
+#: menu/main_menu.lua:346
+msgid "cycle presets"
+msgstr "prepínať predvoľby"
+
+#: menu/main_menu.lua:348
+msgid "preset library"
+msgstr "knižnica predvolieb"
+
+#: menu/main_menu.lua:352
+msgid ""
+"Configure what happens when you tap the centre of the status bar area, and "
+"whether long-pressing a progress bar opens the skim dialog."
+msgstr "Nastavte, čo sa stane pri ťuknutí do stredu oblasti stavového riadku a či sa podržaním lišty priebehu otvorí dialóg preskakovania (skim)."
+
+#: menu/main_menu.lua:363
+msgid "Pass through"
+msgstr "Odovzdať ďalej"
+
+#: menu/main_menu.lua:371
+msgid "Toggle bookends"
+msgstr "Prepnúť bookends"
+
+#: menu/main_menu.lua:385
+msgid "Cycle starred presets"
+msgstr "Prepínať označené predvoľby"
+
+#: menu/main_menu.lua:399
+msgid "Open preset library"
+msgstr "Otvoriť knižnicu predvolieb"
+
+#: menu/main_menu.lua:414
+msgid "Long-press progress bars to skim document"
+msgstr "Podržaním lišty priebehu preskakovať dokumentom"
+
+#: menu/main_menu.lua:422
+msgid ""
+"Opens the skim dialog when you long-press on a full-width progress bar. "
+"Replaces the stock status bar's long-press to skim feature."
+msgstr "Podržaním lišty priebehu cez celú šírku otvorí dialóg preskakovania (skim). Nahrádza rovnakú funkciu pôvodného stavového riadku."
+
+#: menu/main_menu.lua:429
+msgid "Include current page in pages-left tokens"
+msgstr "Započítať aktuálnu stranu do tokenov zostávajúcich strán"
+
+#: menu/main_menu.lua:430
+msgid ""
+"Affects %L (pages left in book) and %l (pages left in chapter). Off "
+"(default): 'n−1 → 0'. On: 'n → 1'."
+msgstr "Ovplyvňuje %L (strany do konca knihy) a %l (strany do konca kapitoly). Vypnuté (predvolené): 'n−1 → 0'. Zapnuté: 'n → 1'."
+
+#: menu/main_menu.lua:443
+msgid "Disable automatic clock/battery refresh"
+msgstr "Vypnúť automatickú obnovu hodín a batérie"
+
+#: menu/main_menu.lua:456
+msgid ""
+"Stops the 60-second background timer that keeps the clock, battery, and time-"
+"left tokens updating without a page turn. Useful on devices where this timer "
+"interferes with sleep/wake (e.g. some Pocketbook models)."
+msgstr "Zastaví 60-sekundový časovač na pozadí, ktorý aktualizuje hodiny, batériu a tokeny zostávajúceho času aj bez otočenia strany. Užitočné na zariadeniach, kde tento časovač narúša uspávanie a prebúdzanie (napr. niektoré modely PocketBook)."
+
+#: menu/main_menu.lua:459
+msgid "Notify on wake when update available"
+msgstr "Po prebudení upozorniť na dostupnú aktualizáciu"
+
+#: menu/main_menu.lua:479
+msgid "Update available"
+msgstr "Dostupná aktualizácia"
+
+#: menu/main_menu.lua:481
+msgid "Installed version"
+msgstr "Nainštalovaná verzia"
+
+#: menu/main_menu.lua:489
+msgid "Auto preset by file type"
+msgstr "Automatická predvoľba podľa typu súboru"
+
+#: menu/main_menu.lua:490
+msgid ""
+"Automatically hide Bookends, or switch to a specific preset, based on the "
+"document's file extension (e.g. hide for comic archives, use a plainer "
+"preset for PDFs)."
+msgstr "Automaticky skryje Bookends alebo prepne na konkrétnu predvoľbu podľa prípony dokumentu (napr. skryť pri komiksových archívoch, jednoduchšia predvoľba pre PDF)."
+
+#: menu/main_menu.lua:496
+msgid "Advanced"
+msgstr "Rozšírené"
+
+#: menu/main_menu.lua:515
+msgid "Check for updates"
+msgstr "Skontrolovať aktualizácie"
+
+#: menu/main_menu.lua:517
+msgid "Install branch"
+msgstr "Nainštalovať vetvu"
+
+#: menu/main_menu.lua:525
+msgid "Reset to latest stable release"
+msgstr "Vrátiť sa na najnovšie stabilné vydanie"
+
+#: menu/main_menu.lua:536 menu/main_menu.lua:539
+msgid "Installed: v"
+msgstr "Nainštalované: v"
+
+#: menu/main_menu.lua:570
+msgid "Change"
+msgstr "Zmeniť"
+
+#: menu/main_menu.lua:580
+msgid "Remove rule"
+msgstr "Odstrániť pravidlo"
+
+#: menu/main_menu.lua:599
+msgid "Add rule…"
+msgstr "Pridať pravidlo…"
+
+#: menu/main_menu.lua:617
+msgid "Preset library…"
+msgstr "Knižnica predvolieb…"
+
+#: menu/main_menu.lua:649 menu/main_menu.lua:653
+msgid "Font scale"
+msgstr "Mierka písma"
+
+#: menu/main_menu.lua:677
+msgid "Truncation gap between regions"
+msgstr "Medzera pri skracovaní medzi oblasťami"
+
+#: menu/main_menu.lua:681
+msgid "Truncation gap"
+msgstr "Medzera pri skracovaní"
+
+#: menu/main_menu.lua:692
+msgid "Prioritise left/right and truncate long center text"
+msgstr "Uprednostniť ľavú/pravú stranu a skrátiť dlhý text v strede"
+
+#: menu/position_menu.lua:16
+msgid "Enabled"
+msgstr "Zapnuté"
+
+#: menu/position_menu.lua:58
+msgid "Add line"
+msgstr "Pridať riadok"
+
+#: menu/position_menu.lua:58
+msgid "long press lines to manage"
+msgstr "riadky spravujete podržaním"
+
+#: menu/position_menu.lua:71
+msgid "Extra top margin"
+msgstr "Dodatočný horný okraj"
+
+#: menu/position_menu.lua:71
+msgid "Extra bottom margin"
+msgstr "Dodatočný dolný okraj"
+
+#: menu/position_menu.lua:94
+msgid "Extra left margin"
+msgstr "Dodatočný ľavý okraj"
+
+#: menu/position_menu.lua:94
+msgid "Extra right margin"
+msgstr "Dodatočný pravý okraj"
+
+#: menu/preset_manager_modal.lua:306
+msgid "+ New blank preset"
+msgstr "+ Nová prázdna predvoľba"
+
+#: menu/preset_manager_modal.lua:322
+msgid "Discover more presets"
+msgstr "Objavte ďalšie predvoľby"
+
+#: menu/preset_manager_modal.lua:328
+msgid ""
+"Browse presets others have shared, preview them on your own status bar, and "
+"install the ones you like. Once installed, you can edit each preset freely "
+"on the My presets tab."
+msgstr "Prezerajte predvoľby, ktoré zdieľali iní, vyskúšajte si ich na vlastnom stavovom riadku a nainštalujte tie, ktoré sa vám páčia. Po inštalácii môžete každú predvoľbu ľubovoľne upraviť na karte Moje predvoľby."
+
+#: menu/preset_manager_modal.lua:335
+msgid ""
+"Made something worth sharing? Submit it with the Manage button while viewing "
+"one of your own presets."
+msgstr "Vytvorili ste niečo, čo stojí za zdieľanie? Odošlite to tlačidlom Spravovať pri zobrazení niektorej z vašich predvolieb."
+
+#: menu/preset_manager_modal.lua:342
+msgid "Tap Latest or Popular above to load the gallery."
+msgstr "Galériu načítate ťuknutím na Najnovšie alebo Obľúbené vyššie."
+
+#: menu/preset_manager_modal.lua:492
+msgid "Hidden (no overlay)"
+msgstr "Skryté (bez prekrytia)"
+
+#: menu/preset_manager_modal.lua:544
+msgid "Preset for this file type"
+msgstr "Predvoľba pre tento typ súboru"
+
+#: menu/preset_manager_modal.lua:545 menu/preset_manager_modal.lua:626
+msgid "Search my presets by name or author…"
+msgstr "Hľadať v mojich predvoľbách podľa názvu alebo autora…"
+
+#: menu/preset_manager_modal.lua:562
+msgid "Done"
+msgstr "Hotovo"
+
+#: menu/preset_manager_modal.lua:574
+msgid "Preset library"
+msgstr "Knižnica predvolieb"
+
+#: menu/preset_manager_modal.lua:576
+msgid "My presets"
+msgstr "Moje predvoľby"
+
+#: menu/preset_manager_modal.lua:577
+msgid "Gallery"
+msgstr "Galéria"
+
+#: menu/preset_manager_modal.lua:587 menu/preset_manager_modal.lua:599
+msgid "Latest"
+msgstr "Najnovšie"
+
+#: menu/preset_manager_modal.lua:588
+msgid "Starred"
+msgstr "Označené"
+
+#: menu/preset_manager_modal.lua:601
+msgid "Popular"
+msgstr "Obľúbené"
+
+#: menu/preset_manager_modal.lua:613
+msgid "Loading gallery…"
+msgstr "Načítava sa galéria…"
+
+#: menu/preset_manager_modal.lua:628
+msgid "Search gallery presets by name or author…"
+msgstr "Hľadať v galérii podľa názvu alebo autora…"
+
+#: menu/preset_manager_modal.lua:670
+msgid "Manage…"
+msgstr "Spravovať…"
+
+#: menu/preset_manager_modal.lua:688 menu/preset_manager_modal.lua:691
+#: menu/preset_manager_modal.lua:2010
+msgid "Install"
+msgstr "Nainštalovať"
+
+#: menu/preset_manager_modal.lua:1067 menu/preset_manager_modal.lua:1968
+msgid "Could not preview preset"
+msgstr "Predvoľbu sa nepodarilo zobraziť"
+
+#: menu/preset_manager_modal.lua:1182
+msgid "by"
+msgstr "od"
+
+#: menu/preset_manager_modal.lua:1462 menu/preset_manager_modal.lua:1777
+msgid "Untitled"
+msgstr "Bez názvu"
+
+#: menu/preset_manager_modal.lua:1492
+msgid "Rename…"
+msgstr "Premenovať…"
+
+#: menu/preset_manager_modal.lua:1496
+msgid "Edit description…"
+msgstr "Upraviť popis…"
+
+#: menu/preset_manager_modal.lua:1500
+msgid "Edit author…"
+msgstr "Upraviť autora…"
+
+#: menu/preset_manager_modal.lua:1504
+msgid "Duplicate"
+msgstr "Duplikovať"
+
+#: menu/preset_manager_modal.lua:1508
+msgid "Submit to gallery…"
+msgstr "Odoslať do galérie…"
+
+#: menu/preset_manager_modal.lua:1618
+msgid "%1, line %2"
+msgstr "%1, riadok %2"
+
+#: menu/preset_manager_modal.lua:1655
+msgid "Edit description"
+msgstr "Upraviť popis"
+
+#: menu/preset_manager_modal.lua:1659
+msgid "Edit author"
+msgstr "Upraviť autora"
+
+#: menu/preset_manager_modal.lua:1663
+msgid "copy"
+msgstr "kópia"
+
+#: menu/preset_manager_modal.lua:1666
+msgid "Duplicate preset"
+msgstr "Duplikovať predvoľbu"
+
+#: menu/preset_manager_modal.lua:1709
+msgid "Rename before sharing"
+msgstr "Premenujte pred zdieľaním"
+
+#: menu/preset_manager_modal.lua:1760
+msgid "Who should we credit as the author?"
+msgstr "Koho máme uviesť ako autora?"
+
+#: menu/preset_manager_modal.lua:1765
+msgid "One-line description of this preset"
+msgstr "Jednoriadkový popis tejto predvoľby"
+
+#: menu/preset_manager_modal.lua:1784
+msgid ""
+"'%1' is one of Bookends' default placeholder names. Give your preset "
+"something distinctive — that's how it'll appear in the gallery."
+msgstr "'%1' je jeden z predvolených zástupných názvov Bookends. Dajte svojej predvoľbe niečo výstižné — pod tým názvom sa objaví v galérii."
+
+#: menu/preset_manager_modal.lua:1790
+msgid ""
+"Write a short description that tells gallery users what your preset shows"
+msgstr "Napíšte krátky popis, ktorý používateľom galérie povie, čo vaša predvoľba zobrazuje"
+
+#: menu/preset_manager_modal.lua:1812
+msgid ""
+"Submit '%1' by %2 to the gallery? A pull request will be opened for review."
+msgstr "Odoslať '%1' od %2 do galérie? Otvorí sa pull request na posúdenie."
+
+#: menu/preset_manager_modal.lua:1814
+msgid "Submit"
+msgstr "Odoslať"
+
+#: menu/preset_manager_modal.lua:1824
+msgid ""
+"A preset called '%1' is already in the gallery. Rename your preset (Manage… "
+"→ Rename…) before submitting, so it doesn't collide with the existing entry."
+msgstr "Predvoľba s názvom '%1' už v galérii existuje. Pred odoslaním svoju predvoľbu premenujte (Spravovať… → Premenovať…), aby nekolidovala s existujúcou položkou."
+
+#: menu/preset_manager_modal.lua:1837
+msgid "Submitting to gallery…"
+msgstr "Odosiela sa do galérie…"
+
+#: menu/preset_manager_modal.lua:1849
+msgid ""
+"Thanks! Your submission is PR #%1.\n"
+"\n"
+"The maintainer will review it before it appears in the Gallery."
+msgstr "Ďakujeme! Vaše odoslanie je PR č. %1.\n\nSprávca ho posúdi, než sa objaví v galérii."
+
+#: menu/preset_manager_modal.lua:1858
+msgid ""
+"A preset called '%1' is already in the gallery. Rename your preset (Manage… "
+"→ Rename…) before submitting."
+msgstr "Predvoľba s názvom '%1' už v galérii existuje. Pred odoslaním svoju predvoľbu premenujte (Spravovať… → Premenovať…)."
+
+#: menu/preset_manager_modal.lua:1861
+msgid ""
+"A submission for '%1' is already awaiting review. Wait for that one to be "
+"reviewed, or rename your preset to submit under a different name."
+msgstr "Odoslanie predvoľby '%1' už čaká na posúdenie. Počkajte na jeho vybavenie alebo predvoľbu premenujte a odošlite ju pod iným názvom."
+
+#: menu/preset_manager_modal.lua:1864
+msgid "Submission failed: %1"
+msgstr "Odoslanie zlyhalo: %1"
+
+#: menu/preset_manager_modal.lua:1877
+msgid ""
+"This preset uses specific fonts that won't exist on other devices. These "
+"overrides will be stripped from your submission so other users see their own "
+"default font."
+msgstr "Táto predvoľba používa konkrétne písma, ktoré na iných zariadeniach nemusia existovať. Tieto nastavenia sa z odoslania odstránia, aby ostatní používatelia videli svoje predvolené písmo."
+
+#: menu/preset_manager_modal.lua:1879
+msgid "Custom fonts in this preset:"
+msgstr "Vlastné písma v tejto predvoľbe:"
+
+#: menu/preset_manager_modal.lua:1885
+msgid ""
+"Tip: for portable presets, pick a Font-family font (Serif, Sans-serif, etc.) "
+"instead of a specific one — those adapt to each user's font settings."
+msgstr "Tip: pre prenosné predvoľby zvoľte radšej rodinu písma (Serif, Sans-serif atď.) než konkrétne písmo — tie sa prispôsobia nastaveniam každého používateľa."
+
+#: menu/preset_manager_modal.lua:1888
+msgid "Submit anyway"
+msgstr "Odoslať aj tak"
+
+#: menu/preset_manager_modal.lua:1901
+msgid "Submission failed — details in the KOReader log."
+msgstr "Odoslanie zlyhalo — podrobnosti nájdete v logu KOReaderu."
+
+#: menu/preset_manager_modal.lua:1907
+msgid "Delete preset '%1'?"
+msgstr "Zmazať predvoľbu '%1'?"
+
+#: menu/preset_manager_modal.lua:1950
+msgid "Offline — connect to preview this preset."
+msgstr "Offline — na zobrazenie ukážky tejto predvoľby sa pripojte na internet."
+
+#: menu/preset_manager_modal.lua:1952
+msgid "Couldn't download '%1'."
+msgstr "Nepodarilo sa stiahnuť '%1'."
+
+#: menu/preset_manager_modal.lua:1958
+msgid "This preset appears invalid; skipping."
+msgstr "Táto predvoľba je zrejme neplatná; preskakuje sa."
+
+#: menu/preset_manager_modal.lua:1981
+msgid ""
+"'%1' already exists in your library.\n"
+"\n"
+"Replacing it will overwrite your local copy with the current gallery "
+"version. Any local edits will be lost.\n"
+"\n"
+"Install under a new name to keep both."
+msgstr "'%1' už vo vašej knižnici existuje.\n\nNahradením prepíšete svoju lokálnu kópiu aktuálnou verziou z galérie. Všetky lokálne úpravy sa stratia.\n\nAk chcete zachovať obe, nainštalujte ju pod novým názvom."
+
+#: menu/preset_manager_modal.lua:1987
+msgid "Replace"
+msgstr "Nahradiť"
+
+#: menu/preset_manager_modal.lua:2001
+msgid "Install as new name…"
+msgstr "Nainštalovať pod novým názvom…"
+
+#: menu/preset_manager_modal.lua:2005
+msgid "Install as"
+msgstr "Nainštalovať ako"
+
+#: menu/progress_bar_menu.lua:32
+msgid "Bar"
+msgstr "Lišta"
+
+#: menu/progress_bar_menu.lua:34
+msgid "chapter"
+msgstr "kapitola"
+
+#: menu/progress_bar_menu.lua:35
+msgid "top"
+msgstr "hore"
+
+#: menu/progress_bar_menu.lua:35
+msgid "bottom"
+msgstr "dole"
+
+#: menu/progress_bar_menu.lua:35
+msgid "left"
+msgstr "vľavo"
+
+#: menu/progress_bar_menu.lua:35
+msgid "right"
+msgstr "vpravo"
+
+#: menu/progress_bar_menu.lua:71
+msgid "Bar %1"
+msgstr "Lišta %1"
+
+#: menu/progress_bar_menu.lua:82
+msgid "Long press to change render order"
+msgstr "Podržaním zmeníte poradie vykresľovania"
+
+#: menu/progress_bar_menu.lua:86
+msgid "Inline progress bars can be added via the line editor"
+msgstr "Vložené lišty priebehu pridáte cez editor riadkov"
+
+#: menu/progress_bar_menu.lua:102
+msgid "Enable"
+msgstr "Zapnúť"
+
+#: menu/progress_bar_menu.lua:159
+msgid "Anchor"
+msgstr "Ukotvenie"
+
+#: menu/progress_bar_menu.lua:184
+msgid "Fill: clockwise"
+msgstr "Plnenie: v smere hodinových ručičiek"
+
+#: menu/progress_bar_menu.lua:189
+msgid "Fill: top to bottom"
+msgstr "Plnenie: zhora nadol"
+
+#: menu/progress_bar_menu.lua:190
+msgid "Fill: bottom to top"
+msgstr "Plnenie: zdola nahor"
+
+#: menu/progress_bar_menu.lua:226 menu/progress_bar_menu.lua:238
+msgid "Diameter"
+msgstr "Priemer"
+
+#: menu/progress_bar_menu.lua:291 menu/progress_bar_menu.lua:293
+msgid "Custom colors and tick marks"
+msgstr "Vlastné farby a značky"
+
+#: menu/progress_bar_menu.lua:301
+msgid "Use custom colors"
+msgstr "Použiť vlastné farby"
+
+#: menu/progress_bar_menu.lua:386
+msgid "Reset custom to defaults"
+msgstr "Obnoviť vlastné na predvolené"
+
+#: menu/progress_bar_menu.lua:468
+msgid "Marker size"
+msgstr "Veľkosť značky"
+
+#: menu/progress_bar_menu.lua:479
+msgid "Marker offset"
+msgstr "Posun značky"
+
+#: menu/progress_bar_menu.lua:490 menu/progress_bar_menu.lua:499
+msgid "Marker colour"
+msgstr "Farba značky"
+
+#: menu/progress_bar_menu.lua:531
+msgid "Edge"
+msgstr "Okraj"
+
+#: menu/progress_bar_menu.lua:531
+msgid "Vertical"
+msgstr "Zvislá"
+
+#: menu/tokens_catalogue.lua:22
+msgid "Progress"
+msgstr "Priebeh"
+
+#: menu/tokens_catalogue.lua:24
+msgid "Session"
+msgstr "Relácia"
+
+#: menu/tokens_catalogue.lua:26
+msgid "If/else"
+msgstr "Ak/inak"
+
+#: menu/tokens_catalogue.lua:27
+msgid "Templates"
+msgstr "Šablóny"
+
+#: menu/tokens_catalogue.lua:31
+msgid "Document title"
+msgstr "Názov dokumentu"
+
+#: menu/tokens_catalogue.lua:32
+msgid "First author"
+msgstr "Prvý autor"
+
+#: menu/tokens_catalogue.lua:33
+msgid "All authors"
+msgstr "Všetci autori"
+
+#: menu/tokens_catalogue.lua:34
+msgid "Second author (empty if none)"
+msgstr "Druhý autor (prázdne, ak nie je)"
+
+#: menu/tokens_catalogue.lua:35
+msgid "Series with index (combined)"
+msgstr "Séria s poradím (spolu)"
+
+#: menu/tokens_catalogue.lua:36
+msgid "Series name only"
+msgstr "Iba názov série"
+
+#: menu/tokens_catalogue.lua:37
+msgid "Series number only"
+msgstr "Iba číslo v sérii"
+
+#: menu/tokens_catalogue.lua:38
+msgid "Chapter title (deepest)"
+msgstr "Názov kapitoly (najhlbšia úroveň)"
+
+#: menu/tokens_catalogue.lua:39
+msgid "Chapter title at depth 1"
+msgstr "Názov kapitoly na úrovni 1"
+
+#: menu/tokens_catalogue.lua:40
+msgid "Chapter title at depth 2"
+msgstr "Názov kapitoly na úrovni 2"
+
+#: menu/tokens_catalogue.lua:41
+msgid "Chapter title at depth 3"
+msgstr "Názov kapitoly na úrovni 3"
+
+#: menu/tokens_catalogue.lua:42
+msgid "Chapter title without leading number (when detected)"
+msgstr "Názov kapitoly bez úvodného čísla (ak sa rozpozná)"
+
+#: menu/tokens_catalogue.lua:43
+msgid "Number from chapter title (when detected)"
+msgstr "Číslo z názvu kapitoly (ak sa rozpozná)"
+
+#: menu/tokens_catalogue.lua:44 menu/tokens_catalogue.lua:161
+msgid "Current chapter number"
+msgstr "Číslo aktuálnej kapitoly"
+
+#: menu/tokens_catalogue.lua:45
+msgid "Chapter count"
+msgstr "Počet kapitol"
+
+#: menu/tokens_catalogue.lua:46
+msgid "File name"
+msgstr "Názov súboru"
+
+#: menu/tokens_catalogue.lua:47
+msgid "File position in folder"
+msgstr "Poradie súboru v priečinku"
+
+#: menu/tokens_catalogue.lua:48
+msgid "Document files in folder"
+msgstr "Počet dokumentov v priečinku"
+
+#: menu/tokens_catalogue.lua:49
+msgid "Number of authors"
+msgstr "Počet autorov"
+
+#: menu/tokens_catalogue.lua:50
+msgid "Short author list ('A, B, et al.' for 3+)"
+msgstr "Skrátený zoznam autorov ('A, B a kol.' pri 3 a viac)"
+
+#: menu/tokens_catalogue.lua:51
+msgid "Reading status value (unread/reading/on_hold/finished)"
+msgstr "Hodnota stavu čítania (unread/reading/on_hold/finished)"
+
+#: menu/tokens_catalogue.lua:52
+msgid "Reading status as a word"
+msgstr "Stav čítania slovom"
+
+#: menu/tokens_catalogue.lua:53
+msgid "Your rating as stars"
+msgstr "Vaše hodnotenie ako hviezdičky"
+
+#: menu/tokens_catalogue.lua:54
+msgid "Your rating as a number"
+msgstr "Vaše hodnotenie ako číslo"
+
+#: menu/tokens_catalogue.lua:55
+msgid "Book description / blurb"
+msgstr "Popis knihy / anotácia"
+
+#: menu/tokens_catalogue.lua:56
+msgid "File size"
+msgstr "Veľkosť súboru"
+
+#: menu/tokens_catalogue.lua:57
+msgid "Date added (file date)"
+msgstr "Dátum pridania (dátum súboru)"
+
+#: menu/tokens_catalogue.lua:58
+msgid "Date last opened"
+msgstr "Dátum posledného otvorenia"
+
+#: menu/tokens_catalogue.lua:59
+msgid "Star glyph when the book is a favourite"
+msgstr "Hviezdička, keď je kniha obľúbená"
+
+#: menu/tokens_catalogue.lua:60
+msgid "A highlight from this book"
+msgstr "Zvýraznenie z tejto knihy"
+
+#: menu/tokens_catalogue.lua:61
+msgid "Title and author for the quote"
+msgstr "Názov a autor k citátu"
+
+#: menu/tokens_catalogue.lua:62
+msgid "Book language"
+msgstr "Jazyk knihy"
+
+#: menu/tokens_catalogue.lua:63
+msgid "Document format (EPUB, PDF, etc.)"
+msgstr "Formát dokumentu (EPUB, PDF atď.)"
+
+#: menu/tokens_catalogue.lua:64
+#, lua-format
+msgid "Calibre column by name, e.g. %calibre{mood}"
+msgstr "Stĺpec Calibre podľa názvu, napr. %calibre{mood}"
+
+#: menu/tokens_catalogue.lua:65
+msgid "Highlights count"
+msgstr "Počet zvýraznení"
+
+#: menu/tokens_catalogue.lua:66
+msgid "Notes count"
+msgstr "Počet poznámok"
+
+#: menu/tokens_catalogue.lua:67
+msgid "Bookmarks count"
+msgstr "Počet záložiek"
+
+#: menu/tokens_catalogue.lua:68
+msgid "Annotations count (bookmarks + highlights + notes)"
+msgstr "Počet anotácií (záložky + zvýraznenia + poznámky)"
+
+#: menu/tokens_catalogue.lua:69
+msgid "Current page number"
+msgstr "Číslo aktuálnej strany"
+
+#: menu/tokens_catalogue.lua:70
+msgid "Total pages"
+msgstr "Celkový počet strán"
+
+#: menu/tokens_catalogue.lua:71
+msgid "Book percentage read"
+msgstr "Prečítané percento knihy"
+
+#: menu/tokens_catalogue.lua:72
+msgid "Book % with 1 decimal (e.g. 45.3%)"
+msgstr "% knihy s 1 desatinným miestom (napr. 45,3 %)"
+
+#: menu/tokens_catalogue.lua:73
+msgid "Book % with 2 decimal places"
+msgstr "% knihy s 2 desatinnými miestami"
+
+#: menu/tokens_catalogue.lua:74
+msgid "Book % with 3 decimal places"
+msgstr "% knihy s 3 desatinnými miestami"
+
+#: menu/tokens_catalogue.lua:75
+msgid "Book % with 4 decimal places"
+msgstr "% knihy so 4 desatinnými miestami"
+
+#: menu/tokens_catalogue.lua:76
+msgid "Book percentage left"
+msgstr "Zostávajúce percento knihy"
+
+#: menu/tokens_catalogue.lua:77
+msgid "Book % left with 1 decimal"
+msgstr "Zostávajúce % knihy s 1 desatinným miestom"
+
+#: menu/tokens_catalogue.lua:78
+msgid "Book % left with 2 decimals"
+msgstr "Zostávajúce % knihy s 2 desatinnými miestami"
+
+#: menu/tokens_catalogue.lua:79
+msgid "Book % left with 3 decimals"
+msgstr "Zostávajúce % knihy s 3 desatinnými miestami"
+
+#: menu/tokens_catalogue.lua:80
+msgid "Book % left with 4 decimals"
+msgstr "Zostávajúce % knihy so 4 desatinnými miestami"
+
+#: menu/tokens_catalogue.lua:81
+msgid "Chapter percentage read"
+msgstr "Prečítané percento kapitoly"
+
+#: menu/tokens_catalogue.lua:82
+msgid "Chapter percentage left"
+msgstr "Zostávajúce percento kapitoly"
+
+#: menu/tokens_catalogue.lua:83
+msgid "Pages read in chapter"
+msgstr "Prečítané strany v kapitole"
+
+#: menu/tokens_catalogue.lua:84
+msgid "Total pages in chapter"
+msgstr "Počet strán v kapitole"
+
+#: menu/tokens_catalogue.lua:85
+msgid "Pages left in chapter"
+msgstr "Strany do konca kapitoly"
+
+#: menu/tokens_catalogue.lua:86
+msgid "Pages left in book"
+msgstr "Strany do konca knihy"
+
+#: menu/tokens_catalogue.lua:87
+msgid "Elastic gap: pushes the rest of the line to the far edge"
+msgstr "Pružná medzera: odtlačí zvyšok riadku k okraju"
+
+#: menu/tokens_catalogue.lua:88
+msgid "Progress bar (configure type in line editor)"
+msgstr "Lišta priebehu (typ nastavíte v editore riadkov)"
+
+#: menu/tokens_catalogue.lua:89
+msgid "Fixed-width progress bar (100px)"
+msgstr "Lišta priebehu s pevnou šírkou (100 px)"
+
+#: menu/tokens_catalogue.lua:90
+msgid "Progress bar, 10px tall"
+msgstr "Lišta priebehu, výška 10 px"
+
+#: menu/tokens_catalogue.lua:91
+msgid "Progress bar, 200px wide and 4px tall"
+msgstr "Lišta priebehu, šírka 200 px a výška 4 px"
+
+#: menu/tokens_catalogue.lua:92
+msgid "Current time (24h, same as %time_24h)"
+msgstr "Aktuálny čas (24 h, rovnako ako %time_24h)"
+
+#: menu/tokens_catalogue.lua:93
+msgid "12-hour clock"
+msgstr "12-hodinový formát"
+
+#: menu/tokens_catalogue.lua:94
+msgid "24-hour clock"
+msgstr "24-hodinový formát"
+
+#: menu/tokens_catalogue.lua:95
+msgid "Date short (28 Mar)"
+msgstr "Dátum krátky (28. mar)"
+
+#: menu/tokens_catalogue.lua:96
+msgid "Date long (28 March 2026)"
+msgstr "Dátum dlhý (28. marca 2026)"
+
+#: menu/tokens_catalogue.lua:97
+msgid "Date numeric (28/03/2026)"
+msgstr "Dátum číselný (28.03.2026)"
+
+#: menu/tokens_catalogue.lua:98
+msgid "Weekday (Friday)"
+msgstr "Deň v týždni (piatok)"
+
+#: menu/tokens_catalogue.lua:99
+msgid "Weekday short (Fri)"
+msgstr "Deň v týždni skrátene (pi)"
+
+#: menu/tokens_catalogue.lua:100
+msgid "Custom date/time format (strftime spec)"
+msgstr "Vlastný formát dátumu/času (podľa strftime)"
+
+#: menu/tokens_catalogue.lua:101
+msgid "Time left in chapter"
+msgstr "Čas do konca kapitoly"
+
+#: menu/tokens_catalogue.lua:102
+msgid "Time left in book"
+msgstr "Čas do konca knihy"
+
+#: menu/tokens_catalogue.lua:103
+msgid "Time left in chapter (hours only)"
+msgstr "Čas do konca kapitoly (iba hodiny)"
+
+#: menu/tokens_catalogue.lua:104
+msgid "Time left in chapter (minutes only)"
+msgstr "Čas do konca kapitoly (iba minúty)"
+
+#: menu/tokens_catalogue.lua:105
+msgid "Time left in book (hours only)"
+msgstr "Čas do konca knihy (iba hodiny)"
+
+#: menu/tokens_catalogue.lua:106
+msgid "Time left in book (minutes only)"
+msgstr "Čas do konca knihy (iba minúty)"
+
+#: menu/tokens_catalogue.lua:107
+msgid "Chapter finish time (clock)"
+msgstr "Čas dočítania kapitoly (hodiny)"
+
+#: menu/tokens_catalogue.lua:108
+msgid "Book finish time (clock)"
+msgstr "Čas dočítania knihy (hodiny)"
+
+#: menu/tokens_catalogue.lua:109
+msgid "Chapter finish time (custom format)"
+msgstr "Čas dočítania kapitoly (vlastný formát)"
+
+#: menu/tokens_catalogue.lua:110
+msgid "Book finish date (projected)"
+msgstr "Predpokladaný dátum dočítania knihy"
+
+#: menu/tokens_catalogue.lua:111
+msgid "Book finish date (custom format)"
+msgstr "Dátum dočítania knihy (vlastný formát)"
+
+#: menu/tokens_catalogue.lua:112
+msgid "Session reading time"
+msgstr "Čas čítania v tejto relácii"
+
+#: menu/tokens_catalogue.lua:113
+msgid "Session pages read"
+msgstr "Prečítané strany v tejto relácii"
+
+#: menu/tokens_catalogue.lua:114
+msgid "Pages read today (all books)"
+msgstr "Dnes prečítané strany (všetky knihy)"
+
+#: menu/tokens_catalogue.lua:115
+msgid "Reading time today (all books)"
+msgstr "Dnešný čas čítania (všetky knihy)"
+
+#: menu/tokens_catalogue.lua:116
+msgid "Pages read today (current book)"
+msgstr "Dnes prečítané strany (aktuálna kniha)"
+
+#: menu/tokens_catalogue.lua:117
+msgid "Reading time today (current book)"
+msgstr "Dnešný čas čítania (aktuálna kniha)"
+
+#: menu/tokens_catalogue.lua:118
+msgid "Pages read in last 7 days (current book)"
+msgstr "Strany prečítané za posledných 7 dní (aktuálna kniha)"
+
+#: menu/tokens_catalogue.lua:119
+msgid "Reading time in last 7 days (current book)"
+msgstr "Čas čítania za posledných 7 dní (aktuálna kniha)"
+
+#: menu/tokens_catalogue.lua:120 menu/tokens_catalogue.lua:171
+msgid "Day streak (any book)"
+msgstr "Séria dní (ľubovoľná kniha)"
+
+#: menu/tokens_catalogue.lua:121 menu/tokens_catalogue.lua:172
+msgid "Day streak (current book)"
+msgstr "Séria dní (aktuálna kniha)"
+
+#: menu/tokens_catalogue.lua:122
+msgid "Lifetime reading time (all books)"
+msgstr "Celkový čas čítania (všetky knihy)"
+
+#: menu/tokens_catalogue.lua:123
+msgid "Books finished (lifetime)"
+msgstr "Dočítané knihy (celkovo)"
+
+#: menu/tokens_catalogue.lua:124
+msgid "Reading speed (pages/hour)"
+msgstr "Rýchlosť čítania (strán/hod.)"
+
+#: menu/tokens_catalogue.lua:125
+msgid "Average time per page"
+msgstr "Priemerný čas na stranu"
+
+#: menu/tokens_catalogue.lua:126
+msgid "Total reading time for book"
+msgstr "Celkový čas čítania knihy"
+
+#: menu/tokens_catalogue.lua:127
+msgid "Pages read of this book (lifetime)"
+msgstr "Prečítané strany tejto knihy (celkovo)"
+
+#: menu/tokens_catalogue.lua:128
+msgid "Book read percentage (skip-aware)"
+msgstr "Prečítané percento knihy (so zohľadnením preskočení)"
+
+#: menu/tokens_catalogue.lua:129
+msgid "Days reading this book"
+msgstr "Počet dní čítania tejto knihy"
+
+#: menu/tokens_catalogue.lua:130
+msgid "Pages per day for this book"
+msgstr "Strán za deň pri tejto knihe"
+
+#: menu/tokens_catalogue.lua:131
+msgid "Battery level"
+msgstr "Úroveň batérie"
+
+#: menu/tokens_catalogue.lua:132
+msgid "Wi-Fi icon (also answers to %wifi_icon)"
+msgstr "Ikona Wi-Fi (funguje aj ako %wifi_icon)"
+
+#: menu/tokens_catalogue.lua:133
+msgid "Wi-Fi icon, Bookshelf's name for it"
+msgstr "Ikona Wi-Fi, názov podľa Bookshelf"
+
+#: menu/tokens_catalogue.lua:134
+msgid "Plugin content"
+msgstr "Obsah pluginu"
+
+#: menu/tokens_catalogue.lua:135
+msgid "Frontlight brightness"
+msgstr "Jas podsvietenia"
+
+#: menu/tokens_catalogue.lua:136 menu/tokens_catalogue.lua:177
+msgid "Frontlight brightness %"
+msgstr "Jas podsvietenia v %"
+
+#: menu/tokens_catalogue.lua:137
+msgid "Frontlight warmth"
+msgstr "Teplota podsvietenia"
+
+#: menu/tokens_catalogue.lua:138 menu/tokens_catalogue.lua:178
+msgid "Frontlight warmth %"
+msgstr "Teplota podsvietenia v %"
+
+#: menu/tokens_catalogue.lua:139
+msgid "RAM used %"
+msgstr "Využitie RAM v %"
+
+#: menu/tokens_catalogue.lua:140
+msgid "System memory used (MiB)"
+msgstr "Využitá systémová pamäť (MiB)"
+
+#: menu/tokens_catalogue.lua:141
+msgid "RAM used (MiB)"
+msgstr "Využitá RAM (MiB)"
+
+#: menu/tokens_catalogue.lua:142
+msgid "Free disk space"
+msgstr "Voľné miesto na disku"
+
+#: menu/tokens_catalogue.lua:143
+msgid "Page X of Y, em-dash framed"
+msgstr "Strana X z Y, oddelené dlhými pomlčkami"
+
+#: menu/tokens_catalogue.lua:144
+msgid "Title ⋮ author (italic)"
+msgstr "Názov ⋮ autor (kurzíva)"
+
+#: menu/tokens_catalogue.lua:145
+msgid "Title in a chosen font"
+msgstr "Názov vo zvolenom písme"
+
+#: menu/tokens_catalogue.lua:146
+msgid "Bookmark(s) count + label"
+msgstr "Počet záložiek + popis"
+
+#: menu/tokens_catalogue.lua:147
+msgid "Highlight(s) count + label"
+msgstr "Počet zvýraznení + popis"
+
+#: menu/tokens_catalogue.lua:148
+msgid "Hourglass session timer + pages"
+msgstr "Presýpacie hodiny: čas relácie + strany"
+
+#: menu/tokens_catalogue.lua:149
+msgid "Sparkles 1"
+msgstr "Iskričky 1"
+
+#: menu/tokens_catalogue.lua:150
+msgid "Sparkles 2"
+msgstr "Iskričky 2"
+
+#: menu/tokens_catalogue.lua:154
+msgid "If Wi-Fi is on"
+msgstr "Ak je Wi-Fi zapnuté"
+
+#: menu/tokens_catalogue.lua:155
+msgid "If connected"
+msgstr "Ak je pripojené"
+
+#: menu/tokens_catalogue.lua:156
+msgid "Battery 0–100"
+msgstr "Batéria 0 – 100"
+
+#: menu/tokens_catalogue.lua:157
+msgid "If charging"
+msgstr "Ak sa nabíja"
+
+#: menu/tokens_catalogue.lua:158
+msgid "If page-turn flipped"
+msgstr "Ak je otáčanie strán prehodené"
+
+#: menu/tokens_catalogue.lua:159
+msgid "Book progress 0–100"
+msgstr "Postup v knihe 0 – 100"
+
+#: menu/tokens_catalogue.lua:160
+msgid "Chapter progress 0–100"
+msgstr "Postup v kapitole 0 – 100"
+
+#: menu/tokens_catalogue.lua:162
+msgid "Total chapters"
+msgstr "Celkový počet kapitol"
+
+#: menu/tokens_catalogue.lua:163
+msgid "Minutes left in chapter"
+msgstr "Minúty do konca kapitoly"
+
+#: menu/tokens_catalogue.lua:164
+msgid "Whole hours left in chapter"
+msgstr "Celé hodiny do konca kapitoly"
+
+#: menu/tokens_catalogue.lua:165
+msgid "Whole hours left in book"
+msgstr "Celé hodiny do konca knihy"
+
+#: menu/tokens_catalogue.lua:166
+msgid "Pages per hour"
+msgstr "Strán za hodinu"
+
+#: menu/tokens_catalogue.lua:167
+msgid "Minutes this session"
+msgstr "Minúty v tejto relácii"
+
+#: menu/tokens_catalogue.lua:168
+msgid "Pages this session"
+msgstr "Strany v tejto relácii"
+
+#: menu/tokens_catalogue.lua:169
+msgid "Pages read today"
+msgstr "Dnes prečítané strany"
+
+#: menu/tokens_catalogue.lua:170
+msgid "Pages today (current book)"
+msgstr "Dnešné strany (aktuálna kniha)"
+
+#: menu/tokens_catalogue.lua:173
+msgid "Books finished"
+msgstr "Dočítané knihy"
+
+#: menu/tokens_catalogue.lua:174
+msgid "Book read % (skip-aware)"
+msgstr "Prečítané % knihy (so zohľadnením preskočení)"
+
+#: menu/tokens_catalogue.lua:175
+msgid "odd / even"
+msgstr "nepárne / párne"
+
+#: menu/tokens_catalogue.lua:176
+msgid "If frontlight on"
+msgstr "Ak je podsvietenie zapnuté"
+
+#: menu/tokens_catalogue.lua:179
+msgid "If night mode on"
+msgstr "Ak je nočný režim zapnutý"
+
+#: menu/tokens_catalogue.lua:180
+msgid "EPUB / PDF / CBZ / …"
+msgstr "EPUB / PDF / CBZ / …"
+
+#: menu/tokens_catalogue.lua:181
+msgid "Current HH:MM (24h)"
+msgstr "Aktuálne HH:MM (24 h)"
+
+#: menu/tokens_catalogue.lua:182
+msgid "Mon–Sun"
+msgstr "Po – Ne"
+
+#: menu/tokens_catalogue.lua:183
+msgid "If book has title"
+msgstr "Ak má kniha názov"
+
+#: menu/tokens_catalogue.lua:184
+msgid "If book has author"
+msgstr "Ak má kniha autora"
+
+#: menu/tokens_catalogue.lua:185
+msgid "If book in series"
+msgstr "Ak je kniha v sérii"
+
+#: menu/tokens_catalogue.lua:186
+msgid "If chapter has title"
+msgstr "Ak má kapitola názov"
+
+#: menu/tokens_catalogue.lua:187
+msgid "Chapter title at depth 1/2/3"
+msgstr "Názov kapitoly na úrovni 1/2/3"
+
+#: menu/tokens_catalogue.lua:188
+msgid "If book has 2+ authors"
+msgstr "Ak má kniha 2 a viac autorov"
+
+#: menu/tokens_catalogue.lua:189
+msgid "Author with et al. for multi-author"
+msgstr "Autor s „a kol.“ pri viacerých autoroch"
+
+#: menu/tokens_catalogue.lua:190
+msgid "Wi-Fi icon only when Wi-Fi enabled"
+msgstr "Ikona Wi-Fi iba pri zapnutom Wi-Fi"
+
+#: menu/tokens_catalogue.lua:191
+msgid "Low-battery warning"
+msgstr "Upozornenie na slabú batériu"
+
+#: menu/tokens_catalogue.lua:192
+msgid "Bolt when charging"
+msgstr "Blesk pri nabíjaní"
+
+#: menu/tokens_catalogue.lua:193
+msgid "Arrow when page-turn flipped"
+msgstr "Šípka pri prehodenom otáčaní strán"
+
+#: menu/tokens_catalogue.lua:194
+msgid "Odd/even variations"
+msgstr "Varianty pre nepárne/párne strany"
+
+#: menu/tokens_catalogue.lua:195
+msgid "Near end of book"
+msgstr "Blízko konca knihy"
+
+#: menu/tokens_catalogue.lua:196
+msgid "Frontlight on/off label"
+msgstr "Popis zapnutia/vypnutia podsvietenia"
+
+#: menu/tokens_catalogue.lua:197
+msgid "If format"
+msgstr "Ak je formát"
+
+#: menu/tokens_catalogue.lua:198
+msgid "Weekends"
+msgstr "Víkendy"
+
+#: menu/tokens_catalogue.lua:199
+msgid "Time window"
+msgstr "Časové okno"
+
+#: menu/tokens_catalogue.lua:200
+msgid "Non-series books"
+msgstr "Knihy mimo série"
+
+#: menu/tokens_catalogue.lua:201
+msgid "Fall back to shallower chapter"
+msgstr "Náhrada plytšou úrovňou kapitoly"
+
+#: menu/tokens_catalogue.lua:202
+msgid "Chapter number then title"
+msgstr "Číslo kapitoly a potom názov"
+
+#: menu/tokens_catalogue.lua:203
+msgid "Long books (20+ chapters)"
+msgstr "Dlhé knihy (20+ kapitol)"
+
+#: menu/tokens_catalogue.lua:207
+msgid "Time left in chapter, Kindle style"
+msgstr "Čas do konca kapitoly v štýle Kindle"
+
+#: menu/tokens_catalogue.lua:208
+msgid "Time left in book, Kindle style"
+msgstr "Čas do konca knihy v štýle Kindle"
+
+#: menu/tokens_catalogue.lua:209
+msgid "Chapter title only when different from book title"
+msgstr "Názov kapitoly iba vtedy, keď sa líši od názvu knihy"
+
+#: menu/tokens_catalogue.lua:210
+msgid "Battery bars"
+msgstr "Stĺpce batérie"
+
+#: menu/tokens_library.lua:335
+msgid "Tokens library"
+msgstr "Knižnica tokenov"
+
+#: menu/tokens_library.lua:336
+msgid "Tokens & conditionals"
+msgstr "Tokeny a podmienky"
+
+#: menu/tokens_library.lua:337
+msgid ""
+"TOKENS\n"
+"\n"
+"Tokens are placeholders that get replaced with live data each time the "
+"preset renders. Each entry in the Book / Progress / Time / Session / Device "
+"chips is a token, written as %name. They expand inline:\n"
+"  %title — %page_num/%page_count\n"
+"  → 1984 — 12/268\n"
+"\n"
+"A token name runs until the next non-letter, so you need a space (or "
+"punctuation) before any following text. To butt text right up against a "
+"token, wrap the name in angle brackets:\n"
+"  %<book_time_left_h>h%<book_time_left_m>m\n"
+"  → 4h40m\n"
+"Width limits still work inside them: %<author{200}>.\n"
+"\n"
+"INLINE STYLING\n"
+"\n"
+"Wrap a span of text to restyle just that part:\n"
+"  [b]…[/b] bold   [i]…[/i] italic   [u]…[/u] UPPERCASE\n"
+"  [c=50]…[/c] grey 0–100   [c=#RRGGBB]…[/c] colour\n"
+"  [font=Name]…[/font] switch font for the span\n"
+"\n"
+"The font Name is the display name shown in KOReader's font menu, e.g. "
+"[font=Noto Sans]%title[/font]. Spaces are fine. If that font isn't installed "
+"on the device, the span falls back to the line's font, so presets stay "
+"readable when shared.\n"
+"\n"
+"CONDITIONALS\n"
+"\n"
+"Wrap content in [if:condition]…[/if] to show it only when the condition is "
+"true. Add an [else]…[/if] branch for an alternative.\n"
+"\n"
+"OPERATORS\n"
+"  =    equals               !=  not equals\n"
+"  <    less than            >   greater than\n"
+"  <=   at most              >=  at least\n"
+"  and / or / not  · ( ) for grouping\n"
+"\n"
+"  Example:  [if:batt<20 and not charging]LOW[/if]\n"
+"\n"
+"Truthy check: a bare [if:key] tests whether the key is set, non-zero, and "
+"not \"off\"/\"no\". Useful for [if:title]…[/if], [if:author]…[/if], "
+"[if:series]…[/if].\n"
+"\n"
+"Token-reference comparison: =@token compares against another token's current "
+"value, e.g. [if:chap_title_1!=@title]…[/if] hides the chapter title when it "
+"equals the book title.\n"
+"\n"
+"For the full list of conditional state keys (wifi, batt, light_pct, night, "
+"time, format, …) browse the If/else chip — every reference entry there shows "
+"the exact key and operator syntax for one condition.\n"
+"\n"
+"EXAMPLES\n"
+"\n"
+"  [if:authors>1]%author, et al.[else]%author[/if]\n"
+"  [if:batt<20]LOW %batt[/if]\n"
+"  [if:time>=18:00 and time<18:30]6–6:30[/if]\n"
+"  [if:not series]Standalone[/if]\n"
+msgstr "TOKENY\n\nTokeny sú zástupné znaky, ktoré sa pri každom vykreslení predvoľby nahradia aktuálnymi údajmi. Každá položka v skupinách Kniha / Priebeh / Čas / Relácia / Zariadenie je token a zapisuje sa ako %name. Rozvinie sa priamo v texte:\n  %title — %page_num/%page_count\n  → 1984 — 12/268\n\nNázov tokenu končí pri prvom znaku, ktorý nie je písmeno, takže pred ďalším textom musí byť medzera alebo interpunkcia. Ak chcete text pripojiť tesne k tokenu, uzavrite názov do lomených zátvoriek:\n  %<book_time_left_h>h%<book_time_left_m>m\n  → 4h40m\nObmedzenie šírky vnútri nich funguje tiež: %<author{200}>.\n\nŠTÝLOVANIE V TEXTE\n\nČasť textu preštýlujete tak, že ju obalíte značkami:\n  [b]…[/b] tučné   [i]…[/i] kurzíva   [u]…[/u] VEĽKÉ PÍSMENÁ\n  [c=50]…[/c] sivá 0 – 100   [c=#RRGGBB]…[/c] farba\n  [font=Name]…[/font] iné písmo pre daný úsek\n\nName je zobrazovaný názov písma z ponuky písiem v KOReaderi, napr. [font=Noto Sans]%title[/font]. Medzery sú v poriadku. Ak dané písmo na zariadení nie je nainštalované, úsek sa vráti k písmu riadku, takže zdieľané predvoľby ostanú čitateľné.\n\nPODMIENKY\n\nObsah uzavretý do [if:podmienka]…[/if] sa zobrazí, len keď je podmienka splnená. Vetvou [else]…[/if] pridáte alternatívu.\n\nOPERÁTORY\n  =    rovná sa             !=  nerovná sa\n  <    menšie ako           >   väčšie ako\n  <=   najviac              >=  najmenej\n  and / or / not  · ( ) na zoskupovanie\n\n  Príklad:  [if:batt<20 and not charging]LOW[/if]\n\nTest na pravdivosť: samotné [if:kluc] overí, či je kľúč nastavený, nenulový a nie je \"off\"/\"no\". Hodí sa na [if:title]…[/if], [if:author]…[/if], [if:series]…[/if].\n\nPorovnanie s tokenom: =@token porovná hodnotu s aktuálnou hodnotou iného tokenu, napr. [if:chap_title_1!=@title]…[/if] skryje názov kapitoly, keď sa zhoduje s názvom knihy.\n\nÚplný zoznam stavových kľúčov pre podmienky (wifi, batt, light_pct, night, time, format, …) nájdete v skupine Ak/inak — každá referenčná položka tam ukazuje presný kľúč aj zápis operátora pre danú podmienku.\n\nPRÍKLADY\n\n  [if:authors>1]%author, et al.[else]%author[/if]\n  [if:batt<20]LOW %batt[/if]\n  [if:time>=18:00 and time<18:30]6–6:30[/if]\n  [if:not series]Standalone[/if]\n"
+
+#: menu/tokens_library.lua:388
+msgid "★ Favourites"
+msgstr "★ Obľúbené"
+
+#: menu/tokens_library.lua:414
+msgid "Search tokens by name, value, or expression…"
+msgstr "Hľadať tokeny podľa názvu, hodnoty alebo výrazu…"
+
+#: menu/tokens_library.lua:419
+msgid "No favourites yet. Tap the ☆ on any token to add it."
+msgstr "Zatiaľ žiadne obľúbené. Ťuknutím na ☆ pri tokene ho pridáte."
+
+#: menu/tokens_library.lua:466
+msgid "Help"
+msgstr "Pomocník"
