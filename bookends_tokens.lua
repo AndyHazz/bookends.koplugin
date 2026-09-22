@@ -758,13 +758,20 @@ local function splitAuthors(authors_raw)
 end
 
 --- Split a Keywords field into a genre list, or an empty list.
---- The rule is bookshelf's `splitGenreTags`, kept in step deliberately so the
---- same book reads the same on the shelf and in the reader: comma, semicolon,
+--- The SPLITTING rule is bookshelf's `splitGenreTags`, kept in step
+--- deliberately so one list of keywords breaks into the same genres in both
+--- places: comma, semicolon,
 --- pipe and newline separate, and a SPACED slash separates a BISAC-style
 --- subject hierarchy ("Fiction / Fantasy"). A bare slash is part of the tag
 --- itself ("hurt/comfort", bookshelf's #240), so it must not split - hence
 --- normalising the spaced form to a newline up front rather than adding "/"
 --- to the separator class.
+--- The SOURCE deliberately differs: bookshelf resolves calibre tags first and
+--- falls back to the keywords, because it has a metadata record per book and
+--- no open document. Here the open document's keywords are the only source,
+--- so a calibre library whose tags were never written into the files shows
+--- genres on the shelf and none in the reader. That is the price of keeping
+--- %calibre{...} the one token that reads metadata.calibre.
 local function splitGenres(keywords)
     local list = {}
     if type(keywords) ~= "string" or keywords == "" then return list end
@@ -1585,6 +1592,11 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
             -- is the normalised 0-100 frontlightWarmth() return value.
             -- Both keys stay ABSENT when the device cannot report warmth, so
             -- [if:warmth>10] reads false rather than taking the paint down.
+            -- Absent is also what a device with no natural light has always
+            -- given these keys, so the two degrade alike. Note the evaluator's
+            -- rule for a missing key (see evaluateCondition): every operator
+            -- reads false EXCEPT !=, which reads true, so [if:warmth!=0] shows
+            -- its branch on a device that cannot report warmth at all.
             local native, pct = readWarmth(powerd)
             if native then state.warmth = native end
             if pct then state.warmth_pct = math.floor(pct + 0.5) end
@@ -1737,10 +1749,16 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
         -- alternating footer usually wants this one: `page` flips on the book
         -- page, so it keeps its phase across a chapter break and a line that
         -- should sit left on every chapter opening does not.
-        -- Keyed off chap_read, the in-chapter page number, which carries the
-        -- whole-book fallback for a chapterless document already. Left unset
-        -- when that is unknown, so [if:chap_page=odd] reads false instead of
-        -- quietly tracking the book page under a chapter name.
+        -- Keyed off chap_read, the in-chapter page number, so it follows
+        -- whatever chap_read resolved to: a real chapter position when the TOC
+        -- gives one, and the whole-book fallback (page_num) on a chapterless
+        -- document, matching how %chap_read itself behaves there. Unset only
+        -- when chap_read is, i.e. no TOC at all, so [if:chap_page=odd] reads
+        -- false rather than inventing a parity from nothing.
+        -- Caveat inherited from that fallback: the condition state falls back
+        -- to state.page_num while the %chap_read TOKEN falls back to page_idx,
+        -- which honours an EPUB's pagemap labels. On a chapterless pagemap
+        -- book the two can differ, and so can this parity.
         if state.chap_read then
             state.chap_page = (state.chap_read % 2 == 1) and "odd" or "even"
         end
@@ -1782,9 +1800,14 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
         -- Strings, not a count: [if:genres] reads "this book has genres" the
         -- way [if:series] reads "this book is in a series", which is the
         -- gating bookshelf documents for the same token.
-        local genre_list = splitGenres(doc_props.keywords or props.keywords)
-        state.genre  = genre_list[1] or ""
-        state.genres = table.concat(genre_list, ", ")
+        -- refs()-gated unlike its neighbours above: those read fields already
+        -- in hand, this one splits a string, and a template that never asks
+        -- about genres should not pay for it on every paint.
+        if refs("genre", "genres") then
+            local genre_list = splitGenres(doc_props.keywords or props.keywords)
+            state.genre  = genre_list[1] or ""
+            state.genres = table.concat(genre_list, ", ")
+        end
     end
 
     -- Chapter titles (reuses the helper already called for state.chap_num/chap_count)
