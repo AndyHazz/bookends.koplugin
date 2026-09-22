@@ -175,6 +175,7 @@ M.CONDITIONALS = {
     { description = _("Books finished"), expression = "[if:books_finished>=10]...[/if]", chip = "ifelse" },
     { description = _("Book read % (skip-aware)"), expression = "[if:book_pct_read>50]...[/if]", chip = "ifelse" },
     { description = _("odd / even"), expression = "[if:page=odd]...[/if]", chip = "ifelse" },
+    { description = _("odd / even in chapter"), expression = "[if:chap_page=odd]...[/if]", chip = "ifelse" },
     { description = _("If frontlight on"), expression = "[if:light=on]...[/if]", chip = "ifelse" },
     { description = _("Frontlight brightness %"), expression = "[if:light_pct>50]...[/if]", chip = "ifelse" },
     { description = _("Frontlight warmth %"), expression = "[if:warmth_pct>50]...[/if]", chip = "ifelse" },

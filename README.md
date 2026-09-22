@@ -313,7 +313,8 @@ Comparison operators: `=` (equals), `!=` (not equals), `<` (less than), `>` (gre
 | `book_pct_read` | 0–100 | Book read percentage, skip-aware (complements position-based `book_pct`) |
 | `days_reading_book` | count | Distinct days you've read this book |
 | `pages_per_day` | count | Pages per reading day for this book |
-| `page` | odd / even | Current page parity |
+| `page` | odd / even | Current page parity, counted through the book |
+| `chap_page` | odd / even | Parity of the page **within the chapter** (matches `%chap_read`). Use this to alternate a line, so it restarts at each chapter rather than keeping the book's phase |
 | `light` | on / off | Frontlight state |
 | `warmth` | 0–100 | Frontlight warmth (only on devices with natural light) |
 | `format` | EPUB / PDF / CBZ… | Document format |

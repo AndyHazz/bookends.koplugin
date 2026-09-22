@@ -1732,6 +1732,18 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
 
         -- Odd/even page
         state.page = (pageno % 2 == 1) and "odd" or "even"
+
+        -- The same parity for the page WITHIN the chapter (#117). An
+        -- alternating footer usually wants this one: `page` flips on the book
+        -- page, so it keeps its phase across a chapter break and a line that
+        -- should sit left on every chapter opening does not.
+        -- Keyed off chap_read, the in-chapter page number, which carries the
+        -- whole-book fallback for a chapterless document already. Left unset
+        -- when that is unknown, so [if:chap_page=odd] reads false instead of
+        -- quietly tracking the book page under a chapter name.
+        if state.chap_read then
+            state.chap_page = (state.chap_read % 2 == 1) and "odd" or "even"
+        end
     end
 
     -- Document format and filename (extension stripped, matches %filename token)
