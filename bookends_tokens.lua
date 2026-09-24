@@ -1831,6 +1831,12 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
 
     -- Session (prefer ReaderStatistics' skip-aware values; fall back to
     -- our wall-clock measurement and max-page counter when stats is disabled).
+    -- Pages advanced this session (#121). Outside the block below on purpose:
+    -- that one reads the statistics database, and this key needs nothing but
+    -- the counter main.lua already keeps.
+    if refs("session_pages_advanced") then
+        state.session_pages_advanced = math.max(0, session_pages_read or 0)
+    end
     if refs("session", "session_pages", "session_time") then
         local stats_session = Tokens._readStatsBookSession(ui, stats_cache)
         if stats_session then
@@ -2238,6 +2244,7 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
             date_numeric = "[dd/mm/yy]",
             weekday = "[weekday]", weekday_short = "[wkday]",
             session_time = "[session]", session_pages = "[pages]",
+            session_pages_advanced = "[pages.adv]",
             title = "[title]", author = "[author]",
             series = "[series]", series_name = "[series.name]", series_num = "[series.#]",
             chap_title = "[chapter]",
@@ -2701,6 +2708,21 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         else
             session_pages = math.max(0, session_pages_read or 0)
         end
+    end
+
+    -- %session_pages_advanced (#121): pages ADVANCED this session - furthest
+    -- page reached minus the page the session started on, on the pagemap
+    -- index when the book has stable page numbers. That is main.lua's
+    -- getSessionPages(), v3.5.0's %s, handed in as session_pages_read. It is
+    -- deliberately NOT the statistics count above: that one is skip-aware and
+    -- counts rendered pages, so a stable-page reader sees it climb several
+    -- times per printed page. Moving within a page counts nothing and going
+    -- back does not subtract. A jump (TOC, go to page) counts the whole
+    -- distance, since it is furthest-minus-start - the same as v3.5.0.
+    -- No statistics read, so it costs nothing on the Clara BW (#36).
+    local session_pages_advanced = "0"
+    if needs("session_pages_advanced") then
+        session_pages_advanced = tostring(math.max(0, session_pages_read or 0))
     end
 
     -- Time left in chapter / document (via statistics plugin).
@@ -3480,6 +3502,7 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         weekday_short = date_weekday_short,
         session_time  = session_time,
         session_pages = tostring(session_pages),
+        session_pages_advanced = session_pages_advanced,
         pages_today      = pages_today_str,
         time_today       = time_today_str,
         pages_today_book = pages_today_book_str,
@@ -3582,7 +3605,7 @@ function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, prev
         book_finish_date = true,
         time_12h = true, time_24h = true,
         time = true,
-        session_time = true, session_pages = true, speed = true,
+        session_time = true, session_pages = true, session_pages_advanced = true, speed = true,
         -- _lastdigit tokens (#55): "0" is a real value (last digit of 10,
         -- 20, …); without this gate it would auto-hide and the conditional
         -- grammar branching on the digit would break.

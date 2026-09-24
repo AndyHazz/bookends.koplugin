@@ -113,6 +113,7 @@ M.TOKENS = {
     { description = _("Book finish date (custom format)"), token = "%book_finish_date{%d %B %Y}", chip = "time" },
     { description = _("Session reading time"), token = "%session_time", chip = "session" },
     { description = _("Session pages read"), token = "%session_pages", chip = "session" },
+    { description = _("Pages advanced this session (stable pages when available)"), token = "%session_pages_advanced", chip = "session" },
     { description = _("Pages read today (all books)"), token = "%pages_today", chip = "session" },
     { description = _("Reading time today (all books)"), token = "%time_today", chip = "session" },
     { description = _("Pages read today (current book)"), token = "%pages_today_book", chip = "session" },

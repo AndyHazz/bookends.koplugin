@@ -193,6 +193,7 @@ Tokens are placeholders that expand to live values. Type `%` followed by a name,
 | `%book_read_time` | Total reading time for book | *2h 30m* |
 | `%session_time` | Session reading time (skip-aware) | *0h 23m* |
 | `%session_pages` | Session pages read (skip-aware) | *14* |
+| `%session_pages_advanced` | Pages advanced this session, counted in stable page numbers when the book has them. Starts at 0 and goes up only when you get further than you've been this session, so paging back doesn't count. A jump ahead counts the pages it skips. Not skip-aware, unlike `%session_pages` | *3* |
 | `%pages_today` | Pages read today across all books | *32* |
 | `%time_today` | Reading time today across all books | *1h 15m* |
 | `%speed` | Reading speed (pages/hour) | *42* |
@@ -306,6 +307,7 @@ Comparison operators: `=` (equals), `!=` (not equals), `<` (less than), `>` (gre
 | `session` | minutes | Session reading time (skip-aware) |
 | `session_time` | minutes | Alias for `session`, matching the `%session_time` token name |
 | `session_pages` | count | Session pages read (skip-aware) |
+| `session_pages_advanced` | count | Pages advanced this session (matches `%session_pages_advanced`) |
 | `pages_today` | count | Pages read today across all books (skip-aware) |
 | `time_today` | minutes | Reading time today across all books |
 | `avg_page_time` | seconds | Average time per page |
