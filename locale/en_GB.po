@@ -4,15 +4,15 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-30 11:21+0100\n"
+"POT-Creation-Date: 2026-09-24 09:56+0100\n"
 "Language: en_GB\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: bookends_colour_palette.lua:400 bookends_dialog_helpers.lua:101
-#: bookends_line_editor.lua:792 bookends_line_editor.lua:1058 main.lua:2485
-#: main.lua:3184 menu/main_menu.lua:55 menu/main_menu.lua:95
+#: bookends_colour_palette.lua:400 bookends_dialog_helpers.lua:117
+#: bookends_line_editor.lua:792 bookends_line_editor.lua:1058 main.lua:2624
+#: main.lua:3323 menu/main_menu.lua:55 menu/main_menu.lua:95
 #: menu/main_menu.lua:133 menu/main_menu.lua:590
 #: menu/preset_manager_modal.lua:1405 menu/preset_manager_modal.lua:1527
 #: menu/preset_manager_modal.lua:1568 menu/preset_manager_modal.lua:1669
@@ -23,16 +23,16 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: bookends_colour_palette.lua:402 bookends_dialog_helpers.lua:109
-#: bookends_line_editor.lua:505 bookends_line_editor.lua:632 main.lua:2495
-#: main.lua:2727 menu/colours_menu.lua:73 menu/colours_menu.lua:269
+#: bookends_colour_palette.lua:402 bookends_dialog_helpers.lua:125
+#: bookends_line_editor.lua:505 bookends_line_editor.lua:632 main.lua:2634
+#: main.lua:2866 menu/colours_menu.lua:73 menu/colours_menu.lua:269
 #: menu/progress_bar_menu.lua:270 menu/progress_bar_menu.lua:503
 #: menu/progress_bar_menu.lua:545
 msgid "Default"
 msgstr ""
 
-#: bookends_colour_palette.lua:404 bookends_dialog_helpers.lua:116
-#: main.lua:2524 menu/preset_manager_modal.lua:691
+#: bookends_colour_palette.lua:404 bookends_dialog_helpers.lua:132
+#: main.lua:2663 menu/preset_manager_modal.lua:691
 msgid "Apply"
 msgstr ""
 
@@ -48,7 +48,7 @@ msgstr "Pick a colour"
 msgid "Invalid hex colour (use #RGB or #RRGGBB)"
 msgstr ""
 
-#: bookends_line_editor.lua:115 main.lua:1115
+#: bookends_line_editor.lua:115 main.lua:1146
 msgid "Regular"
 msgstr ""
 
@@ -279,7 +279,7 @@ msgstr ""
 msgid "Read"
 msgstr ""
 
-#: bookends_line_editor.lua:610 bookends_tokens.lua:429
+#: bookends_line_editor.lua:610 bookends_tokens.lua:443
 #: menu/progress_bar_menu.lua:244
 msgid "Unread"
 msgstr ""
@@ -288,7 +288,7 @@ msgstr ""
 msgid "Custom colours"
 msgstr ""
 
-#: bookends_line_editor.lua:661 bookends_updater.lua:349 main.lua:3022
+#: bookends_line_editor.lua:661 bookends_updater.lua:349 main.lua:3161
 #: menu/icons_library.lua:453 menu/preset_manager_modal.lua:665
 #: menu/tokens_library.lua:463
 msgid "Close"
@@ -318,7 +318,7 @@ msgstr ""
 msgid "Tokens"
 msgstr ""
 
-#: bookends_line_editor.lua:826 main.lua:3186 menu/main_menu.lua:57
+#: bookends_line_editor.lua:826 main.lua:3325 menu/main_menu.lua:57
 #: menu/preset_manager_modal.lua:1409 menu/preset_manager_modal.lua:1569
 #: menu/preset_manager_modal.lua:1670
 msgid "Save"
@@ -349,23 +349,23 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: bookends_tokens.lua:430 menu/icons_catalogue.lua:27
+#: bookends_tokens.lua:444 menu/icons_catalogue.lua:27
 msgid "Reading"
 msgstr ""
 
-#: bookends_tokens.lua:431
+#: bookends_tokens.lua:445
 msgid "On hold"
 msgstr ""
 
-#: bookends_tokens.lua:432
+#: bookends_tokens.lua:446
 msgid "Finished"
 msgstr ""
 
-#: bookends_tokens.lua:3190
+#: bookends_tokens.lua:3387
 msgid " and "
 msgstr ""
 
-#: bookends_tokens.lua:3190
+#: bookends_tokens.lua:3387
 msgid ", et al."
 msgstr ""
 
@@ -417,59 +417,59 @@ msgstr ""
 msgid "Downloading update..."
 msgstr ""
 
-#: bookends_updater.lua:460
+#: bookends_updater.lua:476
 msgid "the connection failed"
 msgstr ""
 
-#: bookends_updater.lua:463
+#: bookends_updater.lua:479
 msgid "the connection timed out"
 msgstr ""
 
-#: bookends_updater.lua:465
+#: bookends_updater.lua:481
 msgid "the secure connection failed"
 msgstr ""
 
-#: bookends_updater.lua:468
+#: bookends_updater.lua:484
 msgid "there was no response"
 msgstr ""
 
-#: bookends_updater.lua:484 bookends_updater.lua:489
+#: bookends_updater.lua:500 bookends_updater.lua:505
 msgid "the file could not be saved"
 msgstr ""
 
-#: bookends_updater.lua:516
+#: bookends_updater.lua:543
 msgid "Download failed."
 msgstr ""
 
-#: bookends_updater.lua:528
+#: bookends_updater.lua:555
 msgid "Installation failed: "
 msgstr ""
 
-#: bookends_updater.lua:545
+#: bookends_updater.lua:572
 msgid "Bookends updated to v"
 msgstr ""
 
-#: bookends_updater.lua:546
+#: bookends_updater.lua:573
 msgid "Restart KOReader now?"
 msgstr ""
 
-#: bookends_updater.lua:547 main.lua:60
+#: bookends_updater.lua:574 main.lua:60
 msgid "Restart"
 msgstr ""
 
-#: bookends_updater.lua:563
+#: bookends_updater.lua:590
 msgid "Could not install branch:"
 msgstr ""
 
-#: bookends_updater.lua:580
+#: bookends_updater.lua:607
 msgid "Downloading latest release..."
 msgstr ""
 
-#: bookends_updater.lua:591
+#: bookends_updater.lua:618
 msgid "Could not fetch latest release."
 msgstr ""
 
-#: bookends_updater.lua:604
+#: bookends_updater.lua:631
 msgid "Latest release has no downloadable zip."
 msgstr ""
 
@@ -570,78 +570,78 @@ msgstr ""
 msgid "Preset: %1"
 msgstr ""
 
-#: main.lua:1116
+#: main.lua:1147
 msgid "Bold"
 msgstr ""
 
-#: main.lua:1117
+#: main.lua:1148
 msgid "Italic"
 msgstr ""
 
-#: main.lua:1118
+#: main.lua:1149
 msgid "Bold italic"
 msgstr ""
 
-#: main.lua:2743
+#: main.lua:2882
 msgid "Select font"
 msgstr ""
 
-#: main.lua:2784
+#: main.lua:2923
 msgid "Font-family fonts"
 msgstr ""
 
-#: main.lua:2849
+#: main.lua:2988
 msgid "Fonts"
 msgstr ""
 
-#: main.lua:2943 menu/library_modal.lua:937
+#: main.lua:3082 menu/library_modal.lua:937
 msgid "Page %1 of %2"
 msgstr ""
 
-#: main.lua:3032 main.lua:3206
+#: main.lua:3171 main.lua:3345
 msgid "Reset"
 msgstr ""
 
-#: main.lua:3041
+#: main.lua:3180
 msgid "Set font"
 msgstr ""
 
-#: main.lua:3180 menu/main_menu.lua:502 menu/main_menu.lua:504
+#: main.lua:3319 menu/main_menu.lua:502 menu/main_menu.lua:504
 msgid "Development branch"
 msgstr ""
 
-#: main.lua:3182
+#: main.lua:3321
 msgid "Branch name (leave empty for stable)"
 msgstr ""
 
-#: main.lua:3205
+#: main.lua:3344
 msgid ""
 "This will clear the development branch setting and install the latest stable "
 "release of Bookends, then restart KOReader. Continue?"
 msgstr ""
 
-#: main.lua:3224
+#: main.lua:3363
 msgid "Bookends update available: v"
 msgstr ""
 
-#: main.lua:3232 menu/main_menu.lua:667 menu/progress_bar_menu.lua:277
+#: main.lua:3371 menu/main_menu.lua:667 menu/progress_bar_menu.lua:277
 #: menu/progress_bar_menu.lua:529
 msgid "Adjust margins"
 msgstr ""
 
-#: main.lua:3234 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:532
+#: main.lua:3373 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:532
 msgid "Top"
 msgstr ""
 
-#: main.lua:3235 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:533
+#: main.lua:3374 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:533
 msgid "Bottom"
 msgstr ""
 
-#: main.lua:3236 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:532
+#: main.lua:3375 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:532
 msgid "Left"
 msgstr ""
 
-#: main.lua:3237 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:533
+#: main.lua:3376 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:533
 msgid "Right"
 msgstr ""
 
@@ -1927,7 +1927,7 @@ msgstr ""
 msgid "Number from chapter title (when detected)"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:44 menu/tokens_catalogue.lua:161
+#: menu/tokens_catalogue.lua:44 menu/tokens_catalogue.lua:164
 msgid "Current chapter number"
 msgstr ""
 
@@ -2004,551 +2004,567 @@ msgid "Book language"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:63
-msgid "Document format (EPUB, PDF, etc.)"
+msgid "First genre, from the book's keywords"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:64
+msgid "All genres, comma-separated"
+msgstr ""
+
+#: menu/tokens_catalogue.lua:65
+msgid "Document format (EPUB, PDF, etc.)"
+msgstr ""
+
+#: menu/tokens_catalogue.lua:66
 #, lua-format
 msgid "Calibre column by name, e.g. %calibre{mood}"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:65
+#: menu/tokens_catalogue.lua:67
 msgid "Highlights count"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:66
+#: menu/tokens_catalogue.lua:68
 msgid "Notes count"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:67
+#: menu/tokens_catalogue.lua:69
 msgid "Bookmarks count"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:68
+#: menu/tokens_catalogue.lua:70
 msgid "Annotations count (bookmarks + highlights + notes)"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:69
+#: menu/tokens_catalogue.lua:71
 msgid "Current page number"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:70
+#: menu/tokens_catalogue.lua:72
 msgid "Total pages"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:71
+#: menu/tokens_catalogue.lua:73
 msgid "Book percentage read"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:72
+#: menu/tokens_catalogue.lua:74
 msgid "Book % with 1 decimal (e.g. 45.3%)"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:73
+#: menu/tokens_catalogue.lua:75
 msgid "Book % with 2 decimal places"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:74
+#: menu/tokens_catalogue.lua:76
 msgid "Book % with 3 decimal places"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:75
+#: menu/tokens_catalogue.lua:77
 msgid "Book % with 4 decimal places"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:76
+#: menu/tokens_catalogue.lua:78
 msgid "Book percentage left"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:77
+#: menu/tokens_catalogue.lua:79
 msgid "Book % left with 1 decimal"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:78
+#: menu/tokens_catalogue.lua:80
 msgid "Book % left with 2 decimals"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:79
+#: menu/tokens_catalogue.lua:81
 msgid "Book % left with 3 decimals"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:80
+#: menu/tokens_catalogue.lua:82
 msgid "Book % left with 4 decimals"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:81
+#: menu/tokens_catalogue.lua:83
 msgid "Chapter percentage read"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:82
+#: menu/tokens_catalogue.lua:84
 msgid "Chapter percentage left"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:83
+#: menu/tokens_catalogue.lua:85
 msgid "Pages read in chapter"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:84
+#: menu/tokens_catalogue.lua:86
 msgid "Total pages in chapter"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:85
+#: menu/tokens_catalogue.lua:87
 msgid "Pages left in chapter"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:86
+#: menu/tokens_catalogue.lua:88
 msgid "Pages left in book"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:87
+#: menu/tokens_catalogue.lua:89
 msgid "Elastic gap: pushes the rest of the line to the far edge"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:88
+#: menu/tokens_catalogue.lua:90
 msgid "Progress bar (configure type in line editor)"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:89
+#: menu/tokens_catalogue.lua:91
 msgid "Fixed-width progress bar (100px)"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:90
+#: menu/tokens_catalogue.lua:92
 msgid "Progress bar, 10px tall"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:91
+#: menu/tokens_catalogue.lua:93
 msgid "Progress bar, 200px wide and 4px tall"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:92
+#: menu/tokens_catalogue.lua:94
 msgid "Current time (24h, same as %time_24h)"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:93
+#: menu/tokens_catalogue.lua:95
 msgid "12-hour clock"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:94
+#: menu/tokens_catalogue.lua:96
 msgid "24-hour clock"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:95
+#: menu/tokens_catalogue.lua:97
 msgid "Date short (28 Mar)"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:96
+#: menu/tokens_catalogue.lua:98
 msgid "Date long (28 March 2026)"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:97
+#: menu/tokens_catalogue.lua:99
 msgid "Date numeric (28/03/2026)"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:98
+#: menu/tokens_catalogue.lua:100
 msgid "Weekday (Friday)"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:99
+#: menu/tokens_catalogue.lua:101
 msgid "Weekday short (Fri)"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:100
+#: menu/tokens_catalogue.lua:102
 msgid "Custom date/time format (strftime spec)"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:101
+#: menu/tokens_catalogue.lua:103
 msgid "Time left in chapter"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:102
+#: menu/tokens_catalogue.lua:104
 msgid "Time left in book"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:103
+#: menu/tokens_catalogue.lua:105
 msgid "Time left in chapter (hours only)"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:104
+#: menu/tokens_catalogue.lua:106
 msgid "Time left in chapter (minutes only)"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:105
+#: menu/tokens_catalogue.lua:107
 msgid "Time left in book (hours only)"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:106
+#: menu/tokens_catalogue.lua:108
 msgid "Time left in book (minutes only)"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:107
+#: menu/tokens_catalogue.lua:109
 msgid "Chapter finish time (clock)"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:108
+#: menu/tokens_catalogue.lua:110
 msgid "Book finish time (clock)"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:109
+#: menu/tokens_catalogue.lua:111
 msgid "Chapter finish time (custom format)"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:110
+#: menu/tokens_catalogue.lua:112
 msgid "Book finish date (projected)"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:111
+#: menu/tokens_catalogue.lua:113
 msgid "Book finish date (custom format)"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:112
+#: menu/tokens_catalogue.lua:114
 msgid "Session reading time"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:113
+#: menu/tokens_catalogue.lua:115
 msgid "Session pages read"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:114
-msgid "Pages read today (all books)"
-msgstr ""
-
-#: menu/tokens_catalogue.lua:115
-msgid "Reading time today (all books)"
-msgstr ""
-
 #: menu/tokens_catalogue.lua:116
-msgid "Pages read today (current book)"
+msgid "Pages advanced this session (stable pages when available)"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:117
-msgid "Reading time today (current book)"
+msgid "Pages read today (all books)"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:118
-msgid "Pages read in last 7 days (current book)"
+msgid "Reading time today (all books)"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:119
-msgid "Reading time in last 7 days (current book)"
+msgid "Pages read today (current book)"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:120 menu/tokens_catalogue.lua:171
-msgid "Day streak (any book)"
+#: menu/tokens_catalogue.lua:120
+msgid "Reading time today (current book)"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:121 menu/tokens_catalogue.lua:172
-msgid "Day streak (current book)"
+#: menu/tokens_catalogue.lua:121
+msgid "Pages read in last 7 days (current book)"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:122
-msgid "Lifetime reading time (all books)"
+msgid "Reading time in last 7 days (current book)"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:123
-msgid "Books finished (lifetime)"
+#: menu/tokens_catalogue.lua:123 menu/tokens_catalogue.lua:174
+msgid "Day streak (any book)"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:124
-msgid "Reading speed (pages/hour)"
+#: menu/tokens_catalogue.lua:124 menu/tokens_catalogue.lua:175
+msgid "Day streak (current book)"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:125
-msgid "Average time per page"
+msgid "Lifetime reading time (all books)"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:126
-msgid "Total reading time for book"
+msgid "Books finished (lifetime)"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:127
-msgid "Pages read of this book (lifetime)"
+msgid "Reading speed (pages/hour)"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:128
-msgid "Book read percentage (skip-aware)"
+msgid "Average time per page"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:129
-msgid "Days reading this book"
+msgid "Total reading time for book"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:130
-msgid "Pages per day for this book"
+msgid "Pages read of this book (lifetime)"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:131
-msgid "Battery level"
+msgid "Book read percentage (skip-aware)"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:132
-msgid "Wi-Fi icon (also answers to %wifi_icon)"
+msgid "Days reading this book"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:133
-msgid "Wi-Fi icon, Bookshelf's name for it"
+msgid "Pages per day for this book"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:134
-msgid "Plugin content"
+msgid "Battery level"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:135
-msgid "Frontlight brightness"
+msgid "Wi-Fi icon (also answers to %wifi_icon)"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:136 menu/tokens_catalogue.lua:177
-msgid "Frontlight brightness %"
+#: menu/tokens_catalogue.lua:136
+msgid "Wi-Fi icon, Bookshelf's name for it"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:137
-msgid "Frontlight warmth"
+msgid "Plugin content"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:138 menu/tokens_catalogue.lua:178
-msgid "Frontlight warmth %"
+#: menu/tokens_catalogue.lua:138
+msgid "Frontlight brightness"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:139
-msgid "RAM used %"
+#: menu/tokens_catalogue.lua:139 menu/tokens_catalogue.lua:181
+msgid "Frontlight brightness %"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:140
-msgid "System memory used (MiB)"
+msgid "Frontlight warmth"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:141
-msgid "RAM used (MiB)"
+#: menu/tokens_catalogue.lua:141 menu/tokens_catalogue.lua:182
+msgid "Frontlight warmth %"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:142
-msgid "Free disk space"
+msgid "RAM used %"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:143
-msgid "Page X of Y, em-dash framed"
+msgid "System memory used (MiB)"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:144
-msgid "Title ⋮ author (italic)"
+msgid "RAM used (MiB)"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:145
-msgid "Title in a chosen font"
+msgid "Free disk space"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:146
-msgid "Bookmark(s) count + label"
+msgid "Page X of Y, em-dash framed"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:147
-msgid "Highlight(s) count + label"
+msgid "Title ⋮ author (italic)"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:148
-msgid "Hourglass session timer + pages"
+msgid "Title in a chosen font"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:149
-msgid "Sparkles 1"
+msgid "Bookmark(s) count + label"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:150
+msgid "Highlight(s) count + label"
+msgstr ""
+
+#: menu/tokens_catalogue.lua:151
+msgid "Hourglass session timer + pages"
+msgstr ""
+
+#: menu/tokens_catalogue.lua:152
+msgid "Sparkles 1"
+msgstr ""
+
+#: menu/tokens_catalogue.lua:153
 msgid "Sparkles 2"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:154
+#: menu/tokens_catalogue.lua:157
 msgid "If Wi-Fi is on"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:155
+#: menu/tokens_catalogue.lua:158
 msgid "If connected"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:156
+#: menu/tokens_catalogue.lua:159
 msgid "Battery 0–100"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:157
+#: menu/tokens_catalogue.lua:160
 msgid "If charging"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:158
+#: menu/tokens_catalogue.lua:161
 msgid "If page-turn flipped"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:159
+#: menu/tokens_catalogue.lua:162
 msgid "Book progress 0–100"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:160
+#: menu/tokens_catalogue.lua:163
 msgid "Chapter progress 0–100"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:162
+#: menu/tokens_catalogue.lua:165
 msgid "Total chapters"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:163
+#: menu/tokens_catalogue.lua:166
 msgid "Minutes left in chapter"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:164
+#: menu/tokens_catalogue.lua:167
 msgid "Whole hours left in chapter"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:165
+#: menu/tokens_catalogue.lua:168
 msgid "Whole hours left in book"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:166
+#: menu/tokens_catalogue.lua:169
 msgid "Pages per hour"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:167
+#: menu/tokens_catalogue.lua:170
 msgid "Minutes this session"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:168
+#: menu/tokens_catalogue.lua:171
 msgid "Pages this session"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:169
+#: menu/tokens_catalogue.lua:172
 msgid "Pages read today"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:170
+#: menu/tokens_catalogue.lua:173
 msgid "Pages today (current book)"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:173
+#: menu/tokens_catalogue.lua:176
 msgid "Books finished"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:174
+#: menu/tokens_catalogue.lua:177
 msgid "Book read % (skip-aware)"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:175
+#: menu/tokens_catalogue.lua:178
 msgid "odd / even"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:176
-msgid "If frontlight on"
-msgstr ""
-
 #: menu/tokens_catalogue.lua:179
-msgid "If night mode on"
+msgid "odd / even in chapter"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:180
-msgid "EPUB / PDF / CBZ / …"
-msgstr ""
-
-#: menu/tokens_catalogue.lua:181
-msgid "Current HH:MM (24h)"
-msgstr ""
-
-#: menu/tokens_catalogue.lua:182
-msgid "Mon–Sun"
+msgid "If frontlight on"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:183
-msgid "If book has title"
+msgid "If night mode on"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:184
-msgid "If book has author"
+msgid "EPUB / PDF / CBZ / …"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:185
-msgid "If book in series"
+msgid "Current HH:MM (24h)"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:186
-msgid "If chapter has title"
+msgid "Mon–Sun"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:187
-msgid "Chapter title at depth 1/2/3"
+msgid "If book has title"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:188
-msgid "If book has 2+ authors"
+msgid "If book has author"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:189
-msgid "Author with et al. for multi-author"
+msgid "If book in series"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:190
-msgid "Wi-Fi icon only when Wi-Fi enabled"
+msgid "If chapter has title"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:191
-msgid "Low-battery warning"
+msgid "Chapter title at depth 1/2/3"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:192
-msgid "Bolt when charging"
+msgid "If book has 2+ authors"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:193
-msgid "Arrow when page-turn flipped"
+msgid "Author with et al. for multi-author"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:194
-msgid "Odd/even variations"
+msgid "Wi-Fi icon only when Wi-Fi enabled"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:195
-msgid "Near end of book"
+msgid "Low-battery warning"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:196
-msgid "Frontlight on/off label"
+msgid "Bolt when charging"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:197
-msgid "If format"
+msgid "Arrow when page-turn flipped"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:198
-msgid "Weekends"
+msgid "Odd/even variations"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:199
-msgid "Time window"
+msgid "Near end of book"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:200
-msgid "Non-series books"
+msgid "Frontlight on/off label"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:201
-msgid "Fall back to shallower chapter"
+msgid "If format"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:202
-msgid "Chapter number then title"
+msgid "Weekends"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:203
-msgid "Long books (20+ chapters)"
+msgid "Time window"
+msgstr ""
+
+#: menu/tokens_catalogue.lua:204
+msgid "Non-series books"
+msgstr ""
+
+#: menu/tokens_catalogue.lua:205
+msgid "Fall back to shallower chapter"
+msgstr ""
+
+#: menu/tokens_catalogue.lua:206
+msgid "Chapter number then title"
 msgstr ""
 
 #: menu/tokens_catalogue.lua:207
+msgid "Long books (20+ chapters)"
+msgstr ""
+
+#: menu/tokens_catalogue.lua:211
 msgid "Time left in chapter, Kindle style"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:208
+#: menu/tokens_catalogue.lua:212
 msgid "Time left in book, Kindle style"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:209
+#: menu/tokens_catalogue.lua:213
 msgid "Chapter title only when different from book title"
 msgstr ""
 
-#: menu/tokens_catalogue.lua:210
+#: menu/tokens_catalogue.lua:214
 msgid "Battery bars"
 msgstr ""
 

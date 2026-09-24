@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bookends\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-30 11:21+0100\n"
+"POT-Creation-Date: 2026-09-24 09:56+0100\n"
 "Language-Team: Hungarian\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
@@ -12,9 +12,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: bookends_colour_palette.lua:400 bookends_dialog_helpers.lua:101
-#: bookends_line_editor.lua:792 bookends_line_editor.lua:1058 main.lua:2485
-#: main.lua:3184 menu/main_menu.lua:55 menu/main_menu.lua:95
+#: bookends_colour_palette.lua:400 bookends_dialog_helpers.lua:117
+#: bookends_line_editor.lua:792 bookends_line_editor.lua:1058 main.lua:2624
+#: main.lua:3323 menu/main_menu.lua:55 menu/main_menu.lua:95
 #: menu/main_menu.lua:133 menu/main_menu.lua:590
 #: menu/preset_manager_modal.lua:1405 menu/preset_manager_modal.lua:1527
 #: menu/preset_manager_modal.lua:1568 menu/preset_manager_modal.lua:1669
@@ -25,16 +25,16 @@ msgstr ""
 msgid "Cancel"
 msgstr "Mégse"
 
-#: bookends_colour_palette.lua:402 bookends_dialog_helpers.lua:109
-#: bookends_line_editor.lua:505 bookends_line_editor.lua:632 main.lua:2495
-#: main.lua:2727 menu/colours_menu.lua:73 menu/colours_menu.lua:269
+#: bookends_colour_palette.lua:402 bookends_dialog_helpers.lua:125
+#: bookends_line_editor.lua:505 bookends_line_editor.lua:632 main.lua:2634
+#: main.lua:2866 menu/colours_menu.lua:73 menu/colours_menu.lua:269
 #: menu/progress_bar_menu.lua:270 menu/progress_bar_menu.lua:503
 #: menu/progress_bar_menu.lua:545
 msgid "Default"
 msgstr "Alapértelmezett"
 
-#: bookends_colour_palette.lua:404 bookends_dialog_helpers.lua:116
-#: main.lua:2524 menu/preset_manager_modal.lua:691
+#: bookends_colour_palette.lua:404 bookends_dialog_helpers.lua:132
+#: main.lua:2663 menu/preset_manager_modal.lua:691
 msgid "Apply"
 msgstr "Alkalmaz"
 
@@ -50,7 +50,7 @@ msgstr "Válassz színt"
 msgid "Invalid hex colour (use #RGB or #RRGGBB)"
 msgstr "Érvénytelen hexa szín (használj #RGB vagy #RRGGBB formátumot)"
 
-#: bookends_line_editor.lua:115 main.lua:1115
+#: bookends_line_editor.lua:115 main.lua:1146
 msgid "Regular"
 msgstr "Normál"
 
@@ -277,7 +277,7 @@ msgstr "Sáv vastagsága"
 msgid "Read"
 msgstr "Olvasott"
 
-#: bookends_line_editor.lua:610 bookends_tokens.lua:429
+#: bookends_line_editor.lua:610 bookends_tokens.lua:443
 #: menu/progress_bar_menu.lua:244
 msgid "Unread"
 msgstr "Olvasatlan"
@@ -286,7 +286,7 @@ msgstr "Olvasatlan"
 msgid "Custom colours"
 msgstr "Egyéni színek"
 
-#: bookends_line_editor.lua:661 bookends_updater.lua:349 main.lua:3022
+#: bookends_line_editor.lua:661 bookends_updater.lua:349 main.lua:3161
 #: menu/icons_library.lua:453 menu/preset_manager_modal.lua:665
 #: menu/tokens_library.lua:463
 msgid "Close"
@@ -316,7 +316,7 @@ msgstr "Ikonok"
 msgid "Tokens"
 msgstr "Tokenek"
 
-#: bookends_line_editor.lua:826 main.lua:3186 menu/main_menu.lua:57
+#: bookends_line_editor.lua:826 main.lua:3325 menu/main_menu.lua:57
 #: menu/preset_manager_modal.lua:1409 menu/preset_manager_modal.lua:1569
 #: menu/preset_manager_modal.lua:1670
 msgid "Save"
@@ -347,23 +347,23 @@ msgstr "%1. sor: %2"
 msgid "Delete"
 msgstr "Törlés"
 
-#: bookends_tokens.lua:430 menu/icons_catalogue.lua:27
+#: bookends_tokens.lua:444 menu/icons_catalogue.lua:27
 msgid "Reading"
 msgstr "Olvasás"
 
-#: bookends_tokens.lua:431
+#: bookends_tokens.lua:445
 msgid "On hold"
 msgstr "Félretéve"
 
-#: bookends_tokens.lua:432
+#: bookends_tokens.lua:446
 msgid "Finished"
 msgstr "Befejezett"
 
-#: bookends_tokens.lua:3190
+#: bookends_tokens.lua:3387
 msgid " and "
 msgstr " és "
 
-#: bookends_tokens.lua:3190
+#: bookends_tokens.lua:3387
 msgid ", et al."
 msgstr ", et al."
 
@@ -415,59 +415,59 @@ msgstr "Legújabb: "
 msgid "Downloading update..."
 msgstr "Frissítés letöltése..."
 
-#: bookends_updater.lua:460
+#: bookends_updater.lua:476
 msgid "the connection failed"
 msgstr "a kapcsolat nem jött létre"
 
-#: bookends_updater.lua:463
+#: bookends_updater.lua:479
 msgid "the connection timed out"
 msgstr "a kapcsolat túllépte az időkorlátot"
 
-#: bookends_updater.lua:465
+#: bookends_updater.lua:481
 msgid "the secure connection failed"
 msgstr "a biztonságos kapcsolat nem jött létre"
 
-#: bookends_updater.lua:468
+#: bookends_updater.lua:484
 msgid "there was no response"
 msgstr "nem érkezett válasz"
 
-#: bookends_updater.lua:484 bookends_updater.lua:489
+#: bookends_updater.lua:500 bookends_updater.lua:505
 msgid "the file could not be saved"
 msgstr "a fájlt nem sikerült elmenteni"
 
-#: bookends_updater.lua:516
+#: bookends_updater.lua:543
 msgid "Download failed."
 msgstr "A letöltés sikertelen."
 
-#: bookends_updater.lua:528
+#: bookends_updater.lua:555
 msgid "Installation failed: "
 msgstr "A telepítés sikertelen: "
 
-#: bookends_updater.lua:545
+#: bookends_updater.lua:572
 msgid "Bookends updated to v"
 msgstr "A Bookends frissítve erre: v"
 
-#: bookends_updater.lua:546
+#: bookends_updater.lua:573
 msgid "Restart KOReader now?"
 msgstr "Újraindítod a KOReadert most?"
 
-#: bookends_updater.lua:547 main.lua:60
+#: bookends_updater.lua:574 main.lua:60
 msgid "Restart"
 msgstr "Újraindítás"
 
-#: bookends_updater.lua:563
+#: bookends_updater.lua:590
 msgid "Could not install branch:"
 msgstr "A branch telepítése sikertelen:"
 
-#: bookends_updater.lua:580
+#: bookends_updater.lua:607
 msgid "Downloading latest release..."
 msgstr "A legújabb kiadás letöltése..."
 
-#: bookends_updater.lua:591
+#: bookends_updater.lua:618
 msgid "Could not fetch latest release."
 msgstr "A legújabb kiadás lekérése sikertelen."
 
-#: bookends_updater.lua:604
+#: bookends_updater.lua:631
 msgid "Latest release has no downloadable zip."
 msgstr "A legújabb kiadáshoz nincs letölthető zip."
 
@@ -568,51 +568,51 @@ msgstr "Előbeállítás hiba: %1"
 msgid "Preset: %1"
 msgstr "Előbeállítás: %1"
 
-#: main.lua:1116
+#: main.lua:1147
 msgid "Bold"
 msgstr "Félkövér"
 
-#: main.lua:1117
+#: main.lua:1148
 msgid "Italic"
 msgstr "Dőlt"
 
-#: main.lua:1118
+#: main.lua:1149
 msgid "Bold italic"
 msgstr "Félkövér dőlt"
 
-#: main.lua:2743
+#: main.lua:2882
 msgid "Select font"
 msgstr "Betűtípus kiválasztása"
 
-#: main.lua:2784
+#: main.lua:2923
 msgid "Font-family fonts"
 msgstr "Betűtípus-családok"
 
-#: main.lua:2849
+#: main.lua:2988
 msgid "Fonts"
 msgstr "Betűtípusok"
 
-#: main.lua:2943 menu/library_modal.lua:937
+#: main.lua:3082 menu/library_modal.lua:937
 msgid "Page %1 of %2"
 msgstr "%1 / %2 oldal"
 
-#: main.lua:3032 main.lua:3206
+#: main.lua:3171 main.lua:3345
 msgid "Reset"
 msgstr "Visszaállítás"
 
-#: main.lua:3041
+#: main.lua:3180
 msgid "Set font"
 msgstr "Betűtípus beállítása"
 
-#: main.lua:3180 menu/main_menu.lua:502 menu/main_menu.lua:504
+#: main.lua:3319 menu/main_menu.lua:502 menu/main_menu.lua:504
 msgid "Development branch"
 msgstr "Fejlesztői branch"
 
-#: main.lua:3182
+#: main.lua:3321
 msgid "Branch name (leave empty for stable)"
 msgstr "Branch neve (üresen hagyva: stabil)"
 
-#: main.lua:3205
+#: main.lua:3344
 msgid ""
 "This will clear the development branch setting and install the latest stable "
 "release of Bookends, then restart KOReader. Continue?"
@@ -620,28 +620,28 @@ msgstr ""
 "Ez törli a fejlesztői branch beállítást, és telepíti a Bookends legújabb "
 "stabil kiadását, majd újraindítja a KOReadert. Folytatod?"
 
-#: main.lua:3224
+#: main.lua:3363
 msgid "Bookends update available: v"
 msgstr "Bookends frissítés elérhető: v"
 
-#: main.lua:3232 menu/main_menu.lua:667 menu/progress_bar_menu.lua:277
+#: main.lua:3371 menu/main_menu.lua:667 menu/progress_bar_menu.lua:277
 #: menu/progress_bar_menu.lua:529
 msgid "Adjust margins"
 msgstr "Margók beállítása"
 
-#: main.lua:3234 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:532
+#: main.lua:3373 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:532
 msgid "Top"
 msgstr "Fent"
 
-#: main.lua:3235 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:533
+#: main.lua:3374 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:533
 msgid "Bottom"
 msgstr "Lent"
 
-#: main.lua:3236 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:532
+#: main.lua:3375 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:532
 msgid "Left"
 msgstr "Bal"
 
-#: main.lua:3237 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:533
+#: main.lua:3376 menu/progress_bar_menu.lua:158 menu/progress_bar_menu.lua:533
 msgid "Right"
 msgstr "Jobb"
 
@@ -1985,7 +1985,7 @@ msgstr "Fejezet címe a sorszám nélkül (ha felismerhető)"
 msgid "Number from chapter title (when detected)"
 msgstr "A fejezetcím sorszáma (ha felismerhető)"
 
-#: menu/tokens_catalogue.lua:44 menu/tokens_catalogue.lua:161
+#: menu/tokens_catalogue.lua:44 menu/tokens_catalogue.lua:164
 msgid "Current chapter number"
 msgstr "Jelenlegi fejezetszám"
 
@@ -2062,551 +2062,567 @@ msgid "Book language"
 msgstr "Könyv nyelve"
 
 #: menu/tokens_catalogue.lua:63
+msgid "First genre, from the book's keywords"
+msgstr "Első műfaj, a könyv kulcsszavai alapján"
+
+#: menu/tokens_catalogue.lua:64
+msgid "All genres, comma-separated"
+msgstr "Minden műfaj, vesszővel elválasztva"
+
+#: menu/tokens_catalogue.lua:65
 msgid "Document format (EPUB, PDF, etc.)"
 msgstr "Dokumentumformátum (EPUB, PDF, stb.)"
 
-#: menu/tokens_catalogue.lua:64
+#: menu/tokens_catalogue.lua:66
 #, lua-format
 msgid "Calibre column by name, e.g. %calibre{mood}"
 msgstr "Calibre oszlop név szerint, pl. %calibre{mood}"
 
-#: menu/tokens_catalogue.lua:65
+#: menu/tokens_catalogue.lua:67
 msgid "Highlights count"
 msgstr "Kiemelések száma"
 
-#: menu/tokens_catalogue.lua:66
+#: menu/tokens_catalogue.lua:68
 msgid "Notes count"
 msgstr "Jegyzetek száma"
 
-#: menu/tokens_catalogue.lua:67
+#: menu/tokens_catalogue.lua:69
 msgid "Bookmarks count"
 msgstr "Könyvjelzők száma"
 
-#: menu/tokens_catalogue.lua:68
+#: menu/tokens_catalogue.lua:70
 msgid "Annotations count (bookmarks + highlights + notes)"
 msgstr "Annotációk száma (könyvjelzők + kiemelések + jegyzetek)"
 
-#: menu/tokens_catalogue.lua:69
+#: menu/tokens_catalogue.lua:71
 msgid "Current page number"
 msgstr "Jelenlegi oldalszám"
 
-#: menu/tokens_catalogue.lua:70
+#: menu/tokens_catalogue.lua:72
 msgid "Total pages"
 msgstr "Összes oldal"
 
-#: menu/tokens_catalogue.lua:71
+#: menu/tokens_catalogue.lua:73
 msgid "Book percentage read"
 msgstr "Könyv elolvasott aránya"
 
-#: menu/tokens_catalogue.lua:72
+#: menu/tokens_catalogue.lua:74
 msgid "Book % with 1 decimal (e.g. 45.3%)"
 msgstr "Könyv %-a, 1 tizedesjeggyel (pl. 45,3%)"
 
-#: menu/tokens_catalogue.lua:73
+#: menu/tokens_catalogue.lua:75
 msgid "Book % with 2 decimal places"
 msgstr "Könyv %-a, 2 tizedesjeggyel"
 
-#: menu/tokens_catalogue.lua:74
+#: menu/tokens_catalogue.lua:76
 msgid "Book % with 3 decimal places"
 msgstr "Könyv %-a, 3 tizedesjeggyel"
 
-#: menu/tokens_catalogue.lua:75
+#: menu/tokens_catalogue.lua:77
 msgid "Book % with 4 decimal places"
 msgstr "Könyv %-a, 4 tizedesjeggyel"
 
-#: menu/tokens_catalogue.lua:76
+#: menu/tokens_catalogue.lua:78
 msgid "Book percentage left"
 msgstr "Könyvből hátralévő rész aránya"
 
-#: menu/tokens_catalogue.lua:77
+#: menu/tokens_catalogue.lua:79
 msgid "Book % left with 1 decimal"
 msgstr "Hátralévő % 1 tizedesjeggyel"
 
-#: menu/tokens_catalogue.lua:78
+#: menu/tokens_catalogue.lua:80
 msgid "Book % left with 2 decimals"
 msgstr "Hátralévő % 2 tizedesjeggyel"
 
-#: menu/tokens_catalogue.lua:79
+#: menu/tokens_catalogue.lua:81
 msgid "Book % left with 3 decimals"
 msgstr "Hátralévő % 3 tizedesjeggyel"
 
-#: menu/tokens_catalogue.lua:80
+#: menu/tokens_catalogue.lua:82
 msgid "Book % left with 4 decimals"
 msgstr "Hátralévő % 4 tizedesjeggyel"
 
-#: menu/tokens_catalogue.lua:81
+#: menu/tokens_catalogue.lua:83
 msgid "Chapter percentage read"
 msgstr "Fejezet elolvasott aránya"
 
-#: menu/tokens_catalogue.lua:82
+#: menu/tokens_catalogue.lua:84
 msgid "Chapter percentage left"
 msgstr "Fejezetből hátralévő rész aránya"
 
-#: menu/tokens_catalogue.lua:83
+#: menu/tokens_catalogue.lua:85
 msgid "Pages read in chapter"
 msgstr "Fejezetben elolvasott oldalak"
 
-#: menu/tokens_catalogue.lua:84
+#: menu/tokens_catalogue.lua:86
 msgid "Total pages in chapter"
 msgstr "Fejezet összes oldala"
 
-#: menu/tokens_catalogue.lua:85
+#: menu/tokens_catalogue.lua:87
 msgid "Pages left in chapter"
 msgstr "Fejezetből hátralévő oldalak"
 
-#: menu/tokens_catalogue.lua:86
+#: menu/tokens_catalogue.lua:88
 msgid "Pages left in book"
 msgstr "Könyvből hátralévő oldalak"
 
-#: menu/tokens_catalogue.lua:87
+#: menu/tokens_catalogue.lua:89
 msgid "Elastic gap: pushes the rest of the line to the far edge"
 msgstr "Rugalmas térköz: a sor további részét a szélére tolja"
 
-#: menu/tokens_catalogue.lua:88
+#: menu/tokens_catalogue.lua:90
 msgid "Progress bar (configure type in line editor)"
 msgstr "Folyamatjelző (típus a sorszerkesztőben állítható)"
 
-#: menu/tokens_catalogue.lua:89
+#: menu/tokens_catalogue.lua:91
 msgid "Fixed-width progress bar (100px)"
 msgstr "Fix szélességű folyamatjelző (100px)"
 
-#: menu/tokens_catalogue.lua:90
+#: menu/tokens_catalogue.lua:92
 msgid "Progress bar, 10px tall"
 msgstr "10px magas folyamatjelző"
 
-#: menu/tokens_catalogue.lua:91
+#: menu/tokens_catalogue.lua:93
 msgid "Progress bar, 200px wide and 4px tall"
 msgstr "200px széles, 4px magas folyamatjelző"
 
-#: menu/tokens_catalogue.lua:92
+#: menu/tokens_catalogue.lua:94
 msgid "Current time (24h, same as %time_24h)"
 msgstr "Jelenlegi idő (24 órás, mint a %time_24h)"
 
-#: menu/tokens_catalogue.lua:93
+#: menu/tokens_catalogue.lua:95
 msgid "12-hour clock"
 msgstr "12 órás formátum"
 
-#: menu/tokens_catalogue.lua:94
+#: menu/tokens_catalogue.lua:96
 msgid "24-hour clock"
 msgstr "24 órás formátum"
 
-#: menu/tokens_catalogue.lua:95
+#: menu/tokens_catalogue.lua:97
 msgid "Date short (28 Mar)"
 msgstr "Dátum, rövid (márc. 28.)"
 
-#: menu/tokens_catalogue.lua:96
+#: menu/tokens_catalogue.lua:98
 msgid "Date long (28 March 2026)"
 msgstr "Dátum, hosszú (2026. március 28.)"
 
-#: menu/tokens_catalogue.lua:97
+#: menu/tokens_catalogue.lua:99
 msgid "Date numeric (28/03/2026)"
 msgstr "Dátum, számjegyekkel (2026.03.28.)"
 
-#: menu/tokens_catalogue.lua:98
+#: menu/tokens_catalogue.lua:100
 msgid "Weekday (Friday)"
 msgstr "Hét napja (péntek)"
 
-#: menu/tokens_catalogue.lua:99
+#: menu/tokens_catalogue.lua:101
 msgid "Weekday short (Fri)"
 msgstr "Hét napja, rövidítve (pén)"
 
-#: menu/tokens_catalogue.lua:100
+#: menu/tokens_catalogue.lua:102
 msgid "Custom date/time format (strftime spec)"
 msgstr "Egyéni dátum/idő formátum (strftime szintaxis)"
 
-#: menu/tokens_catalogue.lua:101
+#: menu/tokens_catalogue.lua:103
 msgid "Time left in chapter"
 msgstr "Fejezetből hátralévő idő"
 
-#: menu/tokens_catalogue.lua:102
+#: menu/tokens_catalogue.lua:104
 msgid "Time left in book"
 msgstr "Könyvből hátralévő idő"
 
-#: menu/tokens_catalogue.lua:103
+#: menu/tokens_catalogue.lua:105
 msgid "Time left in chapter (hours only)"
 msgstr "Fejezetből hátralévő idő (csak óra)"
 
-#: menu/tokens_catalogue.lua:104
+#: menu/tokens_catalogue.lua:106
 msgid "Time left in chapter (minutes only)"
 msgstr "Fejezetből hátralévő idő (csak perc)"
 
-#: menu/tokens_catalogue.lua:105
+#: menu/tokens_catalogue.lua:107
 msgid "Time left in book (hours only)"
 msgstr "Könyvből hátralévő idő (csak óra)"
 
-#: menu/tokens_catalogue.lua:106
+#: menu/tokens_catalogue.lua:108
 msgid "Time left in book (minutes only)"
 msgstr "Könyvből hátralévő idő (csak perc)"
 
-#: menu/tokens_catalogue.lua:107
+#: menu/tokens_catalogue.lua:109
 msgid "Chapter finish time (clock)"
 msgstr "Fejezet befejezésének időpontja"
 
-#: menu/tokens_catalogue.lua:108
+#: menu/tokens_catalogue.lua:110
 msgid "Book finish time (clock)"
 msgstr "Könyv befejezésének időpontja"
 
-#: menu/tokens_catalogue.lua:109
+#: menu/tokens_catalogue.lua:111
 msgid "Chapter finish time (custom format)"
 msgstr "Fejezet befejezési ideje (egyéni formátum)"
 
-#: menu/tokens_catalogue.lua:110
+#: menu/tokens_catalogue.lua:112
 msgid "Book finish date (projected)"
 msgstr "Könyv befejezésének dátuma (becsült)"
 
-#: menu/tokens_catalogue.lua:111
+#: menu/tokens_catalogue.lua:113
 msgid "Book finish date (custom format)"
 msgstr "Könyv befejezési dátuma (egyéni formátum)"
 
-#: menu/tokens_catalogue.lua:112
+#: menu/tokens_catalogue.lua:114
 msgid "Session reading time"
 msgstr "Munkamenet olvasási ideje"
 
-#: menu/tokens_catalogue.lua:113
+#: menu/tokens_catalogue.lua:115
 msgid "Session pages read"
 msgstr "Munkamenetben olvasott oldalak"
 
-#: menu/tokens_catalogue.lua:114
+#: menu/tokens_catalogue.lua:116
+msgid "Pages advanced this session (stable pages when available)"
+msgstr "Munkamenetben előrehaladt oldalak (fix oldalszámok, ha vannak)"
+
+#: menu/tokens_catalogue.lua:117
 msgid "Pages read today (all books)"
 msgstr "Mai oldalak (összes könyv)"
 
-#: menu/tokens_catalogue.lua:115
+#: menu/tokens_catalogue.lua:118
 msgid "Reading time today (all books)"
 msgstr "Mai olvasási idő (összes könyv)"
 
-#: menu/tokens_catalogue.lua:116
+#: menu/tokens_catalogue.lua:119
 msgid "Pages read today (current book)"
 msgstr "Mai oldalak (jelenlegi könyv)"
 
-#: menu/tokens_catalogue.lua:117
+#: menu/tokens_catalogue.lua:120
 msgid "Reading time today (current book)"
 msgstr "Mai olvasási idő (jelenlegi könyv)"
 
-#: menu/tokens_catalogue.lua:118
+#: menu/tokens_catalogue.lua:121
 msgid "Pages read in last 7 days (current book)"
 msgstr "Oldalak az utolsó 7 napban (jelenlegi könyv)"
 
-#: menu/tokens_catalogue.lua:119
+#: menu/tokens_catalogue.lua:122
 msgid "Reading time in last 7 days (current book)"
 msgstr "Olvasási idő az utolsó 7 napban (jelenlegi könyv)"
 
-#: menu/tokens_catalogue.lua:120 menu/tokens_catalogue.lua:171
+#: menu/tokens_catalogue.lua:123 menu/tokens_catalogue.lua:174
 msgid "Day streak (any book)"
 msgstr "Sorozatos napok (bármely könyv)"
 
-#: menu/tokens_catalogue.lua:121 menu/tokens_catalogue.lua:172
+#: menu/tokens_catalogue.lua:124 menu/tokens_catalogue.lua:175
 msgid "Day streak (current book)"
 msgstr "Sorozatos napok (jelenlegi könyv)"
 
-#: menu/tokens_catalogue.lua:122
+#: menu/tokens_catalogue.lua:125
 msgid "Lifetime reading time (all books)"
 msgstr "Élethosszi olvasási idő (összes könyv)"
 
-#: menu/tokens_catalogue.lua:123
+#: menu/tokens_catalogue.lua:126
 msgid "Books finished (lifetime)"
 msgstr "Befejezett könyvek (élethossz)"
 
-#: menu/tokens_catalogue.lua:124
+#: menu/tokens_catalogue.lua:127
 msgid "Reading speed (pages/hour)"
 msgstr "Olvasási sebesség (oldal/óra)"
 
-#: menu/tokens_catalogue.lua:125
+#: menu/tokens_catalogue.lua:128
 msgid "Average time per page"
 msgstr "Átlagos idő oldalanként"
 
-#: menu/tokens_catalogue.lua:126
+#: menu/tokens_catalogue.lua:129
 msgid "Total reading time for book"
 msgstr "Könyv teljes olvasási ideje"
 
-#: menu/tokens_catalogue.lua:127
+#: menu/tokens_catalogue.lua:130
 msgid "Pages read of this book (lifetime)"
 msgstr "Ebből a könyvből olvasott oldalak (élethossz)"
 
-#: menu/tokens_catalogue.lua:128
+#: menu/tokens_catalogue.lua:131
 msgid "Book read percentage (skip-aware)"
 msgstr "Könyv elolvasott aránya (átugrásérzékeny)"
 
-#: menu/tokens_catalogue.lua:129
+#: menu/tokens_catalogue.lua:132
 msgid "Days reading this book"
 msgstr "Hány napja olvasod ezt a könyvet"
 
-#: menu/tokens_catalogue.lua:130
+#: menu/tokens_catalogue.lua:133
 msgid "Pages per day for this book"
 msgstr "Napi oldalak ennél a könyvnél"
 
-#: menu/tokens_catalogue.lua:131
+#: menu/tokens_catalogue.lua:134
 msgid "Battery level"
 msgstr "Akkumulátor szintje"
 
-#: menu/tokens_catalogue.lua:132
+#: menu/tokens_catalogue.lua:135
 msgid "Wi-Fi icon (also answers to %wifi_icon)"
 msgstr "Wi-Fi ikon (%wifi_icon néven is elérhető)"
 
-#: menu/tokens_catalogue.lua:133
+#: menu/tokens_catalogue.lua:136
 msgid "Wi-Fi icon, Bookshelf's name for it"
 msgstr "Wi-Fi ikon, a Bookshelf ezen a néven használja"
 
-#: menu/tokens_catalogue.lua:134
+#: menu/tokens_catalogue.lua:137
 msgid "Plugin content"
 msgstr "Plugin tartalom"
 
-#: menu/tokens_catalogue.lua:135
+#: menu/tokens_catalogue.lua:138
 msgid "Frontlight brightness"
 msgstr "Háttérvilágítás fényerő"
 
-#: menu/tokens_catalogue.lua:136 menu/tokens_catalogue.lua:177
+#: menu/tokens_catalogue.lua:139 menu/tokens_catalogue.lua:181
 msgid "Frontlight brightness %"
 msgstr "Háttérvilágítás fényerő %"
 
-#: menu/tokens_catalogue.lua:137
+#: menu/tokens_catalogue.lua:140
 msgid "Frontlight warmth"
 msgstr "Háttérvilágítás melegség"
 
-#: menu/tokens_catalogue.lua:138 menu/tokens_catalogue.lua:178
+#: menu/tokens_catalogue.lua:141 menu/tokens_catalogue.lua:182
 msgid "Frontlight warmth %"
 msgstr "Háttérvilágítás melegség %"
 
-#: menu/tokens_catalogue.lua:139
+#: menu/tokens_catalogue.lua:142
 msgid "RAM used %"
 msgstr "RAM-használat %"
 
-#: menu/tokens_catalogue.lua:140
+#: menu/tokens_catalogue.lua:143
 msgid "System memory used (MiB)"
 msgstr "Rendszermemória használat (MiB)"
 
-#: menu/tokens_catalogue.lua:141
+#: menu/tokens_catalogue.lua:144
 msgid "RAM used (MiB)"
 msgstr "RAM-használat (MiB)"
 
-#: menu/tokens_catalogue.lua:142
+#: menu/tokens_catalogue.lua:145
 msgid "Free disk space"
 msgstr "Szabad tárhely"
 
-#: menu/tokens_catalogue.lua:143
+#: menu/tokens_catalogue.lua:146
 msgid "Page X of Y, em-dash framed"
 msgstr "X / Y oldal, gondolatjelek között"
 
-#: menu/tokens_catalogue.lua:144
+#: menu/tokens_catalogue.lua:147
 msgid "Title ⋮ author (italic)"
 msgstr "Cím ⋮ szerző (dőlt)"
 
-#: menu/tokens_catalogue.lua:145
+#: menu/tokens_catalogue.lua:148
 msgid "Title in a chosen font"
 msgstr "Cím kiválasztott betűtípussal"
 
-#: menu/tokens_catalogue.lua:146
+#: menu/tokens_catalogue.lua:149
 msgid "Bookmark(s) count + label"
 msgstr "Könyvjelző(k) száma + felirat"
 
-#: menu/tokens_catalogue.lua:147
+#: menu/tokens_catalogue.lua:150
 msgid "Highlight(s) count + label"
 msgstr "Kiemelés(ek) száma + felirat"
 
-#: menu/tokens_catalogue.lua:148
+#: menu/tokens_catalogue.lua:151
 msgid "Hourglass session timer + pages"
 msgstr "Homokóra munkamenet-időzítő + oldalak"
 
-#: menu/tokens_catalogue.lua:149
+#: menu/tokens_catalogue.lua:152
 msgid "Sparkles 1"
 msgstr "Csillogás 1"
 
-#: menu/tokens_catalogue.lua:150
+#: menu/tokens_catalogue.lua:153
 msgid "Sparkles 2"
 msgstr "Csillogás 2"
 
-#: menu/tokens_catalogue.lua:154
+#: menu/tokens_catalogue.lua:157
 msgid "If Wi-Fi is on"
 msgstr "Ha a Wi-Fi be van kapcsolva"
 
-#: menu/tokens_catalogue.lua:155
+#: menu/tokens_catalogue.lua:158
 msgid "If connected"
 msgstr "Ha kapcsolódva van"
 
-#: menu/tokens_catalogue.lua:156
+#: menu/tokens_catalogue.lua:159
 msgid "Battery 0–100"
 msgstr "Akkumulátor 0–100"
 
-#: menu/tokens_catalogue.lua:157
+#: menu/tokens_catalogue.lua:160
 msgid "If charging"
 msgstr "Ha töltődik"
 
-#: menu/tokens_catalogue.lua:158
+#: menu/tokens_catalogue.lua:161
 msgid "If page-turn flipped"
 msgstr "Ha az oldalváltás iránya megfordult"
 
-#: menu/tokens_catalogue.lua:159
+#: menu/tokens_catalogue.lua:162
 msgid "Book progress 0–100"
 msgstr "Könyv folyamata 0–100"
 
-#: menu/tokens_catalogue.lua:160
+#: menu/tokens_catalogue.lua:163
 msgid "Chapter progress 0–100"
 msgstr "Fejezet folyamata 0–100"
 
-#: menu/tokens_catalogue.lua:162
+#: menu/tokens_catalogue.lua:165
 msgid "Total chapters"
 msgstr "Összes fejezet"
 
-#: menu/tokens_catalogue.lua:163
+#: menu/tokens_catalogue.lua:166
 msgid "Minutes left in chapter"
 msgstr "Fejezetből hátralévő percek"
 
-#: menu/tokens_catalogue.lua:164
+#: menu/tokens_catalogue.lua:167
 msgid "Whole hours left in chapter"
 msgstr "Fejezetből hátralévő egész órák"
 
-#: menu/tokens_catalogue.lua:165
+#: menu/tokens_catalogue.lua:168
 msgid "Whole hours left in book"
 msgstr "Könyvből hátralévő egész órák"
 
-#: menu/tokens_catalogue.lua:166
+#: menu/tokens_catalogue.lua:169
 msgid "Pages per hour"
 msgstr "Oldal/óra"
 
-#: menu/tokens_catalogue.lua:167
+#: menu/tokens_catalogue.lua:170
 msgid "Minutes this session"
 msgstr "Ennyi perce tart a munkamenet"
 
-#: menu/tokens_catalogue.lua:168
+#: menu/tokens_catalogue.lua:171
 msgid "Pages this session"
 msgstr "Munkamenetben olvasott oldalak"
 
-#: menu/tokens_catalogue.lua:169
+#: menu/tokens_catalogue.lua:172
 msgid "Pages read today"
 msgstr "Mai oldalak"
 
-#: menu/tokens_catalogue.lua:170
+#: menu/tokens_catalogue.lua:173
 msgid "Pages today (current book)"
 msgstr "Mai oldalak (jelenlegi könyv)"
 
-#: menu/tokens_catalogue.lua:173
+#: menu/tokens_catalogue.lua:176
 msgid "Books finished"
 msgstr "Befejezett könyvek"
 
-#: menu/tokens_catalogue.lua:174
+#: menu/tokens_catalogue.lua:177
 msgid "Book read % (skip-aware)"
 msgstr "Könyv elolvasott % (átugrásérzékeny)"
 
-#: menu/tokens_catalogue.lua:175
+#: menu/tokens_catalogue.lua:178
 msgid "odd / even"
 msgstr "páratlan / páros"
 
-#: menu/tokens_catalogue.lua:176
+#: menu/tokens_catalogue.lua:179
+msgid "odd / even in chapter"
+msgstr "páratlan / páros a fejezetben"
+
+#: menu/tokens_catalogue.lua:180
 msgid "If frontlight on"
 msgstr "Ha a háttérvilágítás be van kapcsolva"
 
-#: menu/tokens_catalogue.lua:179
+#: menu/tokens_catalogue.lua:183
 msgid "If night mode on"
 msgstr "Ha az éjszakai mód be van kapcsolva"
 
-#: menu/tokens_catalogue.lua:180
+#: menu/tokens_catalogue.lua:184
 msgid "EPUB / PDF / CBZ / …"
 msgstr "EPUB / PDF / CBZ / …"
 
-#: menu/tokens_catalogue.lua:181
+#: menu/tokens_catalogue.lua:185
 msgid "Current HH:MM (24h)"
 msgstr "Jelenlegi idő ÓÓ:PP (24 órás)"
 
-#: menu/tokens_catalogue.lua:182
+#: menu/tokens_catalogue.lua:186
 msgid "Mon–Sun"
 msgstr "hét–vas"
 
-#: menu/tokens_catalogue.lua:183
+#: menu/tokens_catalogue.lua:187
 msgid "If book has title"
 msgstr "Ha a könyvnek van címe"
 
-#: menu/tokens_catalogue.lua:184
+#: menu/tokens_catalogue.lua:188
 msgid "If book has author"
 msgstr "Ha a könyvnek van szerzője"
 
-#: menu/tokens_catalogue.lua:185
+#: menu/tokens_catalogue.lua:189
 msgid "If book in series"
 msgstr "Ha a könyv egy sorozat része"
 
-#: menu/tokens_catalogue.lua:186
+#: menu/tokens_catalogue.lua:190
 msgid "If chapter has title"
 msgstr "Ha a fejezetnek van címe"
 
-#: menu/tokens_catalogue.lua:187
+#: menu/tokens_catalogue.lua:191
 msgid "Chapter title at depth 1/2/3"
 msgstr "Fejezetcím, 1/2/3. szint"
 
-#: menu/tokens_catalogue.lua:188
+#: menu/tokens_catalogue.lua:192
 msgid "If book has 2+ authors"
 msgstr "Ha a könyvnek 2 vagy több szerzője van"
 
-#: menu/tokens_catalogue.lua:189
+#: menu/tokens_catalogue.lua:193
 msgid "Author with et al. for multi-author"
 msgstr "Szerző „és mtsai” jelöléssel több szerző esetén"
 
-#: menu/tokens_catalogue.lua:190
+#: menu/tokens_catalogue.lua:194
 msgid "Wi-Fi icon only when Wi-Fi enabled"
 msgstr "Wi-Fi ikon csak ha a Wi-Fi engedélyezve van"
 
-#: menu/tokens_catalogue.lua:191
+#: menu/tokens_catalogue.lua:195
 msgid "Low-battery warning"
 msgstr "Alacsony akkumulátorszint figyelmeztetés"
 
-#: menu/tokens_catalogue.lua:192
+#: menu/tokens_catalogue.lua:196
 msgid "Bolt when charging"
 msgstr "Villám, ha töltődik"
 
-#: menu/tokens_catalogue.lua:193
+#: menu/tokens_catalogue.lua:197
 msgid "Arrow when page-turn flipped"
 msgstr "Nyíl, ha az oldalváltás iránya megfordult"
 
-#: menu/tokens_catalogue.lua:194
+#: menu/tokens_catalogue.lua:198
 msgid "Odd/even variations"
 msgstr "Páratlan/páros variációk"
 
-#: menu/tokens_catalogue.lua:195
+#: menu/tokens_catalogue.lua:199
 msgid "Near end of book"
 msgstr "A könyv vége közeledik"
 
-#: menu/tokens_catalogue.lua:196
+#: menu/tokens_catalogue.lua:200
 msgid "Frontlight on/off label"
 msgstr "Háttérvilágítás be/ki felirat"
 
-#: menu/tokens_catalogue.lua:197
+#: menu/tokens_catalogue.lua:201
 msgid "If format"
 msgstr "Ha a formátum"
 
-#: menu/tokens_catalogue.lua:198
+#: menu/tokens_catalogue.lua:202
 msgid "Weekends"
 msgstr "Hétvégék"
 
-#: menu/tokens_catalogue.lua:199
+#: menu/tokens_catalogue.lua:203
 msgid "Time window"
 msgstr "Időablak"
 
-#: menu/tokens_catalogue.lua:200
+#: menu/tokens_catalogue.lua:204
 msgid "Non-series books"
 msgstr "Sorozaton kívüli könyvek"
 
-#: menu/tokens_catalogue.lua:201
+#: menu/tokens_catalogue.lua:205
 msgid "Fall back to shallower chapter"
 msgstr "Visszaesés egy alacsonyabb fejezetszintre"
 
-#: menu/tokens_catalogue.lua:202
+#: menu/tokens_catalogue.lua:206
 msgid "Chapter number then title"
 msgstr "Fejezetszám, majd cím"
 
-#: menu/tokens_catalogue.lua:203
+#: menu/tokens_catalogue.lua:207
 msgid "Long books (20+ chapters)"
 msgstr "Hosszú könyvek (20+ fejezet)"
 
-#: menu/tokens_catalogue.lua:207
+#: menu/tokens_catalogue.lua:211
 msgid "Time left in chapter, Kindle style"
 msgstr "Fejezetből hátralévő idő, Kindle-stílusban"
 
-#: menu/tokens_catalogue.lua:208
+#: menu/tokens_catalogue.lua:212
 msgid "Time left in book, Kindle style"
 msgstr "Könyvből hátralévő idő, Kindle-stílusban"
 
-#: menu/tokens_catalogue.lua:209
+#: menu/tokens_catalogue.lua:213
 msgid "Chapter title only when different from book title"
 msgstr "Fejezetcím csak akkor, ha különbözik a könyv címétől"
 
-#: menu/tokens_catalogue.lua:210
+#: menu/tokens_catalogue.lua:214
 msgid "Battery bars"
 msgstr "Akkumulátor szintsávok"
 
