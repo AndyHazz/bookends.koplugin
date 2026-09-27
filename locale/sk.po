@@ -1284,7 +1284,7 @@ msgstr "Nastavenia Bookends"
 
 #: menu/main_menu.lua:172
 msgid "plugin update available"
-msgstr "dostupná aktualizácia pluginu"
+msgstr "dostupná aktualizácia doplnku"
 
 #: menu/main_menu.lua:189 menu/main_menu.lua:191
 msgid "Preset"
@@ -2279,7 +2279,7 @@ msgstr "Ikona Wi-Fi, názov podľa Bookshelf"
 
 #: menu/tokens_catalogue.lua:134
 msgid "Plugin content"
-msgstr "Obsah pluginu"
+msgstr "Obsah doplnku"
 
 #: menu/tokens_catalogue.lua:135
 msgid "Frontlight brightness"
