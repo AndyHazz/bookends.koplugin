@@ -1993,6 +1993,14 @@ msgid "Book language"
 msgstr "Jazyk knihy"
 
 #: menu/tokens_catalogue.lua:63
+msgid "First genre, from the book's keywords"
+msgstr "Prvý žáner z kľúčových slov knihy"
+
+#: menu/tokens_catalogue.lua:64
+msgid "All genres, comma-separated"
+msgstr "Všetky žánre oddelené čiarkou"
+
+#: menu/tokens_catalogue.lua:63
 msgid "Document format (EPUB, PDF, etc.)"
 msgstr "Formát dokumentu (EPUB, PDF atď.)"
 
@@ -2196,6 +2204,10 @@ msgstr "Čas čítania v tejto relácii"
 #: menu/tokens_catalogue.lua:113
 msgid "Session pages read"
 msgstr "Prečítané strany v tejto relácii"
+
+#: menu/tokens_catalogue.lua:116
+msgid "Pages advanced this session (stable pages when available)"
+msgstr "Posun v stranách v tejto relácii (stabilné čísla strán, ak sú k dispozícii)"
 
 #: menu/tokens_catalogue.lua:114
 msgid "Pages read today (all books)"
@@ -2420,6 +2432,10 @@ msgstr "Prečítané % knihy (so zohľadnením preskočení)"
 #: menu/tokens_catalogue.lua:175
 msgid "odd / even"
 msgstr "nepárne / párne"
+
+#: menu/tokens_catalogue.lua:179
+msgid "odd / even in chapter"
+msgstr "nepárne / párne v kapitole"
 
 #: menu/tokens_catalogue.lua:176
 msgid "If frontlight on"
