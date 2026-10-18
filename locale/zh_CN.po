@@ -5,8 +5,8 @@ msgstr ""
 "Project-Id-Version: bookends\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-28 23:26+0100\n"
-"PO-Revision-Date: 2026-07-15 09:59+0800\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2026-10-18 17:37+0800\n"
+"Last-Translator: gsWang <gs.wang@outlook.com>\n"
 "Language-Team: Chinese (Simplified)\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
@@ -127,7 +127,7 @@ msgstr "空心环形"
 
 #: bookends_line_editor.lua:218 menu/progress_bar_menu.lua:179
 msgid "Pacman"
-msgstr "极简"
+msgstr "吃豆人"
 
 #: bookends_line_editor.lua:222 menu/progress_bar_menu.lua:160
 msgid "Chapter ticks: off"
@@ -167,7 +167,7 @@ msgstr "今天"
 
 #: bookends_line_editor.lua:246 menu/progress_bar_menu.lua:476
 msgid "Chevron"
-msgstr "箭头"
+msgstr "V 形箭头"
 
 #: bookends_line_editor.lua:285
 msgid "Disable custom colours"
@@ -317,7 +317,7 @@ msgstr "图标"
 
 #: bookends_line_editor.lua:816
 msgid "Tokens"
-msgstr "标记"
+msgstr "词元"
 
 #: bookends_line_editor.lua:826 main.lua:3383 menu/main_menu.lua:57
 #: menu/preset_manager_modal.lua:1440 menu/preset_manager_modal.lua:1600
@@ -620,7 +620,8 @@ msgid ""
 "This will clear the development branch setting and install the latest stable "
 "release of Bookends, then restart KOReader. Continue?"
 msgstr ""
-"此操作将清除开发分支设置，并安装最新的稳定版，然后将重启阅读器，是否继续？"
+"此操作将清除开发分支设置，并安装阅读信息栏的最新稳定版，然后重启 KOReader，是"
+"否继续？"
 
 #: main.lua:3421
 msgid "Bookends update available: v"
@@ -656,7 +657,7 @@ msgid ""
 "Configurable text overlays at screen corners and edges with token expansion "
 "and icon support."
 msgstr ""
-"可以在屏幕四周显示自定义文字，并自动读取系统信息，除了文字，还支持图标。"
+"可以在屏幕四周显示自定义文本，并自动读取系统信息，除了文本，还支持图标。"
 
 #: menu/colours_menu.lua:73
 msgid "per style"
@@ -737,11 +738,11 @@ msgstr "书籍"
 #: menu/colours_menu.lua:297 menu/colours_menu.lua:304
 #: menu/colours_menu.lua:367
 msgid "text"
-msgstr "文字"
+msgstr "文本"
 
 #: menu/colours_menu.lua:348 menu/colours_menu.lua:352
 msgid "Text color"
-msgstr "文字颜色"
+msgstr "文本颜色"
 
 #: menu/colours_menu.lua:362 menu/colours_menu.lua:367
 msgid "Icon color"
@@ -1248,7 +1249,7 @@ msgstr "按名称搜索 %1 个图标…"
 
 #: menu/icons_library.lua:435
 msgid "Drop .svg or .png files in koreader/icons/"
-msgstr "将 .svg 或 .png 文件放入 koreader/icons/ 目录。"
+msgstr "将 .svg 或 .png 文件放入 koreader/icons/ 目录"
 
 #: menu/library_modal.lua:442
 msgid "Search…"
@@ -1333,8 +1334,8 @@ msgid ""
 "and can reduce e-ink flicker on some devices. All status bar features are "
 "available as Bookends tokens."
 msgstr ""
-"隐藏阅读器内置的状态栏，此举可简化渲染流程，并可在部分设备上减少电子墨水屏闪"
-"烁，所有状态栏功能均可用作插件的占位符使用。"
+"隐藏 KOReader 内置的状态栏，此举可简化渲染流程，并可在部分设备上减少电子墨水"
+"屏闪烁，所有状态栏功能都可用作阅读信息栏的词元。"
 
 #: menu/main_menu.lua:306 menu/main_menu.lua:316
 #: menu/preset_manager_modal.lua:1638
@@ -1388,11 +1389,11 @@ msgstr "长按进度条跳转文档"
 msgid ""
 "Opens the skim dialog when you long-press on a full-width progress bar. "
 "Replaces the stock status bar's long-press to skim feature."
-msgstr "长按全宽进度条时，将打开跳转对话框，取代原生状态栏的长按跳转功能。"
+msgstr "长按全宽进度条时打开略读对话框，取代原生状态栏的长按略读功能。"
 
 #: menu/main_menu.lua:429
 msgid "Include current page in pages-left tokens"
-msgstr "剩余页数标记中计入当前页"
+msgstr "剩余页数词元中计入当前页"
 
 #: menu/main_menu.lua:430
 msgid ""
@@ -1674,25 +1675,25 @@ msgstr "应署名谁为作者？"
 
 #: menu/preset_manager_modal.lua:1796
 msgid "One-line description of this preset"
-msgstr "用一行文字描述此预设"
+msgstr "用一行文本描述此预设"
 
 #: menu/preset_manager_modal.lua:1815
 msgid ""
 "'%1' is one of Bookends' default placeholder names. Give your preset "
 "something distinctive — that's how it'll appear in the gallery."
 msgstr ""
-"“%1”是阅读信息栏默认的占位符名称，给你的预设起个独特的名字，它将显示在作品库"
+"“%1”是阅读信息栏默认的占位符名称，给你的预设起个独特的名字，它将显示在画廊"
 "中。"
 
 #: menu/preset_manager_modal.lua:1821
 msgid ""
 "Write a short description that tells gallery users what your preset shows"
-msgstr "写一段简短描述，告诉画廊用户您的预设展示什么"
+msgstr "写一段简短描述，告诉画廊用户你的预设展示什么"
 
 #: menu/preset_manager_modal.lua:1843
 msgid ""
 "Submit '%1' by %2 to the gallery? A pull request will be opened for review."
-msgstr "将%2的“%1”提交到画廊？系统将发起拉取请求等待审核。"
+msgstr "将 %2 的“%1”提交到画廊？系统将发起拉取请求等待审核。"
 
 #: menu/preset_manager_modal.lua:1845
 msgid "Submit"
@@ -1703,7 +1704,7 @@ msgid ""
 "A preset called '%1' is already in the gallery. Rename your preset (Manage… "
 "→ Rename…) before submitting, so it doesn't collide with the existing entry."
 msgstr ""
-"画廊中已存在名为“%1”的预设。请在提交前通过「管理…」>「重命名…」重命名你的预"
+"画廊中已存在名为“%1”的预设。请在提交前通过「管理… > 重命名…」重命名你的预"
 "设，以避免与现有条目冲突。"
 
 #: menu/preset_manager_modal.lua:1868
@@ -1716,22 +1717,24 @@ msgid ""
 "\n"
 "The maintainer will review it before it appears in the Gallery."
 msgstr ""
-"感谢！您的提交是请求 #%1，\n"
-"维护者审核后将在画廊中展示。"
+"感谢！你的提交是拉取请求 #%1。\n"
+"\n"
+"维护者审核通过后，它就会出现在画廊中。"
 
 #: menu/preset_manager_modal.lua:1889
 msgid ""
 "A preset called '%1' is already in the gallery. Rename your preset (Manage… "
 "→ Rename…) before submitting."
 msgstr ""
-"名为“%1”的预设已存在于画廊中，提交前请通过「管理…」>「重命名…」重命名您的预"
+"名为“%1”的预设已存在于画廊中，提交前请通过「管理… > 重命名…」重命名你的预"
 "设。"
 
 #: menu/preset_manager_modal.lua:1892
 msgid ""
 "A submission for '%1' is already awaiting review. Wait for that one to be "
 "reviewed, or rename your preset to submit under a different name."
-msgstr "“%1”的提交已在等待审核，请等待该审核完成，或重命名预设以其他名称提交。"
+msgstr ""
+"「%1」的提交已在等待审核，请等待该审核完成，或重命名预设以其他名称提交。"
 
 #: menu/preset_manager_modal.lua:1895
 msgid "Submission failed: %1"
@@ -1791,9 +1794,10 @@ msgid ""
 "\n"
 "Install under a new name to keep both."
 msgstr ""
-"“%1”已存在于你的库中。\n"
+"“%1”已存在于你的预设库中。\n"
 "\n"
 "替换将用当前画廊版本覆盖你的本地副本。所有本地编辑将丢失。\n"
+"\n"
 "以新名称安装可同时保留两者。"
 
 #: menu/preset_manager_modal.lua:2018
@@ -1879,7 +1883,7 @@ msgid ""
 "different screen. Adjust margins then sets that distance; negative values "
 "move the bar in towards the text."
 msgstr ""
-"让进度条与顶部或底部的文本行保持固定距离，这样当文字变大或变小时（例如在另一"
+"让进度条与顶部或底部的文本行保持固定距离，这样当文本变大或变小时（例如在另一"
 "块屏幕上）它仍保持在原位。随后可在「调整边距」中设置这个距离；负值会使进度条"
 "向文本靠近。"
 
@@ -1977,11 +1981,11 @@ msgstr "章节标题（第 3 级）"
 
 #: menu/tokens_catalogue.lua:42
 msgid "Chapter title without leading number (when detected)"
-msgstr "章节标题（去除前导数字）"
+msgstr "章节标题（去除前导数字，若可识别）"
 
 #: menu/tokens_catalogue.lua:43
 msgid "Number from chapter title (when detected)"
-msgstr "章节标题中的数字"
+msgstr "章节标题中的数字（若可识别）"
 
 #: menu/tokens_catalogue.lua:44 menu/tokens_catalogue.lua:164
 msgid "Current chapter number"
@@ -2009,7 +2013,7 @@ msgstr "作者数量"
 
 #: menu/tokens_catalogue.lua:50
 msgid "Short author list ('A, B, et al.' for 3+)"
-msgstr "简短作者列表（3 位以上时为“A, B 等”）"
+msgstr "简短作者列表（3 位以上时为“第一作者, 第二作者等”）"
 
 #: menu/tokens_catalogue.lua:51
 msgid "Reading status value (unread/reading/on_hold/finished)"
@@ -2017,7 +2021,7 @@ msgstr "阅读状态值（unread/reading/on_hold/finished）"
 
 #: menu/tokens_catalogue.lua:52
 msgid "Reading status as a word"
-msgstr "阅读状态文字"
+msgstr "阅读状态文本"
 
 #: menu/tokens_catalogue.lua:53
 msgid "Your rating as stars"
@@ -2069,7 +2073,7 @@ msgstr "所有类型，逗号分隔"
 
 #: menu/tokens_catalogue.lua:65
 msgid "Document format (EPUB, PDF, etc.)"
-msgstr "文档格式（EPUB、PDF等）"
+msgstr "文档格式（EPUB、PDF 等）"
 
 #: menu/tokens_catalogue.lua:66
 #, lua-format
@@ -2626,11 +2630,11 @@ msgstr "电池条"
 
 #: menu/tokens_library.lua:335
 msgid "Tokens library"
-msgstr "标记库"
+msgstr "词元库"
 
 #: menu/tokens_library.lua:336
 msgid "Tokens & conditionals"
-msgstr "标记与条件"
+msgstr "词元与条件"
 
 #: menu/tokens_library.lua:337
 msgid ""
@@ -2695,32 +2699,33 @@ msgid ""
 msgstr ""
 "词元\n"
 "\n"
-"词元是占位符，每次渲染预设时会被替换为实时数据。书籍/进度/时间/会话/设备芯片"
-"中的每个条目都是一个词元，写作 %名称。它们会内联展开：\n"
-"  %书名 — %当前页码/%总页数\n"
+"词元是占位符，每次渲染预设时都会被替换为实时数据。「书籍／进度／时间／会话／"
+"设备」这几个芯片中的每个条目都是一个词元，写作 %name 的形式。它们会内联展"
+"开：\n"
+"  %title — %page_num/%page_count\n"
 "  → 1984 — 12/268\n"
 "\n"
-"词元名称会一直读取到下一个非字母字符为止，因此后面紧跟文字时需要先加一个空格"
-"（或标点符号）。如需让文字紧贴词元，可将名称用尖括号包裹：\n"
+"词元名称会一直读取到下一个非字母字符为止，因此后面紧接文本时要先加一个空格"
+"（或标点符号）。若要让文本紧贴词元，可用尖括号把名称包住：\n"
 "  %<book_time_left_h>h%<book_time_left_m>m\n"
 "  → 4h40m\n"
 "尖括号内同样支持宽度限制：%<author{200}>。\n"
 "\n"
 "内联样式\n"
 "\n"
-"用标签包裹一段文本来单独改变其样式：\n"
+"用标签包住一段文本，就能单独改变那一小段的样式：\n"
 "  [b]…[/b] 粗体   [i]…[/i] 斜体   [u]…[/u] 大写\n"
 "  [c=50]…[/c] 灰色 0–100   [c=#RRGGBB]…[/c] 颜色\n"
-"  [font=字体名]…[/font] 为该段切换字体\n"
+"  [font=Name]…[/font] 为该段切换字体\n"
 "\n"
-"字体名即 KOReader 字体菜单中显示的名称，例如 [font=Noto Sans]%书名[/font]。空"
-"格没问题。如果设备上未安装该字体，该段会回退到所在行的字体，因此预设即使在分"
-"享时也能保持可读。\n"
+"其中的 Name 是 KOReader 字体菜单中显示的名称，例如 [font=Noto Sans]%title[/"
+"font]。可以包含空格。若设备上未安装该字体，该段会退回使用所在行的字体，因此预"
+"设即使在分享时也能保持可读。\n"
 "\n"
 "条件判断\n"
 "\n"
-"用 [if:条件]…[/if] 包裹内容，仅当条件为真时才显示。可添加 [else]…[/if] 分支作"
-"为备选。\n"
+"用 [if:condition]…[/if] 包住内容，就只会在条件成立时显示。也可以加上 [else]…"
+"[/if] 分支作为替代内容。\n"
 "\n"
 "运算符\n"
 "  =    等于               !=  不等于\n"
@@ -2728,23 +2733,23 @@ msgstr ""
 "  <=   不超过             >=  至少\n"
 "  and / or / not  · ( ) 用于分组\n"
 "\n"
-"  示例：[if:电量<20 and not 充电中]电量低[/if]\n"
+"  示例：[if:batt<20 and not charging]LOW[/if]\n"
 "\n"
-"真值检测：裸写 [if:键] 会检测该键是否已设置、非零且不是 \"off\"/\"no\"。适用"
-"于 [if:书名]…[/if]、[if:作者]…[/if]、[if:丛书]…[/if]。\n"
+"真值检测：单独写 [if:key] 会检查该键是否已设置、非零，且不是 \"off\"/\"no\"。"
+"适用于 [if:title]…[/if]、[if:author]…[/if]、[if:series]…[/if]。\n"
 "\n"
-"词元引用比较：=@词元 会将值与另一个词元的当前值比较，例如 [if:章节标题_1!=@书"
-"名]…[/if] 可在章节标题与书名相同时隐藏章节标题。\n"
+"词元引用比较：=@token 会将值与另一个词元的当前值比较，例如 [if:chap_title_1!"
+"=@title]…[/if] 可以在章节标题与书名相同时把它隐藏。\n"
 "\n"
-"完整的条件状态键列表（wifi、电量、亮度百分比、夜间模式、时间、格式……）请浏览 "
-"If/else 芯片 — 其中的每个参考条目都展示了一种条件的准确键名和运算符语法。\n"
+"完整的条件状态键列表（wifi、batt、light_pct、night、time、format……）请浏览 "
+"If/else 芯片，里面的每个参考条目都列出该条件的准确键名和运算符语法。\n"
 "\n"
 "示例\n"
 "\n"
-"  [if:作者数>1]%作者 等[else]%作者[/if]\n"
-"  [if:电量<20]电量低 %电量[/if]\n"
-"  [if:时间>=18:00 and 时间<18:30]6–6:30[/if]\n"
-"  [if:not 丛书]独立作品[/if]\n"
+"  [if:authors>1]%author, et al.[else]%author[/if]\n"
+"  [if:batt<20]LOW %batt[/if]\n"
+"  [if:time>=18:00 and time<18:30]6–6:30[/if]\n"
+"  [if:not series]Standalone[/if]\n"
 
 #: menu/tokens_library.lua:388
 msgid "★ Favourites"
@@ -2752,15 +2757,12 @@ msgstr "★ 收藏"
 
 #: menu/tokens_library.lua:414
 msgid "Search tokens by name, value, or expression…"
-msgstr "按名称、值或表达式搜索标记…"
+msgstr "按名称、值或表达式搜索词元…"
 
 #: menu/tokens_library.lua:419
 msgid "No favourites yet. Tap the ☆ on any token to add it."
-msgstr "暂无收藏，点击任意标记旁的 ☆ 即可添加。"
+msgstr "暂无收藏，点击任意词元旁的 ☆ 即可添加。"
 
 #: menu/tokens_library.lua:466
 msgid "Help"
 msgstr "帮助"
-
-#~ msgid "Background colour"
-#~ msgstr "背景颜色"
