@@ -1527,12 +1527,68 @@ local function addCalibreConditionKeys(state, ui, format_str)
     end
 end
 
+--- Walk the footer's additional_footer_content list and join non-empty
+-- callback returns with the footer's own separator. If `filter` is set,
+-- only callbacks whose source file lives under `<filter>.koplugin/`
+-- contribute. Owner is identified via debug.getinfo on the closure's
+-- source path — KOReader plugins all live in `<name>.koplugin/`, so the
+-- directory basename is a stable public identifier.
+local function gatherPluginContent(ui, filter)
+    local footer = ui and ui.view and ui.view.footer
+    local funcs = footer and footer.additional_footer_content
+    if not funcs or #funcs == 0 then return "" end
+    local parts = {}
+    for _, fn in ipairs(funcs) do
+        local include = true
+        if filter and filter ~= "" then
+            local info = debug.getinfo(fn, "S")
+            local source = info and info.source or ""
+            local owner = source:match("/([^/]+)%.koplugin/")
+            include = (owner == filter)
+        end
+        if include then
+            local val = fn()
+            if val and val ~= "" then
+                parts[#parts + 1] = val
+            end
+        end
+    end
+    if #parts == 0 then return "" end
+    return table.concat(parts, footer:genSeparator())
+end
+
+--- Add the plugin footer content named in THIS template's [if:...] openers
+--- to a condition state (#125), so [if:plugin_content{readtimer}] can swap a
+--- plugin's output for something else while that plugin has nothing to show.
+---
+--- Per-caller for the same reason as the calibre columns: the shared state
+--- would otherwise only ever hold the filters of the first line that built it.
+--- Keyed as written, braces included; the filter is passed verbatim, exactly
+--- as the %plugin_content{<plugin>} token does.
+local function addPluginContentConditionKeys(state, ui, format_str)
+    if not (state and format_str and format_str:find("plugin_content", 1, true)) then
+        return
+    end
+    for cond in format_str:gmatch("%[if:([^%]]+)%]") do
+        for raw in cond:gmatch("plugin_content(%b{})") do
+            local key = "plugin_content" .. raw
+            if state[key] == nil then
+                state[key] = gatherPluginContent(ui, raw:sub(2, -2))
+            end
+        end
+        if state.plugin_content == nil and cond:find("plugin_content", 1, true) then
+            state.plugin_content = gatherPluginContent(ui, nil)
+        end
+    end
+end
+
 function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, paint_ctx, stats_cache, format_str)
     if paint_ctx and paint_ctx._condition_state then
         local cached = paint_ctx._condition_state
         -- The shared table is built once per paint, but the calibre columns
         -- are gated on the calling template, so each caller contributes its own.
         addCalibreConditionKeys(cached, ui, format_str)
+        addPluginContentConditionKeys(cached, ui, format_str)
         return cached
     end
 
@@ -1973,6 +2029,7 @@ function Tokens.buildConditionState(ui, session_elapsed, session_pages_read, pai
         paint_ctx._condition_state = state
     end
     addCalibreConditionKeys(state, ui, format_str)
+    addPluginContentConditionKeys(state, ui, format_str)
 
     return state
 end
@@ -2030,36 +2087,6 @@ function Tokens.canonicaliseLegacy(format_str)
     local s = rewriteLegacyTokens(format_str)
     s = rewriteConditionalKeys(s)
     return s
-end
-
---- Walk the footer's additional_footer_content list and join non-empty
--- callback returns with the footer's own separator. If `filter` is set,
--- only callbacks whose source file lives under `<filter>.koplugin/`
--- contribute. Owner is identified via debug.getinfo on the closure's
--- source path — KOReader plugins all live in `<name>.koplugin/`, so the
--- directory basename is a stable public identifier.
-local function gatherPluginContent(ui, filter)
-    local footer = ui and ui.view and ui.view.footer
-    local funcs = footer and footer.additional_footer_content
-    if not funcs or #funcs == 0 then return "" end
-    local parts = {}
-    for _, fn in ipairs(funcs) do
-        local include = true
-        if filter and filter ~= "" then
-            local info = debug.getinfo(fn, "S")
-            local source = info and info.source or ""
-            local owner = source:match("/([^/]+)%.koplugin/")
-            include = (owner == filter)
-        end
-        if include then
-            local val = fn()
-            if val and val ~= "" then
-                parts[#parts + 1] = val
-            end
-        end
-    end
-    if #parts == 0 then return "" end
-    return table.concat(parts, footer:genSeparator())
 end
 
 function Tokens.expand(format_str, ui, session_elapsed, session_pages_read, preview_mode, tick_width_multiplier, symbol_color, paint_ctx, opts)
