@@ -175,6 +175,9 @@ require("bookends_textwidget_patch")  -- TextWidget: paint ColorRGB32 fgcolor as
 function Bookends:init()
     self:openSettings()
     self:loadSettings()
+    -- Inactivity auto-hide is transient: every document starts visible.
+    self._auto_hidden = false
+    self:startAutoHideTimer()
     self.ui.menu:registerToMainMenu(self)
     self.ui.view:registerViewModule("bookends", self)
     self:registerFolderShortcut()
@@ -236,6 +239,14 @@ function Bookends:init()
     -- Register hold-to-skim touch zone
     self:setupTouchZones()
 
+    -- Watch every input frame so the auto-hide deadline follows real activity.
+    -- registerWidget() also unregisters the hook from onCloseWidget.
+    if not self._auto_hide_input_hook and UIManager.event_hook
+            and UIManager.event_hook.registerWidget then
+        UIManager.event_hook:registerWidget("InputEvent", self)
+        self._auto_hide_input_hook = true
+    end
+
     -- Apply stock bar disable if our setting is active
     if self.stock_bar_disabled then
         local footer = self.ui.view.footer
@@ -264,6 +275,8 @@ function Bookends:init()
 end
 
 function Bookends:onCloseDocument()
+    self:stopAutoHideTimer()
+    self._auto_hidden = false
     if self._flipping_halo then
         UIManager:close(self._flipping_halo)
         self._flipping_halo = nil
@@ -557,6 +570,22 @@ function Bookends:setupTouchZones()
             },
         },
         {
+            -- Observe taps without consuming them: returning false lets page
+            -- turns, links, highlights, menus, and gestures keep their normal
+            -- handlers. The reveal is deferred so a tap that turns the page
+            -- can be recognised and ignored (see _observeAutoHideTap).
+            id = "bookends_auto_hide_tap",
+            ges = "tap",
+            screen_zone = {
+                ratio_x = 0, ratio_y = 0,
+                ratio_w = 1, ratio_h = 1,
+            },
+            handler = function()
+                self:_observeAutoHideTap()
+                return false
+            end,
+        },
+        {
             id = "bookends_hold",
             ges = "hold",
             screen_zone = {
@@ -572,7 +601,7 @@ function Bookends:setupTouchZones()
 end
 
 function Bookends:onHoldBookends(ges)
-    if not self.enabled or not self.skim_on_hold then return end
+    if not self.enabled or not self.skim_on_hold or self._auto_hidden then return end
     local rects = self._hold_rects
     if not rects or #rects == 0 then return end
     local pos = ges.pos
@@ -588,15 +617,34 @@ function Bookends:onHoldBookends(ges)
 end
 
 function Bookends:onToggleBookends()
+    -- If inactivity hid the overlay, the first toggle brings it back rather
+    -- than turning Bookends off (enabled is still true underneath).
+    if self._auto_hidden then
+        self:revealOverlay()
+        return true
+    end
     self.enabled = not self.enabled
     self.settings:saveSetting("enabled", self.enabled)
+    if self.enabled then
+        self:startAutoHideTimer()
+    else
+        self:stopAutoHideTimer()
+    end
     self:markDirty()
     return true
 end
 
 function Bookends:onSetBookends(new_state)
+    -- An explicit visibility request always clears the transient hidden state,
+    -- so "set visibility: on" restores an overlay the timer took away.
+    self._auto_hidden = false
     self.enabled = new_state
     self.settings:saveSetting("enabled", self.enabled)
+    if self.enabled then
+        self:startAutoHideTimer()
+    else
+        self:stopAutoHideTimer()
+    end
     self:markDirty()
     return true
 end
@@ -703,6 +751,7 @@ function Bookends:loadSettings()
     }
 
     self.skim_on_hold = self.settings:readSetting("skim_on_hold", true)
+    self.auto_hide_seconds = tonumber(self.settings:readSetting("auto_hide_seconds", 0)) or 0
     self.disable_auto_refresh = self.settings:isTrue("disable_auto_refresh")
     self.check_updates = self.settings:readSetting("check_updates", false)
     self.dev_branch = self.settings:readSetting("dev_branch", "")
@@ -1105,6 +1154,9 @@ function Bookends:_refreshOverlayBands()
 end
 
 function Bookends:markOverlayDirty()
+    -- Nothing to refresh while the inactivity timer has hidden the overlay.
+    -- Revealing marks dirty again, which rebuilds the current clock/battery state.
+    if self._auto_hidden then return end
     -- #114: while a menu or dialog covers the reader the overlay is not
     -- visible, so repainting buys nothing except a full-page write to the
     -- framebuffer underneath the menu - and that write races KOReader's
@@ -1225,6 +1277,11 @@ end
 
 -- Event handlers
 function Bookends:onPageUpdate()
+    -- A tap that turns the page must not reveal an auto-hidden overlay. The
+    -- deferred reveal reads this flag before deciding (see _observeAutoHideTap).
+    if self._auto_hide_reveal_pending then
+        self._page_changed_since_tap = true
+    end
     local current = self:getSessionPageNumber()
     if current then
         if not self.session_start_page then
@@ -1257,6 +1314,9 @@ function Bookends:onPageUpdate()
     self._tick_cache = nil
 end
 function Bookends:onPosUpdate()
+    if self._auto_hide_reveal_pending then
+        self._page_changed_since_tap = true
+    end
     self.dirty = true
     self._tick_cache = nil
 end
@@ -1471,6 +1531,7 @@ function Bookends:buildBarMarkers(mk_cfg, src)
 end
 function Bookends:onSuspend()
     self:stopRefreshTimer()
+    self:stopAutoHideTimer()
     -- Drop any pending resume repaint; the next onResume re-arms it if needed.
     self._resume_repaint_pending = nil
 end
@@ -1484,6 +1545,9 @@ function Bookends:onResume()
     self._marker_session_anchor = Tokens.captureMarkerAnchor(self.ui, Tokens.getCurrentPageNumber(self.ui))
         or self._marker_session_anchor
     self:backgroundUpdateCheck()
+    -- Re-arm the inactivity timer after suspend, unless the overlay was hidden
+    -- before sleeping (startAutoHideTimer no-ops while _auto_hidden is set).
+    self:startAutoHideTimer()
 
     -- A repaint here would blit our overlay onto a screensaver that's still
     -- showing (some devices, e.g. Kobo Clara Color, keep the screensaver up with
@@ -1545,7 +1609,12 @@ end
 Bookends._is_subprocess = false
 
 function Bookends:paintTo(bb, x, y)
-    if not self.enabled or self._format_hidden then return end
+    if not self.enabled or self._format_hidden or self._auto_hidden then
+        -- Clear the flag even when nothing is drawn: the auto-hide repaint is
+        -- a normal dirty request whose paintTo call happens to be a no-op.
+        self.dirty = false
+        return
+    end
     -- Skip overlay painting in thumbnail subprocesses. Mirrors the stock
     -- footer's footer_visible=false in readerthumbnail.lua: a 200px-tall
     -- thumbnail can't legibly carry overlay text, and on Kindle several token
@@ -2523,6 +2592,10 @@ end
 
 function Bookends:onCloseWidget()
     self:stopRefreshTimer()
+    self:stopAutoHideTimer()
+    -- registerWidget() unregisters the InputEvent hook after this returns;
+    -- clearing the guard lets the same instance re-register if it is re-inited.
+    self._auto_hide_input_hook = false
     if self.widget_cache then
         OverlayWidget.freeWidgets(self.widget_cache)
         self.widget_cache = nil
@@ -2548,6 +2621,7 @@ end
 -- the koplugin folder is already purged; what remains is everything we wrote
 -- into koreader/settings/, which we own and clear here.
 function Bookends:deletePluginSettings()
+    self:stopAutoHideTimer()
     -- Cancel before clearing self.settings: the 2 s autosave debounce can
     -- otherwise fire between our delete and the user accepting the restart
     -- prompt, recreating the file we just removed.
@@ -2615,6 +2689,117 @@ function Bookends:stopRefreshTimer()
     self.refresh_timer_func = nil
 end
 
+-- ─── Inactivity auto-hide ────────────────────────────────
+
+-- While a menu/dialog is open, poll at this interval for it closing. Menu
+-- close happens inside the input frame that opened the item, so there is no
+-- later InputEvent guaranteed to arm the timer.
+local AUTO_HIDE_RECHECK_SECONDS = 1
+
+--- Arm (or re-arm) the auto-hide deadline. Called on every input event while
+--- the overlay is visible, so each interaction pushes the deadline out.
+--- No-op when the feature is off, Bookends is disabled/format-hidden, or the
+--- overlay is already hidden by the timer.
+function Bookends:startAutoHideTimer()
+    self:stopAutoHideTimer()
+    local seconds = tonumber(self.auto_hide_seconds) or 0
+    if seconds <= 0 or not self.enabled or self._format_hidden or self._auto_hidden then
+        return
+    end
+    -- Never arm the countdown while a menu or dialog covers the reader. A
+    -- timer firing underneath one is the repaint-under-a-dialog case that
+    -- caused the settings dialog to lock up on device.
+    local top = UIManager:getTopmostVisibleWidget()
+    if top and top ~= self.ui then
+        -- Closing a menu is handled inside the same input frame as the menu
+        -- item tap, so no later InputEvent will re-arm us. Poll briefly so
+        -- the countdown starts as soon as the reader is uncovered again.
+        self._auto_hide_timer = function()
+            self._auto_hide_timer = nil
+            self:startAutoHideTimer()
+        end
+        UIManager:scheduleIn(AUTO_HIDE_RECHECK_SECONDS, self._auto_hide_timer)
+        return
+    end
+    self._auto_hide_timer = function()
+        self._auto_hide_timer = nil
+        self:_onAutoHideTimeout()
+    end
+    UIManager:scheduleIn(seconds, self._auto_hide_timer)
+end
+
+function Bookends:stopAutoHideTimer()
+    if self._auto_hide_timer then
+        UIManager:unschedule(self._auto_hide_timer)
+        self._auto_hide_timer = nil
+    end
+end
+
+function Bookends:_onAutoHideTimeout()
+    if not self.enabled or self._format_hidden or self._auto_hidden then return end
+    -- If a menu/dialog or the screensaver appeared after the timer was armed,
+    -- do nothing. Hiding here would repaint underneath it (#114 / #73). The
+    -- next interaction with the reading screen re-arms the countdown.
+    local top = UIManager:getTopmostVisibleWidget()
+    if Device.screen_saver_mode or (top and top ~= self.ui) then return end
+    self._auto_hidden = true
+    self._tick_cache = nil
+    self.dirty = true
+    self._deferred_overlay_repaint = nil
+    self:markDirty()
+end
+
+--- Clear the transient hidden state and bring the overlay back. Used by the
+--- toggle gesture, "set visibility: on", and a non-page-turn tap.
+function Bookends:revealOverlay()
+    local was_hidden = self._auto_hidden
+    self._auto_hidden = false
+    if not self.enabled or self._format_hidden then
+        self:stopAutoHideTimer()
+        return
+    end
+    self:startAutoHideTimer()
+    if was_hidden then self:markDirty() end
+end
+
+--- Any input frame restarts the idle clock, but does not reveal a hidden
+--- overlay by itself. Taps have their own observer below.
+function Bookends:onInputEvent()
+    if not self.enabled or self._format_hidden or self._auto_hidden then return end
+    self:startAutoHideTimer()
+end
+
+--- Observe a tap without consuming it. A tap that turns the page must leave
+--- the overlay hidden, so the reveal is deferred one tick and cancelled by
+--- onPageUpdate/onPosUpdate. This is independent of touch-zone ordering: it
+--- works whether this observer runs before or after the page-turn zone.
+function Bookends:_observeAutoHideTap()
+    if not self.enabled or self._format_hidden or not self._auto_hidden then return false end
+    if self._auto_hide_reveal_pending then return false end
+    self._auto_hide_reveal_pending = true
+    self._page_changed_since_tap = false
+    UIManager:nextTick(function()
+        if not self._auto_hide_reveal_pending then return end
+        self._auto_hide_reveal_pending = false
+        local page_changed = self._page_changed_since_tap
+        self._page_changed_since_tap = false
+        if page_changed then return end
+        -- The tap opened a menu/dialog. Reveal in memory, but leave the paint
+        -- to the repaint that follows the menu closing: writing underneath it
+        -- is the #114 race. The existing deferral refreshes our bands then.
+        local top = UIManager:getTopmostVisibleWidget()
+        if top and top ~= self.ui then
+            self._auto_hidden = false
+            self.dirty = true
+            self._deferred_overlay_repaint = true
+            self:startAutoHideTimer()
+            return
+        end
+        self:revealOverlay()
+    end)
+    return false
+end
+
 -- ─── Menu ────────────────────────────────────────────────
 
 function Bookends:hideMenu(touchmenu_instance)
@@ -2626,7 +2811,10 @@ end
 ---   the dialog sets `value` to the supplied number, fires on_change, then
 ---   closes — matching the one-tap-commit feel of the colour picker's White
 ---   shortcut on the greyscale nudge for background_color.
-function Bookends:showNudgeDialog(title, value, min_val, max_val, default_val, unit, on_change, on_close, small_step, large_step, touchmenu_instance, on_default, default_label, extra_button)
+--- @param medium_step number|nil  Optional middle increment. When set, the
+---   nudge row gets six step buttons around the value (-large, -medium, -small,
+---   +small, +medium, +large). Callers that omit it keep the original five.
+function Bookends:showNudgeDialog(title, value, min_val, max_val, default_val, unit, on_change, on_close, small_step, large_step, touchmenu_instance, on_default, default_label, extra_button, medium_step)
     local ButtonDialog = require("ui/widget/buttondialog")
     local restoreMenu = self:hideMenu(touchmenu_instance)
     local orig_on_close = on_close
@@ -2646,6 +2834,14 @@ function Bookends:showNudgeDialog(title, value, min_val, max_val, default_val, u
         dialog.layout = nil
         dialog:reinit()
         dialog:refocusWidget(true)
+        -- reinit() replaces every button. Their dimens are only computed during
+        -- paintTo, so without a repaint the new buttons have empty touch ranges
+        -- and the dialog stops responding until something else forces a paint.
+        -- Mark the dialog itself dirty (not ReaderUI) so it repaints over its
+        -- own region without writing underneath it.
+        UIManager:setDirty(dialog, function()
+            return "ui", dialog.movable.dimen
+        end)
     end
 
     local function update(delta)
@@ -2658,9 +2854,15 @@ function Bookends:showNudgeDialog(title, value, min_val, max_val, default_val, u
     if large_step then
         table.insert(nudge_buttons, { text = "-" .. large_step, callback = function() update(-large_step) end })
     end
+    if medium_step then
+        table.insert(nudge_buttons, { text = "-" .. medium_step, callback = function() update(-medium_step) end })
+    end
     table.insert(nudge_buttons, { text = "-" .. small_step, callback = function() update(-small_step) end })
     table.insert(nudge_buttons, { text_func = function() return tostring(value) .. unit end, enabled = false })
     table.insert(nudge_buttons, { text = "+" .. small_step, callback = function() update(small_step) end })
+    if medium_step then
+        table.insert(nudge_buttons, { text = "+" .. medium_step, callback = function() update(medium_step) end })
+    end
     if large_step then
         table.insert(nudge_buttons, { text = "+" .. large_step, callback = function() update(large_step) end })
     end

@@ -40,6 +40,17 @@ local function closeMenuInstance(touchmenu_instance)
     end
 end
 
+--- Compact label for the auto-hide delay. Values step in tens of seconds, so
+--- exact minutes get the friendlier form and everything else stays in seconds.
+local function formatAutoHideDelay(seconds)
+    seconds = tonumber(seconds) or 0
+    if seconds <= 0 then return _("off") end
+    if seconds % 60 == 0 then
+        return (seconds / 60) .. " " .. _("min")
+    end
+    return seconds .. " s"
+end
+
 --- Save current overlay as a new preset — opens an input dialog.
 --- Extracted so the top-level Bookends menu and any future entry point
 --- can share the flow.
@@ -269,9 +280,46 @@ function Bookends:buildBookendsSettingsMenu()
             text = _("Enable bookends"),
             checked_func = function() return self.enabled end,
             callback = function()
-                self.enabled = not self.enabled
-                self.settings:saveSetting("enabled", self.enabled)
-                self:markDirty()
+                -- Route through the event handler so re-enabling also clears
+                -- any transient auto-hidden state left from before.
+                self:onSetBookends(not self.enabled)
+            end,
+        },
+        {
+            text_func = function()
+                local seconds = tonumber(self.auto_hide_seconds) or 0
+                local label = _("Auto-hide overlay after inactivity")
+                return label .. " (" .. formatAutoHideDelay(seconds) .. ")"
+            end,
+            help_text = _("Hides the Bookends overlay after this many seconds without screen input. A tap on the reading screen, or the visibility toggle gesture, brings it back; page turns leave it hidden."),
+            keep_menu_open = true,
+            callback = function(touchmenu_instance)
+                -- Stop the timer while the dialog is open. Restarting it from
+                -- the nudge callback used to start a countdown under the
+                -- dialog, and some devices froze when it fired mid-edit.
+                self:stopAutoHideTimer()
+                self:showNudgeDialog(
+                    _("Auto-hide overlay after inactivity"),
+                    tonumber(self.auto_hide_seconds) or 0,
+                    0, 3600, 0, " s",
+                    function(val)
+                        self.auto_hide_seconds = val
+                        self.settings:saveSetting("auto_hide_seconds", val)
+                    end,
+                    function()
+                        if (tonumber(self.auto_hide_seconds) or 0) > 0 then
+                            self:startAutoHideTimer()
+                        else
+                            self:stopAutoHideTimer()
+                        end
+                    end,
+                    -- 1 s fine adjustment, 10 s for small jumps, 60 s for
+                    -- whole minutes.
+                    1, 60, touchmenu_instance,
+                    nil, nil,
+                    { text = _("Off"), value = 0 },
+                    10
+                )
             end,
         },
         {

@@ -462,6 +462,7 @@ The Bookends menu separates **global** settings (apply everywhere, never saved w
 | Setting | Default | Description |
 |---------|---------|-------------|
 | Enable bookends | Off | Master on/off |
+| Auto-hide overlay after inactivity | Off | Hides the overlay after N seconds without screen input. A tap on the reading screen or the visibility toggle gesture brings it back; page turns leave it hidden |
 | Disable stock status bar | Off | Hides KOReader's built-in status bar (recommended — see below) |
 | Default font | Status bar font | Base font for all overlays; pick a font family slot for portable presets |
 | Bottom-center tap gesture | Toggle bookends | Action when you tap the centre of the status bar area |
