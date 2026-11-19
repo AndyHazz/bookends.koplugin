@@ -57,10 +57,16 @@ local function bookends_error(context, err)
         UIManager:show(ConfirmBox:new{
             text = msg,
             icon = "notice-warning",
-            ok_text = _("Restart"),
+            -- No restart on Android: exit code 85 shows the launcher's
+            -- crash screen there, so quit cleanly instead (see updater).
+            ok_text = Device:canRestart() and _("Restart") or _("Close"),
             cancel_text = _("Dismiss"),
             ok_callback = function()
-                UIManager:restartKOReader()
+                if Device:canRestart() then
+                    UIManager:restartKOReader()
+                else
+                    UIManager:quit()
+                end
             end,
             cancel_callback = function()
                 _error_dialog_shown = false

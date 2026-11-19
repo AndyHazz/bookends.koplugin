@@ -567,13 +567,24 @@ function Updater.install(zip_url, old_version, new_version, on_success, error_la
             end
         end
 
-        -- Restart KOReader to load the new version
+        -- Restart KOReader to load the new version. Android (and any other
+        -- platform with canRestart = no) has no launcher loop to catch the
+        -- restart exit code 85, so restartKOReader() there just exits
+        -- non-zero and the Android launcher shows its "KOReader crashed"
+        -- screen, even though the update unpacked fine. Mirror core's
+        -- SetDefaultsWidget: quit cleanly instead and ask for a reopen.
+        local can_restart = Device:canRestart()
         UIManager:show(ConfirmBox:new{
             text = _("Bookends updated to v") .. new_version .. ".\n\n" ..
-                _("Restart KOReader now?"),
-            ok_text = _("Restart"),
+                (can_restart and _("Restart KOReader now?")
+                    or _("Close KOReader now? Open it again to finish the update.")),
+            ok_text = can_restart and _("Restart") or _("Close"),
             ok_callback = function()
-                UIManager:restartKOReader()
+                if can_restart then
+                    UIManager:restartKOReader()
+                else
+                    UIManager:quit()
+                end
             end,
         })
     end)

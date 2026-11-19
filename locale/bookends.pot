@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bookends\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-28 23:26+0100\n"
+"POT-Creation-Date: 2026-11-19 23:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,28 +18,28 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: bookends_colour_palette.lua:400 bookends_dialog_helpers.lua:123
-#: bookends_line_editor.lua:792 bookends_line_editor.lua:1058 main.lua:2682
-#: main.lua:3381 menu/main_menu.lua:55 menu/main_menu.lua:95
+#: bookends_line_editor.lua:792 bookends_line_editor.lua:1058 main.lua:2688
+#: main.lua:3387 menu/main_menu.lua:55 menu/main_menu.lua:95
 #: menu/main_menu.lua:133 menu/main_menu.lua:590
 #: menu/preset_manager_modal.lua:1436 menu/preset_manager_modal.lua:1558
 #: menu/preset_manager_modal.lua:1599 menu/preset_manager_modal.lua:1700
-#: menu/preset_manager_modal.lua:1744 menu/preset_manager_modal.lua:1846
-#: menu/preset_manager_modal.lua:1920 menu/preset_manager_modal.lua:2015
-#: menu/preset_manager_modal.lua:2039 menu/preset_manager_modal.lua:2063
+#: menu/preset_manager_modal.lua:1744 menu/preset_manager_modal.lua:1861
+#: menu/preset_manager_modal.lua:1935 menu/preset_manager_modal.lua:2030
+#: menu/preset_manager_modal.lua:2054 menu/preset_manager_modal.lua:2078
 #: menu/progress_bar_menu.lua:100
 msgid "Cancel"
 msgstr ""
 
 #: bookends_colour_palette.lua:402 bookends_dialog_helpers.lua:131
-#: bookends_line_editor.lua:505 bookends_line_editor.lua:632 main.lua:2692
-#: main.lua:2924 menu/colours_menu.lua:73 menu/colours_menu.lua:277
+#: bookends_line_editor.lua:505 bookends_line_editor.lua:632 main.lua:2698
+#: main.lua:2930 menu/colours_menu.lua:73 menu/colours_menu.lua:277
 #: menu/progress_bar_menu.lua:308 menu/progress_bar_menu.lua:561
 #: menu/progress_bar_menu.lua:616
 msgid "Default"
 msgstr ""
 
 #: bookends_colour_palette.lua:404 bookends_dialog_helpers.lua:138
-#: main.lua:2721 menu/preset_manager_modal.lua:683
+#: main.lua:2727 menu/preset_manager_modal.lua:683
 msgid "Apply"
 msgstr ""
 
@@ -55,7 +55,7 @@ msgstr ""
 msgid "Invalid hex colour (use #RGB or #RRGGBB)"
 msgstr ""
 
-#: bookends_line_editor.lua:115 main.lua:1177
+#: bookends_line_editor.lua:115 main.lua:1183
 msgid "Regular"
 msgstr ""
 
@@ -291,7 +291,8 @@ msgstr ""
 msgid "Custom colours"
 msgstr ""
 
-#: bookends_line_editor.lua:661 bookends_updater.lua:349 main.lua:3219
+#: bookends_line_editor.lua:661 bookends_updater.lua:349
+#: bookends_updater.lua:581 main.lua:62 main.lua:3225
 #: menu/icons_library.lua:453 menu/preset_manager_modal.lua:657
 #: menu/tokens_library.lua:463
 msgid "Close"
@@ -321,7 +322,7 @@ msgstr ""
 msgid "Tokens"
 msgstr ""
 
-#: bookends_line_editor.lua:826 main.lua:3383 menu/main_menu.lua:57
+#: bookends_line_editor.lua:826 main.lua:3389 menu/main_menu.lua:57
 #: menu/preset_manager_modal.lua:1440 menu/preset_manager_modal.lua:1600
 #: menu/preset_manager_modal.lua:1701
 msgid "Save"
@@ -348,7 +349,7 @@ msgid "Line %1: %2"
 msgstr ""
 
 #: bookends_line_editor.lua:1054 menu/preset_manager_modal.lua:1543
-#: menu/preset_manager_modal.lua:1939
+#: menu/preset_manager_modal.lua:1954
 msgid "Delete"
 msgstr ""
 
@@ -364,11 +365,11 @@ msgstr ""
 msgid "Finished"
 msgstr ""
 
-#: bookends_tokens.lua:3387
+#: bookends_tokens.lua:3414
 msgid " and "
 msgstr ""
 
-#: bookends_tokens.lua:3387
+#: bookends_tokens.lua:3414
 msgid ", et al."
 msgstr ""
 
@@ -448,31 +449,35 @@ msgstr ""
 msgid "Installation failed: "
 msgstr ""
 
-#: bookends_updater.lua:572
+#: bookends_updater.lua:578
 msgid "Bookends updated to v"
 msgstr ""
 
-#: bookends_updater.lua:573
+#: bookends_updater.lua:579
 msgid "Restart KOReader now?"
 msgstr ""
 
-#: bookends_updater.lua:574 main.lua:60
+#: bookends_updater.lua:580
+msgid "Close KOReader now? Open it again to finish the update."
+msgstr ""
+
+#: bookends_updater.lua:581 main.lua:62
 msgid "Restart"
 msgstr ""
 
-#: bookends_updater.lua:590
+#: bookends_updater.lua:601
 msgid "Could not install branch:"
 msgstr ""
 
-#: bookends_updater.lua:607
+#: bookends_updater.lua:618
 msgid "Downloading latest release..."
 msgstr ""
 
-#: bookends_updater.lua:618
+#: bookends_updater.lua:629
 msgid "Could not fetch latest release."
 msgstr ""
 
-#: bookends_updater.lua:631
+#: bookends_updater.lua:642
 msgid "Latest release has no downloadable zip."
 msgstr ""
 
@@ -500,151 +505,151 @@ msgstr ""
 msgid "Fantasy"
 msgstr ""
 
-#: main.lua:61
+#: main.lua:63
 msgid "Dismiss"
 msgstr ""
 
-#: main.lua:153
+#: main.lua:159
 msgid "Top-left"
 msgstr ""
 
-#: main.lua:154
+#: main.lua:160
 msgid "Top-center"
 msgstr ""
 
-#: main.lua:155
+#: main.lua:161
 msgid "Top-right"
 msgstr ""
 
-#: main.lua:156
+#: main.lua:162
 msgid "Bottom-left"
 msgstr ""
 
-#: main.lua:157
+#: main.lua:163
 msgid "Bottom-center"
 msgstr ""
 
-#: main.lua:158
+#: main.lua:164
 msgid "Bottom-right"
 msgstr ""
 
-#: main.lua:307
+#: main.lua:313
 msgid "Bookends presets folder"
 msgstr ""
 
-#: main.lua:328
+#: main.lua:334
 msgid "Bookends: toggle visibility"
 msgstr ""
 
-#: main.lua:334
+#: main.lua:340
 msgid "Bookends: cycle preset"
 msgstr ""
 
-#: main.lua:340
+#: main.lua:346
 msgid "Bookends: set visibility"
 msgstr ""
 
-#: main.lua:343
+#: main.lua:349
 msgid "on"
 msgstr ""
 
-#: main.lua:343 menu/colours_menu.lua:335 menu/colours_menu.lua:342
+#: main.lua:349 menu/colours_menu.lua:335 menu/colours_menu.lua:342
 #: menu/colours_menu.lua:382 menu/colours_menu.lua:397
 msgid "off"
 msgstr ""
 
-#: main.lua:348
+#: main.lua:354
 msgid "Bookends: open preset library"
 msgstr ""
 
-#: main.lua:437 main.lua:475 menu/preset_manager_modal.lua:1807
+#: main.lua:443 main.lua:481 menu/preset_manager_modal.lua:1822
 msgid "My setup"
 msgstr ""
 
-#: main.lua:438 main.lua:476 menu/preset_manager_modal.lua:1811
+#: main.lua:444 main.lua:482 menu/preset_manager_modal.lua:1826
 msgid "Imported from your earlier Bookends settings"
 msgstr ""
 
-#: main.lua:647
+#: main.lua:653
 msgid "Preset error: %1"
 msgstr ""
 
-#: main.lua:656
+#: main.lua:662
 msgid "Preset: %1"
 msgstr ""
 
-#: main.lua:1178
+#: main.lua:1184
 msgid "Bold"
 msgstr ""
 
-#: main.lua:1179
+#: main.lua:1185
 msgid "Italic"
 msgstr ""
 
-#: main.lua:1180
+#: main.lua:1186
 msgid "Bold italic"
 msgstr ""
 
-#: main.lua:2940
+#: main.lua:2946
 msgid "Select font"
 msgstr ""
 
-#: main.lua:2981
+#: main.lua:2987
 msgid "Font-family fonts"
 msgstr ""
 
-#: main.lua:3046
+#: main.lua:3052
 msgid "Fonts"
 msgstr ""
 
-#: main.lua:3140 menu/library_modal.lua:937
+#: main.lua:3146 menu/library_modal.lua:949
 msgid "Page %1 of %2"
 msgstr ""
 
-#: main.lua:3229 main.lua:3403
+#: main.lua:3235 main.lua:3409
 msgid "Reset"
 msgstr ""
 
-#: main.lua:3238
+#: main.lua:3244
 msgid "Set font"
 msgstr ""
 
-#: main.lua:3377 menu/main_menu.lua:502 menu/main_menu.lua:504
+#: main.lua:3383 menu/main_menu.lua:502 menu/main_menu.lua:504
 msgid "Development branch"
 msgstr ""
 
-#: main.lua:3379
+#: main.lua:3385
 msgid "Branch name (leave empty for stable)"
 msgstr ""
 
-#: main.lua:3402
+#: main.lua:3408
 msgid ""
 "This will clear the development branch setting and install the latest stable "
 "release of Bookends, then restart KOReader. Continue?"
 msgstr ""
 
-#: main.lua:3421
+#: main.lua:3427
 msgid "Bookends update available: v"
 msgstr ""
 
-#: main.lua:3429 menu/main_menu.lua:667 menu/progress_bar_menu.lua:335
+#: main.lua:3435 menu/main_menu.lua:667 menu/progress_bar_menu.lua:335
 #: menu/progress_bar_menu.lua:590
 msgid "Adjust margins"
 msgstr ""
 
-#: main.lua:3431 menu/progress_bar_menu.lua:194 menu/progress_bar_menu.lua:595
+#: main.lua:3437 menu/progress_bar_menu.lua:194 menu/progress_bar_menu.lua:595
 msgid "Top"
 msgstr ""
 
-#: main.lua:3432 menu/progress_bar_menu.lua:194 menu/progress_bar_menu.lua:596
+#: main.lua:3438 menu/progress_bar_menu.lua:194 menu/progress_bar_menu.lua:596
 msgid "Bottom"
 msgstr ""
 
-#: main.lua:3433 menu/progress_bar_menu.lua:194 menu/progress_bar_menu.lua:595
+#: main.lua:3439 menu/progress_bar_menu.lua:194 menu/progress_bar_menu.lua:595
 msgid "Left"
 msgstr ""
 
-#: main.lua:3434 menu/progress_bar_menu.lua:194 menu/progress_bar_menu.lua:596
+#: main.lua:3440 menu/progress_bar_menu.lua:194 menu/progress_bar_menu.lua:596
 msgid "Right"
 msgstr ""
 
@@ -1244,11 +1249,11 @@ msgstr ""
 msgid "Drop .svg or .png files in koreader/icons/"
 msgstr ""
 
-#: menu/library_modal.lua:442
+#: menu/library_modal.lua:454
 msgid "Search…"
 msgstr ""
 
-#: menu/library_modal.lua:478
+#: menu/library_modal.lua:490
 msgid "Search"
 msgstr ""
 
@@ -1591,11 +1596,11 @@ msgid "Manage…"
 msgstr ""
 
 #: menu/preset_manager_modal.lua:680 menu/preset_manager_modal.lua:683
-#: menu/preset_manager_modal.lua:2041
+#: menu/preset_manager_modal.lua:2056
 msgid "Install"
 msgstr ""
 
-#: menu/preset_manager_modal.lua:1098 menu/preset_manager_modal.lua:1999
+#: menu/preset_manager_modal.lua:1098 menu/preset_manager_modal.lua:2014
 msgid "Could not preview preset"
 msgstr ""
 
@@ -1603,7 +1608,7 @@ msgstr ""
 msgid "by"
 msgstr ""
 
-#: menu/preset_manager_modal.lua:1493 menu/preset_manager_modal.lua:1808
+#: menu/preset_manager_modal.lua:1493 menu/preset_manager_modal.lua:1823
 msgid "Untitled"
 msgstr ""
 
@@ -1651,109 +1656,109 @@ msgstr ""
 msgid "Rename before sharing"
 msgstr ""
 
-#: menu/preset_manager_modal.lua:1791
+#: menu/preset_manager_modal.lua:1800
 msgid "Who should we credit as the author?"
 msgstr ""
 
-#: menu/preset_manager_modal.lua:1796
+#: menu/preset_manager_modal.lua:1808
 msgid "One-line description of this preset"
 msgstr ""
 
-#: menu/preset_manager_modal.lua:1815
+#: menu/preset_manager_modal.lua:1830
 msgid ""
 "'%1' is one of Bookends' default placeholder names. Give your preset "
 "something distinctive — that's how it'll appear in the gallery."
 msgstr ""
 
-#: menu/preset_manager_modal.lua:1821
+#: menu/preset_manager_modal.lua:1836
 msgid ""
 "Write a short description that tells gallery users what your preset shows"
 msgstr ""
 
-#: menu/preset_manager_modal.lua:1843
+#: menu/preset_manager_modal.lua:1858
 msgid ""
 "Submit '%1' by %2 to the gallery? A pull request will be opened for review."
 msgstr ""
 
-#: menu/preset_manager_modal.lua:1845
+#: menu/preset_manager_modal.lua:1860
 msgid "Submit"
 msgstr ""
 
-#: menu/preset_manager_modal.lua:1855
+#: menu/preset_manager_modal.lua:1870
 msgid ""
 "A preset called '%1' is already in the gallery. Rename your preset (Manage… "
 "→ Rename…) before submitting, so it doesn't collide with the existing entry."
 msgstr ""
 
-#: menu/preset_manager_modal.lua:1868
+#: menu/preset_manager_modal.lua:1883
 msgid "Submitting to gallery…"
 msgstr ""
 
-#: menu/preset_manager_modal.lua:1880
+#: menu/preset_manager_modal.lua:1895
 msgid ""
 "Thanks! Your submission is PR #%1.\n"
 "\n"
 "The maintainer will review it before it appears in the Gallery."
 msgstr ""
 
-#: menu/preset_manager_modal.lua:1889
+#: menu/preset_manager_modal.lua:1904
 msgid ""
 "A preset called '%1' is already in the gallery. Rename your preset (Manage… "
 "→ Rename…) before submitting."
 msgstr ""
 
-#: menu/preset_manager_modal.lua:1892
+#: menu/preset_manager_modal.lua:1907
 msgid ""
 "A submission for '%1' is already awaiting review. Wait for that one to be "
 "reviewed, or rename your preset to submit under a different name."
 msgstr ""
 
-#: menu/preset_manager_modal.lua:1895
+#: menu/preset_manager_modal.lua:1910
 msgid "Submission failed: %1"
 msgstr ""
 
-#: menu/preset_manager_modal.lua:1908
+#: menu/preset_manager_modal.lua:1923
 msgid ""
 "This preset uses specific fonts that won't exist on other devices. These "
 "overrides will be stripped from your submission so other users see their own "
 "default font."
 msgstr ""
 
-#: menu/preset_manager_modal.lua:1910
+#: menu/preset_manager_modal.lua:1925
 msgid "Custom fonts in this preset:"
 msgstr ""
 
-#: menu/preset_manager_modal.lua:1916
+#: menu/preset_manager_modal.lua:1931
 msgid ""
 "Tip: for portable presets, pick a Font-family font (Serif, Sans-serif, etc.) "
 "instead of a specific one — those adapt to each user's font settings."
 msgstr ""
 
-#: menu/preset_manager_modal.lua:1919
+#: menu/preset_manager_modal.lua:1934
 msgid "Submit anyway"
 msgstr ""
 
-#: menu/preset_manager_modal.lua:1932
+#: menu/preset_manager_modal.lua:1947
 msgid "Submission failed — details in the KOReader log."
 msgstr ""
 
-#: menu/preset_manager_modal.lua:1938
+#: menu/preset_manager_modal.lua:1953
 msgid "Delete preset '%1'?"
 msgstr ""
 
-#: menu/preset_manager_modal.lua:1981
+#: menu/preset_manager_modal.lua:1996
 msgid "Offline — connect to preview this preset."
 msgstr ""
 
-#: menu/preset_manager_modal.lua:1983
+#: menu/preset_manager_modal.lua:1998
 msgid "Couldn't download '%1'."
 msgstr ""
 
-#: menu/preset_manager_modal.lua:1989
+#: menu/preset_manager_modal.lua:2004
 msgid "This preset appears invalid; skipping."
 msgstr ""
 
-#: menu/preset_manager_modal.lua:2012
+#: menu/preset_manager_modal.lua:2027
 msgid ""
 "'%1' already exists in your library.\n"
 "\n"
@@ -1763,15 +1768,15 @@ msgid ""
 "Install under a new name to keep both."
 msgstr ""
 
-#: menu/preset_manager_modal.lua:2018
+#: menu/preset_manager_modal.lua:2033
 msgid "Replace"
 msgstr ""
 
-#: menu/preset_manager_modal.lua:2032
+#: menu/preset_manager_modal.lua:2047
 msgid "Install as new name…"
 msgstr ""
 
-#: menu/preset_manager_modal.lua:2036
+#: menu/preset_manager_modal.lua:2051
 msgid "Install as"
 msgstr ""
 
